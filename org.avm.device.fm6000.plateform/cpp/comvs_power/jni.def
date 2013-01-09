@@ -1,0 +1,24 @@
+;**********************************************
+;Declaration of Functions expoted by dll
+;**********************************************
+EXPORTS
+
+;**********************************************
+;Declaration of Native Functions for Java (JNI)
+;**********************************************
+
+Java_org_avm_device_fm6000_power_jni_COMVS_1POWERMANAGEMENTJNI_Comvs_1SwitchOff = JNI_PowerNative_SwitchOff
+Java_org_avm_device_fm6000_power_jni_COMVS_1POWERMANAGEMENTJNI_Comvs_1Modem_1SwitchOn = JNI_PowerNative_ModemSwitchOn
+Java_org_avm_device_fm6000_power_jni_COMVS_1POWERMANAGEMENTJNI_Comvs_1Modem_1SwitchOff = JNI_PowerNative_ModemSwitchOff
+Java_org_avm_device_fm6000_power_jni_COMVS_1POWERMANAGEMENTJNI_Comvs_1GPS_1SwitchOn = JNI_PowerNative_GPSSwitchOn
+Java_org_avm_device_fm6000_power_jni_COMVS_1POWERMANAGEMENTJNI_Comvs_1GPS_1SwitchOff = JNI_PowerNative_GPSSwitchOff
+Java_org_avm_device_fm6000_power_jni_COMVS_1POWERMANAGEMENTJNI_Comvs_1Accelerometer_1SwitchOn = JNI_PowerNative_AcceleroSwitchOn
+Java_org_avm_device_fm6000_power_jni_COMVS_1POWERMANAGEMENTJNI_Comvs_1Accelerometer_1SwitchOff = JNI_PowerNative_AcceleroSwitchOff
+Java_org_avm_device_fm6000_power_jni_COMVS_1POWERMANAGEMENTJNI_Comvs_1CAN_1SwitchOn = JNI_PowerNative_CANSwitchOn
+Java_org_avm_device_fm6000_power_jni_COMVS_1POWERMANAGEMENTJNI_Comvs_1GetPowerSource = JNI_PowerNative_CANSwitchOff
+Java_org_avm_device_fm6000_power_jni_COMVS_1POWERMANAGEMENTJNI_Comvs_1GetPowerSource = JNI_PowerNative_GetPowerSource
+Java_org_avm_device_fm6000_power_jni_COMVS_1POWERMANAGEMENTJNI_Comvs_1StopPowerEvent = JNI_PowerNative_StopPowerEvent
+Java_org_avm_device_fm6000_power_jni_COMVS_1POWERMANAGEMENTJNI_Comvs_1WaitPowerEvent = JNI_PowerNative_WaitPowerEvent
+Java_org_avm_device_fm6000_power_jni_COMVS_1POWERMANAGEMENTJNI_Comvs_1SetRTCWakeUp = JNI_PowerNative_SetRTCWakeUp
+Java_org_avm_device_fm6000_power_jni_COMVS_1POWERMANAGEMENTJNI_Comvs_1GetRTCWakeUp = JNI_PowerNative_GetRTCWakeUp
+Java_org_avm_device_fm6000_power_jni_COMVS_1POWERMANAGEMENTJNI_Comvs_1GetWakeupSource = JNI_PowerNative_WakeUpSource

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.elementary.media.sms.MediaSMS" immediate="true">
+	<implementation class="org.avm.elementary.media.sms.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.elementary.media.sms.MediaSMS"/>
+	<service>				
+		<provide interface="org.avm.elementary.common.Media"/>		
+	</service>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>	
+	<reference name="messenger" interface="org.avm.elementary.common.MediaListener"/>	
+	<reference name="gsm" interface="org.avm.device.gsm.Gsm"/>	
+</component>

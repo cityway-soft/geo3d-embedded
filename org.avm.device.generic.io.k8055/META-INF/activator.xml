@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.generic.io.k8055.K8055" immediate="true">
+	<implementation class="org.avm.device.generic.io.k8055.Activator"/>
+	<property name="service.pid" value="org.avm.device.generic.io.k8055.K8055"/>	
+</component>

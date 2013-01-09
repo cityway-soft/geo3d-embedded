@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.girouette.GirouetteDevice" immediate="true">
+	<implementation class="org.avm.device.girouette.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.device.girouette.GirouetteDevice"/>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+	<reference name="girouette" interface="org.avm.device.girouette.Girouette" cardinality="0..1" policy="dynamic"/>
+</component>

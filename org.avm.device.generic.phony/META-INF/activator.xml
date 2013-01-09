@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.generic.phony.impl.Phony"
+	immediate="true">
+	<implementation class="org.avm.device.generic.phony.bundle.Activator" />
+	<property name="service.pid" value="org.avm.device.phony.Phony" />
+	<service>
+		<provide interface="org.avm.device.phony.Phony" />
+	</service>
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin" />
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin" />
+	
+	<reference name="cioaudio" interface="org.avm.elementary.variable.Variable"
+		target="(org.avm.elementary.variable.name=cioaudio)" cardinality="0..1"
+		policy="dynamic" bind="setVariable" unbind="unsetVariable" />
+	
+	<reference name="gsm" interface="org.avm.device.gsm.Gsm"
+		cardinality="0..1" policy="dynamic" bind="setGsm" unbind="unsetGsm" />
+	<reference name="sound" interface="org.avm.device.sound.Sound"
+		cardinality="0..1" policy="dynamic" bind="setSound" unbind="unsetSound" />
+	<reference name="jdb" interface="org.avm.elementary.jdb.JDB"
+		cardinality="0..1" policy="dynamic" bind="setJdb" unbind="unsetJdb" />
+</component>

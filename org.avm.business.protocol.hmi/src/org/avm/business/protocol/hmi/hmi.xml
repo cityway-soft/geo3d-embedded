@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<binding>		
+	<mapping name="state"
+		class="org.avm.business.protocol.hmi.State"	
+		value-style="attribute">
+		<value name="value" field="_value" />
+		<value name="time" field="_time" />
+		<value name="name" field="_name" />
+	</mapping>		
+</binding>

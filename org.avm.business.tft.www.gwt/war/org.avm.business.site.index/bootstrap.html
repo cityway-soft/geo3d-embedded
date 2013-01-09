@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="FR">
+<head>
+<title>Bootstrap site embarqu&eacute</title>
+<meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
+<script language=javascript" type="text/javascript" src="http://localhost/ressources/dio.js"></script>
+<script type="text/javascript" src="http://localhost/ressources/soundmanager2.js"></script>
+<script type="text/javascript">
+try{
+Dio.initialize();
+}catch(e){
+
+}
+soundManager.url = 'http://localhost/ressources/soundmanager2.swf'; // override default SWF url
+soundManager.debugMode = true;
+soundManager.consoleOnly = false;
+
+soundManager.onload = function() {
+soundManager.createSound({
+	    id:'test',
+	    url:'http://localhost/audio/test.mp3',
+	    onfinish:function() {
+	    	Dio.dio_write(5,true);
+	    }
+   });
+}
+//soundManager.onerror = function(){
+//alert("soundmanager error");
+//}
+
+</script>
+
+<script language="javascript" type="text/javascript">
+var url = "http://calculateur:81/tft/";
+var ok = false;
+var cpt = 0;
+function isSiteLoadableTest(){
+	if(cpt%5==0){	
+		Dio.dio_write(5,false);
+		soundManager.play('test');
+	}
+	var today=new Date()
+	var time=Math.ceil(today.getTime() /1000);
+	var urlImg = url+"ressources/VT.bmp?"+ time.valueOf();
+	var img=new Image();
+	window.status="Nombre de tentatives : "+cpt;
+	img.onerror = testLater;
+	img.onload = doRedirect;
+	ok = true;
+	img.src =urlImg;
+}
+function testLater() {
+//	alert("testLater");
+	setTimeout("isSiteLoadableTest()",2000);
+	ok=false;
+	cpt = cpt+1;
+}
+
+function doRedirect(){
+	if(ok){
+	//	alert("doRedirect");
+		window.location = url+'index.html';
+	}
+}
+</script>
+</head>
+
+<body id="Site embarqu&eacute;" leftmargin="0" marginheight="0" marginwidth="0" topmargin="0" 
+onLoad="isSiteLoadableTest();">
+
+<div align="center">
+<img style="border-width:0;border:0;" src="pendule.gif" width="150" height="150">
+</div>
+<h1 align="center"> 
+<br>Pr&eacute;sentation temporairement indisponible <br>
+Veuillez nous excuser pour la g&ecirc;ne occasionn&eacute;e.
+</h1>
+<div align="center">
+<img src="VT.bmp">
+</div>
+
+<!--
+	<form align="center">
+<table>
+<tr>
+<td>
+<table>	
+	<tr>
+		<td>Port 1</td>
+		<td><input type="button" value="Read" onClick="Dio.dio_read(1)" /></td>
+		<td><div id="port1" />---</td>
+		<td><input type="button" value="On" onClick="Dio.dio_write(1, false)" /></td>
+		<td><input type="button" value="Off" onClick="Dio.dio_write(1, true)" /></td>
+	</tr>
+	<tr>
+		<td>Port 2</td>
+		<td><input type="button" value="Read" onClick="Dio.dio_read(2)" /></td>
+		<td><div id="port2" />---</td>
+		<td><input type="button" value="On" onClick="Dio.dio_write(2, false)" /></td>
+		<td><input type="button" value="Off" onClick="Dio.dio_write(2, true)" /></td>
+	</tr>
+	<tr>
+		<td>Port 3</td>
+		<td><input type="button" value="Read" onClick="Dio.dio_read(3)" /></td>
+		<td><div id="port3" />---</td>
+		<td><input type="button" value="On" onClick="Dio.dio_write(3, false)" /></td>
+		<td><input type="button" value="Off" onClick="Dio.dio_write(3, true)" /></td>
+	</tr>
+	<tr>
+		<td>Port 4</td>
+		<td><input type="button" value="Read" onClick="Dio.dio_read(4)" /></td>
+		<td><div id="port4" />---</td>
+		<td><input type="button" value="On" onClick="Dio.dio_write(4, false)" /></td>
+		<td><input type="button" value="Off" onClick="Dio.dio_write(4, true)" /></td>
+	</tr>
+</table>
+</td><td>	
+<table>
+<tr>
+		<td>Port 5</td>
+		<td><input type="button" value="Read" onClick="Dio.dio_read(5)" /></td>
+		<td><div id="port5" />---</td>
+		<td><input type="button" value="On" onClick="Dio.dio_write(5, false)" /></td>
+		<td><input type="button" value="Off" onClick="Dio.dio_write(5, true)" /></td>
+	</tr>
+	<tr>
+		<td>Port 6</td>
+		<td><input type="button" value="Read" onClick="Dio.dio_read(6)" /></td>
+		<td><div id="port6" />---</td>
+		<td><input type="button" value="On" onClick="Dio.dio_write(6, false)" /></td>
+		<td><input type="button" value="Off" onClick="Dio.dio_write(6, true)" /></td>
+	</tr>
+	<tr>
+		<td>Port 7</td>
+		<td><input type="button" value="Read" onClick="Dio.dio_read(7)" /></td>
+		<td><div id="port7" />---</td>
+		<td><input type="button" value="On" onClick="Dio.dio_write(7, false)" /></td>
+		<td><input type="button" value="Off" onClick="Dio.dio_write(7, true)" /></td>
+	</tr>
+	<tr>
+		<td>Port 8</td>
+		<td><input type="button" value="Read" onClick="Dio.dio_read(8)" /></td>
+		<td><div id="port8" />---</td>
+		<td><input type="button" value="On" onClick="Dio.dio_write(8, false)" /></td>
+		<td><input type="button" value="Off" onClick="Dio.dio_write(8, true)" /></td>
+	</tr>
+</table></td></tr>
+	</table>
+	</form>
+-->
+</body></html>

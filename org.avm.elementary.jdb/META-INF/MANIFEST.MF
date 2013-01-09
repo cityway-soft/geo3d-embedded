@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.avm.elementary.jdb
+Bundle-SymbolicName: org.avm.elementary.jdb
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: mercur.fr
+Import-Package: 
+ org.apache.log4j,
+ org.apache.log4j.spi,
+ org.avm.device.gps,
+ org.avm.device.plateform,
+ org.avm.elementary.common,
+ org.avm.elementary.jdb,
+ org.knopflerfish.service.console,
+ org.osgi.framework,
+ org.osgi.service.cm,
+ org.osgi.service.component,
+ org.osgi.util.measurement,
+ org.osgi.util.position
+Bundle-ClassPath: .
+Service-Component: META-INF/activator.xml

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.angolight.hmi.swt.leds.LedsDevice" immediate="true">
+	<implementation class="org.angolight.hmi.swt.leds.bundle.Activator"/>
+	<property name="service.pid" value="org.angolight.device.leds.Leds"/>
+	<service>				
+		<provide interface="org.angolight.device.leds.Leds"/>		
+	</service>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>	
+	<reference name="desktop" interface="org.avm.hmi.swt.desktop.Desktop"/>
+	
+</component>

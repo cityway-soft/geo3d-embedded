@@ -1,0 +1,61 @@
+// State Machine
+// WiFi
+//
+// Machine a etats du module WiFi
+//  
+//
+
+%start OutWifiZoneMap::Disconnected
+%package org.avm.elementary.wifi
+%class WifiManagerStateMachine
+
+//------------------ MAP Hors Zone Wifi ---------------------
+%map OutWifiZoneMap
+%%
+// State		Transition		End State		Action(s)
+Disconnected
+Entry{ }
+Exit { }
+{
+// 		Trans 					Next State 					Actions
+								
+}
+
+Default
+{
+// 		Trans 				Next State 					 Actions
+	   	entryWifiZone		InWifiZoneMap::Disconnected	 {startWifi();}
+	   	exitWifiZone 		nil							 {}
+}
+%%
+
+
+//------------------ MAP En Zone Wifi---------------------
+%map InWifiZoneMap
+%%
+// State		Transition		End State		Action(s)
+Disconnected
+Entry{ }
+Exit { }
+{
+// 		Trans 			Next State 				Actions
+		connect			Connected				{}	
+
+}
+
+Connected
+Entry{ }
+Exit { }
+{
+// 		Trans 					Next State 					Actions
+		disconnect			Connected				{}	
+}
+
+Default
+{
+// 		Trans 				Next State 					 Actions
+	   	entryWifiZone		nil							 {}
+	   	exitWifiZone 		OutWifiZoneMap::Disconnected {stopWifi();}
+}
+%%
+

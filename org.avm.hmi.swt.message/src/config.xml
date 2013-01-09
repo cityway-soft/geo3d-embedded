@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.hmi.swt.message.MessageIhm" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.hmi.swt.message.MessageIhm</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">initial@reference:file:../../../home/didier/Projets/geolia/common/dev/workspace/avmrefactor/org.avm.hmi.swt.message/</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">1</value>
+</property>
+<property name="messages">
+<value type="String">#Thu Jun 02 11:03:26 CEST 2011
+Accident=Accident 
+FRDR=Fraudeur a bord
+Controleur=Demande Controleurs
+Pluie=Pluie
+Verglas=Verglas sur la route
+</value>
+</property>
+<property name="config.date">
+<value type="String">Mon May 23 21:28:59 CEST 2011</value>
+</property>
+</configuration>
+</cm_data>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="javadoc">
+<target name="javadoc">
+<javadoc access="public" author="true" classpath="../org.avm.elementary.concurrent/bin:../console/bin:/opt/eclipse/plugins/org.eclipse.osgi_3.2.0.v20060426.jar:../org.avm.device.io/bin:/opt/eclipse/plugins/org.elver.store.libraries_1.0.0/commons-logging.jar:../org.avm.elementary.concurrent/lib/concurrent.jar:/opt/eclipse/plugins/org.eclipse.osgi.services_3.1.100.v20060426.jar:/opt/eclipse/plugins/org.elver.store.libraries_1.0.0/log4j-1.2.13.jar:../org.avm.elementary.log4j/bin:../org.avm.elementary.common/bin:../jni_comvs/bin" destdir="doc" doctitle="FM6000 device" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="org.avm.device.io.fm6000" source="1.3" sourcepath="src" splitindex="true" use="true" version="true"/>
+</target>
+</project>

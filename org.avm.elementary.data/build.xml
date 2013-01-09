@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.avm.elementary.data" default="build" basedir=".">
+	<tstamp>
+		<format property="now" pattern="yyyyMMddHHmmss" />
+	</tstamp>
+	<property file="${build.properties}" />
+	<property name="bundle.jar" value="${bundle.name}.jar" />
+	<property name="build.dir" value="build" />	
+	<property name="ressouces.file" value="ressouces.properties" />
+	<property name="pattern.version" value="yyyyMMddHHmmss" />
+	<property name="pattern.date" value="yyyy-MM-dd" />
+
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+		<mkdir dir="${build.dir}"/>
+	</target>
+
+	<target name="resource" description="Creation du fichier de ressouces" >
+		<propertyfile file="${build.dir}/${resource.file}">
+			<entry key="service.pid" value="${bundle.name}" />
+			<entry key="vdr.nom" value="${vdr.nom}" />
+			<entry key="vdr.id" value="${vdr.id}" />
+			<entry key="vdr.date.exp" type="date" value="now" pattern="${pattern.version}" />
+			<entry key="jex.date.deb" type="date" value="${jex.date.deb}" pattern="${pattern.date}" />
+			<entry key="jex.date.fin" type="date" value="${jex.date.fin}" pattern="${pattern.date}" />
+			<!-- <entry key="url.connection" value="http://localhost/data.jar" /> -->
+		</propertyfile>
+	</target>
+
+	<target name="compress" description="Compression du repertoire de donnee">
+		<zip destfile="${build.dir}/data.jar" basedir="${data.dir}" filesonly="false" whenempty="skip" update="false" />
+	</target>
+
+
+	<target name="build" depends="clean, resource, compress" description="Creation du bundle data">
+		<jar destfile="${dist.dir}/${bundle.jar}" basedir="${build.dir}">
+			<manifest>
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Bundle-Name" value="${bundle.name}" />
+				<attribute name="Bundle-SymbolicName" value="${bundle.name}" />
+				<attribute name="Bundle-Version" value="1.0.0.${now}" />
+				<attribute name="Bundle-Vendor" value="mercur.fr" />
+				<attribute name="Bundle-ClassPath" value="." />
+				<attribute name="Import-Package" value="org.apache.log4j,
+					org.avm.elementary.common, 
+					org.osgi.framework" />
+				<attribute name="Export-Package" value="org.avm.elementary.data" />
+				<attribute name="Bundle-Activator" value="org.avm.elementary.common.AbstractDataDeployer" />				
+			</manifest>
+		</jar>
+	</target>
+</project>

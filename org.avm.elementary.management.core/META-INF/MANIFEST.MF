@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Management Core
+Bundle-SymbolicName: org.avm.elementary.management.core
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: .
+Service-Component: META-INF/activator.xml
+Export-Package: org.avm.elementary.management.core
+Import-Package: org.osgi.framework,
+ org.osgi.service.packageadmin,
+ org.osgi.service.startlevel;version="1.0.0"
+Bundle-Activator: org.avm.elementary.management.core.bundle.Activator

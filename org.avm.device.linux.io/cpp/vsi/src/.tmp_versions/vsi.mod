@@ -1,0 +1,2 @@
+/root/affaires/geolia/avm/device/linux/org.avm.device.linux.io/cpp/vsi/src/vsi.ko
+/root/affaires/geolia/avm/device/linux/org.avm.device.linux.io/cpp/vsi/src/main.o /root/affaires/geolia/avm/device/linux/org.avm.device.linux.io/cpp/vsi/src/din.o /root/affaires/geolia/avm/device/linux/org.avm.device.linux.io/cpp/vsi/src/dout.o /root/affaires/geolia/avm/device/linux/org.avm.device.linux.io/cpp/vsi/src/counter.o /root/affaires/geolia/avm/device/linux/org.avm.device.linux.io/cpp/vsi/src/reset.o

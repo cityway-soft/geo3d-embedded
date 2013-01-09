@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.business.girouette.ClientGirouette" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.business.girouette.ClientGirouette</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">initial@reference:file:../../home/didier/projets/geolia/common/dev/workspace/avm-v1-ENCOURS/org.avm.business
+.girouette/</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">2</value>
+</property>
+<property name="codes">
+<value type="String">#Tue Nov 27 14:07:22 CET 2007
+en-panne=5000
+hors-service=5000
+hlp=5002
+hors-course=5000
+complet=2000</value>
+</property>
+<property name="org.avm.elementary.dummy.property">
+<value type="String">Thu Nov 22 14:36:41 CET 2007</value>
+</property>
+</configuration>
+</cm_data>

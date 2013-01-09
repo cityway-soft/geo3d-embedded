@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.fm6000.player.mp3.Player" immediate="true">
+	<implementation class="org.avm.device.fm6000.player.mp3.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.device.fm6000.player.mp3.Player"/>
+	<service>
+		<provide interface="org.avm.device.player.Player" />
+	</service>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>		
+</component>

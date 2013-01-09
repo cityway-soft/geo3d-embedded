@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="update" default="all" basedir=".">
+
+	<target name="init">
+		<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+			<classpath>
+				<pathelement location="${ant.home}/lib/ant-contrib-1.0b3.jar" />
+			</classpath>
+		</taskdef>
+	</target>
+
+	<target name="all" depends="init">
+		<property name="in" value="build.xml" />
+		<property name="out" value="tmp.xml" />
+		<xslt style="update.xsl" in="${in}" destdir="." out="${out}">
+			<outputproperty name="method" value="xml" />
+			<outputproperty name="standalone" value="yes" />
+			<outputproperty name="indent" value="yes" />
+		</xslt>
+		<move file="${out}" tofile="${in}" />
+	</target>
+
+</project>
+

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.elementary.rsync.RSync" immediate="true">
+	<implementation class="org.avm.elementary.rsync.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.elementary.rsync.RSync"/>
+	<service>				
+		<provide interface="org.avm.elementary.rsync.RSync"/>		
+	</service>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>		
+</component>

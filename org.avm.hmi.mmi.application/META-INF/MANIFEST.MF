@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.avm.hmi.mmi.application
+Bundle-SymbolicName: org.avm.hmi.mmi.application
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: .
+Import-Package: EDU.oswego.cs.dl.util.concurrent,
+ org.apache.log4j,
+ org.avm.device.knet.mmi,
+ org.avm.elementary.management.core,
+ org.osgi.framework;version="1.3.0",
+ org.osgi.service.startlevel;version="1.0.0",
+ org.osgi.util.tracker;version="1.3.1"
+Bundle-Vendor: mercur.fr
+Bundle-Activator: org.avm.hmi.mmi.application.bundle.Activator
+Export-Package: org.avm.hmi.mmi.application.actions,
+ org.avm.hmi.mmi.application.display,
+ org.avm.hmi.mmi.application.screens
+

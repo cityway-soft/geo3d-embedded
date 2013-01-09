@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<binding>
+	<mapping name="message"
+		class="org.avm.business.protocol.phoebus.Message"
+		value-style="attribute"
+		abstract="true">
+		<structure name="entete" field="_entete">
+			<value name="protocole" field="_protocole" />
+			<value name="type" field="_type" />
+			<value name="version" field="_version" />
+			<structure name="source" field="_source" label="identite">
+				<value name="type" field="_type" />
+				<value name="id" field="_id" />
+				<value name="exploitant" field="_exploitant" />
+			</structure>
+			<structure name="destination" field="_destination"
+				using="identite" />
+			<value name="id" field="_id" />
+			<structure name="champs" field="_champs">
+				<value name="date" field="_date" />
+				<value name="position" field="_position" />
+				<value name="service" field="_service" />
+				<value name="reference" field="_reference" />
+				<value name="progression" field="_progression" />
+				<value name="programmation" field="_programmation" />
+				<value name="anomalie" field="_anomalie" />
+				<value name="options" field="_options" />
+			</structure>
+			<structure name="horodate" field="_date" label="horodate"
+				usage="optional">
+				<value name="annee" field="_annee" />
+				<value name="mois" field="_mois" />
+				<value name="jour" field="_jour" />
+				<value name="heure" field="_heure" />
+				<value name="minute" field="_minute" />
+				<value name="seconde" field="_seconde" />
+			</structure>
+			<structure name="position" field="_position"
+				usage="optional">
+				<value name="longitude" field="_longitude" />
+				<value name="latitude" field="_latitude" />
+				<value name="vitesse" field="_vitesse" />
+				<value name="cap" field="_cap" />
+			</structure>
+			<structure name="service" field="_service"
+				usage="optional">
+				<value name="conducteur" field="_conducteur" />
+				<value name="service-agent" field="_serviceAgent" />
+				<value name="service-vehicule" field="_serviceVehicule" />
+				<value name="course" field="_course" />
+			</structure>
+			<structure name="reference" field="_reference"
+				usage="optional">
+				<value name="id" field="_id" />
+				<value name="acquittement" field="_acquittement" />
+				<value name="annulation" field="_annulation" />
+			</structure>
+			<structure name="progression" field="_progression"
+				usage="optional">
+				<value name="retard" field="_avanceRetard" />
+				<value name="idu-dernier-arret"
+					field="_iduDernierArret" />
+				<value name="rang-dernier-arret"
+					field="_rangDernierArret" />
+				<value name="progression" field="_progression" />
+				<value name="deviation" field="_deviation" />
+			</structure>
+			<structure name="programmation" field="_programmation"
+				usage="optional">
+				<structure name="date-debut" field="_dateDebut"
+					label="date">
+					<value name="annee" field="_annee" />
+					<value name="mois" field="_mois" />
+					<value name="jour" field="_jour" />
+				</structure>
+				<structure name="date-fin" field="_dateFin"
+					using="date" />
+				<value name="lun" field="_lun" />
+				<value name="mar" field="_mar" />
+				<value name="mer" field="_mer" />
+				<value name="jeu" field="_jeu" />
+				<value name="ven" field="_ven" />
+				<value name="sam" field="_sam" />
+				<value name="dim" field="_dim" />
+				<structure name="heure-debut" field="_heureDebut"
+					label="heure">
+					<value name="heure" field="_heure" />
+					<value name="minute" field="_minute" />
+					<value name="seconde" field="_seconde" />
+				</structure>
+				<structure name="heure-fin" field="_heureFin"
+					using="heure" />
+				<value name="periode" field="_periode" />
+			</structure>
+			<structure name="anomalie" field="_anomalie"
+				usage="optional">
+				<value name="alarme-0" field="_alarme_0" />
+				<value name="alarme-1" field="_alarme_1" />
+				<value name="alarme-2" field="_alarme_2" />
+				<value name="alarme-3" field="_alarme_3" />
+				<value name="alarme-4" field="_alarme_4" />
+				<value name="alarme-5" field="_alarme_5" />
+				<value name="alarme-6" field="_alarme_6" />
+				<value name="alarme-7" field="_alarme_7" />
+				<value name="alarme-8" field="_alarme_8" />
+				<value name="alarme-9" field="_alarme_9" />
+				<value name="alarme-10" field="_alarme_10" />
+				<value name="alarme-11" field="_alarme_11" />
+				<value name="alarme-12" field="_alarme_12" />
+				<value name="alarme-13" field="_alarme_13" />
+				<value name="alarme-14" field="_alarme_14" />
+				<value name="alarme-15" field="_alarme_15" />
+				<value name="alarme-16" field="_alarme_16" />
+				<value name="alarme-17" field="_alarme_17" />
+				<value name="alarme-18" field="_alarme_18" />
+				<value name="alarme-19" field="_alarme_19" />
+				<value name="alarme-20" field="_alarme_20" />
+				<value name="alarme-21" field="_alarme_21" />
+				<value name="alarme-22" field="_alarme_22" />
+				<value name="alarme-23" field="_alarme_23" />
+				<value name="alarme-24" field="_alarme_24" />
+				<value name="alarme-25" field="_alarme_25" />
+				<value name="alarme-26" field="_alarme_26" />
+				<value name="alarme-27" field="_alarme_27" />
+				<value name="alarme-28" field="_alarme_28" />
+				<value name="alarme-29" field="_alarme_29" />
+				<value name="alarme-30" field="_alarme_30" />
+				<value name="alarme-31" field="_alarme_31" />
+			</structure>
+			<structure name="options" field="_options"
+				usage="optional">
+				<value name="priorite" field="_priorite" />
+				<value name="acquittement" field="_acquittement" />
+			</structure>
+		</structure>
+	</mapping>
+</binding>

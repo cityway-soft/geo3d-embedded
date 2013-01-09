@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.avm.device.fm6000.io
+Bundle-SymbolicName: org.avm.device.fm6000.io
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: mercur.fr
+Import-Package: org.apache.log4j,
+ org.avm.device.io,
+ org.avm.elementary.common,
+ org.osgi.framework,
+ org.osgi.service.component,
+ org.osgi.service.device,
+ org.osgi.util.tracker
+Bundle-ClassPath: .
+Service-Component: META-INF/io.xml,
+ META-INF/digitalinput.xml,
+ META-INF/digitaloutput.xml,
+ META-INF/analoginput.xml
+Bundle-NativeCode: lib/comvs_io.dll ;osname = WindowsCE; processor = ARM
+
+

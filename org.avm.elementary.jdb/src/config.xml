@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.elementary.jdb.JDB" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.elementary.jdb.JDB</value>
+</property>
+<property name="filename">
+<value type="String">{0}/data/upload/jdb.gz</value>
+</property>
+<property name="pattern">
+<value type="String">.E</value>
+</property>
+<property name="size">
+<value type="Integer">16384</value>
+</property>
+</configuration>
+</cm_data>

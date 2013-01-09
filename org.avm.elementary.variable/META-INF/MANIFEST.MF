@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.avm.elementary.variable
+Bundle-SymbolicName: org.avm.elementary.variable
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: mercur.fr
+Import-Package: org.apache.log4j,
+ org.avm.device.io,
+ org.avm.elementary.common,
+ org.knopflerfish.service.console,
+ org.osgi.framework,
+ org.osgi.service.cm,
+ org.osgi.service.component,
+ org.osgi.service.device,
+ org.osgi.service.wireadmin,
+ org.osgi.util.measurement,
+ org.osgi.util.tracker
+Bundle-ClassPath: .
+Service-Component: META-INF/digital.xml,
+ META-INF/analog.xml,
+ META-INF/counter.xml,
+ META-INF/activator.xml
+Export-Package: org.avm.elementary.variable,
+ org.avm.elementary.variable.bundle
+

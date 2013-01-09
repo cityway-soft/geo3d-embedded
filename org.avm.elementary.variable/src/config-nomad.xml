@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<!--  ATON  -->
+<configuration pid="org.avm.elementary.variable.VariableService" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.elementary.variable.VariableService</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">5</value>
+</property>
+<property name="alarm">
+<value type="String">#Thu Oct 05 22:12:56 CEST 2006
+	org.avm.elementary.variable.device.serial=70da86a2-b068-4027-a8eb-05b0edf6838d
+	org.avm.elementary.variable.type=org.avm.elementary.variable.DigitalVariable
+	org.avm.elementary.variable.device.index=0
+	org.avm.elementary.variable.device.category=org.avm.device.io.DigitalIODevice
+	org.avm.elementary.variable.name=alarm</value>
+</property>
+<property name="porteav">
+<value type="String">#Thu Oct 05 22:12:56 CEST 2006
+	org.avm.elementary.variable.device.serial=70da86a2-b068-4027-a8eb-05b0edf6838d
+	org.avm.elementary.variable.type=org.avm.elementary.variable.DigitalVariable
+	org.avm.elementary.variable.device.index=2
+	org.avm.elementary.variable.device.category=org.avm.device.io.DigitalIODevice
+	org.avm.elementary.variable.name=porteav</value>
+</property>
+<property name="portear">
+<value type="String">#Thu Oct 05 22:12:56 CEST 2006
+	org.avm.elementary.variable.device.serial=70da86a2-b068-4027-a8eb-05b0edf6838d
+	org.avm.elementary.variable.type=org.avm.elementary.variable.DigitalVariable
+	org.avm.elementary.variable.device.index=3
+	org.avm.elementary.variable.device.category=org.avm.device.io.DigitalIODevice
+	org.avm.elementary.variable.name=portear</value>
+</property>
+<property name="odometre">
+<value type="String">#Tue Nov 21 11:52:37 CET 2006
+	org.avm.elementary.variable.device.serial=a1bb7bb5-bde8-4dad-9750-2542e5d67550
+	org.avm.elementary.variable.type=org.avm.elementary.variable.CounterVariable
+	org.avm.elementary.variable.device.index=0
+	org.avm.elementary.variable.device.category=org.avm.device.io.CounterDevice
+	org.avm.elementary.variable.name=odometre</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">ftp://avm:avm++@ftpserver.avm.org/nomad/1/bundles/org.avm.elementary.variable.jar</value>
+</property>
+<property name="cioaudio">
+<value type="String">#Tue May 18 00:00:00 CET 2009
+	org.avm.elementary.variable.device.serial=770a5e01-2637-4cca-9392-bf121e3fdd45
+	org.avm.elementary.variable.type=org.avm.elementary.variable.DigitalVariable
+	org.avm.elementary.variable.device.index=1
+	org.avm.elementary.variable.device.category=org.avm.device.io.DigitalIODevice
+	org.avm.elementary.variable.name=cioaudio</value>
+</property>
+<property name="vioaudio-int">
+<value type="String">#Tue May 18 00:00:00 CET 2009
+	org.avm.elementary.variable.device.serial=770a5e01-2637-4cca-9392-bf121e3fdd45
+	org.avm.elementary.variable.type=org.avm.elementary.variable.DigitalVariable
+	org.avm.elementary.variable.device.index=0
+	org.avm.elementary.variable.device.category=org.avm.device.io.DigitalIODevice
+	org.avm.elementary.variable.name=vioaudio-int</value>
+</property>
+<property name="vioaudio-ext">
+<value type="String">#Tue May 18 00:00:00 CET 2009
+	org.avm.elementary.variable.device.serial=45ed08d9-9ed4-4c4f-867d-03364ac2fe69
+	org.avm.elementary.variable.type=org.avm.elementary.variable.DigitalVariable
+	org.avm.elementary.variable.device.index=2
+	org.avm.elementary.variable.device.category=org.avm.device.io.DigitalIODevice
+	org.avm.elementary.variable.name=vioaudio-ext</value>
+</property>
+<property name="config.date">
+<value type="String">Mon May 18 17:13:00 GMT 2009</value>
+</property>
+</configuration>
+</cm_data>

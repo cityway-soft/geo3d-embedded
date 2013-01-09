@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<project name="sae" default="all" basedir=".">
+
+	<property name="project.dir" value="/root/affaires/avm/org.avm.elementary.media.jms"/>
+	<property name="build.dir" value="build"/>
+	<property name="autojar.jar" value="/opt/autojar-1.2.2/autojar-jdk-1.3.1.jar"/>
+	
+	<target name="clean">
+		<delete dir="${build.dir}" />
+	</target>
+
+	<target name="init" depends="clean">
+		<mkdir dir="${build.dir}" />
+	</target>
+
+	<target name="autojar">
+		<java jar="${autojar.jar}" fork="true">
+			<arg value="-vc" />
+			<arg value="${project.dir}/@dot:lib/*.jar" />
+			<arg value="-o" />
+			<arg value="build/tmp.jar" />
+			<arg value="sae.bundle.messenger.MessengerImpl.class" />
+			<arg value="org.jboss.mq.il.uil2.UILServerILFactory.class" />
+			<arg value="org.jboss.mq.il.uil2.UILClientILService.class" />
+			<arg value="org.jboss.mq.SpyConnectionFactory.class" />
+			<arg value="org.jboss.mq.selectors.SelectorParser.class" />
+			<arg value="org.jboss.logging.Log4jLoggerPlugin.class" />
+		</java>
+	</target>
+
+	<target name="build" depends="init,autojar">
+		<unjar src="build/tmp.jar" dest="${build.dir}" />
+		<delete file="${build.dir}/tmp.jar" />
+		<jar basedir="${build.dir}" destfile="lib/jboss-messenger.jar" excludes="org/avm/**" />
+		<echo>!!!!!!!!!!!!!!! build JDK 1.3.1 (XAException)</echo>
+	</target>
+
+	<target name="all" depends="build" />
+</project>

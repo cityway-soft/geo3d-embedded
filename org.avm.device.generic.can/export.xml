@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="export" default="all">
+
+	<property file="export.properties" />
+
+	<path id="classpath">
+		<pathelement location="." />
+		<fileset dir="lib">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="init">
+		<!-- Initialise task -->
+		<taskdef classpathref="classpath" name="export" classname="org.avm.business.exporter.database.ant.TableExporterTask" />
+		<typedef classpathref="classpath" name="src" classname="org.avm.business.exporter.database.ant.TableExporterTask$SourceDB" />
+		<typedef classpathref="classpath" name="dest" classname="org.avm.business.exporter.database.ant.TableExporterTask$DestinationDB" />
+		<typedef classpathref="classpath" name="exportentry" classname="org.avm.business.exporter.database.ant.TableExporterTask$ExportEntry" />
+
+		<taskdef classpathref="classpath" name="db2cvs" classname="org.avm.business.exporter.geofencing.ant.DB2CSVTask" />
+		<typedef classpathref="classpath" name="database" classname="org.avm.business.exporter.geofencing.ant.DB2CSVTask$Database" />
+		<taskdef classpathref="classpath" name="spacialindex" classname="org.avm.business.exporter.geofencing.ant.SpacialIndexTask" />
+
+		<!-- Load driver database -->
+		<sql driver="${driver}" url="${url}" userid="${user}" password="${passwd}" classpathref="classpath" onerror="stop">
+			<transaction src="${sql.test}" />
+		</sql>
+	</target>
+
+	<target name="database" description="create database bundle data">
+
+		<!-- drop hsql database -->
+		<delete failonerror="false">
+			<fileset dir="${src_path}/${hsql.dbname}" includes="${hsql.dbname}.*" />
+		</delete>
+
+		<!-- create empty hsql database -->
+		<sql classpathref="classpath" driver="${hsql.driver}" userid="${hsql.user}" password="${hsql.passwd}" url="jdbc:hsqldb:file:${src_path}/${hsql.dbname}/${hsql.dbname};${hsql.param}">
+			<transaction src="${sql.create}" />
+			<transaction>shutdown compact</transaction>
+		</sql>
+
+		<!-- export database -->
+		<export classpathref="classpath">
+			<sourceDB driver="${driver}" url="${url}" userid="${user}" password="${passwd}" />
+			<destinationDB driver="${hsql.driver}" url="jdbc:hsqldb:file:${src_path}/${hsql.dbname}/${hsql.dbname};hsqldb.default_table_type=cached" userid="${hsql.user}" password="${hsql.passwd}" closeStatement="shutdown compact" />
+			<exportentry srcTable="EXPLOITANT" filtre="EXP_ID=${exp_id}" dstTable="EXPLOITANT" />
+			<exportentry srcTable="JOUR_EXPLOITATION" filtre="JEX_DATE >= (SELECT JEX_DATE_DEB FROM VERSION_RESEAU WHERE VDR_ID=${vdr_id})" dstTable="JOUR_EXPLOITATION" />
+			<exportentry srcTable="VERSION_RESEAU" filtre="VDR_ID=${vdr_id}" dstTable="VERSION_RESEAU" />
+			<exportentry srcTable="GROUPE_POINT" filtre="VDR_ID=${vdr_id} and EXP_ID=${exp_id}" dstTable="GROUPE_POINT" />
+			<exportentry srcTable="POINT" filtre="VDR_ID=${vdr_id} and EXP_ID=${exp_id}" dstTable="POINT" />
+			<exportentry srcTable="ATTRIBUT" filtre="ATT_ID IN (SELECT ATT_ID FROM ATTRIBUT_POINT ADP JOIN POINT PNT ON ADP.PNT_ID=PNT.PNT_ID WHERE PNT.EXP_ID=${exp_id} AND PNT.VDR_ID=${vdr_id})" dstTable="ATTRIBUT" />
+			<exportentry srcTable="ATTRIBUT_POINT" filtre="PNT_ID IN (SELECT PNT_ID FROM POINT PNT WHERE PNT.EXP_ID=${exp_id} AND PNT.VDR_ID=${vdr_id})" dstTable="ATTRIBUT_POINT" />
+			<exportentry srcTable="LIGNE" filtre="VDR_ID=${vdr_id} and EXP_ID=${exp_id}" dstTable="LIGNE" />
+			<exportentry srcTable="GROUPE_SUR_LIGNE" filtre="LGN_ID IN (SELECT LGN_ID FROM LIGNE WHERE VDR_ID=${vdr_id} and EXP_ID=${exp_id})" dstTable="GROUPE_SUR_LIGNE" />
+			<exportentry srcTable="ITINERAIRE" filtre="VDR_ID=${vdr_id} and EXP_ID=${exp_id}" dstTable="ITINERAIRE" />
+			<exportentry srcTable="POINT_SUR_ITINERAIRE" filtre="ITI_ID IN (SELECT ITI_ID FROM ITINERAIRE WHERE VDR_ID=${vdr_id} and EXP_ID=${exp_id})" dstTable="POINT_SUR_ITINERAIRE" />
+			<exportentry srcTable="PARCOURS" filtre="VDR_ID=${vdr_id} and EXP_ID=${exp_id}" dstTable="PARCOURS" />
+			<exportentry srcTable="POINT_SUR_PARCOURS" filtre="PCR_ID IN (SELECT PCR_ID FROM PARCOURS WHERE VDR_ID=${vdr_id} and EXP_ID=${exp_id})" dstTable="POINT_SUR_PARCOURS" />
+			<exportentry srcTable="VOITURE_CONTINUE" filtre="VDR_ID=${vdr_id} and EXP_ID=${exp_id}" dstTable="VOITURE_CONTINUE" />
+			<exportentry srcTable="SERVICE_AGENT" filtre="VDR_ID=${vdr_id} and EXP_ID=${exp_id}" dstTable="SERVICE_AGENT" />
+			<exportentry srcTable="COURSE" filtre="VDR_ID=${vdr_id} and EXP_ID=${exp_id}" dstTable="COURSE" />
+			<exportentry srcTable="HORAIRE" filtre="CRS_ID IN (SELECT CRS_ID FROM COURSE WHERE VDR_ID=${vdr_id} and EXP_ID=${exp_id})" dstTable="HORAIRE" />
+			<exportentry srcTable="PROPRIETES_DE_JOUR" filtre="PDJ_ID IN (SELECT PDJ_ID FROM VALIDITE_COURSE VCR JOIN COURSE CRS ON VCR.CRS_ID=CRS.CRS_ID WHERE VDR_ID=${vdr_id} and EXP_ID=${exp_id})" dstTable="PROPRIETES_DE_JOUR" />
+			<exportentry srcTable="VALIDITE_COURSE" filtre="CRS_ID IN (SELECT CRS_ID FROM COURSE WHERE VDR_ID=${vdr_id} and EXP_ID=${exp_id})" dstTable="VALIDITE_COURSE" />
+			<exportentry srcTable="AGENT" filtre="VDR_ID=${vdr_id} and EXP_ID=${exp_id}" dstTable="AGENT" />
+			<exportentry srcTable="EQUIPEMENT" filtre="VDR_ID=${vdr_id} and EXP_ID=${exp_id}" dstTable="EQUIPEMENT" />
+			<!--
+	        <exportentry srcTable="CARACTERISTIQUE" filtre="CAR_ID IN (SELECT CAR_ID FROM CARACTERISTIQUE_EQUIPEMENT CDE JOIN EQUIPEMENT EQU ON CDE.EQU_ID=EQU.EQU_ID WHERE VDR_ID=${vdr_id} and EXP_ID=${exp_id})" dstTable="CARACTERISTIQUE"/>
+	        <exportentry srcTable="EQUIPEMENT_CARACTERISTIQUE" filtre="EQU_ID IN (SELECT EQU_ID FROM EQUIPEMENT WHERE VDR_ID=${vdr_id} and EXP_ID=${exp_id})" dstTable="EQUIPEMENT_CARACTERISTIQUE"/>
+			-->
+		</export>
+
+		<propertyfile file="${src_path}/${hsql.dbname}/${hsql.dbname}.properties">
+					<entry key="readonly" value="true" />
+		</propertyfile>
+		
+		<antcall target="bundle">
+			<param name="bundle.name" value="org.avm.elementary.database.data" />
+			<param name="data.dir" value="${src_path}/${hsql.dbname}" />
+			<param name="dist.dir" value="${dest_path}" />		
+		</antcall>
+
+	</target>
+
+	<target name="geofencing" description="create geofencing bundle data">
+
+		<!-- export spatial index data -->
+		<delete file="${src_path}/export.csv" failonerror="false" />
+		<db2cvs VDR_ID="${vdr_id}" EXP_ID="${exp_id}" CSVFileName="${src_path}/export.rtree" classpathref="classpath">
+			<database driver="${driver}" url="${url}" userid="${user}" password="${passwd}" />
+		</db2cvs>
+
+		<!-- create spatial index -->
+		<delete dir="${src_path}/rtree" failonerror="false" />
+		<mkdir dir="${src_path}/rtree" />
+		<spacialindex destfile="${src_path}/rtree/rtree">
+			<fileset dir="${src_path}">
+				<include name="**/*.rtree" />
+			</fileset>
+		</spacialindex>
+
+		<antcall target="bundle">
+			<param name="bundle.name" value="org.avm.elementary.geofencing.data" />
+			<param name="data.dir" value="${src_path}/rtree" />
+			<param name="dist.dir" value="${dest_path}" />		
+		</antcall>
+	</target>
+
+	<target name="girouette" description="create girouette bundle data">
+		<mkdir dir="${src_path}/girouette"/>
+		<antcall target="bundle">
+			<param name="bundle.name" value="org.avm.business.ihm.voyageur.girouette.data" />
+			<param name="data.dir" value="${src_path}/girouette" />
+			<param name="dist.dir" value="${dest_path}" />
+		</antcall>
+	</target>
+
+
+	<target name="all" depends="init, girouette, database, geofencing" />
+
+	<target name="bundle">
+
+		<tstamp>
+			<format property="now" pattern="yyyyMMddHHmmss" />
+		</tstamp>
+		<property name="bundle.jar" value="${bundle.name}.jar" />
+		<property name="build.dir" value="${src_path}/build" />
+		<property name="ressouces.file" value="ressouces.properties" />		
+		
+
+		<!-- clean build dir -->
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}" />
+
+		<!-- create ressource -->
+		<propertyfile file="${build.dir}/${ressouces.file}">
+			<entry key="service.pid" value="${bundle.name}" />
+			<entry key="vdr.nom" value="${vdr_nom}" />
+			<entry key="vdr.date.exp" value="${now}" />
+			<entry key="jex.date.deb" value="${jex.date.deb}" />
+			<entry key="jex.date.fin" value="${jex.date.fin}" />
+			<!-- <entry key="url.connection" value="http://localhost/data.jar" /> -->
+		</propertyfile>
+
+		<!-- compress data -->
+		<zip destfile="${build.dir}/data.jar" basedir="${data.dir}" filesonly="false" whenempty="skip" update="false" />
+
+		<!-- create bundle data -->
+		<jar destfile="${dist.dir}/${bundle.jar}" basedir="${build.dir}">
+			<manifest>
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Bundle-Name" value="${bundle.name}" />
+				<attribute name="Bundle-SymbolicName" value="${bundle.name}" />
+				<attribute name="Bundle-Version" value="1.0.0.${now}" />
+				<attribute name="Bundle-Vendor" value="mercur.fr" />
+				<attribute name="Bundle-ClassPath" value="." />
+				<attribute name="Import-Package" value="org.apache.log4j,
+								org.avm.elementary.common, 
+								org.osgi.framework" />
+				<attribute name="Export-Package" value="org.avm.elementary.data" />
+				<attribute name="Bundle-Activator" value="org.avm.elementary.common.AbstractDataDeployer" />
+			</manifest>
+		</jar>
+	</target>
+
+</project>

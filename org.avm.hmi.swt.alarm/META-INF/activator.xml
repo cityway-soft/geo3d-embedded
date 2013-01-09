@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.hmi.swt.alarm.AlarmIhm" immediate="true">
+	<implementation	class="org.avm.hmi.swt.alarm.bundle.Activator" />
+	<property name="service.pid" value="org.avm.hmi.swt.alarm.AlarmIhm" />
+	<service>						
+		<provide interface="org.avm.elementary.alarm.AlarmProvider"/>	
+	</service>
+	<reference name="avm" interface="org.avm.business.core.Avm" cardinality="0..1" policy="dynamic" />
+	<reference name="desktop" interface="org.avm.hmi.swt.desktop.Desktop" />
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin" />
+	<reference name="wireadmin"	interface="org.osgi.service.wireadmin.WireAdmin" />
+	<reference name="usersession"	interface="org.avm.elementary.useradmin.UserSessionService" 
+		cardinality="0..1" policy="dynamic" bind="setUserSessionService" unbind="unsetUserSessionService" />
+	
+</component>

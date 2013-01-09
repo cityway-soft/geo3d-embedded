@@ -1,0 +1,110 @@
+.ligne1,
+.ligne2,
+.ligne3,
+.ligne4,
+.ligne5,
+.ligne6,
+.ligne7,
+.ligne8,
+.ligne9,
+.stop-empty,
+.stop-arrived,
+.stop-next{
+   fill-rule:evenodd;
+   stroke:#000000;
+   stroke-width:8px;
+   stroke-linecap:butt;
+   stroke-linejoin:miter;
+   stroke-opacity:1;
+}
+
+.ligne1{
+   fill-opacity:1;
+   fill : #a80016;
+}
+
+.ligne2{
+   fill-opacity:1;
+   fill : #361a71;
+}
+.ligne3{
+   fill-opacity:1;
+   fill : #66c530;
+}
+.ligne4{
+   fill-opacity:1;
+   fill : #f67c13;
+}
+
+.ligne5{
+   fill-opacity:1;
+   fill : #99acd1;
+}
+
+.ligne6{
+   fill-opacity:1;
+   fill : #c4853c;
+}
+.ligne8{
+   fill-opacity:1;
+   fill : #059b4d;
+}
+.ligne10{
+   fill-opacity:1;
+   fill: #be175b;
+}
+.ligne11{
+   fill-opacity:1;
+   fill: #da251c;
+}
+.ligne12{
+   fill-opacity:1;
+   fill : #8f2927;
+}
+.ligne13{
+   fill-opacity:1;
+   fill : #e4664f;
+}
+
+.ligne14{
+   fill-opacity:1;
+   fill : #fcc707;
+}
+
+.ligne16{
+   fill-opacity:1;
+   fill : #8d188f;
+}
+
+.ligne101{
+   fill-opacity:1;
+   fill : #4cc6f4;
+}
+
+.ligne102{
+   fill-opacity:1;
+   fill : #2f95da;
+}
+
+.ligne104{
+   fill-opacity:1;
+   fill : #fff200;
+}
+
+
+
+.stop-next{
+	fill: white;
+  	fill-opacity:0.40;
+}
+
+
+.stop-empty{
+ 	fill: #FFFFFF;
+ 	fill-opacity:1;
+}
+
+.stop-arrived{
+ 	fill: #00FF00;
+ 	fill-opacity:1;
+}

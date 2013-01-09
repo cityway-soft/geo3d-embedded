@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.device.knet.bearerManager.BearerManager" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.device.knet.bearerManager.BearerManager</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">ftp://ftp:ftp++@avm/default/org.avm.device.knet.bearerManager.jar</value>
+</property>
+<property name="STATUS_ID">
+<value type="String">disconnected</value>
+</property>
+<property name="BEARER_ID">
+<value type="String"></value>
+</property>
+</configuration>
+</cm_data>
+

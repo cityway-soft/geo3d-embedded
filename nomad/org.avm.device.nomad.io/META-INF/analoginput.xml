@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.nomad.io.AnalogInputDriver" immediate="true">
+	<implementation class="org.avm.device.nomad.io.AnalogInputDriver"/>
+	<property name="service.pid" value="org.avm.device.nomad.io.AnalogInputDriver"/>
+	<property name="DRIVER_ID" value="org.avm.device.nomad.io.AnalogInputDriver"/>
+	<service>				
+		<provide interface="org.osgi.service.device.Driver"/>
+	</service>	
+</component>

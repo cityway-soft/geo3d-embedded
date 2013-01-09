@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.can.CanManager" immediate="true">
+	<implementation class="org.avm.device.generic.can.manager.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.device.can.CanManager"/>
+	<service>				
+		<provide interface="org.avm.device.can.CanManager"/>
+	</service>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+	<reference name="factory" interface="org.osgi.service.component.ComponentFactory" target="(component.factory=org.avm.device.generic.can.bundle.Activator)"/>
+</component>

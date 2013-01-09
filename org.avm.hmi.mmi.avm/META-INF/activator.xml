@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.hmi.mmi.avm.AvmMmi" immediate="true">
+	<implementation class="org.avm.hmi.mmi.avm.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.hmi.mmi.avm.AvmMmi"/>
+	<service>						
+		<provide interface="org.avm.hmi.mmi.avm.AvmMmi"/>	
+		<provide interface="org.avm.elementary.useradmin.session.UserSessionListener" />	
+	</service>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>	
+
+	<reference name="base" interface="org.avm.hmi.mmi.application.display.AVMDisplay"/>
+	<reference name="avmcore" interface="org.avm.business.core.Avm"/>
+	<reference 
+		name="beeper" 
+		interface="org.avm.elementary.variable.Variable"
+		target="(org.avm.elementary.variable.name=beeper)"
+		cardinality="0..1" 
+		policy="dynamic" bind="setBeeper" unbind="unsetBeeper"
+	/>
+				   
+</component>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.device.linux.player.mp3.Player" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.device.linux.player.mp3.Player</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">ftp://avm:avm++@ftpserver.avm.org/aton/default/bundles/org.avm.device.linux.sound.jar</value>
+</property>
+<property name="player">
+<value type="String">mpg123 -o alsa</value>
+</property>
+<property name="config.date">
+<value type="String">Tue Feb 03 14:47:27 GMT 2009</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">0</value>
+</property>
+</configuration>
+</cm_data>

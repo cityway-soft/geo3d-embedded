@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.generic.girouette.hanover.GirouetteDriver" immediate="true">
+	<implementation class="org.avm.device.generic.girouette.hanover.GirouetteDriver"/>
+	<property name="service.pid" value="org.avm.device.girouette.hanover"/>
+	<property name="DRIVER_ID" value="org.avm.device.girouette.hanover"/>
+	<service>				
+		<provide interface="org.osgi.service.device.Driver"/>
+	</service>	
+</component>

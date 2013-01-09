@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.device.can.CanManager" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.device.can.CanManager</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">initial@reference:file:../../geolia/avm/device/generic/org.avm.device.generic.can/</value>
+</property>
+<property name="org.avm.device.generic.can0">
+<value type="String">#Tue Apr 07 12:07:35 CEST 2009
+service.pid=org.avm.device.generic.can0
+protocol.name=org.avm.elementary.can.parser.fms
+</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">1</value>
+</property>
+<property name="config.date">
+<value type="String">Tue Apr 07 11:51:19 CEST 2009</value>
+</property>
+</configuration>
+</cm_data>

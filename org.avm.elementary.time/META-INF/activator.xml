@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.elementary.time.TimeManagerImpl"
+	immediate="true">
+	<implementation class="org.avm.elementary.time.bundle.Activator" />
+	<property name="service.pid" value="org.avm.elementary.time.TimeManagerImpl" />
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin" />
+	<reference name="gps" interface="org.avm.device.gps.Gps"
+		cardinality="0..1" policy="dynamic" bind="setGps" unbind="unsetGps" />
+</component>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.elementary.directory.Directory" immediate="true">
+	<implementation class="org.avm.elementary.directory.bundle.Activator"/>	
+	<property name="service.pid" value="org.avm.elementary.directory.Directory"/>
+	<service>				
+		<provide interface="org.avm.elementary.directory.Directory"/>
+	</service>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>		
+</component>
+

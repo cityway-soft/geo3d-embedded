@@ -1,0 +1,43 @@
+// -*- tab-width: 4; -*-//
+// State Machine
+//	SAE
+//
+// Machine a etats
+// Machine a etats du service de gestion des alertes conducteur
+//
+
+%start EcallMap::NoAlert
+%package org.avm.business.ecall
+%class EcallServiceStateMachine
+
+//------------------ MAP ECALL ---------------------
+%map EcallMap
+%%
+// State		Transition		End State		Action(s)
+NoAlert
+Entry{ entryNoAlert(); }
+Exit {  }
+{
+// 		Trans 					Next State 					Actions
+		startEcall				WaitAck						{}
+}
+
+WaitAck
+Entry{ entryWaitAck(); }
+Exit {  }
+{
+// 		Trans 					Next State 					Actions
+		endEcall 				NoAlert						{}
+		ack(phone: String)		ListenMode					{call(phone);}
+}
+
+ListenMode
+Entry{ entryListenMode(); }
+Exit {  }
+{
+// 		Trans 					Next State 					Actions
+		endEcall				NoAlert						{}
+		ack	(phone: String)		ListenMode					{call(phone);}
+}
+
+%%

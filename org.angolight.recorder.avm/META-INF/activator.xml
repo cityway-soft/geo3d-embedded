@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.angolight.recorder.Recorder" immediate="true">
+	<implementation class="org.angolight.recorder.avm.bundle.Activator"/>
+	<property name="service.pid" value="org.angolight.recorder.Recorder"/>
+	<service>				
+		<provide interface="org.angolight.recorder.Recorder"/>
+	</service>
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>		
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+
+	<reference name="jdb" interface="org.avm.elementary.jdb.JDB"	
+		cardinality="0..1" policy="dynamic" bind="setJdb" unbind="unsetJdb" />	
+
+	<reference name="indicator" interface="org.angolight.indicator.Indicator"
+		cardinality="0..1" policy="dynamic" bind="setIndicator" unbind="unsetIndicator" />	
+	
+</component>

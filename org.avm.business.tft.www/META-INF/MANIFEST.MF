@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.avm.business.tft.www
+Bundle-SymbolicName: org.avm.business.tft.www
+Bundle-Version: 1.0.0.qualifier
+Bundle-Localization: plugin
+Import-Package: org.avm.business.tft.www.bundle,org.osgi.framework,org
+ .osgi.service.http
+Bundle-ClassPath: .
+Bundle-Activator: org.avm.business.tft.www.bundle.Activator

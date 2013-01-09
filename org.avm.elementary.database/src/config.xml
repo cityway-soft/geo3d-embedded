@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.elementary.database.Database" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.elementary.database.Database</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">http://localhost/org.avm.elementary.database_1.0.0.jar</value>
+</property>
+<property name="login">
+<value type="String">sa</value>
+</property>
+<property name="password">
+<value type="String"></value>
+</property>
+<property name="url.connection">
+<value type="String">jdbc:hsqldb:file:{0}/data/database/19700101000000/db</value>
+</property>
+</configuration>
+</cm_data>

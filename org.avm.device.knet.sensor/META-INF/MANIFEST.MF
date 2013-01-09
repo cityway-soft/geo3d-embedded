@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.avm.device.knet.sensor
+Bundle-SymbolicName: org.avm.device.knet.sensor
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: KERLINK &MERCUR
+Bundle-Localization: plugin
+Import-Package: EDU.oswego.cs.dl.util.concurrent,
+ org.apache.log4j,
+ org.avm.device.knet,
+ org.avm.device.knet.model,
+ org.avm.elementary.common,
+ org.knopflerfish.service.console,
+ org.osgi.framework,
+ org.osgi.service.cm,
+ org.osgi.service.component,
+ org.osgi.service.wireadmin
+Bundle-ClassPath: .
+Export-Package: org.avm.device.knet.sensor,
+ org.avm.device.knet.sensor.bundle
+Service-Component: META-INF/activator.xml

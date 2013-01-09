@@ -1,0 +1,34 @@
+;**********************************************
+;Declaration of Native Functions for Java (JNI)
+;**********************************************
+
+EXPORTS
+
+Java_org_avm_device_fm6000_network_jni_COMVS_1NETCONFIGJNI_Comvs_1AddRouteToInterface = JNI_netconfig_addRoute
+Java_org_avm_device_fm6000_network_jni_COMVS_1NETCONFIGJNI_Comvs_1DeleteRouteOfInterface = JNI_netconfig_deleteRoute
+Java_org_avm_device_fm6000_network_jni_COMVS_1NETCONFIGJNI_Comvs_1ModifyRouteOfInterface = JNI_netconfig_modifyRoute
+
+Java_org_avm_device_fm6000_network_jni_COMVS_1NETCONFIGJNI_Comvs_1RenewDHCPLease = JNI_netconfig_renewDHCPLease
+Java_org_avm_device_fm6000_network_jni_COMVS_1NETCONFIGJNI_Comvs_1ReleaseDHCPLease = JNI_netconfig_releaseDHCPLease
+
+Java_org_avm_device_fm6000_network_jni_COMVS_1NETCONFIGJNI_Comvs_1SetDHCPConfiguration = JNI_netconfig_setDHCPConfiguration
+Java_org_avm_device_fm6000_network_jni_COMVS_1NETCONFIGJNI_Comvs_1SetDNSConfiguration = JNI_netconfig_setDNSConfiguration
+Java_org_avm_device_fm6000_network_jni_COMVS_1NETCONFIGJNI_Comvs_1SetWINSConfiguration = JNI_netconfig_setWINSConfiguration
+
+Java_org_avm_device_fm6000_network_jni_COMVS_1NETCONFIGJNI_Comvs_1ReleaseIPAddress = JNI_netconfig_releaseIPAdress
+Java_org_avm_device_fm6000_network_jni_COMVS_1NETCONFIGJNI_Comvs_1RegisterIPAddress = JNI_netconfig_registerIPAdress
+
+Java_org_avm_device_fm6000_network_jni_COMVS_1NETCONFIGJNI_Comvs_1ListInterfaces = JNI_netconfig_listInterface
+
+Java_org_avm_device_fm6000_network_jni_COMVS_1NETCONFIGJNI_Comvs_1ListRoutesOfInterface = JNI_netconfig_listRoutesOfInterface
+Java_org_avm_device_fm6000_network_jni_COMVS_1NETCONFIGJNI_Comvs_1ListRoutes = JNI_netconfig_listRoutes
+	 
+Java_org_avm_device_fm6000_network_jni_COMVS_1NETCONFIGJNI_Comvs_1ListIPAddresses = JNI_netconfig_listIPAdresses
+Java_org_avm_device_fm6000_network_jni_COMVS_1NETCONFIGJNI_Comvs_1ListIP = JNI_netconfig_listIP
+
+
+Java_org_avm_device_fm6000_network_jni_COMVS_1NETCONFIGJNI_Comvs_1SetGlobalProperty = JNI_netconfig_setGlobalProperty
+Java_org_avm_device_fm6000_network_jni_COMVS_1NETCONFIGJNI_Comvs_1GetGlobalProperty = JNI_netconfig_getGlobalProperty
+Java_org_avm_device_fm6000_network_jni_COMVS_1NETCONFIGJNI_Comvs_1SetProperty = JNI_netconfig_setInterfaceProperty
+Java_org_avm_device_fm6000_network_jni_COMVS_1NETCONFIGJNI_Comvs_1GetProperty = JNI_netconfig_getInterfaceProperty
+

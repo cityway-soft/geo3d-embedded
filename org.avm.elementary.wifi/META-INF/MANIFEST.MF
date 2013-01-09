@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.avm.elementary.wifi
+Bundle-SymbolicName: org.avm.elementary.wifi
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: mercur.fr
+Import-Package: org.apache.log4j,
+ org.avm.device.wifi,
+ org.avm.elementary.common,
+ org.avm.elementary.geofencing,
+ org.knopflerfish.service.console,
+ org.osgi.framework,
+ org.osgi.service.cm,
+ org.osgi.service.component,
+ org.osgi.service.wireadmin,
+ org.osgi.util.measurement,
+ statemap
+Service-Component: META-INF/activator.xml
+Export-Package: org.avm.elementary.wifi,
+ org.avm.elementary.wifi.bundle
+

@@ -1,0 +1,139 @@
+package org.avm.elementary.alarm.bundle;
+
+import java.util.BitSet;
+
+import org.avm.elementary.alarm.AlarmService;
+import org.avm.elementary.alarm.impl.AlarmServiceImpl;
+import org.avm.elementary.common.AbstractActivator;
+import org.avm.elementary.common.ConfigurableService;
+import org.avm.elementary.common.ConsumerService;
+import org.avm.elementary.common.ManageableService;
+import org.avm.elementary.messenger.Messenger;
+import org.avm.elementary.messenger.MessengerInjector;
+import org.osgi.service.cm.ConfigurationAdmin;
+import org.osgi.service.component.ComponentContext;
+
+public class Activator extends AbstractActivator implements AlarmService {
+
+	private static org.avm.elementary.alarm.bundle.Activator _plugin;
+
+	private ConfigurationAdmin _cm;
+
+	private AlarmServiceImpl _peer;
+
+	private ConsumerImpl _consumer;
+
+	private ConfigImpl _config;
+
+	private CommandGroupImpl _commands;
+
+	public Activator() {
+		_plugin = this;
+		_peer = new AlarmServiceImpl();
+	}
+
+	public static Activator getDefault() {
+		return _plugin;
+	}
+
+	protected void start(ComponentContext context) {
+		initializeConfiguration();
+		initializeMessenger();
+		initializeCommandGroup();
+		initializeConsumer();
+		startService();
+	}
+
+	protected void stop(ComponentContext context) {
+		stopService();
+		disposeConsumer();
+		disposeCommandGroup();
+		disposeMessenger();
+		disposeConfiguration();
+	}
+
+	// config
+	private void initializeConfiguration() {
+
+		_cm = (ConfigurationAdmin) _context.locateService("cm");
+		try {
+			_config = new ConfigImpl(_context, _cm);
+			_config.start();
+			if (_peer instanceof ConfigurableService) {
+				((ConfigurableService) _peer).configure(_config);
+
+			}
+		} catch (Exception e) {
+			_log.error(e.getMessage(), e);
+		}
+	}
+
+	private void disposeConfiguration() {
+		_config.stop();
+		if (_peer instanceof ConfigurableService) {
+			((ConfigurableService) _peer).configure(null);
+		}
+	}
+
+	// messenger
+	private void initializeMessenger() {
+		if (_peer instanceof MessengerInjector) {
+			Messenger messenger = (Messenger) _context
+					.locateService("messenger");
+			((MessengerInjector) _peer).setMessenger(messenger);
+		}
+	}
+
+	private void disposeMessenger() {
+		if (_peer instanceof MessengerInjector) {
+			((MessengerInjector) _peer).setMessenger(null);
+		}
+	}
+
+	// consumer
+	private void initializeConsumer() {
+		if (_peer instanceof ConsumerService) {
+			_consumer = new ConsumerImpl(_context, _peer);
+			_consumer.start();
+		}
+	}
+
+	private void disposeConsumer() {
+		if (_peer instanceof ConsumerService) {
+			_consumer.stop();
+		}
+	}
+
+	// commands
+	private void initializeCommandGroup() {
+		_commands = new CommandGroupImpl(_context, _peer, _config);
+		_commands.start();
+	}
+
+	private void disposeCommandGroup() {
+		if (_commands != null)
+			_commands.stop();
+	}
+
+	// service
+	private void stopService() {
+		if (_peer instanceof ManageableService) {
+			((ManageableService) _peer).stop();
+		}
+	}
+
+	private void startService() {
+		if (_peer instanceof ManageableService) {
+			((ManageableService) _peer).start();
+		}
+	}
+
+	public long getCounter() {
+		return _peer.getCounter();
+	}
+
+	public BitSet getAlarms() {
+		return _peer.getAlarms();
+	}
+
+}

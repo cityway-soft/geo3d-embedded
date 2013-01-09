@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.sound.Sound" immediate="true">
+	<implementation class="org.avm.device.fm6000.sound.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.device.sound.Sound"/>
+	<service>
+		<provide interface="org.avm.device.sound.Sound" />
+	</service>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>		
+</component>

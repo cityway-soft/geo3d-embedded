@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<project name="smc" default="all" basedir=".">
+
+	<property file="smc.properties" />
+
+	<property name="src.dir" location="src" />
+	<property name="lib.dir" location="lib" />
+	<property name="build.dir" location="${src.dir}/${pkg.dir}" />	
+	
+	<property name="smc.jar" location="${lib.dir}/Smc.jar" />
+
+	<path id="classpath">
+		<fileset dir="${lib.dir}" includes="**/*.jar" />	
+	</path>
+
+	<target name="init">
+		<tstamp />
+		<taskdef name="smc" classname="net.sf.smc.ant.SmcJarWrapper" classpathref="classpath" />		
+	</target>
+
+	<target name="build" depends="init">
+		<smc target="java" smfile="${smfile}" destdir="${build.dir}" smcjar="${smc.jar}" />
+	</target>
+
+	<target name="all" depends="build">		
+	</target>
+
+</project>
+

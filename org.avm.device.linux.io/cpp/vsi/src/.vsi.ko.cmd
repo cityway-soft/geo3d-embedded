@@ -1,0 +1,1 @@
+cmd_/root/affaires/geolia/avm/device/linux/org.avm.device.linux.io/cpp/vsi/src/vsi.ko := ld -r -m elf_i386   -o /root/affaires/geolia/avm/device/linux/org.avm.device.linux.io/cpp/vsi/src/vsi.ko /root/affaires/geolia/avm/device/linux/org.avm.device.linux.io/cpp/vsi/src/vsi.o /root/affaires/geolia/avm/device/linux/org.avm.device.linux.io/cpp/vsi/src/vsi.mod.o

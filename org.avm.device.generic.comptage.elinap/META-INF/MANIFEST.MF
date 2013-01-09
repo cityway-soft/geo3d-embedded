@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.avm.device.generic.comptage.elinap
+Bundle-SymbolicName: org.avm.device.generic.comptage.elinap
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: cityway.fr
+Import-Package: org.apache.log4j,
+ org.avm.device.comptage,
+ org.avm.elementary.common,
+ org.osgi.framework,
+ org.osgi.service.component,
+ org.osgi.service.device,
+ org.osgi.service.wireadmin,
+ org.osgi.util.tracker
+Bundle-ClassPath: .
+Service-Component: META-INF/activator.xml
+Export-Package: org.avm.device.generic.comptage.elinap

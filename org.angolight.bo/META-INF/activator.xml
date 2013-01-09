@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.angolight.bo.Bo" immediate="true">
+	<implementation class="org.angolight.bo.bundle.Activator"/>
+	<property name="service.pid" value="org.angolight.bo.Bo"/>
+	<service>				
+		<provide interface="org.angolight.bo.Bo"/>		
+	</service>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>
+</component>

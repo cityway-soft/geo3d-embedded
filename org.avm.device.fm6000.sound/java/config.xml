@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.device.fm6000.sound.Sound" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.device.fm6000.sound.Sound</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">ftp://avm:avm++@ftpserver.avm.org/fm6000/1/bundles/org.avm.device.fm6000.sound.jar</value>
+</property>
+<property name="default">
+<value type="String">#Tue Sep 30 14:16:57 CEST 2008
+url=/silence.cfg
+name=default
+priority=0</value>
+</property>
+<property name="conducteur">
+<value type="String">#Tue Sep 30 14:16:44 CEST 2008
+url=/conducteur.cfg
+name=conducteur
+priority=1</value>
+</property>
+<property name="voyageur-interieur">
+<value type="String">#Tue Sep 30 14:17:24 CEST 2008
+url=/voyageur.cfg
+name=voyageur-interieur
+priority=2
+</value>
+</property>
+<property name="voyageur-exterieur">
+<value type="String">#Tue Sep 30 14:17:24 CEST 2008
+url=/voyageur.cfg
+name=voyageur-exterieur
+priority=2
+</value>
+</property>
+<property name="org.avm.elementary.dummy.property">
+<value type="String">Tue Sep 30 13:53:48 CEST 2008</value>
+</property>
+</configuration>
+</cm_data>

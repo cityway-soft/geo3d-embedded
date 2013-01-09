@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.business.afficheur.Afficheur" immediate="true">
+	<implementation class="org.avm.business.afficheur.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.business.afficheur.Afficheur"/>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin" />	
+	<reference name="afficheur" interface="org.avm.device.afficheur.Afficheur"/>
+	<reference name="messages" interface="org.avm.business.messages.Messages" />	
+	<reference name="avm" interface="org.avm.business.core.Avm"
+			   cardinality="0..1" policy="dynamic" bind="setAvm" unbind="unsetAvm" />
+</component>

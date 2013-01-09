@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.avm.device.knet.io
+Bundle-SymbolicName: org.avm.device.knet.io
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: mercur.fr
+Import-Package: org.apache.log4j,
+ org.avm.device.io,
+ org.avm.device.knet.sensor,
+ org.avm.elementary.common,
+ org.osgi.framework,
+ org.osgi.service.component,
+ org.osgi.service.device,
+ org.osgi.util.tracker
+Service-Component: META-INF/counter.xml,
+ META-INF/digitalinput.xml,
+ META-INF/digitaloutput.xml
+ 

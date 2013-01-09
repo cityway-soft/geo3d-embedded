@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.angolight.indicator.Indicator" immediate="true">
+	<implementation class="org.angolight.indicator.bundle.Activator"/>
+	<property name="service.pid" value="org.angolight.indicator.Indicator"/>
+	<service>				
+		<provide interface="org.angolight.indicator.Indicator"/>
+	</service>
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>		
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+	<reference name="jdb" interface="org.avm.elementary.jdb.JDB"	
+		cardinality="0..1" policy="dynamic" bind="setJdb" unbind="unsetJdb" />	
+</component>

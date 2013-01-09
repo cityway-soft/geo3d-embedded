@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.angolight.kinetic.KineticService" mode="new">
+<property name="notification-period">
+<value type="Double">0.4</value>
+</property>
+<property name="service.pid">
+<value type="String">org.angolight.kinetic.KineticService</value>
+</property>
+<property name="acquisition-period">
+<value type="Double">0.04</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">initial@reference:file:../../geolia/ango/org.angolight.kinetic.can.fms/</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">1</value>
+</property>
+<property name="median-filter-length">
+<value type="Integer">11</value>
+</property>
+<property name="can-service-pid">
+<value type="String">org.avm.device.can0</value>
+</property>
+<property name="config.date">
+<value type="String">Wed Jul 01 12:45:00 CEST 2009</value>
+</property>
+</configuration>
+</cm_data>

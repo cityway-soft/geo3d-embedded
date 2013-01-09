@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.elementary.variable.CounterVariable" 
+	factory="org.avm.elementary.variable.CounterVariable">
+	<implementation class="org.avm.elementary.variable.CounterVariable"/>	
+	<service>	
+		<provide interface="org.avm.elementary.variable.Variable"/>			
+		<provide interface="org.avm.elementary.variable.CounterVariable"/>
+	</service>	
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>
+</component>
+

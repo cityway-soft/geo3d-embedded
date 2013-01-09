@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.hmi.mmi.phony.MmiPhony" immediate="true">
+	<implementation class="org.avm.hmi.mmi.phony.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.hmi.mmi.phony.MmiPhony"/>
+	<service>						
+		<provide interface="org.avm.hmi.mmi.phony..MmiPhony"/>	
+		<provide interface="org.avm.elementary.useradmin.session.UserSessionListener" />	
+	</service>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>	
+
+	<reference name="base" interface="org.avm.hmi.mmi.application.display.AVMDisplay"/>
+	
+	<reference 
+		name="phony" 
+		interface="org.avm.elementary.phony.Phony" 
+		policy="dynamic" bind="setPhony" unbind="unsetPhony"
+	/>		
+	<reference 
+		name="ecall" 
+		interface="org.avm.business.ecall.EcallService" 
+		cardinality="0..1"
+		policy="dynamic" bind="setEcall" unbind="unsetEcall"
+	/>		
+	<reference 
+		name="beeper" 
+		interface="org.avm.elementary.variable.Variable"
+		target="(org.avm.elementary.variable.name=beeper)"
+		cardinality="0..1" 
+		policy="dynamic" bind="setBeeper" unbind="unsetBeeper"
+	/>
+	
+</component>

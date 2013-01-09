@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.avm.device.generic.afficheur.mobitec
+Bundle-SymbolicName: org.avm.device.generic.afficheur.mobitec
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: mercur.fr
+Import-Package: org.apache.log4j,
+ org.avm.device.afficheur,
+ org.avm.elementary.common,
+ org.osgi.framework,
+ org.osgi.service.cm,
+ org.osgi.service.component,
+ org.osgi.service.device,
+ org.osgi.util.tracker
+Service-Component: META-INF/activator.xml
+ 

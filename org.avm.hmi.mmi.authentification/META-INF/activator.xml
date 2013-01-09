@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.hmi.mmi.authentification.Authentification"
+	immediate="true">
+	<implementation
+		class="org.avm.hmi.mmi.authentification.bundle.Activator" />
+	<property name="service.pid"
+		value="org.avm.hmi.mmi.authentification.Authentification" />
+	<service>
+		<provide
+			interface="org.avm.hmi.mmi.authentification.Authentification" />
+	</service>
+	<reference name="base"
+		interface="org.avm.hmi.mmi.application.display.AVMDisplay" />
+
+	<reference name="usersession"
+		interface="org.avm.elementary.useradmin.session.UserSession" />
+</component>

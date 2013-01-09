@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<project name="ptotocol_phoebus" default="all">
+
+	<property file="build.properties" />
+
+	<property name="jibx.home" value="/opt/jibx/" />
+	<property name="src.dir" value="${project.dir}/src" />
+	<property name="lib.dir" value="${project.dir}/lib" />
+	<property name="build.dir" value="${project.dir}/build" />
+	<property name="dist.dir" value="${project.dir}/dist" />
+
+	<path id="classpath">
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${jibx.home}/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<target name="flavor" description="Generateur de code">
+		<!-- property name="flavor.home" location="/opt/flavor" 
+				-->
+		<echo message="directory=${project.dir}/src/${pkg.dir}" />
+		<exec executable="${flavor.home}/bin/flavorc">
+			<arg value="-x" />
+						<arg value="-oj" />
+						<arg value="${package}" />
+						<arg value="-gj" />
+						<arg value="${input}.fl" />
+		</exec>
+	</target>
+
+	<target name="clean">
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+	</target>
+
+	<target name="init" depends="clean">
+		<tstamp />
+		<taskdef name="bind" classname="org.jibx.binding.ant.CompileTask" classpathref="classpath"/>
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${dist.dir}" />
+	</target>
+
+	<target name="compile" depends="init">
+		<javac srcdir="${src.dir}" debug="on" deprecation="on" source="1.3" target="1.2" classpathref="classpath" destdir="${build.dir}">
+			<include name="**/*.java" />
+			<exclude name="**/*Test*" />
+		</javac>
+	</target>
+
+	<target name="jibx" depends="compile" description="Mapping object-xml">
+		<bind verbose="true" load="false" binding="${project.dir}/src/${pkg.dir}/${input}.xml">
+			<classpathset dir="${build.dir}" />
+		</bind>
+	</target>
+	
+	<target name="dist" depends="jibx">
+		<jar destfile="${dist.dir}/${input}.jar"
+		       basedir="${build.dir}"
+		       excludes="**/Test.class"
+		  />
+	</target>
+	
+	<target name="all" depends="dist" />
+
+</project>
+
+

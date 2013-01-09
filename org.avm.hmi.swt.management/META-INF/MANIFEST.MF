@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: IHM Management
+Bundle-SymbolicName: org.avm.hmi.swt.management
+Bundle-Version: 1.0.0.qualifier
+Service-Component: META-INF/activator.xml
+Bundle-ClassPath: .
+Import-Package: org.apache.log4j,
+ org.avm.elementary.common,
+ org.avm.elementary.useradmin,
+ org.avm.hmi.swt.desktop,
+ org.knopflerfish.service.console,
+ org.osgi.framework;version="1.3.0",
+ org.osgi.service.cm,
+ org.osgi.service.component;version="1.0.0",
+ org.osgi.service.wireadmin,
+ org.osgi.util.measurement;version="1.0.0"
+Bundle-Vendor: mercur.fr
+

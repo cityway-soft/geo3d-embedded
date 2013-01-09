@@ -1,0 +1,129 @@
+%class HalfCycleStateMachine
+%package org.angolight.halfcycle.state
+%import org.angolight.kinetic.Kinetic
+%start HalfCycleMap::ZeroAccelerationState
+
+%map HalfCycleMap
+/////////////////////////////////////////////////////////////////////////
+//------------------    MAP : HalfCycleMap	 --------------------
+/////////////////////////////////////////////////////////////////////////
+// State		Transition			End State           		Action(s)
+// Etat : 
+%%
+//---------------------------------------------------------------------------------------------------------------
+ZeroAccelerationState
+Entry											{ 
+													// mise à zero des toutes les variables
+													reset();
+												} 
+{
+			// Notification vitesse <= VMinUp
+			onKinetic(kinetic: Kinetic)[kinetic.getSpeed() <= ctxt.getMinimumSpeedUp()]
+							nil
+												{   													
+												}
+
+			// Notification vitesse : Acceleration positive 
+			onKinetic(kinetic: Kinetic)[kinetic.getAcceleration() > ctxt.getPositiveAccelerationUp()]			
+							PositiveAccelerationState
+												{ 													
+													initilizeHalfCycleSpeed(kinetic.getSpeed());
+													updatePositiveH1H2(kinetic.getSpeed());
+												}			
+												
+			// Notification vitesse : Acceleration négative 
+			onKinetic(kinetic: Kinetic)[kinetic.getAcceleration() < ctxt.getNegativeAccelerationDown()]
+							NegativeAccelerationState
+												{  													
+													initilizeHalfCycleSpeed(kinetic.getSpeed());
+													updateNegativeH1H2(kinetic.getSpeed());
+												}
+												
+			// Notification vitesse 
+			onKinetic(kinetic: Kinetic)
+							nil
+												{   													
+												}
+
+}
+
+//---------------------------------------------------------------------------------------------------------------
+// Etat : PositiveAccelerationState
+PositiveAccelerationState
+{
+		// Vitesse <= seuil Vmin down
+		onKinetic(kinetic: Kinetic)[kinetic.getSpeed() <= ctxt.getMinimumSpeedDown()]
+							ZeroAccelerationState
+											{
+												updatePositiveH1H2(kinetic.getSpeed());
+												updatePositiveHalfCycle(kinetic.getSpeed(), kinetic.getAcceleration());
+												notifyHalfCycle();
+											}
+											
+		// Vitesse et Acc OK
+		onKinetic(kinetic: Kinetic)[kinetic.getAcceleration() > ctxt.getPositiveAccelerationDown()]
+							nil
+											{
+												updatePositiveH1H2(kinetic.getSpeed());
+												updatePositiveHalfCycle(kinetic.getSpeed(), kinetic.getAcceleration());
+											}
+											
+		// Acceleration > 0
+		onKinetic(kinetic: Kinetic)[kinetic.getAcceleration() > 0]
+							ZeroAccelerationState
+											{
+												updatePositiveH1H2(kinetic.getSpeed());
+												updatePositiveHalfCycle(kinetic.getSpeed(), kinetic.getAcceleration());
+												notifyHalfCycle();
+											}
+											
+		// Donc Acceleration <= 0, pas de mise à jour du cycle
+		onKinetic(kinetic: Kinetic)
+							ZeroAccelerationState
+											{
+												notifyHalfCycle();
+											}
+											
+}
+//---------------------------------------------------------------------------------------------------------------
+// Etat : 
+NegativeAccelerationState
+{
+		// Vitesse <= seuil Vmin down
+		onKinetic(kinetic: Kinetic)[kinetic.getSpeed() <= ctxt.getMinimumSpeedDown()]
+							ZeroAccelerationState
+											{
+												updateNegativeH1H2(kinetic.getSpeed());
+												updateNegativeHalfCycle(kinetic.getSpeed(), kinetic.getAcceleration());
+												notifyHalfCycle();
+											}
+											
+		// Vitesse et Acc OK
+		onKinetic(kinetic: Kinetic)[kinetic.getAcceleration() < ctxt.getNegativeAccelerationUp()]
+							nil
+											{
+												updateNegativeH1H2(kinetic.getSpeed());
+												updateNegativeHalfCycle(kinetic.getSpeed(), kinetic.getAcceleration());
+											}
+											
+		// Acceleration < 0
+		onKinetic(kinetic: Kinetic)[kinetic.getAcceleration() < 0]
+							ZeroAccelerationState
+											{
+												updateNegativeH1H2(kinetic.getSpeed());
+												updateNegativeHalfCycle(kinetic.getSpeed(), kinetic.getAcceleration());
+												notifyHalfCycle();
+											}
+											
+		// Acceleration donc > 0, pas de mise à jour du cycle
+		onKinetic(kinetic: Kinetic)
+							ZeroAccelerationState
+											{
+												notifyHalfCycle();
+											}
+											
+}
+/////////////////////////////////////////////////////////////////////////
+//------------------------ FIN MAP : HalfCycleMap  -----------------
+/////////////////////////////////////////////////////////////////////////
+%%

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.elementary.command.CommandChain" immediate="true">
+	<implementation class="org.avm.elementary.command.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.elementary.command.CommandChain"/>
+	<service>				
+		<provide interface="org.avm.elementary.command.CommandChain"/>
+	</service>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+	<reference name="gps" interface="org.avm.device.gps.Gps" cardinality="0..1" policy="dynamic"/>	
+	<reference name="alarm" interface="org.avm.elementary.alarm.AlarmService" cardinality="0..1" policy="dynamic"/>
+	<reference name="avm" interface="org.avm.business.core.Avm" cardinality="0..1" policy="dynamic" />
+</component>

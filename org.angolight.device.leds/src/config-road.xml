@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.angolight.device.leds.Leds" mode="new">
+<property name="service.pid">
+<value type="String">org.angolight.device.leds.Leds</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">initial@reference:file:../../geolia/ango/org.angolight.device.leds/</value>
+</property>
+<property name="url.connection">
+<value type="String">comm:8;baudrate=19200</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">4</value>
+</property>
+<property name="brightness">
+<value type="Integer">0</value>
+</property>
+<property name="config.date">
+<value type="String">Wed May 20 11:05:57 CEST 2009</value>
+</property>
+</configuration>
+</cm_data>

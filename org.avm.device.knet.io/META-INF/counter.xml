@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.knet.io.KnetCounterDriver"
+	immediate="true">
+	<implementation class="org.avm.device.knet.io.KnetCounterDriver" />
+	<property name="service.pid"
+		value="org.avm.device.knet.io.KnetCounterDriver" />
+	<property name="DRIVER_ID"
+		value="org.avm.device.knet.io.KnetCounterDriver" />
+	<service>
+		<provide interface="org.osgi.service.device.Driver" />
+	</service>
+	<reference name="sensor"
+		interface="org.avm.device.knet.sensor.Sensor" cardinality="0..n"
+		policy="dynamic" bind="setSensor" unbind="unsetSensor" />
+</component>

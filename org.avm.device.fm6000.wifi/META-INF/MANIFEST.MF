@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.avm.device.fm6000.wifi
+Bundle-SymbolicName: org.avm.device.fm6000.wifi
+Bundle-Version: 1.0.0.20090928000000
+Bundle-Vendor: mercur.fr
+Import-Package: EDU.oswego.cs.dl.util.concurrent,
+ org.apache.log4j,
+ org.avm.device.plateform,
+ org.avm.device.wifi,
+ org.avm.elementary.common,
+ org.knopflerfish.service.console,
+ org.osgi.service.cm,
+ org.osgi.service.component,
+ org.osgi.service.wireadmin,
+ org.osgi.util.measurement;version="1.0.0",
+ org.osgi.util.position,
+ statemap
+Bundle-ClassPath: .
+Export-Package: 
+ org.avm.device.fm6000.wifi,
+ org.avm.device.fm6000.wifi.bundle
+Service-Component: META-INF/activator.xml
+Bundle-NativeCode: lib/comvs_wifi.dll ; osname = WindowsCE; processor = ARM

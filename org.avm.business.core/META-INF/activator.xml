@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.business.core.Avm" immediate="true">
+	<implementation class="org.avm.business.core.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.business.core.Avm"/>		
+	<service>						
+		<provide interface="org.avm.business.core.Avm"/>	
+		<provide interface="org.avm.elementary.alarm.AlarmProvider"/>	
+	</service>	
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>	
+
+	<reference name="wireadmin"	interface="org.osgi.service.wireadmin.WireAdmin" />
+	<reference name="usersession"
+		interface="org.avm.elementary.useradmin.UserSessionService" 
+		cardinality="0..1" policy="dynamic" bind="setUserSessionService" unbind="unsetUserSessionService" />
+			
+	<reference name="database" interface="org.avm.elementary.database.Database"
+			cardinality="0..1" policy="dynamic" bind="setDatabase" unbind="unsetDatabase" />
+		
+			
+	<reference name="gps" interface="org.avm.device.gps.Gps"
+			cardinality="0..1" policy="dynamic" bind="setGps" unbind="unsetGps" />
+			
+	<reference name="geofencing" interface="org.avm.elementary.geofencing.GeoFencing"
+				cardinality="0..1" policy="dynamic" bind="setGeoFencing" unbind="unsetGeoFencing" />
+				
+	<reference name="jdb" interface="org.avm.elementary.jdb.JDB" 
+				cardinality="0..1" policy="dynamic" bind="setJdb" unbind="unsetJdb" />
+	
+		
+	<reference name="odometre" interface="org.avm.elementary.variable.Variable"
+		target="(org.avm.elementary.variable.name=odometre)"/>	
+	<reference name="messenger" interface="org.avm.elementary.messenger.Messenger"/>	
+
+
+	<reference name="prefs" interface="org.osgi.service.prefs.PreferencesService"/>		
+</component>

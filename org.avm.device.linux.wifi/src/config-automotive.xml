@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.device.wifi.Wifi" mode="new">
+<property name="org.avm.config.version">
+<value type="Integer">1</value>
+</property>
+<property name="service.pid">
+<value type="String">org.avm.device.wifi.Wifi</value>
+</property>
+<property name="device">
+<value type="String">wlan0</value>
+</property>
+<property name="essid">
+<value type="String">avm-site</value>
+</property>
+<property name="key">
+<value type="String">e6e5a80ff7</value>
+</property>
+<property name="rate">
+<value type="String">auto</value>
+</property>
+<property name="freq">
+<value type="String">auto</value>
+</property>
+<property name="channel">
+<value type="String">auto</value>
+</property>
+<property name="mode">
+<value type="String">managed</value>
+</property>
+<property name="org.avm.elementary.dummy.property">
+<value type="String">Thu Apr 24 17:39:34 CEST 2008</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">ftp://avm:avm++@ftpserver.avm.org/aton/106/bundles/org.avm.device.linux.wifi.jar</value>
+</property>
+<property name="config.date">
+<value type="String">Mon May 18 15:04:48 GMT 2009</value>
+</property>
+</configuration>
+</cm_data>

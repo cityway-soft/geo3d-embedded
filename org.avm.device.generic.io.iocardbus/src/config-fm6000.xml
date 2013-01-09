@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.device.io.iocardbus.IOCardBus" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.device.io.iocardbus.IOCardBus</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">initial@reference:file:../../root/affaires/avm/org.avm.device.io.iocardbus/</value>
+</property>
+<property name="org.knopflerfish.dummy.property">
+<value type="String">org.knopflerfish.dummy.property</value>
+</property>
+<property name="counter1">
+<vector length="4">
+<value type="String">org.avm.device.io.CounterDevice</value>
+<value type="String">mercur.fr</value>
+<value type="String">org.avm.device.io.memory.OdometerCounter</value>
+<value type="String">a1bb7bb5-bde8-4dad-9750-2542e5d67550</value>
+</vector>
+</property>
+<property name="fm6000di">
+<vector length="4">
+<value type="String">org.avm.device.io.DigitalIODevice</value>
+<value type="String">b2i.fr</value>
+<value type="String">org.avm.device.io.fm6000.FM6000DigitalInput</value>
+<value type="String">5a00051d-1a44-4693-a2cc-0a326211b614</value>
+</vector>
+</property>
+<property name="fm6000do">
+<vector length="4">
+<value type="String">org.avm.device.io.DigitalIODevice</value>
+<value type="String">b2i.fr</value>
+<value type="String">org.avm.device.io.fm6000.FM6000DigitalOutput</value>
+<value type="String">2496c39e-9cde-409c-9ad5-ae310b47f1dd</value>
+</vector>
+</property>
+</configuration>
+</cm_data>

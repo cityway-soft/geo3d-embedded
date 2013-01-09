@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.business.recorder.action.SpeedAction" immediate="true">
+	<implementation class="org.avm.business.recorder.action.SpeedAction"/>
+	<property name="service.pid" value="org.avm.business.recorder.action.SpeedAction"/>
+	<service>						
+		<provide interface="org.avm.elementary.alarm.AlarmProvider"/>		
+	</service>
+</component>

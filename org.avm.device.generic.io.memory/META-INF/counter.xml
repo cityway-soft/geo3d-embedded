@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.generic.io.memory.OdometerCounterDriver" immediate="true">
+	<implementation class="org.avm.device.generic.io.memory.OdometerCounterDriver"/>
+	<property name="service.pid" value="org.avm.device.generic.io.memory.OdometerCounterDriver"/>
+	<property name="DRIVER_ID" value="org.avm.device.generic.io.memory.OdometerCounterDriver"/>	
+	<service>				
+		<provide interface="org.osgi.service.device.Driver"/>
+	</service>	
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>		
+</component>

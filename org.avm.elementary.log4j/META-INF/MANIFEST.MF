@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.avm.elementary.log4j
+Bundle-SymbolicName: org.avm.elementary.log4j
+Bundle-Version: 1.0.0.qualifier
+Bundle-Localization: plugin
+Bundle-ClassPath: .
+Export-Package: org.apache.log4j;version="1.0.0",
+ org.apache.log4j.spi;version="1.0.0",
+ org.avm.elementary.log4j
+Import-Package: org.osgi.framework,
+ org.osgi.service.log,
+ org.osgi.util.tracker
+Bundle-Activator: org.avm.elementary.log4j.Activator
+Bundle-Vendor: mercur.fr

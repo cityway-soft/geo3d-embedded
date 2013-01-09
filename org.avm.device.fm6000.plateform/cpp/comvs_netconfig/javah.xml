@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="javah" default="all" basedir=".">
+	<target name="all">
+		<property file="javah.properties" />
+
+
+		<path id="classpath">
+			<pathelement location="${outdir}" />
+	
+		</path>
+	
+		<javah class="${class}" 
+			outputfile="${project.name}.h" classpathref="classpath">
+		</javah>
+	</target>
+</project>

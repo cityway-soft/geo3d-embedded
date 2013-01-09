@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.elementary.messenger.Messenger" immediate="true">
+	<implementation class="org.avm.elementary.messenger.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.elementary.messenger.Messenger"/>
+	<service>				
+		<provide interface="org.avm.elementary.common.MediaListener"/>	
+		<provide interface="org.avm.elementary.messenger.Messenger"/>		
+	</service>
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>		
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>	
+	<reference name="command" interface="org.avm.elementary.command.CommandChain"/>
+	<reference name="medias" interface="org.avm.elementary.common.Media" cardinality="0..n" policy="dynamic" bind="setMedia" unbind="unsetMedia"/>
+	<reference name="parsers" interface="org.avm.elementary.parser.Parser" cardinality="0..n" policy="dynamic" bind="setParser" unbind="unsetParser"/>
+</component>

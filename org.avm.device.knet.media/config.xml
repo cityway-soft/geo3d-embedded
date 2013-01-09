@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.device.knet.Media" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.device.knet.Media</value>
+</property>
+<property name="MEDIA_ID">
+<value type="String">KNET</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">ftp://ftp:ftp++@avm/default/org.avm.device.knet.media.jar</value>
+</property>
+<property name="org.knopflerfish.dummy.property">
+<value type="String">org.knopflerfish.dummy.property</value>
+</property>
+</configuration>
+</cm_data>

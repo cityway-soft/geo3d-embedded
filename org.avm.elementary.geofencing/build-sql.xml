@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="org.avm.elementary.geofencing.ant" basedir="." default="build">
+	<target name="build">
+		<sql driver="" password="" url="" userid="">
+		
+		</sql>
+		
+	</target>
+</project>

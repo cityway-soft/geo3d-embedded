@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="javah" default="all" basedir=".">
+	<target name="all">
+		<javah classpath="bin" verbose="true"
+			class="org.avm.device.fm6000.io.COMVS_IO" 
+			outputfile="">
+		</javah>
+	</target>
+</project>

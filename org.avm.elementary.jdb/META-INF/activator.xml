@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.elementary.jdb.JDB" immediate="true">
+	<implementation class="org.avm.elementary.jdb.bundle.Activator" />
+	<property name="service.pid" value="org.avm.elementary.jdb.JDB" />
+	<service>
+		<provide interface="org.avm.elementary.jdb.JDB" />
+	</service>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin" />
+	<reference name="gps" interface="org.avm.device.gps.Gps"
+		cardinality="0..1" policy="dynamic" bind="setGps" unbind="unsetGps" />
+</component>

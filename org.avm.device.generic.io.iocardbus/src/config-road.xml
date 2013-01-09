@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.device.io.iocardbus.IOCardBus" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.device.io.iocardbus.IOCardBus</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">1</value>
+</property>
+<property name="roaddo">
+<vector length="3">
+<value type="String">org.avm.device.io.DigitalIODevice</value>
+<value type="String">kerlink.fr</value>
+<value type="String">org.avm.device.io.road.DigitalOutput</value>
+<value type="String">770a5e01-2637-4cca-9392-bf121e3fdd45</value>
+</vector>
+</property>
+<property name="roaddi">
+<vector length="4">
+<value type="String">org.avm.device.io.DigitalIODevice</value>
+<value type="String">kerlink.fr</value>
+<value type="String">org.avm.device.io.road.DigitalInput</value>
+<value type="String">70da86a2-b068-4027-a8eb-05b0edf6838d</value>
+</vector>
+</property>
+<property name="roadcounter">
+<vector length="1">
+<value type="String">org.avm.device.io.CounterDevice</value>
+<value type="String">kerlink.fr</value>
+<value type="String">org.avm.device.road.io.Counter</value>
+<value type="String">3083bc17-0120-4d7b-b0b1-e64d65962a2c</value>
+</vector>
+</property>
+<property name="roadaudio">
+<vector length="2">
+<value type="String">org.avm.device.io.DigitalIODevice</value>
+<value type="String">kerlink.fr</value>
+<value type="String">org.avm.device.road.io.AudioAmplifierOutput</value>
+<value type="String">fad1bee0-07dc-4841-87e2-d76b9909a84b</value>
+</vector>
+</property>
+<property name="counter1">
+<vector length="4">
+<value type="String">org.avm.device.io.CounterDevice</value>
+<value type="String">mercur.fr</value>
+<value type="String">org.avm.device.io.memory.OdometerCounter</value>
+<value type="String">a1bb7bb5-bde8-4dad-9750-2542e5d67550</value>
+</vector>
+</property>
+<property name="service.bundleLocation">
+<value type="String">ftp://avm:avm++@ftpserver.avm.org/aton/106/bundles/org.avm.device.generic.io.iocardbus.jar</value>
+</property>
+<property name="config.date">
+<value type="String">Mon May 18 15:04:47 GMT 2009</value>
+</property>
+</configuration>
+</cm_data>

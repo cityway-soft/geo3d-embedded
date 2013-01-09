@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Management Patch
+Bundle-SymbolicName: org.avm.elementary.management.patch
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: .
+Import-Package: 
+ org.apache.log4j,
+ org.avm.device.plateform,
+ org.avm.elementary.common,
+ org.avm.elementary.log4j,
+ org.avm.elementary.management.addons
+Bundle-Activator: org.avm.elementary.management.addons.PatchManagerActivator

@@ -1,0 +1,227 @@
+// -*- tab-width: 4; -*-//
+// State Machine
+//	SAE
+//
+// Machine a etats
+//  Cette machine a etats est celle d'un SAE
+//
+
+%start HorsServiceMap::Init
+%package org.avm.business.core
+%class AvmStateMachine
+
+//------------------ MAP Service Ferme ---------------------
+%map HorsServiceMap
+%%
+// State		Transition		End State		Action(s)
+Init
+Entry{ stateChange(AvmModel.STATE_INITIAL);
+	   checkPlanification();
+	   resetService();
+	   resetCourse();
+	   serialize();
+	   //journalize("HORSPOSTE");
+	 }
+Exit {   }
+{
+// 		Trans 					Next State 					Actions
+		prisePoste(vehiculeReplace:int, matriculeReplace:int)				AttenteSaisieService		{ actionPrisePoste(vehiculeReplace, matriculeReplace);																						 
+																										}	
+}
+
+
+
+AttenteSaisieService
+Entry{  stateChange(AvmModel.STATE_ATTENTE_SAISIE_SERVICE);
+		resetService();
+		resetCourse();
+		checkPlanification();
+		serialize();
+		checkForcePriseService();
+   	    //journalize("HORSSERVICE");
+}
+Exit { showMessage(); }
+{
+// 		Trans 									Next State 									Actions
+		priseService(service: int)		
+		[ctxt.isServiceSpecial(service) == true]
+												ServiceSpecialMap::EnCourse					{ actionService(true, service); }
+
+		priseService(service: int)		
+		[ctxt.isServiceNormal(service) == true]
+												ServiceNormalMap::AttenteSaisieCourse		{ actionService(true, service); }
+		
+		annuler									AttenteSaisieService						{ actionAnnuler(); }		
+}
+
+Default
+{
+// 		Trans 									Next State 									Actions
+	   	finService								AttenteSaisieService						{ actionFinService();  }
+	   	finPoste								HorsServiceMap::Init						{ actionFinService();actionFinPoste(); }
+	   	priseService(service: int)				nil											{ actionService(false, service); }
+}
+%%
+
+
+//------------------ MAP Service Normal---------------------
+%map ServiceNormalMap
+%%
+// State		Transition		End State		Action(s)
+AttenteSaisieCourse
+Entry{ stateChange(AvmModel.STATE_ATTENTE_SAISIE_COURSE);
+	   checkPlanification();
+	   checkCourse();
+   	   resetCourse();
+   	   serialize();
+   	  // journalize("HORSCOURSE");
+   	 }
+Exit { }
+{
+// 		Trans 									Next State 									Actions
+		priseCourse(course:  int)		
+			[ctxt.isCourseCorrect(course) == true]
+												AttenteDepart								{ actionCourse(true, course);	}	
+								
+		priseCourse(course:  int)		
+			// SAISIE COURSE INCORRECTE
+												nil											{ actionCourse(false, course); }									
+		finCourse								nil 										{  }
+		annuler									HorsServiceMap::AttenteSaisieService		{ actionAnnuler(); }
+}
+
+
+AttenteDepart
+Entry{ 	stateChange(AvmModel.STATE_ATTENTE_DEPART);
+		checkPlanification();
+		startSuiviItineraire();
+		serialize();
+     }
+Exit {  }
+{
+// 		Trans 										Next State 									Actions
+		depart(balise: int)										
+		[ctxt.isArret(balise) == true]				EnCourseMap::ArretSurItineraire				{ actionEntreeArret(balise);actionDepart(); }
+
+		depart(balise: int)										
+		[ctxt.isArret(balise) == false]				EnCourseMap::HorsItineraire					{ actionDepart(); }
+				
+		sortie(balise:  int)
+		[ctxt.isTerminusDepart(balise) == true]		EnCourseMap::InterArretSurItineraire		{ actionDepart();actionEntreeArret(balise);actionSortieArret(balise); }	
+	
+		entree(balise:  int)
+		[ctxt.isTerminusDepart(balise) == true]		nil											{ actionEntreeArret(balise); }	
+
+		annuler										ServiceNormalMap::AttenteSaisieCourse		{ actionAnnuler();}	
+}
+
+
+Default
+{
+// 		Trans 						Next State 								Actions
+		sortie(balise:  int)		nil										{ }	
+		entree(balise:  int)		nil										{ }	
+	   	finCourse					AttenteSaisieCourse						{ stopSuiviItineraire();actionFinCourse(); }
+	   	finService 					HorsServiceMap::AttenteSaisieService	{ stopSuiviItineraire();actionFinCourse(); actionFinService();  }
+	   	finPoste					HorsServiceMap::Init					{ stopSuiviItineraire();actionFinCourse(); actionFinService(); actionFinPoste(); }   	
+}
+%%
+
+//------------------ MAP En Course---------------------
+%map EnCourseMap
+%%
+// State		Transition		End State		Action(s)
+HorsItineraire
+Entry{ 	
+		stateChange(AvmModel.STATE_EN_COURSE_HORS_ITINERAIRE);
+		checkSuiviItineraire();
+		entryHorsItineraire();	
+	 }
+Exit { exitHorsItineraire(); 
+	 }
+{
+// 		Trans 								Next State 					Actions
+
+		entree(balise:  int)
+		[ctxt.isArret(balise) == true]		ArretSurItineraire			{ actionEntreeArret(balise);  }	
+			
+		sortieItineraire					nil							{  }
+}
+
+ArretSurItineraire
+Entry{ stateChange(AvmModel.STATE_EN_COURSE_ARRET_SUR_ITINERAIRE); 
+	   checkSuiviItineraire();
+	   serialize();
+	 }
+Exit { }
+{
+// 		Trans 										Next State 								Actions
+		
+		sortie(balise:  int)
+		[ctxt.isTerminusArrivee(balise) == true]	ServiceNormalMap::AttenteSaisieCourse	{ actionSortieArret(); actionFinCourse(); }	
+	
+		sortie(balise:  int)
+		[ctxt.isArretCourant(balise) == true]		InterArretSurItineraire					{ actionSortieArret(balise); }
+			
+		entree(balise:  int)
+		[ctxt.isProchainArret(balise) == true]		nil										{ actionEntreeArret(balise); }	
+		
+		finCourse									ServiceNormalMap::AttenteSaisieCourse	{ actionSortieArret(); actionFinCourse(); }
+		
+		
+		sortieItineraire							nil										{  }
+		
+}
+
+InterArretSurItineraire
+Entry{ stateChange(AvmModel.STATE_EN_COURSE_INTERARRET_SUR_ITINERAIRE); 
+	   checkSuiviItineraire();}
+Exit { }
+{
+// 		Trans 												Next State 						Actions
+
+		entree(balise:  int)
+		[ctxt.isProchainArret(balise) == true]				ArretSurItineraire				{ actionEntreeArret(balise); }	
+		
+		progression(pourcentage:  int)						nil								{ notifyProgression(pourcentage); }	
+			
+		sortieItineraire									HorsItineraire					{ actionSortieItineraire(); }
+		
+		entree(balise:  int)
+		[ctxt.isArret(balise) && ctxt.isGeorefMode() ]		ArretSurItineraire				{ actionEntreeArret(balise); }	
+}
+
+
+Default
+{
+// 		Trans 						Next State 								Actions
+	   sortie(balise:  int)			nil										{  }	
+	   entree(balise:  int)      	nil  									{  }	
+	   finCourse					ServiceNormalMap::AttenteSaisieCourse	{ stopSuiviItineraire();actionFinCourse(); }
+	   finService 					HorsServiceMap::AttenteSaisieService	{ stopSuiviItineraire();actionFinCourse(); actionFinService();  }
+	   finPoste						HorsServiceMap::Init					{ stopSuiviItineraire();actionFinCourse(); actionFinService(); actionFinPoste(); }
+}
+%%
+
+
+//------------------ MAP Service Special ---------------------
+%map ServiceSpecialMap
+%%
+EnCourse
+Entry{ 
+		stateChange(AvmModel.STATE_EN_COURSE_SERVICE_SPECIAL);
+		entryEnCourseServiceSpecial();  }
+Exit {  }
+{
+	   	finService 		HorsServiceMap::AttenteSaisieService	{ actionFinService(); }
+	   	finCourse		HorsServiceMap::AttenteSaisieService	{ actionFinCourse(); }
+	   	annuler			HorsServiceMap::AttenteSaisieService	{ actionAnnuler(); }
+	   	finPoste		HorsServiceMap::Init					{ actionFinPoste(); }
+	   	
+}
+%%
+
+
+
+
+

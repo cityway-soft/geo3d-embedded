@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.avm.device.linux.plateform
+Bundle-SymbolicName: org.avm.device.linux.plateform
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: mercur.fr
+Import-Package: org.osgi.framework,
+ org.apache.log4j
+Export-Package: org.avm.device.plateform
+Bundle-Activator: org.avm.device.plateform.Activator

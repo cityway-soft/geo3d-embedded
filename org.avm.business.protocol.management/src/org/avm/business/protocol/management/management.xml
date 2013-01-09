@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<binding>		
+	<mapping name="management"
+		class="org.avm.business.protocol.management.Management"	
+		value-style="attribute">
+		<value name="text" field="_text" />	
+	</mapping>		
+</binding>

@@ -1,0 +1,550 @@
+package org.avm.elementary.management.core;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Enumeration;
+import java.util.Vector;
+
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
+import org.osgi.service.startlevel.StartLevel;
+
+class SynchronizeBundlesCommand {
+	private static final String BUNDLES_LIST_FILENAME = "bundles.list";
+
+	private BundleContext _context;
+
+	private Management _management;
+
+	private static PrintWriter _out = null;
+
+	public SynchronizeBundlesCommand(BundleContext context,
+			Management management, PrintWriter out) {
+		_context = context;
+		_management = management;
+		_out = out;
+	}
+
+	private static void println(String trace) {
+		if (_out != null) {
+			_out.println("[ManagementCore] " + trace);
+		}
+	}
+
+	private static void print(String trace) {
+		if (_out != null) {
+			_out.print("[ManagementCore] " + trace);
+		}
+	}
+
+	private static void flush() {
+		if (_out != null) {
+			_out.flush();
+		}
+	}
+
+	public void exec() throws IOException {
+
+		println("***************************************************");
+		println("***************************************************");
+		println("** M I S E * A * J O U R * A U T O M A T I Q U E **");
+		println("***************************************************");
+		println("***************************************************");
+		flush();
+		try {
+			deploy();
+		} catch (IOException e) {
+			throw e;
+		} catch (Throwable e) {
+			println("!!!!!!!!!!!! => Erreur au cours du deploiement :");
+			e.printStackTrace(_out);
+			println("==============================================================");
+		} finally {
+			startAllBundles();
+		}
+
+	}
+
+	private void sendReport() {
+		BundleList bundleList = createFromFwk();
+		Enumeration enumeration = bundleList.elements();
+		StringBuffer buffer = new StringBuffer();
+		while (enumeration.hasMoreElements()) {
+			BundleProperties element = (BundleProperties) enumeration
+					.nextElement();
+			buffer.append(element);
+			buffer.append(System.getProperty("line.separator"));
+		}
+
+		String filename = "$u_updateauto.log";
+		String username = System.getProperty("org.avm.vehicule.id");
+
+		String path = Utils.replace(_management.getPrivateUploadUrl(), "$u",
+				username);
+		filename = Utils.replace(filename, "$u", username);
+		try {
+			SimpleFTPClient client = new SimpleFTPClient();
+			client.put(new URL(path + "/" + filename), buffer);
+		} catch (IOException e) {
+			println("IOException (sendReport) :" + e.getMessage());
+		}
+	}
+
+	private void stopBundlesToUpdate(BundleList list) {
+		Enumeration e = list.elements();
+		while (e.hasMoreElements()) {
+			BundleProperties bp = (BundleProperties) e.nextElement();
+			String bundleName = bp.getName();
+			Bundle bundle = getBundle(bundleName);
+
+			boolean isManagementBundle = this.getClass().getPackage().getName()
+					.indexOf(bundleName) != -1;
+
+			if (isManagementBundle) {
+				// -- attention : ne pas stopper le bundle management (sinon
+				// redemarrage manuel!)
+				println(" update cannot stop management!!!!! ");
+				flush();
+				continue;
+			}
+			if (bundle != null) {
+				try {
+					print("[                   Stopping " + bundleName);
+					bundle.stop();
+					println("     OK ]");
+				} catch (BundleException e1) {
+					println("Error on stop bundle : " + bundleName);
+				}
+				flush();
+			}
+		}
+	}
+
+	public void deploy() throws IOException, BundleException {
+		String managementNeedToBeUpdated = null;
+
+		BundleList bundleList = downloadBundleList();
+
+		stopBundlesToUpdate(bundleList);
+
+		println("#######################################");
+		println(bundleList.toString());
+		println("###############TOTAL : " + bundleList.size()
+				+ "######################");
+		flush();
+		Vector updatedBundles = new Vector();
+
+		boolean updated;
+
+		if (bundleList.size() > 0) {
+			Enumeration e = bundleList.elements();
+			while (e.hasMoreElements()) {
+				updated = false;
+				BundleProperties bundleProperties = (BundleProperties) e
+						.nextElement();
+				int startlevel = bundleProperties.getStartlevel();
+
+				String bName = bundleProperties.getName();
+
+				Bundle bundle = getBundle(bName);
+
+				try {
+					if (startlevel < 0) {
+						if (bundle != null) {
+							bundle.uninstall();
+						}
+						continue;
+					} else if (startlevel > 0) {
+
+						if (bundle == null) {
+							String msg = "[update]" + bName + " INSTALL";
+							println(msg);
+							flush();
+							install(bundleProperties, bName);
+							updated = true;
+						} else {
+							String msg = "[update]" + bName + " UPDATE";
+							println(msg);
+							flush();
+
+							String packageName = _management.getClass()
+									.getPackage().getName();
+
+							if (packageName.indexOf(bName) != -1) {
+								managementNeedToBeUpdated = bName;
+								continue;
+							}
+							update(bName);
+							updated = true;
+						}
+						if (updated) {
+							updatedBundles.addElement(bName);
+						}
+						bundle = getBundle(bName);
+						setBundleStartLevel(bundle, startlevel);
+						if (bundle != null
+								&& _management.getStartLevelService()
+										.getBundleStartLevel(bundle) <= 3) {
+							bundle.start();
+						}
+					}
+				} catch (Throwable ex) {
+					println("ERR " + bName + " : " + ex.getMessage());
+					bundle = getBundle(bName);
+					updatedBundles.addElement(bName);
+					ex.printStackTrace();
+				}
+			}
+
+			Bundle[] bundles = new Bundle[updatedBundles.size()];
+			for (int i = 0; i < updatedBundles.size(); i++) {
+				bundles[i] = getBundle((String) updatedBundles.elementAt(i));
+			}
+			try {
+				_management.getPackageAdminService().refreshPackages(bundles);
+			} catch (Throwable t) {
+
+			}
+			// startUpdatedBundles(context, updatedBundles, out);
+
+		}
+		if (managementNeedToBeUpdated != null) {
+			update(managementNeedToBeUpdated);
+		}
+
+		sendReport();
+	}
+
+	private void setBundleStartLevel(Bundle bundle, int startlevel) {
+
+		StartLevel sl = _management.getStartLevelService();
+		if (sl != null && bundle != null) {
+			boolean isManagementBundle = this.getClass().getPackage().getName()
+					.indexOf(bundle.getSymbolicName()) != -1;
+			if (isManagementBundle) {
+				println("[Management] **WARNING** Cannot change management startlevel !");
+				return;
+			}
+			println("LEVEL = " + startlevel + "; bundle = " + bundle);
+			sl.setBundleStartLevel(bundle, startlevel);
+		}
+	}
+
+	private void update(String bundleName) throws IOException, BundleException {
+		URLConnection connection = getRemoteBundleURLConnection(bundleName);
+		println("Download " + connection.getURL());
+		Bundle bundle = getBundle(bundleName);
+		bundle.update(connection.getInputStream());
+	}
+
+	/**
+	 * installation des bundles
+	 * 
+	 * @param management
+	 *            TODO
+	 * @param context
+	 *            TODO
+	 * @param bundleProperties
+	 * @param bundleName
+	 * @param out
+	 * @param buffer
+	 * @return
+	 * @throws IOException
+	 * @throws BundleException
+	 */
+	private void install(BundleProperties bundleProperties, String bundleName)
+			throws IOException, BundleException {
+		URLConnection connection = getRemoteBundleURLConnection(bundleName);
+		println("Download " + connection.getURL());
+		_context.installBundle(connection.getURL().toString(), connection
+				.getInputStream());
+	}
+
+	/**
+	 * Demarre tous les bundles
+	 * 
+	 * @param out
+	 */
+	public void startAllBundles() {
+		Bundle[] bundles = _context.getBundles();
+
+		boolean retry = false;
+
+		for (int i = 0; i < bundles.length; i++) {
+			Bundle b = bundles[i];
+			try {
+				boolean fragment = (b.getHeaders().get("Fragment-Host") != null);
+				if (fragment) {
+					println("WARN - Bundle " + b.getSymbolicName()
+							+ " is a fragment (will not be started)");
+				} else if (b.getState() == Bundle.INSTALLED
+						|| b.getState() == Bundle.STOPPING) {
+					println("WARN - Bundle " + b.getSymbolicName()
+							+ "'s state is INSTALLED (strange ???) ");
+					retry = true;
+				} else if (b.getState() != Bundle.STARTING
+						&& b.getState() != Bundle.ACTIVE) {
+					b.start();
+				}
+			} catch (Throwable t) {
+				println("failed (" + t.getLocalizedMessage() + ")");
+			}
+		}
+
+		if (retry) {
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+			}
+			for (int i = 0; i < bundles.length; i++) {
+				Bundle b = bundles[i];
+				try {
+					if (b.getState() == Bundle.INSTALLED) {
+						println("Bundle " + b.getSymbolicName()
+								+ "'s state is still INSTALLED (!!!) ");
+					} else if (b.getState() != Bundle.STARTING
+							&& b.getState() != Bundle.ACTIVE) {
+						println("Bundle " + b.getSymbolicName()
+								+ " can now be started !!!!! ");
+						b.start();
+					}
+				} catch (Throwable t) {
+					println("failed (" + t.getLocalizedMessage() + ")");
+				}
+			}
+		}
+	}
+
+	public static String stateInt2String(int state) {
+		switch (state) {
+		case Bundle.ACTIVE:
+			return "ACTIVE";
+		case Bundle.INSTALLED:
+			return "INSTALLED";
+		case Bundle.RESOLVED:
+			return "RESOLVED";
+		case Bundle.STARTING:
+			return "STARTING";
+		case Bundle.STOPPING:
+			return "STOPPING";
+		case Bundle.UNINSTALLED:
+			return "UNINSTALLED";
+		default:
+			return "";
+		}
+	}
+
+	/**
+	 * converti un numero de version au format 1.0.0.10.2 dans un format
+	 * numérique 1.00102 (pour pouvoir effectuer des comparaisons)
+	 * 
+	 * @param version
+	 * @return
+	 */
+	private double getVersion(String version) {
+		if (version == null)
+			return Double.NaN;
+		StringBuffer buf = new StringBuffer();
+		boolean dotfound = false;
+		for (int i = 0; i < version.length(); i++) {
+			char c = version.charAt(i);
+			if (Character.isDigit(c)) {
+				buf.append(c);
+			} else if (dotfound == false && c == '.') {
+				dotfound = true;
+				buf.append(c);
+			}
+		}
+		double ver;
+		try {
+			ver = Double.parseDouble(buf.toString());
+		} catch (NumberFormatException e) {
+			ver = Double.MAX_VALUE;
+		}
+		return ver;
+	}
+
+	/**
+	 * retourne une hashtable contenant la liste des bundles sur le repository
+	 * 
+	 * @return
+	 * @throws IOException
+	 * @throws IOException
+	 * @throws IOException
+	 */
+	private BundleList downloadBundleList() throws IOException {
+		BundleList bundleList;
+		String username = System.getProperty("org.avm.vehicule.id");
+		String strurl;
+
+		try {
+			strurl = Utils.replace(_management.getPrivateDownloadUrl() + "/"
+					+ BUNDLES_LIST_FILENAME, "$u", username);
+			println("Try : " + strurl);
+			bundleList = loadFromURL(strurl);
+		} catch (IOException e) {
+			println("WARNING : " + e.getMessage());
+			strurl = Utils.replace(_management.getPrivateDownloadUrl() + "/"
+					+ BUNDLES_LIST_FILENAME, "$u", "default");
+			println("    Try : " + strurl);
+			bundleList = loadFromURL(strurl);
+		}
+		flush();
+		try {
+			println("[update] BundleList file  : " + strurl);
+			println("[update] BundleList count : " + bundleList.size());
+
+			Bundle[] bundles = _context.getBundles();
+			for (int i = 0; i < bundles.length; i++) {
+				String bundleName = bundles[i].getSymbolicName();
+
+				BundleProperties bundleProperties = bundleList
+						.getBundleProperties(bundleName);
+				if (bundleProperties == null) {
+					continue;
+				}
+
+				String ver = bundleProperties.getVersion();
+				double bundleVersion = getVersion(ver);
+				ver = (String) bundles[i].getHeaders().get("Bundle-Version");
+				double currentVersion = getVersion(ver);
+
+				if (bundleVersion <= currentVersion
+						&& bundleProperties.getStartlevel() > 0) {
+					bundleList.remove(bundleName);
+				}
+			}
+			flush();
+
+			Enumeration e = bundleList.elements();
+			while (e.hasMoreElements()) {
+				BundleProperties bl = (BundleProperties) e.nextElement();
+				String bundlename = bl.getCompleteName();
+				Bundle bundle = getBundle(bundlename);
+				if (bundle == null && bl.getStartlevel() <= 0) {
+					bundleList.remove(bundlename);
+				}
+			}
+		} catch (Throwable t) {
+			println("!!!!!!!!!!!! => Erreur au cours du downloadBundleList :");
+			t.printStackTrace(_out);
+			println("==============================================================");
+		}
+		return bundleList;
+
+	}
+
+	private BundleList loadFromURL(String strurl) throws IOException {
+		URL url;
+		BundleList bundleList = new BundleList();
+
+		url = new URL(strurl);
+		URLConnection connection = url.openConnection();
+		InputStream in = connection.getInputStream();
+		bundleList.load(in);
+		in.close();
+		return bundleList;
+	}
+
+	private BundleList createFromFwk() {
+		BundleList bundleList = new BundleList();
+
+		Bundle[] bundles = _context.getBundles();
+		for (int i = 1; i < bundles.length; i++) {
+			BundleProperties bp = new BundleProperties();
+			String bundleName = bundles[i].getSymbolicName();
+			String bundleVersion = (String) bundles[i].getHeaders().get(
+					"Bundle-Version");
+			bundleList.put(bundleName, bp);
+			bp.setName(bundleName);
+			bp.setVersion(bundleVersion);
+
+			bp.setStartlevel(_management.getStartLevelService()
+					.getBundleStartLevel(bundles[i]));
+		}
+		return bundleList;
+	}
+
+	protected Bundle getBundle(String bundlename) {
+
+		try {
+			Bundle[] bundles = _context.getBundles();
+			for (int i = 0; i < bundles.length; i++) {
+				Bundle bundle = bundles[i];
+				String installbundle = (String) bundle.getHeaders().get(
+						"Bundle-SymbolicName");
+				installbundle = formatBundleName(installbundle);
+				if (installbundle != null && installbundle.equals(bundlename)) {
+					return bundle;
+				}
+			}
+		} catch (Exception e) {
+		}
+
+		return null;
+	}
+
+	public String formatBundleName(String bundlename) {
+		String result = bundlename;
+		if (bundlename != null) {
+			int idx = bundlename.indexOf(";");
+			if (idx != -1) {
+				result = bundlename.substring(0, idx);
+			}
+		}
+		return result;
+	}
+
+	private URLConnection getRemoteBundleURLConnection(String bundlename)
+			throws MalformedURLException {
+		String downloadURL = _management.getPrivateDownloadUrl(); // TODO
+		// traiter
+		// le cas ou
+		// il faut
+		// utiliser
+		// public.download.url
+		// et le cas
+		// ou il
+		// faut
+		// utiliser
+		// private.download.url
+
+		StringBuffer buf = new StringBuffer();
+		buf.append(downloadURL);
+		buf.append("/");
+		buf.append(bundlename);
+		buf.append(".jar");
+		String surl = Utils.replace(buf.toString(), "$u", System
+				.getProperty("org.avm.vehicule.id"));
+		URL url = new URL(surl);
+		URLConnection connection = null;
+		try {
+			connection = url.openConnection();
+			check(connection);
+			return connection;
+		} catch (IOException e) {
+
+		}
+
+		surl = Utils.replace(buf.toString(), "$u", "default");
+		url = new URL(surl);
+		try {
+			connection = url.openConnection();
+			check(connection);
+			return connection;
+		} catch (IOException e) {
+			println("IOException " + e.getMessage());
+		}
+		return null;
+	}
+
+	private void check(URLConnection c) throws IOException {
+		c.getInputStream();
+	}
+
+}

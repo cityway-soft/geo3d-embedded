@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.elementary.media.jms.MediaJMS" mode="new">
+<property name="SERVER_IL_FACTORY">
+<value type="String">org.jboss.mq.il.uil2.UILServerILFactory</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">initial@reference:file:../../home/didier/projets/EN-COURS/AVM/common/dev/workspace/avm-v1/org.avm.elementary.media.jms/</value>
+</property>
+<property name="PING_PERIOD">
+<value type="Integer">180000</value>
+</property>
+<property name="UIL_BUFFERSIZE">
+<value type="Integer">2048</value>
+</property>
+<property name="UIL_PORT_KEY">
+<value type="Integer">8093</value>
+</property>
+<property name="DESTINATION">
+<value type="String">media-gprs</value>
+</property>
+<property name="CLIENT_IL_SERVICE_KEY">
+<value type="String">org.jboss.mq.il.uil2.UILClientILService</value>
+</property>
+<property name="service.pid">
+<value type="String">org.avm.elementary.media.jms.MediaJMS</value>
+</property>
+<property name="UIL_CHUNKSIZE">
+<value type="Integer">1000000</value>
+</property>
+<property name="UIL_TCPNODELAY">
+<value type="Boolean">true</value>
+</property>
+<property name="UIL_ADDRESS">
+<value type="String">193.251.14.88</value>
+</property>
+</configuration>
+</cm_data>

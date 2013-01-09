@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.comptage.ComptageDevice" immediate="true">
+	<implementation class="org.avm.device.comptage.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.device.comptage.ComptageDevice"/>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+	<reference name="comptage" interface="org.avm.device.comptage.Comptage" cardinality="0..1" policy="dynamic"/>
+</component>

@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<binding>		
+	<include path="message.xml"/>
+	<format type="org.avm.business.protocol.phoebus.IntArray" 
+		serializer="org.avm.business.protocol.phoebus.MessageText.serializeIntArray" 
+		deserializer="org.avm.business.protocol.phoebus.MessageText.deserializeIntArray"/>
+	<!--
+	<mapping name="annulation"
+		class="org.avm.business.protocol.phoebus.Annulation"
+		extends="org.avm.business.protocol.phoebus.Message"
+		value-style="attribute">
+		<structure map-as="org.avm.business.protocol.phoebus.Message"/>
+	</mapping>
+	-->	
+	<mapping name="message-text"
+		class="org.avm.business.protocol.phoebus.MessageText"
+		extends="org.avm.business.protocol.phoebus.Message"
+		value-style="attribute">
+		<structure map-as="org.avm.business.protocol.phoebus.Message"/>
+		<value name="message" field="_message" using="cstring"  />
+		<value name="type" field="_type" />
+		<value name="affectation" field="_affectation" />
+	</mapping>	
+	<mapping name="avance-retard"
+		class="org.avm.business.protocol.phoebus.AvanceRetard"
+		extends="org.avm.business.protocol.phoebus.Message"
+		value-style="attribute">
+		<structure map-as="org.avm.business.protocol.phoebus.Message"/>
+	</mapping>	
+	<mapping name="passage-arret"
+		class="org.avm.business.protocol.phoebus.PassageArret"
+		extends="org.avm.business.protocol.phoebus.Message"
+		value-style="attribute">
+		<structure map-as="org.avm.business.protocol.phoebus.Message"/>
+		<value name="attente" field="_attente" />
+	</mapping>	
+	<mapping name="alerte"
+		class="org.avm.business.protocol.phoebus.Alerte"
+		extends="org.avm.business.protocol.phoebus.Message"
+		value-style="attribute">
+		<structure map-as="org.avm.business.protocol.phoebus.Message"/>
+	</mapping>	
+	<mapping name="cloture-alerte"
+		class="org.avm.business.protocol.phoebus.ClotureAlerte"
+		extends="org.avm.business.protocol.phoebus.Message"
+		value-style="attribute">
+		<structure map-as="org.avm.business.protocol.phoebus.Message"/>
+	</mapping>	
+	<mapping name="prise-en-charge"
+		class="org.avm.business.protocol.phoebus.PriseEnCharge"
+		extends="org.avm.business.protocol.phoebus.Message"
+		value-style="attribute">
+		<structure map-as="org.avm.business.protocol.phoebus.Message"/>
+		<value name="tel" field="_tel" using="cstring"  />
+	</mapping>	
+	<mapping name="demande-statut"
+		class="org.avm.business.protocol.phoebus.DemandeStatut"
+		extends="org.avm.business.protocol.phoebus.Message"
+		value-style="attribute">
+		<structure map-as="org.avm.business.protocol.phoebus.Message"/>
+		<structure name="statut" field="_statut">
+				<value name="date" field="_date" />
+				<value name="position" field="_position" />
+				<value name="service" field="_service" />
+				<value name="reference" field="_reference" />
+				<value name="progression" field="_progression" />
+				<value name="programmation" field="_programmation" />
+				<value name="anomalie" field="_anomalie" />
+				<value name="options" field="_options" />
+		</structure>
+	</mapping>
+	<mapping name="reponse-statut"
+		class="org.avm.business.protocol.phoebus.ReponseStatut"
+		extends="org.avm.business.protocol.phoebus.Message"
+		value-style="attribute">
+		<structure map-as="org.avm.business.protocol.phoebus.Message"/>
+	</mapping>	
+	<mapping name="prise-poste"
+		class="org.avm.business.protocol.phoebus.PrisePoste"
+		extends="org.avm.business.protocol.phoebus.Message"
+		value-style="attribute">
+		<structure map-as="org.avm.business.protocol.phoebus.Message"/>
+		<value name="planification" field="_planification" />
+		<value name="checksum" field="_checksum" />		
+		<value name="conducteur-remplacement" field="_conducteurRemplacement" />
+		<value name="vehicule-remplacement" field="_vehiculeRemplacement" />
+		<value name="password" field="_password" />
+	</mapping>
+	
+	
+	<mapping name="planification"
+		class="org.avm.business.protocol.phoebus.Planification"
+		extends="org.avm.business.protocol.phoebus.Message"
+		value-style="attribute">
+		<structure map-as="org.avm.business.protocol.phoebus.Message"/>
+		<value name="planification" field="_planification" />
+		<value name="checksum" field="_checksum" />
+		<value name="service" field="_service" />
+		<collection field="_courses" get-method="getCourses" set-method="setCourses" item-type="org.avm.business.protocol.phoebus.Course"/>
+		<collection field="_points" get-method="getPoints" set-method="setPoints" item-type="org.avm.business.protocol.phoebus.Arret"/>
+	</mapping>
+	
+	<mapping name="course"
+		class="org.avm.business.protocol.phoebus.Course" 
+		value-style="attribute">
+			<value name="course" field="_course" />
+			<value name="depart" field="_depart" />
+			<value name="ligne" field="_ligne" />
+			<value name="amplitude" field="_amplitude" />
+			<value name="chevauchement" field="_chevauchement" />	
+			<collection field="_horaires" get-method="getHoraires" set-method="setHoraires" item-type="org.avm.business.protocol.phoebus.Horaire"/>
+	</mapping>
+	<mapping name="horaire"
+		class="org.avm.business.protocol.phoebus.Horaire" 
+		value-style="attribute">
+			<value name="point" field="_point" />
+			<value name="distance" field="_distance" />
+			<value name="arrivee" field="_arrivee" />
+			<value name="attente" field="_attente" />
+			<value name="girouette" field="_girouette" />					
+	</mapping>
+	<mapping name="arret"
+		class="org.avm.business.protocol.phoebus.Arret" 
+		value-style="attribute">
+			<value name="point" field="_point" />
+			<value name="longitude" field="_longitude" />
+			<value name="latitude" field="_latitude" />
+			<value name="nom" field="_nom" using="cstring"  />
+			<value name="code" field="_code" using="cstring"  />				
+	</mapping>
+	
+	<mapping name="fin-prise-poste"
+		class="org.avm.business.protocol.phoebus.FinPrisePoste"
+		extends="org.avm.business.protocol.phoebus.Message"
+		value-style="attribute">
+		<structure map-as="org.avm.business.protocol.phoebus.Message"/>		
+	</mapping>
+	<mapping name="prise-service"
+		class="org.avm.business.protocol.phoebus.PriseService"
+		extends="org.avm.business.protocol.phoebus.Message"
+		value-style="attribute">
+		<structure map-as="org.avm.business.protocol.phoebus.Message"/>
+		<value name="conducteur-remplacement" field="_conducteurRemplacement" />
+		<value name="vehicule-remplacement" field="_vehiculeRemplacement" />
+	</mapping>
+	<mapping name="fin-prise-service"
+		class="org.avm.business.protocol.phoebus.FinPriseService"
+		extends="org.avm.business.protocol.phoebus.Message"
+		value-style="attribute">
+		<structure map-as="org.avm.business.protocol.phoebus.Message"/>
+	</mapping>
+	<mapping name="depart-course"
+		class="org.avm.business.protocol.phoebus.DepartCourse"
+		extends="org.avm.business.protocol.phoebus.Message"
+		value-style="attribute">
+		<structure map-as="org.avm.business.protocol.phoebus.Message"/>
+	</mapping>	
+	<mapping name="fin-course"
+		class="org.avm.business.protocol.phoebus.FinCourse"
+		extends="org.avm.business.protocol.phoebus.Message"
+		value-style="attribute">
+		<structure map-as="org.avm.business.protocol.phoebus.Message"/>		
+	</mapping>
+	<mapping name="deviation"
+		class="org.avm.business.protocol.phoebus.Deviation"
+		extends="org.avm.business.protocol.phoebus.Message"
+		value-style="attribute">
+		<structure map-as="org.avm.business.protocol.phoebus.Message"/>
+	</mapping>	
+</binding>
