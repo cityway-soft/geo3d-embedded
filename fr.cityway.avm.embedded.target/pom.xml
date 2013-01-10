@@ -9,7 +9,7 @@
 	<modules>
 
 		<module>../org.angolight.bo</module>
-		<module>../org.angolight.common</module>
+		<!-- <module>../org.angolight.common</module> -->
 		<module>../org.angolight.device.leds</module>
 		<module>../org.angolight.halfcycle</module>
 		<module>../org.angolight.hmi.leds</module>
