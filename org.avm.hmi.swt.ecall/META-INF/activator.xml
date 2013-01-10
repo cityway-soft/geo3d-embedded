@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.hmi.swt.ecall.Ecall" immediate="true">
+	<implementation class="org.avm.hmi.swt.ecall.bundle.Activator" />
+	<property name="service.pid" value="org.avm.hmi.swt.ecall.Ecall" />
+	<service>
+		<provide interface="org.avm.hmi.swt.ecall.Ecall" />
+	</service>
+
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin" />
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin" />
+	<reference name="desktop" interface="org.avm.hmi.swt.desktop.Desktop" />
+	<reference name="ecall"	interface="org.avm.business.ecall.EcallService" 
+		cardinality="0..1" 	policy="dynamic" bind="setEcallService" unbind="unsetEcallService" />
+</component>

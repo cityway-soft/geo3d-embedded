@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.fm6000.io.FM6000DigitalInputDriver" immediate="true">
+	<implementation class="org.avm.device.fm6000.io.FM6000DigitalInputDriver"/>
+	<property name="service.pid" value="org.avm.device.fm6000.io.FM6000DigitalInputDriver"/>
+	<property name="DRIVER_ID" value="org.avm.device.fm6000.io.FM6000DigitalInputDriver"/>
+	<service>				
+		<provide interface="org.osgi.service.device.Driver"/>
+	</service>	
+</component>

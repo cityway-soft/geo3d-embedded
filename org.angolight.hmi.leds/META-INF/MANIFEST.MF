@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.angolight.hmi.leds
+Bundle-SymbolicName: org.angolight.hmi.leds
+Bundle-Version: 1.0.0.qualifier
+Import-Package: org.angolight.bo,
+ org.angolight.device.leds,
+ org.apache.log4j,
+ org.avm.elementary.common,
+ org.avm.elementary.useradmin,
+ org.knopflerfish.service.console,
+ org.osgi.framework,
+ org.osgi.service.cm,
+ org.osgi.service.component,
+ org.osgi.service.wireadmin,
+ org.osgi.util.measurement
+Service-Component: META-INF/activator.xml

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.knet.girouette.GirouetteDriver"
+	immediate="true">
+	<implementation
+		class="org.avm.device.girouette.knet.GirouetteDriver" />
+	<property name="service.pid"
+		value="org.avm.device.girouette.GirouetteDriver" />
+	<property name="DRIVER_ID"
+		value="org.avm.device.knet.girouette.GirouetteDriver" />
+	<service>
+		<provide interface="org.osgi.service.device.Driver" />
+	</service>
+	<reference name="knet"
+		interface="org.avm.device.knet.KnetAgentFactory" />
+</component>

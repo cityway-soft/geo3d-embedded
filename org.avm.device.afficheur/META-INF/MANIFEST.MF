@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.avm.device.afficheur
+Bundle-SymbolicName: org.avm.device.afficheur
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: mercur.fr
+Import-Package: org.apache.log4j,
+ org.avm.elementary.common,
+ org.knopflerfish.service.console,
+ org.osgi.service.cm,
+ org.osgi.service.component,
+ org.osgi.service.device
+Service-Component: META-INF/activator.xml
+Export-Package: org.avm.device.afficheur

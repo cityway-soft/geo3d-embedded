@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.hmi.swt.management.Management" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.hmi.swt.management.Management</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">http://localhost/org.avm.hmi.swt.management.jar</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">42</value>
+</property>
+<property name="reboot">
+	<value type="String">#Tue Nov 21 11:52:37 CET 2006
+	start=/management shell exec reboot
+	name=Reboot System
+	group=system
+	</value>
+</property>
+<property name="sync">
+	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
+	start=/management autoupdate
+	name=Synchronize
+	group=system
+	</value>
+</property>
+<property name="syncdata">
+	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
+	start=/jdb sync\n/management upload -f true -r true
+	name=Upload Data
+	group=system
+	</value>
+</property>
+<property name="shutdown">
+	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
+	start=/management shutdown -t 0
+	name=Fermer l'application.
+	group=system
+	</value>
+</property>
+<property name="restart">
+	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
+	start=/management shutdown -t 0 -r fwk
+	name=Relancer l'application
+	group=system
+	</value>
+</property>
+<property name="shell">
+	<value type="String">#Tue Nov 21 11:52:37 CET 2006
+	start=/management shell exec /usr/bin/xterm;
+	stop=/management shell exec "sh -c 'killall xterm'"
+	name=Xterm
+	group=system
+	</value>
+</property>
+<property name="twm">
+	<value type="String">#Tue Nov 21 11:52:37 CET 2006
+	start=/management shell exec /usr/bin/twm;
+	stop=/management shell exec "sh -c 'killall twm'"
+	name=TWM
+	group=system
+	</value>
+</property>
+<property name="firefox">
+	<value type="String">#Tue Nov 21 11:52:37 CET 2006
+	start=/management shell exec firefox;
+	stop=/management shell exec "sh -c 'killall firefox-bin'"
+	name=Firefox
+	group=system
+	</value>
+</property>
+<property name="killX">
+<value type="String">#Tue Nov 21 11:52:37 CET 2006
+    start=/management shell exec "sh -c 'killall X'"
+    name=Kill X
+    group=system
+</value>
+</property>
+<property name="onescreenv2">
+<value type="String">#Tue Nov 21 11:52:37 CET 2006
+    start=/management shell exec /etc/sysconfig/xconfig 1
+    name=Pupitre seul 6.5 V2
+    group=system
+</value>
+</property>
+<property name="dualscreenv2">
+<value type="String">#Tue Nov 21 11:52:37 CET 2006
+    start=/management shell exec /etc/sysconfig/xconfig 2
+    name=Pupitre 6.5 V2+TFT
+    group=system
+</value>
+</property>
+<property name="onescreenv3">
+<value type="String">#Tue Nov 21 11:52:37 CET 2006
+    start=/management shell exec /etc/sysconfig/xconfig 3
+    name=Pupitre seul 6.5 V3
+    group=system
+</value>
+</property>
+<property name="dualscreenv3">
+<value type="String">#Tue Nov 21 11:52:37 CET 2006
+    start=/management shell exec /etc/sysconfig/xconfig 4
+    name=Pupitre 6.5 V3 +TFT
+    group=system
+</value>
+</property> 
+<property name="wifi">
+	<value type="String">#Tue Nov 21 11:52:37 CET 2006
+	start=/management shell exec ifup-wlan -d ath0
+	stop=/management shell exec ifdown-wlan -d ath0
+	name=Wifi
+	group=system
+	</value>
+</property>
+<property name="usbupdate">
+	<value type="String">#Tue Nov 21 11:52:37 CET 2006
+	start=/management shell exec "sh -c '/mnt/sda1/avm/update.sh'" 
+	name=MAJ via cle USB
+	group=system
+	</value>
+</property>
+
+
+<property name="son-long">
+	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
+	start=/sound configure -n voyageur-interieur\n/variable write -n vioaudio-int 1\n/mp3 play $HOME/data/sound/test-voyageur-continue.mp3
+	stop=/mp3 stop
+	name=Jiggle
+	group=sound
+	</value>
+</property>
+
+<property name="son-voyageur">
+	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
+	start=/vocal testvoyageur
+	name=Test voyageur
+	group=sound
+	</value>
+</property>
+
+<property name="son-conducteur">
+	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
+	start=/vocal testconducteur
+	name=Test conducteur
+	group=sound
+	</value>
+</property>
+
+<property name="ango">
+	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
+	start=/leds setstates 1FF 40 false
+	stop=/leds setstates 0 0 false
+	name=Eco-conduite
+	group=can
+	</value>
+</property>
+
+<property name="indicator">
+	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
+	start=/indicator evaluate
+	name=Indicators
+	group=CAN
+	</value>
+</property>
+
+<property name="can">
+	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
+	start=/management shell exec "xterm -geometry 80+20+0+0 -e '/sbin/ifconfig can0 | grep bytes &amp;&amp; sleep 3'"
+	name=Frame Counters
+	group=CAN
+	</value>
+</property>
+
+<property name="gps">
+	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
+	start=/gps showp
+	name=GPS
+	group=test
+	</value>
+</property>
+
+<property name="ftpserver">
+	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
+	start=/management shell nmap ftpserver.avm.org 21
+	name=Acc\u00E8s Ftp/WiFi
+	group=test
+	</value>
+</property>
+
+<property name="vncsvr">
+<value type="String">#Tue Nov 21 11:52:37 CET 2006
+    start=/management shell exec "sh -c /root/avm/bin/avmvncserver"
+    stop=/management shell exec "sh -c 'killall avmvncserver'"
+    name=VNC server
+    group=system
+</value>
+</property>
+
+<property name="saml">
+	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
+	start=/management shell nmap saml.avm.org 8094
+	name=Acc\u00E8s Sam/Gprs
+	group=test
+	</value>
+</property>
+
+<property name="config-girouettes">
+	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
+	DUHAMEL-PF5005-PCE300=duhamel|comm:1|1200|7|1|none
+	DUHAMEL-PF5005-PCE311=duhamel|comm:1|9600|7|1|none
+	MATIS-DH20=matis|comm:1|4800|8|1|even
+	MATIS-HE200=matis|comm:1|4800|8|1|even
+	MATIS-C10000=matis|comm:1|1200|8|1|even
+	SPEC=spec|comm:1|9600|8|1|even
+	HANOVER-ERIC+=hanover|comm:1|9600|8|1|none
+	AESYS=aesys|comm:1|9600|8|1|none
+	</value>
+</property>
+
+<property name="config-afficheurs">
+	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
+	MOBITEC=mobitec|rs485:0|1200|7|2|even
+	MATIS=matis|rs485:0|1200|8|1|even
+	HANOVER=hanover|rs485:0|4800|8|1|none
+	AESYS=aesys|rs485:0|9600|8|1|none
+	</value>
+</property>
+
+</configuration>
+</cm_data>

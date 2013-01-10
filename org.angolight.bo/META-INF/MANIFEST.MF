@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Ango BO
+Bundle-SymbolicName: org.angolight.bo
+Bundle-Version: 1.0.0.qualifier
+Import-Package: EDU.oswego.cs.dl.util.concurrent,
+ org.angolight.bo,
+ org.angolight.kinetic,
+ org.apache.log4j,
+ org.avm.elementary.common,
+ org.avm.elementary.log4j,
+ org.knopflerfish.service.console,
+ org.osgi.framework,
+ org.osgi.service.cm,
+ org.osgi.service.component,
+ org.osgi.service.wireadmin,
+ org.osgi.util.measurement,
+ statemap
+Service-Component: META-INF/activator.xml

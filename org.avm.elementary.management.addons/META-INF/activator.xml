@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.elementary.management.addons.Management" immediate="true">
+	<implementation class="org.avm.elementary.management.addons.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.elementary.management.addons.ManagementService"/>		
+	<service>						
+		<provide interface="org.avm.elementary.management.addons.ManagementService"/>																
+	</service>	
+
+	<reference name="messenger" interface="org.avm.elementary.messenger.Messenger" 
+			   cardinality="0..1" 
+			   policy="dynamic" 
+			   bind="setMessenger" 
+			   unbind="unsetMessenger"/>
+			   			   
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>	
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>	 
+	
+	<reference name="console" interface="org.knopflerfish.service.console.ConsoleService"/>	
+	
+	<reference name="syslog" interface="org.avm.elementary.log4j.Logger" 
+				cardinality="0..1"
+				policy="dynamic"  
+				bind="setSyslog" 
+			   	unbind="unsetSyslog"/>
+			   	
+	<reference name="management" interface="org.avm.elementary.management.core.Management" 
+				cardinality="0..1"
+				policy="dynamic"  
+				bind="setSynchronizationService" 
+			   	unbind="unsetSynchronizationService"/>
+</component>

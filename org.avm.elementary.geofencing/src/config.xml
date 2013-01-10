@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.elementary.geofencing.GeoFencing" mode="new">
+<property name="buffercapacity">
+<value type="Integer">3000</value>
+</property>
+<property name="service.pid">
+<value type="String">org.avm.elementary.geofencing.GeoFencing</value>
+</property>
+<property name="filename">
+<value type="String">{0}/data/geofencing/19700101000000/rtree</value>
+</property>
+<property name="indexcapacity">
+<value type="Integer">10</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">http://avm-srv:8022/org.avm.elementary.geofencing.jar</value>
+</property>
+<property name="leafcapacity">
+<value type="Integer">10</value>
+</property>
+<property name="overwrite">
+<value type="Boolean">true</value>
+</property>
+<property name="fillfactor">
+<value type="Double">0.7</value>
+</property>
+<property name="pagesize">
+<value type="Integer">512</value>
+</property>
+<property name="dimension">
+<value type="Integer">2</value>
+</property>
+</configuration>
+</cm_data>

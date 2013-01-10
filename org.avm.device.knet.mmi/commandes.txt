@@ -1,0 +1,14 @@
+/knet.mmi newdialog "attente saisie authentification" "V" "40"
+/knet.mmi newdialog "choix Activite" "SEG" ""
+/knet.mmi newdialog "choix Activite" "KM" ""
+/knet.mmi newdialog "attente saisie segment" "V" "15130"
+/knet.mmi newdialog "valid segment" "V" ""
+/knet.mmi newdialog "en course commerciale" "HS" ""
+/knet.mmi newdialog "valid hors service" "V" ""
+/knet.mmi newdialog "en panne" "FIN_HS" ""
+/knet.mmi newdialog "valid fin hors service" "V" ""
+
+
+/knet.mmi newdialog "en course commerciale" "CM" "" 
+/knet.mmi newdialog "entre ring et raccrocher" "HANG_UP" ""
+/knet.mmi newdialog "valid kms a vide" "C" ""

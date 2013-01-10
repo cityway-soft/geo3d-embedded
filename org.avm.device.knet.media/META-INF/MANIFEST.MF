@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.avm.device.knet.media
+Bundle-SymbolicName: org.avm.device.knet.media
+Bundle-Version: 1.0.0.qualifier
+Bundle-Localization: plugin
+Import-Package: org.apache.log4j,
+ org.avm.device.knet,
+ org.avm.device.knet.bearer,
+ org.avm.device.knet.model,
+ org.avm.elementary.common,
+ org.avm.elementary.geofencing,
+ org.avm.elementary.log4j,
+ org.avm.elementary.messenger,
+ org.knopflerfish.service.console,
+ org.osgi.framework,
+ org.osgi.service.cm,
+ org.osgi.service.component,
+ org.osgi.service.wireadmin
+Bundle-ClassPath: .
+Export-Package: org.avm.device.knet.media,
+ org.avm.device.knet.media.bundle
+Service-Component: META-INF/activator.xml
+Bundle-Vendor: KERLINK & MERCUR

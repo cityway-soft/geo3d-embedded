@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>fr.cityway.avm.embedded.tab</groupId>
+	<artifactId>fr.cityway.avm.embedded.target</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<modules>
+
+		<module>../org.angolight.bo</module>
+		<module>../org.angolight.common</module>
+		<module>../org.angolight.device.leds</module>
+		<module>../org.angolight.halfcycle</module>
+		<module>../org.angolight.hmi.leds</module>
+		<module>../org.angolight.interface</module>
+
+		<module>../org.angolight.kinetic.gps</module>
+		<module>../org.angolight.kinetic.odo</module>
+		<module>../org.angolight.recorder.avm</module>
+		<module>../org.avm.business.afficheur</module>
+		<module>../org.avm.business.comptage</module>
+		<module>../org.avm.business.core</module>
+		<module>../org.avm.business.ecall</module>
+		<module>../org.avm.business.girouette</module>
+		<module>../org.avm.business.messages</module>
+		<module>../org.avm.business.parser.hmi</module>
+		<module>../org.avm.business.parser.management</module>
+		<module>../org.avm.business.parser.phoebus</module>
+		<module>../org.avm.business.tft</module>
+		<module>../org.avm.business.tracking</module>
+		<module>../org.avm.business.vocal</module>
+		<module>../org.avm.device.afficheur</module>
+		<module>../org.avm.device.comptage</module>
+
+
+		<module>../org.avm.device.generic.afficheur.hanover</module>
+		<module>../org.avm.device.generic.afficheur.matis</module>
+		<module>../org.avm.device.generic.afficheur.mobitec</module>
+		<module>../org.avm.device.generic.can</module>
+		<module>../org.avm.device.generic.comptage.elinap</module>
+		<module>../org.avm.device.generic.girouette.duhamel</module>
+		<module>../org.avm.device.generic.girouette.hanover</module>
+		<module>../org.avm.device.generic.girouette.matis</module>
+		<module>../org.avm.device.generic.girouette.spec</module>
+		<module>../org.avm.device.generic.gps</module>
+		<module>../org.avm.device.generic.gsm</module>
+		<module>../org.avm.device.generic.io.iocardbus</module>
+		<!-- <module>../org.avm.device.generic.io.k8055</module> -->
+		<module>../org.avm.device.generic.io.memory</module>
+		<module>../org.avm.device.generic.odometer</module>
+		<module>../org.avm.device.generic.phony</module>
+		<module>../org.avm.device.girouette</module>
+		<module>../org.avm.device.interface</module>
+		<module>../org.avm.device.io</module>
+		<module>../org.avm.device.knet</module>
+		<module>../org.avm.device.knet.bearer</module>
+		<module>../org.avm.device.knet.girouette</module>
+		<module>../org.avm.device.knet.gps</module>
+		<module>../org.avm.device.knet.io</module>
+		<module>../org.avm.device.knet.media</module>
+		<module>../org.avm.device.knet.mmi</module>
+		<module>../org.avm.device.knet.phony</module>
+		<module>../org.avm.device.knet.sensor</module>
+		<module>../org.avm.device.knet.wifi</module>
+		<module>../org.avm.device.linux.io</module>
+		<module>../org.avm.device.linux.odometer</module>
+		<module>../org.avm.device.linux.plateform</module>
+		<module>../org.avm.device.linux.sound</module>
+		<module>../org.avm.device.linux.watchdog</module>
+		<module>../org.avm.device.linux.wifi</module>
+		<module>../org.avm.device.usbmass</module>
+		<module>../org.avm.elementary.alarm</module>
+		<module>../org.avm.elementary.can.logger</module>
+		<module>../org.avm.elementary.command</module>
+		<module>../org.avm.elementary.common</module>
+		<module>../org.avm.elementary.database</module>
+		<module>../org.avm.elementary.directory</module>
+		<module>../org.avm.elementary.geofencing</module>
+		<module>../org.avm.elementary.interface</module>
+		<module>../org.avm.elementary.jdb</module>
+		<module>../org.avm.elementary.json</module>
+		<module>../org.avm.elementary.log4j</module>
+		<module>../org.avm.elementary.management.addons</module>
+		<module>../org.avm.elementary.management.core</module>
+		<module>../org.avm.elementary.media.avm</module>
+		<module>../org.avm.elementary.media.sms</module>
+		<module>../org.avm.elementary.messenger</module>
+		<module>../org.avm.elementary.rsync</module>
+		<module>../org.avm.elementary.time</module>
+		<module>../org.avm.elementary.useradmin</module>
+		<module>../org.avm.elementary.variable</module>
+		<module>../org.avm.elementary.wifi</module>
+
+
+<!-- ne compile pas avec Maven -->
+		<!-- <module>../org.angolight.kinetic.can.kangoo</module> -->
+		<!-- <module>../org.avm.device.fm6000.io</module> -->
+		<!-- <module>../org.avm.device.fm6000.plateform</module> -->
+		<!-- <module>../org.avm.device.fm6000.sound</module> -->
+		<!-- <module>../org.avm.device.fm6000.wifi</module> -->
+		<!-- <module>../org.avm.device.nomad.io</module> -->
+		<!-- <module>../org.avm.device.nomad.whatchdog</module> -->
+		<!-- <module>../org.avm.device.road.io</module> -->
+		<!-- <module>../org.avm.device.road.watchdog</module> -->
+		
+		<!-- <module>../org.angolight.indicator</module> -->
+		<!-- <module>../org.angolight.kinetic.can.fms</module> -->
+
+<!-- HMI -->
+<!-- 		
+		<module>../org.angolight.hmi.swt.leds</module>
+		<module>../org.avm.hmi.mmi.application</module>
+		<module>../org.avm.hmi.mmi.authentification</module>
+		<module>../org.avm.hmi.mmi.avm</module>
+		<module>../org.avm.hmi.mmi.phony</module>
+		<module>../org.avm.hmi.swt.alarm</module>
+		<module>../org.avm.hmi.swt.application</module>
+		<module>../org.avm.hmi.swt.authentification</module>
+		<module>../org.avm.hmi.swt.avm</module>
+		<module>../org.avm.hmi.swt.browser</module>
+		<module>../org.avm.hmi.swt.desktop</module>
+		<module>../org.avm.hmi.swt.ecall</module>
+		<module>../org.avm.hmi.swt.management</module>
+		<module>../org.avm.hmi.swt.message</module>
+		<module>../org.avm.hmi.swt.phony</module> -->
+
+		<!-- *** Not an OSGi project ;( -->
+		<!-- <module>../org.cg38.business.protocol.itinisere</module> -->
+		<!-- <module>../org.avm.elementary.protocol.ctw</module> -->
+		<!-- <module>../org.avm.device.linux.connection.comm</module> -->
+		<!-- <module>../org.avm.device.linux.connection.rs485</module> -->
+		<!-- <module>../org.avm.device.linux.connection.rxtx</module> -->
+		<!-- <module>../org.avm.device.generic.protocol</module> -->
+		<!-- <module>../org.avm.device.linux.connection.can</module> -->
+		<!-- <module>../org.avm.device.linux.connection.comm</module> -->
+		<!-- <module>../org.avm.device.linux.connection.rs485</module> -->
+		<!-- <module>../org.avm.device.linux.connection.rxtx</module> -->
+		<!-- <module>../org.avm.device.linux.connection.vcan</module> -->
+		<!-- *** Not an OSGi project ;( -->
+
+	</modules>
+	<properties>
+		<tycho-version>0.16.0</tycho-version>
+		<tycho-extras-version>0.16.0</tycho-extras-version>
+		<tycho.scmUrl>scm:git:git://git.paris.cityway.fr/home/git/repos/sae/embarque/tab.git</tycho.scmUrl>
+	</properties>
+	<build>
+		<defaultGoal>compile</defaultGoal>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<extensions>true</extensions>
+			</plugin>
+
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-compiler-plugin</artifactId>
+				<version>0.16.0</version>
+				<configuration>
+					<compilerVersion>1.3</compilerVersion>
+					<!-- <compilerArguments> <extraBootclasspath>/opt/j9/lib/jclFoundation10/ext/swt.jar</extraBootclasspath> 
+						</compilerArguments> -->
+				</configuration>
+			</plugin>
+
+
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-toolchains-plugin</artifactId> 
+				<version>1.0</version> <executions> <execution> <phase>compile</phase> <goals> 
+				<goal>toolchain</goal> </goals> </execution> </executions> <configuration> 
+				<toolchains> <jdk> <version>1.3</version> <vendor>ibm</vendor> </jdk> </toolchains> 
+				</configuration> </plugin> -->
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-packaging-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<format>yyyyMMddHHmm</format>
+					<timestampProvider>jgit</timestampProvider>
+					<jgit.ignore>pom.xml</jgit.ignore>
+					<jgit.ignore>*/META-INF/*</jgit.ignore>
+					<jgit.ignore>config*.xml</jgit.ignore>
+					<sourceReferences>
+						<generate>true</generate>
+					</sourceReferences>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.eclipse.tycho.extras</groupId>
+						<artifactId>tycho-buildtimestamp-jgit</artifactId>
+						<version>${tycho-extras-version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.eclipse.tycho.extras</groupId>
+						<artifactId>tycho-sourceref-jgit</artifactId>
+						<version>${tycho-extras-version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<target>
+						<artifact>
+							<groupId>${project.parent.groupId}</groupId>
+							<artifactId>${project.parent.artifactId}</artifactId>
+							<version>${project.parent.version}</version>
+							<type>target</type>
+							<file>fr.cityway.avm.embedded.target</file>
+							<classifier>fr.cityway.avm.embedded</classifier>
+						</artifact>
+					</target>
+					<environments>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>arm</arch>
+						</environment>
+					</environments>
+				</configuration>
+			</plugin>
+
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!-- This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.eclipse.tycho</groupId>
+										<artifactId>tycho-packaging-plugin</artifactId>
+										<versionRange>[0.14.0,)</versionRange>
+										<goals>
+											<goal>build-qualifier</goal>
+											<goal>validate-id</goal>
+											<goal>validate-version</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.eclipse.tycho</groupId>
+										<artifactId>tycho-compiler-plugin</artifactId>
+										<versionRange>[0.14.0,)</versionRange>
+										<goals>
+											<goal>compile</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-toolchains-plugin</artifactId>
+										<versionRange>[1.0,)</versionRange>
+										<goals>
+											<goal>toolchain</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<repositories>
+		<repository>
+			<id>fr.cityway.avm.embedded.p2</id>
+			<layout>p2</layout>
+			<url>http://dev.paris.cityway.fr/repo/fr.cityway.avm.embedded.target/</url>
+		</repository>
+	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>cityway-snapshots</id>
+			<name>Cityway Snapshots</name>
+			<url>http://nexus.paris.cityway.fr:8081/nexus/content/repositories/snapshots</url>
+		</repository>
+	</distributionManagement>
+</project> 

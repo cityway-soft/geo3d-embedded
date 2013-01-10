@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE catalogs [ 
+<!ELEMENT catalogs ( catalog+ ) >
+<!ELEMENT catalog ( chain*, command* ) >
+<!ATTLIST catalog name NMTOKEN #REQUIRED >
+
+<!ELEMENT chain ( command*, chain* ) >
+<!ATTLIST chain name NMTOKEN #REQUIRED >
+
+<!ELEMENT command EMPTY >
+<!ATTLIST command class NMTOKEN #REQUIRED >
+<!ATTLIST command name NMTOKEN #REQUIRED >
+]>
+<catalogs>
+	<catalog name="default">
+		<chain name="default">
+			<command name="identite"
+				class="org.avm.elementary.command.commands.IdentiteCommand" />
+			<command name="gps"
+				class="org.avm.elementary.command.commands.PositionCommand" />
+			<command name="service"
+				class="org.avm.elementary.command.commands.ServiceCommand" />
+			<command name="alarm"
+				class="org.avm.elementary.command.commands.AlarmCommand" />
+			<command name="media"
+				class="org.avm.elementary.command.commands.MediaCommand" />
+		</chain>
+	</catalog>
+</catalogs>

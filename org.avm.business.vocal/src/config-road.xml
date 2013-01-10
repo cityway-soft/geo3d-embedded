@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.business.vocal.Vocal" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.business.vocal.Vocal</value>
+</property>
+<property name="sleep-before-play">
+<value type="String">2000</value>
+</property>
+<property name="filename">
+<value type="String">{0}/data/sound/19700101000000</value>
+</property>
+<property name="voyageur-exterieur">
+<value type="String">#Thu Nov 20 00:10:11 CET 2008
+do2=1
+do1=0
+org.avm.business.vocal.key=voyageur-exterieur
+do0=0
+</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">initial@reference:file:../../../dev/workspace/geolia/avm/business/org.avm.business.vocal/</value>
+</property>
+<property name="voyageur-interieur">
+<value type="String">#Thu Nov 20 00:10:22 CET 2008
+do2=0
+do1=0
+org.avm.business.vocal.key=voyageur-interieur
+do0=1
+</value>
+</property>
+<property name="default">
+<value type="String">#Thu Nov 20 00:10:35 CET 2008
+do2=0
+do1=0
+org.avm.business.vocal.key=default
+do0=0
+</value>
+</property>
+<property name="conducteur">
+<value type="String">#Thu Nov 20 00:10:45 CET 2008
+do2=0
+do1=1
+org.avm.business.vocal.key=conducteur
+do0=0
+</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">5</value>
+</property>
+<property name="config.date">
+<value type="String">Wed Nov 19 23:29:34 CET 2008</value>
+</property>
+</configuration>
+</cm_data>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.business.vocal.Vocal" immediate="true">
+	<implementation class="org.avm.business.vocal.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.business.vocal.Vocal"/>
+	<service>						
+		<provide interface="org.avm.business.vocal.Vocal"/>		
+	</service>
+	
+	<reference name="cm"  interface="org.osgi.service.cm.ConfigurationAdmin" />
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin" />	
+
+	<reference name="sound" interface="org.avm.device.sound.Sound" 	
+		cardinality="0..1" policy="dynamic" bind="setSound" unbind="unsetSound" />	
+		
+	<reference name="player" interface="org.avm.device.player.Player" 	
+		cardinality="0..1" policy="dynamic" bind="setPlayer" unbind="unsetPlayer" />	
+
+	<reference name="avm" interface="org.avm.business.core.Avm"
+		cardinality="0..1" policy="dynamic" bind="setAvm" unbind="unsetAvm" />
+
+	<reference name="cioaudio"	interface="org.avm.elementary.variable.Variable"
+		target="(org.avm.elementary.variable.name=cioaudio)"
+		cardinality="0..1" 
+		policy="dynamic" bind="setAudioConducteur" unbind="unsetAudioConducteur"
+	/>
+	<reference 	name="vioaudio-int"	interface="org.avm.elementary.variable.Variable"
+		target="(org.avm.elementary.variable.name=vioaudio-int)"
+		cardinality="0..1" 
+		policy="dynamic" bind="setIOAudioVoyageurInterieur" unbind="unsetIOAudioVoyageurInterieur"
+	/>
+	<reference 	name="vioaudio-ext"	interface="org.avm.elementary.variable.Variable"
+		target="(org.avm.elementary.variable.name=vioaudio-ext)"
+		cardinality="0..1" 
+		policy="dynamic" bind="setIOAudioVoyageurExterieur" unbind="unsetIOAudioVoyageurExterieur"
+	/>
+</component>

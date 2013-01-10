@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Parser management Plug-in
+Bundle-SymbolicName: org.avm.business.parser.management
+Bundle-Version: 1.0.0.qualifier
+Import-Package: EDU.oswego.cs.dl.util.concurrent,
+ flavor,
+ org.apache.log4j,
+ org.avm.elementary.common,
+ org.avm.elementary.parser,
+ org.jibx.runtime,
+ org.knopflerfish.service.console,
+ org.osgi.framework,
+ org.osgi.service.cm,
+ org.osgi.service.component
+Bundle-ClassPath: .,
+ lib/management.jar
+Export-Package: org.avm.business.parser.management,
+ org.avm.business.parser.management.bundle,
+ org.avm.business.protocol.management
+Service-Component: META-INF/activator.xml

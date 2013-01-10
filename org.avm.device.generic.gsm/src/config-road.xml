@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.elementary.gsm.Gsm" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.elementary.gsm.Gsm</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">13</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">http://localhost/org.avm.elementary.gsm_1.0.0.jar</value>
+</property>
+<property name="url.connection">
+<value type="String">comm:5;baudrate=57600;stopbits=1;parity=none;bitsperchar=8;autocts=on;autorts=on;blocking=on;timeout=3000</value>
+</property>
+<property name="org.knopflerfish.dummy.property">
+<value type="String">org.knopflerfish.dummy.property</value>
+</property>
+</configuration>
+</cm_data>

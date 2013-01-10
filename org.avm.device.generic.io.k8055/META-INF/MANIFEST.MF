@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.avm.device.generic.io.k8055
+Bundle-SymbolicName: org.avm.device.generic.io.k8055
+Bundle-Version: 1.0.0
+Bundle-Vendor: mercur.fr
+Import-Package: org.apache.log4j,
+ org.avm.device.io,
+ org.avm.elementary.common,
+ org.osgi.framework,
+ org.osgi.service.component,
+ org.osgi.service.device,
+ org.osgi.util.tracker
+Bundle-ClassPath: .,
+ lib/jsr80_linux.jar,
+ lib/jsr80_ri.jar,
+ lib/jsr80.jar
+Service-Component: META-INF/activator.xml
+

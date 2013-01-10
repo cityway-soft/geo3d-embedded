@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.device.generic.can0" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.device.generic.can0</value>
+</property>
+<property name="buffersize">
+<value type="String">140</value>
+</property>
+<property name="filters">
+<array length="6" elementType="String">
+<value type="String">#Mon Oct 05 14:59:26 CEST 2009
+mask=80ffff00
+filter=80fef100
+</value>
+<value type="String">#Mon Oct 05 14:59:26 CEST 2009
+mask=80ffff00
+filter=80fef200
+</value>
+<value type="String">#Mon Oct 05 14:59:26 CEST 2009
+mask=80ffff00
+filter=80f00300
+</value>
+<value type="String">#Mon Oct 05 14:59:26 CEST 2009
+mask=80ffff00
+filter=80f00400
+</value>
+<value type="String">#Mon Oct 05 14:59:26 CEST 2009
+mask=80ffff00
+filter=80f00500
+</value>
+<value type="String">#Mon Oct 05 14:59:26 CEST 2009
+mask=80ffff00
+filter=80fee900
+</value>
+</array>
+</property>
+<property name="service.bundleLocation">
+<value type="String">initial@reference:file:../../geolia/avm/device/generic/org.avm.device.generic.can/</value>
+</property>
+<property name="url">
+<value type="String">vcan:0;blocking=off;timeout=10</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">4</value>
+</property>
+<property name="priority">
+<value type="String">5</value>
+</property>
+<property name="sleep">
+<value type="String">30</value>
+</property>
+<property name="mode">
+<value type="String">rw</value>
+</property>
+<property name="config.date">
+<value type="String">Mon Oct 05 11:45:16 CEST 2009</value>
+</property>
+</configuration>
+</cm_data>

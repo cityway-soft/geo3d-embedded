@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<digester-rules>
+	    <pattern value="can-specifications/slots">
+  			<object-create-rule classname="org.avm.elementary.can.generator.Catalog" />
+  			<pattern value="slot">
+	      		<object-create-rule classname="org.avm.elementary.can.generator.Slot" />
+	      		<set-properties-rule>
+		      		<alias attr-name="name" prop-name="name" />
+	      		</set-properties-rule>
+	      		<bean-property-setter-rule pattern="type" propertyname="type"/>
+	      		<bean-property-setter-rule pattern="unit" propertyname="unit"/>
+	      		<bean-property-setter-rule pattern="scaling" propertyname="scaling"/>
+	      		<bean-property-setter-rule pattern="range-min" propertyname="rangeMin"/>
+	      		<bean-property-setter-rule pattern="range-max" propertyname="rangeMax"/>		      				
+	      		<bean-property-setter-rule pattern="offset" propertyname="offset"/>
+	      		<bean-property-setter-rule pattern="length" propertyname="length"/>
+	      		<bean-property-setter-rule pattern="val-type" propertyname="valType"/>
+	      		<set-next-rule methodname="add" />
+  			</pattern>  		
+  		</pattern>
+		<pattern value="can-specifications/cans/can">    
+			<object-create-rule classname="org.avm.elementary.can.generator.CAN" />				
+			<set-properties-rule>
+		  		<alias attr-name="name" prop-name="name" />
+		  		<alias attr-name="pgn-mask" prop-name="mask" />
+		  		<alias attr-name="mode" prop-name="mode" />
+		  		<alias attr-name="check-spn" prop-name="check" />
+	      	</set-properties-rule>			      
+			<pattern value="pgns/pgn">
+				<object-create-rule classname="org.avm.elementary.can.generator.PGN" />
+				<set-properties-rule>
+			    	<alias attr-name="pgnID" prop-name="id" />		      				
+		      	</set-properties-rule>	
+				<pattern value="spns/spn">
+					<object-create-rule classname="org.avm.elementary.can.generator.SPN" />
+					<set-properties-rule>
+				    	<alias attr-name="spnID" prop-name="id" />		      				
+			      	</set-properties-rule>
+			      	<bean-property-setter-rule pattern="name" propertyname="name"/>
+		      		<bean-property-setter-rule pattern="slot" propertyname="slot"/>
+		      		<bean-property-setter-rule pattern="start-byte-position" propertyname="startBytePosition"/>
+		      		<bean-property-setter-rule pattern="start-bit-position" propertyname="startBitPosition"/>
+		      		<bean-property-setter-rule pattern="msb" propertyname="msb"/>	
+					<set-next-rule methodname="add" />
+	      		</pattern>
+	      		<set-next-rule methodname="add" />
+	      	</pattern>			
+	    </pattern>
+</digester-rules>

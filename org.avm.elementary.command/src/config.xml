@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.elementary.command.CommandChain" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.elementary.command.CommandChain</value>
+</property>
+<property name="command">
+<value type="String">default:default</value>
+</property>
+</configuration>
+</cm_data>

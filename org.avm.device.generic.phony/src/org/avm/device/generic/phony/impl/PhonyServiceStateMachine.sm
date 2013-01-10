@@ -1,0 +1,50 @@
+%start PhonyMap::Closed
+%package org.avm.device.generic.phony.impl
+%class PhonyServiceStateMachine
+%map PhonyMap
+%%
+
+Closed
+Entry{ entryClosed(); }
+{
+		open [ ctxt.isGsmAvailable() ]		Ready 							{initialize();}
+}
+
+Ready
+Entry{ entryReady(); }
+{
+		hangup					Ready										{}
+		ring(phone: String)		Ringing										{ringing(phone);}
+		dial(phone: String, listen: boolean)Dialing							{dialing(phone, listen);}		
+}
+
+Ringing
+Exit { exitRinging(); }
+{
+		ring(phone: String)					Ringing							{ringing(phone);}
+		hangup								Ready							{}
+		answer								Online							{answering();}
+}
+
+
+Dialing
+Entry{ entryDialing();}
+Exit{ exitDialing();}
+{
+		hangup								Ready							{}
+		online								Online							{}
+}
+
+Online
+Entry{ entryOnline();}
+{
+		hangup								Ready							{}			
+}
+
+Default 
+{
+		close								Closed							{}
+		Default								nil								{}
+}
+
+%%

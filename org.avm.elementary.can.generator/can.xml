@@ -1,0 +1,666 @@
+<?xml version="1.0" encoding="utf-8"?>
+<can-specifications>
+  <slots>
+    <slot name="GRUnoc02">
+      <type>concentration</type>
+      <unit>ppm</unit>
+      <scaling>1</scaling>
+      <range-min>-100</range-min>
+      <range-max>3000</range-max>
+      <offset>0</offset>
+      <length>2</length>
+      <val-type>byte</val-type>
+    </slot>
+    <slot name="GRUtp02">
+      <type>temperature</type>
+      <unit>degree</unit>
+      <scaling>1</scaling>
+      <range-min>-50</range-min>
+      <range-max>600</range-max>
+      <offset>0</offset>
+      <length>2</length>
+      <val-type>byte</val-type>
+    </slot>
+    <slot name="GRUmaf13">
+      <type>Mass air flow</type>
+      <unit>kg/h</unit>
+      <scaling>1</scaling>
+      <range-min>0</range-min>
+      <range-max>8191</range-max>
+      <offset>0</offset>
+      <length>13</length>
+      <val-type>bit</val-type>
+    </slot>
+    <slot name="GRUflo17">
+      <type>Flow rate</type>
+      <unit>ml/h</unit>
+      <scaling>0.1</scaling>
+      <range-min>0</range-min>
+      <range-max>13107.1</range-max>
+      <offset>0</offset>
+      <length>17</length>
+      <val-type>bit</val-type>
+    </slot>
+    <slot name="SAEbs01">
+      <type>Bit_Field</type>
+      <unit>bit</unit>
+      <scaling>1</scaling>
+      <range-min>0</range-min>
+      <range-max>1</range-max>
+      <offset>0</offset>
+      <length>1</length>
+      <val-type>bit</val-type>
+    </slot>
+    <slot name="SAEbs02">
+      <type>Bit_Field</type>
+      <unit>bit</unit>
+      <scaling>1</scaling>
+      <range-min>0</range-min>
+      <range-max>3</range-max>
+      <offset>0</offset>
+      <length>2</length>
+      <val-type>bit</val-type>
+    </slot>
+    <slot name="SAEbs03">
+      <type>Bit_Field</type>
+      <unit>bit</unit>
+      <scaling>1</scaling>
+      <range-min>0</range-min>
+      <range-max>7</range-max>
+      <offset>0</offset>
+      <length>3</length>
+      <val-type>bit</val-type>
+    </slot>
+    <slot name="SAEbs04">
+      <type>Bit_Field</type>
+      <unit>bit</unit>
+      <scaling>1</scaling>
+      <range-min>0</range-min>
+      <range-max>15</range-max>
+      <offset>0</offset>
+      <length>4</length>
+      <val-type>bit</val-type>
+    </slot>
+    <slot name="SAEbs05">
+      <type>Bit_Field</type>
+      <unit>bit</unit>
+      <scaling>1</scaling>
+      <range-min>0</range-min>
+      <range-max>31</range-max>
+      <offset>0</offset>
+      <length>5</length>
+      <val-type>bit</val-type>
+    </slot>
+    <slot name="SAEbs06">
+      <type>Bit_Field</type>
+      <unit>bit</unit>
+      <scaling>1</scaling>
+      <range-min>0</range-min>
+      <range-max>63</range-max>
+      <offset>0</offset>
+      <length>6</length>
+      <val-type>bit</val-type>
+    </slot>
+    <slot name="SAEbs07">
+      <type>Bit_Field</type>
+      <unit>bit</unit>
+      <scaling>1</scaling>
+      <range-min>0</range-min>
+      <range-max>127</range-max>
+      <offset>0</offset>
+      <length>7</length>
+      <val-type>bit</val-type>
+    </slot>
+    <slot name="SAEbs08">
+      <type>Bit_Field</type>
+      <unit>bit</unit>
+      <scaling>1</scaling>
+      <range-min>0</range-min>
+      <range-max>255</range-max>
+      <offset>0</offset>
+      <length>8</length>
+      <val-type>bit</val-type>
+    </slot>
+    <slot name="SAEbs11">
+      <type>Bit_Field</type>
+      <unit>bit</unit>
+      <scaling>1</scaling>
+      <range-min>0</range-min>
+      <range-max>2047</range-max>
+      <offset>0</offset>
+      <length>11</length>
+      <val-type>bit</val-type>
+    </slot>
+    <slot name="SAEbs21">
+      <type>Bit_Field</type>
+      <unit>bit</unit>
+      <scaling>1</scaling>
+      <range-min>0</range-min>
+      <range-max>2097151</range-max>
+      <offset>0</offset>
+      <length>21</length>
+      <val-type>bit</val-type>
+    </slot>
+    <slot name="SAEdef01">
+      <type>Unknowned</type>
+      <unit>??</unit>
+      <scaling>1</scaling>
+      <range-min>0</range-min>
+      <range-max>255</range-max>
+      <offset>0</offset>
+      <length>1</length>
+      <val-type>byte</val-type>
+    </slot>
+    <slot name="SAEdef02">
+      <type>Unknowned</type>
+      <unit>??</unit>
+      <scaling>1</scaling>
+      <range-min>0</range-min>
+      <range-max>65535</range-max>
+      <offset>0</offset>
+      <length>2</length>
+      <val-type>byte</val-type>
+    </slot>
+    <slot name="SAEdef03">
+      <type>Unknowned</type>
+      <unit>??</unit>
+      <scaling>1</scaling>
+      <range-min>0</range-min>
+      <range-max>16777215</range-max>
+      <offset>0</offset>
+      <length>3</length>
+      <val-type>byte</val-type>
+    </slot>
+    <slot name="SAEdef04">
+      <type>Unknowned</type>
+      <unit>??</unit>
+      <scaling>1</scaling>
+      <range-min>0</range-min>
+      <range-max>4294967295</range-max>
+      <offset>0</offset>
+      <length>4</length>
+      <val-type>byte</val-type>
+    </slot>
+    <slot name="SAEds09">
+      <type>Distance</type>
+      <unit>m</unit>
+      <scaling>5</scaling>
+      <range-min>0</range-min>
+      <range-max>21055406E3</range-max>
+      <offset>0</offset>
+      <length>4</length>
+      <val-type>byte</val-type>
+    </slot>
+    <slot name="SAEeg01">
+      <type>Economy_Gaseous</type>
+      <unit>km/kg</unit>
+      <scaling>0.001953125</scaling>
+      <range-min>0</range-min>
+      <range-max>127</range-max>
+      <offset>0</offset>
+      <length>2</length>
+      <val-type>byte</val-type>
+    </slot>
+    <slot name="SAEfl01">
+      <type>Flow_Rate_Liquid</type>
+      <unit>l/h</unit>
+      <scaling>0.05</scaling>
+      <range-min>0</range-min>
+      <range-max>3212.75</range-max>
+      <offset>0</offset>
+      <length>2</length>
+      <val-type>byte</val-type>
+    </slot>
+    <slot name="SAEpc03">
+      <type>Percent_Position_Level</type>
+      <unit>%</unit>
+      <scaling>0.4</scaling>
+      <range-min>0</range-min>
+      <range-max>100</range-max>
+      <offset>0</offset>
+      <length>1</length>
+      <val-type>byte</val-type>
+    </slot>
+    <slot name="SAEpc05">
+      <type>Percent_Position_Level</type>
+      <unit>%</unit>
+      <scaling>1</scaling>
+      <range-min>-125</range-min>
+      <range-max>125</range-max>
+      <offset>-125</offset>
+      <length>1</length>
+      <val-type>byte</val-type>
+    </slot>
+    <slot name="SAEpr07">
+      <type>Pressure</type>
+      <unit>kPa</unit>
+      <scaling>2</scaling>
+      <range-min>0</range-min>
+      <range-max>500</range-max>
+      <offset>0</offset>
+      <length>1</length>
+      <val-type>byte</val-type>
+    </slot>
+    <slot name="SAEpr10">
+      <type>Pressure</type>
+      <unit>kPa</unit>
+      <scaling>4</scaling>
+      <range-min>0</range-min>
+      <range-max>1000</range-max>
+      <offset>0</offset>
+      <length>1</length>
+      <val-type>byte</val-type>
+    </slot>
+    <slot name="SAEtp01">
+      <type>Temperature</type>
+      <unit>C</unit>
+      <scaling>1</scaling>
+      <range-min>-40</range-min>
+      <range-max>210</range-max>
+      <offset>-40</offset>
+      <length>1</length>
+      <val-type>byte</val-type>
+    </slot>
+    <slot name="SAEtp02">
+      <type>Temperature</type>
+      <unit>C</unit>
+      <scaling>0.03125</scaling>
+      <range-min>-273</range-min>
+      <range-max>1735</range-max>
+      <offset>-273</offset>
+      <length>2</length>
+      <val-type>byte</val-type>
+    </slot>
+    <slot name="SAEvl02">
+      <type>Velocity_Linear</type>
+      <unit>kph</unit>
+      <scaling>0.00390625</scaling>
+      <range-min>0</range-min>
+      <range-max>250.996</range-max>
+      <offset>0</offset>
+      <length>2</length>
+      <val-type>byte</val-type>
+    </slot>
+    <slot name="SAEvr01">
+      <type>Velocity_Rotational</type>
+      <unit>rpm</unit>
+      <scaling>0.125</scaling>
+      <range-min>0</range-min>
+      <range-max>8031.875</range-max>
+      <offset>0</offset>
+      <length>2</length>
+      <val-type>byte</val-type>
+    </slot>
+  </slots>
+  <cans>
+    <can name="j1939" pgn-mask="00FFFF00" >
+      <pgns>
+        <pgn pgnID="0702">
+          <spns>
+            <spn spnID="SCR1">
+              <name>Urea level</name>
+              <slot>SAEpc03</slot>
+              <start-byte-position>1</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>true</msb>
+            </spn>
+            <spn spnID="SCR2">
+              <name>Urea temperature</name>
+              <slot>SAEtp02</slot>
+              <start-byte-position>3</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>false</msb>
+            </spn>
+            <spn spnID="SCR3">
+              <name>Urea quantity</name>
+              <slot>SAEdef02</slot>
+              <start-byte-position>5</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>false</msb>
+            </spn>
+            <spn spnID="SCR4">
+              <name>Machine state</name>
+              <slot>SAEdef01</slot>
+              <start-byte-position>7</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>true</msb>
+            </spn>
+            <spn spnID="SCR5">
+              <name>Transition state</name>
+              <slot>SAEdef01</slot>
+              <start-byte-position>8</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>true</msb>
+            </spn>
+          </spns>
+        </pgn>
+        <pgn pgnID="F003">
+          <spns>
+            <spn spnID="SPN91">
+              <name>Accelerator pedal position 1</name>
+              <slot>SAEpc03</slot>
+              <start-byte-position>2</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>true</msb>
+            </spn>
+          </spns>
+        </pgn>
+        <pgn pgnID="F004">
+          <spns>
+            <spn spnID="SPN512">
+              <name>Driver's Demand Engine - Percent Torque</name>
+              <slot>SAEpc05</slot>
+              <start-byte-position>2</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>true</msb>
+            </spn>
+            <spn spnID="SPN513">
+              <name>Actual Engine - Percent Torque</name>
+              <slot>SAEpc05</slot>
+              <start-byte-position>3</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>true</msb>
+            </spn>
+            <spn spnID="SPN190">
+              <name>Engine Speed</name>
+              <slot>SAEvr01</slot>
+              <start-byte-position>4</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>false</msb>
+            </spn>
+          </spns>
+        </pgn>
+        <pgn pgnID="FEC1">
+          <spns>
+            <spn spnID="SPN918">
+              <name>High Resolution Trip Distance</name>
+              <slot>SAEds09</slot>
+              <start-byte-position>5</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>false</msb>
+            </spn>
+	          <spn spnID="SPN917">
+              <name>High Resolution Vehicule Distance</name>
+              <slot>SAEds09</slot>
+              <start-byte-position>1</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>false</msb>
+            </spn>
+          </spns>
+        </pgn>
+        <pgn pgnID="FEDF">
+          <spns>
+            <spn spnID="SPN514">
+              <name>Nominal Friction - Percent Torque</name>
+              <slot>SAEpc05</slot>
+              <start-byte-position>1</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>true</msb>
+            </spn>
+          </spns>
+        </pgn>
+        <pgn pgnID="FEEE">
+          <spns>
+            <spn spnID="SPN110">
+              <name>Engine Coolant Temperature</name>
+              <slot>SAEtp01</slot>
+              <start-byte-position>1</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>true</msb>
+            </spn>
+            <spn spnID="SPN174">
+              <name>Engine Fuel Temperature</name>
+              <slot>SAEtp01</slot>
+              <start-byte-position>2</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>true</msb>
+            </spn>
+            <spn spnID="SPN175">
+              <name>Engine Oil Temperature 1</name>
+              <slot>SAEtp02</slot>
+              <start-byte-position>3</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>false</msb>
+            </spn>
+          </spns>
+        </pgn>
+        <pgn pgnID="FEEF">
+          <spns>
+            <spn spnID="SPN100">
+              <name>Engine oil pressure</name>
+              <slot>SAEpr10</slot>
+              <start-byte-position>4</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>true</msb>
+            </spn>
+          </spns>
+        </pgn>
+        <pgn pgnID="FEF1">
+          <spns>
+            <spn spnID="SPN70">
+              <name>Parking Brake Switch</name>
+              <slot>SAEbs02</slot>
+              <start-byte-position>1</start-byte-position>
+              <start-bit-position>3</start-bit-position>
+              <msb>true</msb>
+            </spn>
+            <spn spnID="SPN84">
+              <name>Wheel-Based vehicule Speed</name>
+              <slot>SAEvl02</slot>
+              <start-byte-position>2</start-byte-position>
+              <start-bit-position>1</start-bit-position>
+              <msb>false</msb>
+            </spn>
+            <spn spnID="SPN597">
+              <name>Brake Switch</name>
+              <slot>SAEbs02</slot>
+              <start-byte-position>4</start-byte-position>
+              <start-bit-position>5</start-bit-position>
+              <msb>true</msb>
+            </spn>
+            <spn spnID="SPN598">
+              <name>Clutch Switch</name>
+              <slot>SAEbs02</slot>
+              <start-byte-position>4</start-byte-position>
+              <start-bit-position>7</start-bit-position>
+              <msb>true</msb>
+            </spn>
+          </spns>
+        </pgn>
+        <pgn pgnID="FEF2">
+          <spns>
+            <spn spnID="SPN183">
+              <name>Engine Fuel Rate</name>
+              <slot>SAEfl01</slot>
+              <start-byte-position>1</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>false</msb>
+            </spn>
+            <spn spnID="SPN184">
+              <name>Engine Instantaneous Fuel Economy</name>
+              <slot>SAEeg01</slot>
+              <start-byte-position>3</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>false</msb>
+            </spn>
+          </spns>
+        </pgn>
+        <pgn pgnID="FEF6">
+          <spns>
+            <spn spnID="SPN102">
+              <name>Engine Boost Pressure</name>
+              <slot>SAEpr07</slot>
+              <start-byte-position>2</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>true</msb>
+            </spn>
+            <spn spnID="SPN105">
+              <name>Engine Intake Manifold 1 Temperature</name>
+              <slot>SAEtp01</slot>
+              <start-byte-position>3</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>true</msb>
+            </spn>
+          </spns>
+        </pgn>
+        <pgn pgnID="FF01">
+          <spns>            
+          </spns>
+        </pgn>      
+          <pgn pgnID="F000">
+          <spns>            
+          </spns>
+        </pgn>
+        <pgn pgnID="FE6C">
+          <spns>            
+          </spns>
+        </pgn>
+        <pgn pgnID="F001">
+          <spns>            
+          </spns>
+        </pgn>
+        <pgn pgnID="FEBF">
+          <spns>            
+          </spns>
+        </pgn>
+        <pgn pgnID="FF03">
+          <spns>            
+          </spns>
+        </pgn>
+        <pgn pgnID="FEE6">
+          <spns>            
+          </spns>
+        </pgn>
+        <pgn pgnID="FF02">
+          <spns>            
+          </spns>
+        </pgn>
+        <pgn pgnID="DEEE">
+          <spns>            
+          </spns>
+        </pgn>
+        <pgn pgnID="E8FF">
+          <spns>            
+          </spns>
+        </pgn>
+        <pgn pgnID="ECFF">
+          <spns>            
+          </spns>
+        </pgn>
+        <pgn pgnID="DAEE">
+          <spns>            
+          </spns>
+        </pgn>
+        <pgn pgnID="EBFF">
+          <spns>            
+          </spns>
+        </pgn>
+        <pgn pgnID="DA17">
+          <spns>            
+          </spns>
+        </pgn>
+        <pgn pgnID="D0EE">
+          <spns>            
+          </spns>
+        </pgn>
+        <pgn pgnID="FECA">
+          <spns>            
+          </spns>
+        </pgn>
+        <pgn pgnID="FEBD">
+          <spns>            
+          </spns>
+        </pgn>
+      </pgns>
+    </can>
+    <!--
+    <can name="grunfos" pgn-mask="00FFF">
+      <pgns>
+        <pgn pgnID="0048">
+          <spns>
+            <spn spnID="NOXInlet">
+              <name>Nox Inlet</name>
+              <slot>GRUnoc02</slot>
+              <start-byte-position>1</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>false</msb>
+            </spn>
+            <spn spnID="NOXOulet">
+              <name>Nox Oulet</name>
+              <slot>GRUnoc02</slot>
+              <start-byte-position>3</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>false</msb>
+            </spn>
+            <spn spnID="TCataIn">
+              <name>Catalyst Temp In</name>
+              <slot>GRUtp02</slot>
+              <start-byte-position>5</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>false</msb>
+            </spn>
+            <spn spnID="TCataOut">
+              <name>Catalyst Temp Out</name>
+              <slot>GRUtp02</slot>
+              <start-byte-position>7</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>false</msb>
+            </spn>
+          </spns>
+        </pgn>
+        <pgn pgnID="0058">
+          <spns>
+            <spn spnID="MAFSensor">
+              <name>MAF Sensor</name>
+              <slot>GRUmaf13</slot>
+              <start-byte-position>1</start-byte-position>
+              <start-bit-position>1</start-bit-position>
+              <msb>false</msb>
+            </spn>
+            <spn spnID="ReqFlowRate">
+              <name>Requested Flow Rate</name>
+              <slot>GRUflo17</slot>
+              <start-byte-position>2</start-byte-position>
+              <start-bit-position>6</start-bit-position>
+              <msb>false</msb>
+            </spn>
+            <spn spnID="UTankL">
+              <name>Urea Tank Level</name>
+              <slot>SAEbs02</slot>
+              <start-byte-position>4</start-byte-position>
+              <start-bit-position>7</start-bit-position>
+              <msb>false</msb>
+            </spn>
+            <spn spnID="PumpState">
+              <name>Pump State</name>
+              <slot>SAEbs04</slot>
+              <start-byte-position>5</start-byte-position>
+              <start-bit-position>1</start-bit-position>
+              <msb>false</msb>
+            </spn>
+          </spns>
+        </pgn>
+        <pgn pgnID="0200">
+          <spns>            
+          </spns>
+        </pgn>      
+      </pgns>
+    </can>
+    <can name="Can-Moteur" pgn-mask="00FFFF00">
+      <pgns>
+        <pgn pgnID="0703">
+          <spns>
+            <spn spnID="NOX1">
+              <name>Nox estimation</name>
+              <slot>SAEdef02</slot>
+              <start-byte-position>1</start-byte-position>
+              <start-bit-position>0</start-bit-position>
+              <msb>true</msb>
+            </spn>
+          </spns>
+        </pgn>
+      </pgns>
+    </can>
+    -->
+  </cans>
+</can-specifications>

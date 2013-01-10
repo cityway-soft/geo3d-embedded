@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.device.wifi.Wifi" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.device.wifi.Wifi</value>
+</property>
+<property name="org.avm.device.wifi.disconnect.timeout">
+<value type="String">60</value>
+</property>
+<property name="org.avm.device.wifi.ssid">
+<value type="String">wirmacat22</value>
+</property>
+<property name="org.avm.device.wifi.encryption">
+<value type="String">false</value>
+</property>
+<property name="org.avm.device.wifi.open-authentication">
+<value type="String">true</value>
+</property>
+<property name="org.avm.device.wifi.adhoc">
+<value type="String">false</value>
+</property>                 
+<property name="org.avm.device.wifi.wepkey">
+<value type="String">ED8B0F1D22</value>
+</property>
+<property name="org.avm.device.wifi.automatic-wepkey">
+<value type="String">true</value>
+</property>
+<property name="org.avm.device.wifi.eap">
+<value type="String">TLS</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">ftp://ftp:ftp++@avm/default/org.avm.device.knet.wifi.jar</value>
+</property>
+<property name="org.avm.device.wifi.balise.list">
+<value type="String">10000;100000;100001;100002</value>
+</property>
+<property name="org.avm.device.wifi.authentication">
+<value type="String">false</value>
+</property>
+</configuration>
+</cm_data>

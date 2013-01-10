@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.business.tad.TAD" immediate="true">
+	<implementation class="org.avm.business.tad.bundle.Activator"/>	
+	<property name="service.pid" value="org.avm.business.tad.TAD"/>
+	<service>				
+		<provide interface="org.avm.business.tad.TAD"/>
+	</service>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+	<reference name="wireadmin"
+		interface="org.osgi.service.wireadmin.WireAdmin" />		
+</component>
+

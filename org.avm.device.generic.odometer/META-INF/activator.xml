@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.generic.odometer.Odometer" immediate="true">
+	<implementation class="org.avm.device.generic.odometer.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.device.generic.odometer.Odometer"/>
+	<service>				
+		<provide interface="org.avm.device.odometer.Odometer"/>
+	</service>
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>		
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+</component>

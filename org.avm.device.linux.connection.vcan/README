@@ -1,0 +1,12 @@
+# generation trame
+./util/cangen can0 -e -I 00F00400 -D FFFF85D012FFFFFF -L8
+
+# generation data
+awk -f can.awk can.txt > can.data
+
+#  play data
+./util/canplayer -I can.data -v
+
+# read data 
+./util/candump -t z can0
+

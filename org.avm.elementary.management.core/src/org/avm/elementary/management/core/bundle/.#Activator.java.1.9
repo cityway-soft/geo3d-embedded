@@ -1,0 +1,97 @@
+package org.avm.elementary.management.core.bundle;
+
+import org.avm.elementary.management.core.Management;
+import org.avm.elementary.management.core.ManagementImpl;
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.packageadmin.PackageAdmin;
+import org.osgi.service.startlevel.StartLevel;
+
+public class Activator implements BundleActivator, Management {
+
+	static final String PID = Management.class.getName();
+
+	private static final String LOGTAG = "DEBUG [" + Activator.class.getName()
+			+ "] ";
+
+	private ManagementImpl _peer;
+
+	private ServiceRegistration _sr;
+
+	private boolean DEBUG;
+
+	public Activator() {
+		
+	}
+
+	public void setBundleContext(BundleContext context) {
+		_peer.setBundleContext(context);
+	}
+
+
+	public StartLevel getStartLevelService() {
+		return _peer.getStartLevelService();
+	}
+
+	public String getPublicUploadUrl() {
+		return _peer.getPublicUploadUrl();
+	}
+
+	public String getPublicDownloadUrl() {
+		return _peer.getPublicDownloadUrl();
+	}
+
+
+	public void start(BundleContext context) throws Exception {
+		DEBUG = Boolean.valueOf(System.getProperty("org.avm.debug", "false")).booleanValue();
+		_peer = new ManagementImpl();
+		debug("activating...");
+		_peer.setBundleContext(context);
+		_peer.start();
+		// Dictionary dic = new Properties();
+		// dic.put("service.pid", ManagementService.class.getName());
+		_sr = context.registerService(Management.class.getName(), _peer,
+				null);
+		debug(_sr + " registered.");
+		debug("activated.");
+	}
+
+	public void stop(BundleContext context) throws Exception {
+		debug("deactivating...");
+		_sr.unregister();
+		_peer.stop();
+		_peer.setBundleContext(context);
+		debug("deactivated.");
+	}
+
+	public String getPrivateDownloadUrl() {
+		return _peer.getPrivateDownloadUrl();
+	}
+
+	public String getPrivateUploadUrl() {
+		return _peer.getPrivateUploadUrl();
+	}
+
+
+	private void debug(String debug) {
+		if (DEBUG) {
+			System.out.println(LOGTAG + debug);
+		}
+	}
+
+	public PackageAdmin getPackageAdminService() {
+		return _peer.getPackageAdminService();
+	}
+
+
+
+	public void init() {
+		_peer.init();
+	}
+
+	public void synchronize() throws Exception {
+		_peer.synchronize();
+	}
+
+}

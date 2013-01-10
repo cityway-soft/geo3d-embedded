@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.device.wifi.Wifi" mode="new">
+<property name="org.avm.config.version">
+<value type="Integer">2</value>
+</property>
+<property name="avm-site">
+<value type="String">#Sat Jan 01 01:05:49 CET 2000
+encryption=true
+automatic-wepkey=false
+eap=TLS
+open-authentication=true
+adhoc=false
+wepkey=E6E5A80FF7
+authentication=false
+</value>
+</property>
+<property name="service.pid">
+<value type="String">org.avm.device.wifi.Wifi</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">ftp://avm:avm++@ftpserver.avm.org/fm6000/default/bundles/org.avm.device.wifi.jar</value>
+</property>
+</configuration>
+</cm_data>

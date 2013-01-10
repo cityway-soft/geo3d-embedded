@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.hmi.swt.avm.Avm" immediate="true">
+	<implementation class="org.avm.hmi.swt.avm.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.hmi.swt.avm.Avm"/>
+	<service>						
+		<provide interface="org.avm.hmi.swt.avm.Avm"/>	
+	</service>
+	
+	<reference name="desktop" 
+			   interface="org.avm.hmi.swt.desktop.Desktop"/>
+			   
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>
+	
+	<reference name="avm" interface="org.avm.business.core.Avm"
+		cardinality="0..1" policy="dynamic" bind="setAvm" unbind="unsetAvm" />
+		
+	<reference name="usersession" interface="org.avm.elementary.useradmin.UserSessionService" 
+		cardinality="0..1" policy="dynamic" bind="setUserSessionService" unbind="unsetUserSessionService" />
+</component>

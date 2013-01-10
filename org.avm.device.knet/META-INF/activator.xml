@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.knet.KnetAgentFactory" immediate="true">
+	<implementation class="org.avm.device.knet.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.device.knet.KnetAgentFactory"/>
+	<service>				
+		<provide interface="org.avm.device.knet.KnetAgentFactory"/>
+	</service>
+	<reference 
+		name="cm" 
+		interface="org.osgi.service.cm.ConfigurationAdmin"
+		/>
+</component>

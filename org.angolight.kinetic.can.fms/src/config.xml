@@ -1,0 +1,29 @@
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.angolight.kinetic.KineticService" mode="new">
+<property name="acquisition-period">
+<value type="Double">0.1</value>
+</property>
+<property name="service.pid">
+<value type="String">org.angolight.kinetic.KineticService</value>
+</property>
+<property name="notification-period">
+<value type="Double">0.4</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">ftp://avm:avm++@ftpserver.avm.org/aton/116/bundles/org.angolight.kinetic.can.fms.jar</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">2</value>
+</property>
+<property name="median-filter-length">
+<value type="Integer">9</value>
+</property>
+<property name="config.date">
+<value type="String">Fri Nov 20 16:13:13 CET 2009</value>
+</property>
+<property name="can-service-pid">
+<value type="String">org.avm.device.generic.can0</value>
+</property>
+</configuration>
+</cm_data>

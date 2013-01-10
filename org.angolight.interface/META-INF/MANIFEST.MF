@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.angolight.elementary.interface
+Bundle-SymbolicName: org.angolight.interface
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.angolight.bo,
+ org.angolight.device.leds,
+ org.angolight.halfcycle,
+ org.angolight.indicator,
+ org.angolight.kinetic,
+ org.angolight.recorder
+Import-Package: org.apache.commons.pool,
+ org.apache.log4j,
+ org.osgi.util.measurement
+
+

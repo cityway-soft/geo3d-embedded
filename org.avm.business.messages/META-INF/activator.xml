@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.business.messages.Messages" immediate="true">
+	<implementation class="org.avm.business.messages.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.business.messages.Messages"/>
+	<service>						
+		<provide interface="org.avm.business.messages.Messages"/>		
+	</service>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"	/>
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>
+	<reference name="messenger" interface="org.avm.elementary.messenger.Messenger"/>
+</component>

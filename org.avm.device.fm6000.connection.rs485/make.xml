@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="dist" name="rs485">
+ 	
+	<property name="src.dir" value="src"/>
+	<property name="lib.dir" value="lib"/>
+	<property name="build.dir" value="build"/>
+	<property name="dist.dir" value="dist"/>
+	
+    <path id="classpath">
+        <pathelement location="${build.dir}"/>
+    	<pathelement location="/opt/ive-2.2/lib/jclPPro10/classes.zip"/>
+    </path>
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+    	<mkdir dir="${dist.dir}"/>
+    </target>
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    	<delete dir="${dist.dir}"/>
+    </target>
+    <target depends="init" name="build">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac destdir="${build.dir}" source="1.3" target="1.2">
+            <src path="${src.dir}"/>
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
+	<target name="dist" depends="build">
+	    <jar destfile="${dist.dir}/${ant.project.name}.jar" basedir="${build.dir}"></jar>
+		<delete dir="${build.dir}"/>
+	</target>
+</project>

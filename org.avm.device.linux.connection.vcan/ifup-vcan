@@ -1,0 +1,24 @@
+#!/bin/bash
+case $1 in
+start)
+	modprobe can
+	modprobe can_raw
+	modprobe vcan
+# dmesg -> device peak can (can1)
+#	modprobe pcan
+	ip link add type vcan
+	ip link add dev can0 type vcan
+	ifconfig can0 up
+#	ifconfig can1 up
+	;;
+
+stop)
+	ip link del can0
+#	ip link del can1
+	;;
+
+*)	
+	echo "usage $0 {start,stop}"
+	exit 1
+	;;
+esac

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.device.io.iocardbus.IOCardBus" mode="new">
+<property name="do">
+<vector length="4">
+<value type="String">org.avm.device.io.DigitalIODevice</value>
+<value type="String">kerlink.fr</value>
+<value type="String">org.avm.device.io.nomad.DigitalOutput</value>
+<value type="String">12aef38b-bc84-4bb7-9a56-d4b1c6d98618</value>
+</vector>
+</property>
+<property name="service.pid">
+<value type="String">org.avm.device.io.iocardbus.IOCardBus</value>
+</property>
+<property name="counter">
+<vector length="4">
+<value type="String">org.avm.device.io.CounterDevice</value>
+<value type="String">kerlink.fr</value>
+<value type="String">org.avm.device.nomad.io.Counter</value>
+<value type="String">4f522f1a-933f-4517-bb27-6b63de5dd442</value>
+</vector>
+</property>
+<property name="service.bundleLocation">
+<value type="String">ftp://avm:avm++@ftpserver.avm.org/nomad/default/bundles/org.avm.device.generic.io.iocardbus.jar</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">3</value>
+</property>
+<property name="di">
+<vector length="4">
+<value type="String">org.avm.device.io.DigitalIODevice</value>
+<value type="String">kerlink.fr</value>
+<value type="String">org.avm.device.io.nomad.DigitalInput</value>
+<value type="String">ccea6a6d-bbfe-4179-a0a2-ab940611c772</value>
+</vector>
+</property>
+<property name="config.date">
+<value type="String">Wed Dec 16 14:55:00 CET 2009</value>
+</property>
+</configuration>
+</cm_data>

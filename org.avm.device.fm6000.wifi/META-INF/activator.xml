@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.fm6000.wifi.Wifi" immediate="true">
+	<implementation class="org.avm.device.fm6000.wifi.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.device.wifi.Wifi"/>
+	<service>				
+		<provide interface="org.avm.device.wifi.Wifi"/>
+	</service>
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>		
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+</component>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.device.gps.Gps" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.device.gps.Gps</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">http://localhost/org.avm.device.gps_1.0.0.jar</value>
+</property>
+<property name="correct">
+<value type="Boolean">false</value>
+</property>
+<property name="delay">
+<value type="Integer">2</value>
+</property>
+<property name="url.connection">
+<value type="String">comm:8;baudrate=9600;stopbits=1;parity=none;bitsperchar=8;autocts=off;autorts=off;blocking=on</value>
+</property>
+</configuration>
+</cm_data>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.hmi.swt.desktop.Desktop" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.hmi.swt.desktop.Desktop</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">initial@reference:file:../../../home/didier/Projets/geolia/common/dev/workspace/avmrefactor/avm/hmi/swt/org.avm.hmi.swt.desktop/</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">1</value>
+</property>
+<property name="day.begin">
+<value type="String">6:30</value>
+</property>
+<property name="day.end">
+<value type="String">19:45</value>
+</property>
+<property name="config.date">
+<value type="String">Tue May 31 21:40:04 CEST 2011</value>
+</property>
+</configuration>
+</cm_data>

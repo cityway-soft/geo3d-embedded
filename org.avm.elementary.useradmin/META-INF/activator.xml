@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.elementary.useradmin.UserSessionService" immediate="true">
+	<implementation class="org.avm.elementary.useradmin.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.elementary.useradmin.UserSessionService"/>		
+	<service>																					
+		<provide interface="org.avm.elementary.useradmin.UserSessionService"/>																
+	</service>	
+
+	<reference name="prefs" interface="org.osgi.service.prefs.PreferencesService"/>	
+	<reference name="useradmin" interface="org.osgi.service.useradmin.UserAdmin" cardinality="0..1" policy="dynamic" bind="addUserAdminService" unbind="removeUserAdminService"/>	
+	<reference name="wireadmin"
+		interface="org.osgi.service.wireadmin.WireAdmin" />
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+</component>

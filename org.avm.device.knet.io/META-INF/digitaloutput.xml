@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.io.knet.KnetDigitalOutputDriver"
+	immediate="true">
+	<implementation
+		class="org.avm.device.io.knet.KnetDigitalOutputDriver" />
+	<property name="service.pid"
+		value="org.avm.device.io.knet.KnetDigitalOutputDriver" />
+	<property name="DRIVER_ID"
+		value="org.avm.device.io.knet.KnetDigitalOutputDriver" />
+	<service>
+		<provide interface="org.osgi.service.device.Driver" />
+	</service>
+	<reference name="sensor"
+		interface="org.avm.device.knet.sensor.Sensor" cardinality="0..n"
+		policy="dynamic" bind="setSensor" unbind="unsetSensor" />
+
+</component>

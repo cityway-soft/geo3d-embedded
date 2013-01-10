@@ -1,0 +1,28 @@
+package org.avm.elementary.management.core;
+
+import java.io.PrintWriter;
+
+import org.osgi.service.packageadmin.PackageAdmin;
+import org.osgi.service.startlevel.StartLevel;
+
+
+/**
+ * @author Didier LALLEMAND
+ * 
+ */
+public interface Management {
+
+	public void synchronize(PrintWriter out) throws Exception;
+		
+	public void init();
+
+	public String getPrivateUploadUrl();
+
+	public StartLevel getStartLevelService();
+
+	public String getPrivateDownloadUrl();
+
+	public PackageAdmin getPackageAdminService();
+
+
+}

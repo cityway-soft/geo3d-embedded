@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.business.recorder.Recorder" immediate="true">
+	<implementation class="org.avm.business.recorder.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.business.recorder.Recorder"/>
+	<service>						
+		<provide interface="org.avm.business.recorder.Recorder"/>		
+	</service>
+	<reference name="avm" interface="org.avm.business.core.Avm" 
+		cardinality="0..1" 
+		policy="dynamic" bind="setAvm" unbind="unsetAvm"
+	/>
+	<reference name="jdb" interface="org.avm.elementary.jdb.JDB" />
+	<reference name="database" interface="org.avm.elementary.database.Database" />
+	<reference name="cm"  interface="org.osgi.service.cm.ConfigurationAdmin" />
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin" />	
+	<reference 
+		name="compostage" 
+		interface="org.avm.elementary.variable.Variable"
+		target="(org.avm.elementary.variable.name=compostage)"
+		cardinality="0..1" 
+		policy="dynamic" bind="setCompostage" unbind="unsetCompostage"
+	/>
+</component>

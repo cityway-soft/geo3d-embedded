@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Media Test Plug-in
+Bundle-SymbolicName: org.avm.elementary.media.test
+Bundle-Version: 1.0.0.qualifier
+Bundle-Localization: plugin
+Import-Package: EDU.oswego.cs.dl.util.concurrent,
+ org.apache.log4j,
+ org.avm.elementary.common,
+ org.knopflerfish.service.console,
+ org.osgi.framework,
+ org.osgi.service.cm,
+ org.osgi.service.component,
+ org.osgi.service.wireadmin
+Bundle-ClassPath: .
+Service-Component: META-INF/activator.xml
+Bundle-Vendor: mercur.fr
+Export-Package: org.avm.elementary.media.test
+

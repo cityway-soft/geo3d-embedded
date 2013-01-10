@@ -1,0 +1,34 @@
+MODULE = rs485
+CROSSTOOLS =  /opt/toolchains/armeabi-gcc-4.3.2-glibc-2.8
+CLASSPATH = ../../bin
+CLASS    = org/avm/device/protocol/rs485/Rs485Connection.class
+CLASSNAME = org.avm.device.protocol.rs485.Rs485Connection
+OBJS       = $(MODULE).o
+NATIVE_LIB = lib$(MODULE).so
+GCC_PREFIX = arm-none-linux-gnueabi
+#CC = $(CROSSTOOLS)/bin/arm-none-linux-gnueabi-gcc
+JAVA_HOME =  /opt/java
+JAVAH = $(JAVA_HOME)/bin/javah
+DIST_DIR = ../../dist
+CPPFLAGS  += -c -g -O2 -Wall  \
+			-I$(LIBC)/usr/include \
+			-I$(JAVA_HOME)/include \
+			-I$(JAVA_HOME)/include/linux 
+
+all: $(NATIVE_LIB)
+
+$(NATIVE_LIB): $(OBJS)
+	$(CC) -shared -o $(NATIVE_LIB) $^ -l comm
+	cp $(NATIVE_LIB) $(DIST_DIR)
+
+$(MODULE).o: $(MODULE).c $(MODULE).h
+	$(CC) $(CPPFLAGS) $<
+	
+$(MODULE).h: $(CLASSPATH)/$(CLASS)
+	$(JAVAH)  -classpath $(CLASSPATH) -o $(MODULE).h -jni $(CLASSNAME) 
+
+clean: 
+	rm -f *.o 
+	rm -f *.so 
+	rm -f $(MODULE).h 
+

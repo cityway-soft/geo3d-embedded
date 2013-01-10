@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: IHM Message
+Bundle-SymbolicName: org.avm.hmi.swt.message
+Bundle-Version: 1.0.0.qualifier
+Service-Component: META-INF/activator.xml
+Bundle-ClassPath: .
+Import-Package: org.apache.log4j,
+ EDU.oswego.cs.dl.util.concurrent,
+ org.avm.elementary.alarm,
+ org.avm.business.messages,
+ org.avm.business.protocol.phoebus,
+ org.avm.elementary.common,
+ org.avm.elementary.messenger,
+ org.avm.elementary.useradmin,
+ org.avm.hmi.swt.desktop,
+ org.knopflerfish.service.console,
+ org.osgi.framework;version="1.3.0",
+ org.osgi.service.cm,
+ org.osgi.service.component,
+ org.osgi.service.wireadmin,
+ org.osgi.util.measurement;version="1.0.0",
+ org.osgi.util.position;version="1.0.0"
+Bundle-Vendor: cityway.fr
+

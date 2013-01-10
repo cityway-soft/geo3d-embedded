@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.device.io.iocardbus.IOCardBus" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.device.io.iocardbus.IOCardBus</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">10</value>
+</property>
+<property name="config.date">
+<value type="String">Mon May 18 15:04:47 GMT 2009</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">ftp://avm:avm++@ftpserver.avm.org/aton/106/bundles/org.avm.device.generic.io.iocardbus.jar</value>
+</property>
+<property name="memorydi">
+<vector length="4">
+<value type="String">org.avm.device.io.DigitalIODevice</value>
+<value type="String">mercur.fr</value>
+<value type="String">org.avm.device.io.memory.MemoryDigitalIO</value>
+<value type="String">961001fb-6b7b-4c97-b544-6f6964c21cd1</value>
+</vector>
+</property>
+<property name="memorydo">
+<vector length="4">
+<value type="String">org.avm.device.io.DigitalIODevice</value>
+<value type="String">mercur.fr</value>
+<value type="String">org.avm.device.io.memory.MemoryDigitalIO</value>
+<value type="String">107bd6eb-8ccd-481b-9d10-dd87c2b02c61</value>
+</vector>
+</property>
+<property name="counter1">
+<vector length="4">
+<value type="String">org.avm.device.io.CounterDevice</value>
+<value type="String">mercur.fr</value>
+<value type="String">org.avm.device.io.memory.OdometerCounter</value>
+<value type="String">a1bb7bb5-bde8-4dad-9750-2542e5d67550</value>
+</vector>
+</property>
+</configuration>
+</cm_data>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.can.Can" factory="org.avm.device.generic.can.bundle.Activator">
+	<implementation class="org.avm.device.generic.can.bundle.Activator"/>
+	<service>				
+		<provide interface="org.avm.device.can.Can"/>
+	</service>
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>		
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+</component>

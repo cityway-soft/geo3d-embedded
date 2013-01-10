@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.elementary.phony.Phony" mode="new">
+<property name="org.avm.config.version">
+<value type="Integer">19</value>
+</property>
+<property name="service.pid">
+<value type="String">org.avm.device.phony.Phony</value>
+</property>
+<property name="defaultvolume">
+<value type="Integer">20</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">initial@reference:file:../../home/didier/projets/geolia/common/dev/workspace/avm-futur/org.avm.elementary.phony/</value>
+</property>
+<property name="org.avm.elementary.dummy.property">
+<value type="String">Tue Aug 28 19:41:48 CEST 2007</value>
+</property>
+
+<property name="init">
+<value type="String">
+set-ringer-sound-level,call-line-presentation
+</value>
+</property>
+
+<property name="at.call-line-presentation">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=presentation du numero appelant
+request=AT+CLIP=1\r
+</value>
+</property>
+
+<property name="at.set-ringer-sound-level">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=Ringer Sound Level
+request=AT+CRSL=2
+</value>
+</property>
+
+<property name="at.set-handset-microphone-gain">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=Handset Microphone Gain
+request=AT#HSMICG=1
+</value>
+</property>
+
+<property name="at.set-handset-echo-canceller">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=Handset Echo Canceller
+request=AT#SHSEC=1
+</value>
+</property>
+
+<property name="at.set-handset-sidetone">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=Handset Sidetone
+request=AT#SHSSD=0
+</value>
+</property>
+
+<property name="at.set-handset-automatic-gain-control">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=Handset Automatic Gain Control
+request=AT#SHSAGC=1
+</value>
+</property>
+
+<property name="at.set-handset-automatic-gain-control">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=Handset Echo Canceller
+request=AT#SHSEC=1
+</value>
+</property>
+
+<property name="at.set-default-melody">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=selection melodie par defaut,selection 'speaker' comme player par defaut
+request=AT#SRS=10,0
+</value>
+</property>
+
+<property name="at.set-default-player">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=speaker player par defaut
+request=AT#CAP=2
+</value>
+</property>
+
+<property name="at.melody3">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=test melodie n°3
+request=AT#SRS=10,0
+</value>
+</property>
+
+<property name="at.melody10">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=test melodie n°10
+request=AT#SRS=10,0
+</value>
+</property>
+
+<property name="at.listen-mode-on">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=active l'ecoute discrete
+request=AT#SPKMUT=1
+</value>
+</property>
+
+<property name="at.listen-mode-off">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=desactive l'ecoute discrete
+request=AT#SPKMUT=0
+</value>
+</property>
+
+<property name="at.volume0">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=change le volume en sortie de speaker
+request=AT+CLVL=2
+</value>
+</property>
+
+<property name="at.volume1">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=change le volume en sortie de speaker
+request=AT+CLVL=5
+</value>
+</property>
+
+<property name="at.volume2">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=change le volume en sortie de speaker
+request=AT+CLVL=8
+</value>
+</property>
+
+<property name="at.volume3">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=change le volume en sortie de speaker
+request=AT+CLVL=11
+</value>
+</property>
+
+<property name="at.volume4">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=change le volume en sortie de speaker
+request=AT+CLVL=14
+</value>
+</property>
+
+
+
+</configuration>
+</cm_data>

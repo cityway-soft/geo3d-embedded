@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="export" default="all">
+	
+	<property file="export.properties" />
+	
+	<target name="all">
+		<antcall target="bundle">			
+			<param name="data.dir" value="${path.src}" />
+			<param name="dist.dir" value="${path.dest}" />
+		</antcall>
+	</target>
+
+	<target name="bundle">
+
+		<tstamp>
+			<format property="now" pattern="yyyyMMddHHmmss" />
+		</tstamp>
+		<property name="bundle.jar" value="${bundle.name}.jar" />
+		<property name="build.dir" value="${path.dest}/build" />
+		<property name="resources.file" value="resources.properties" />
+
+		<!-- clean build dir -->
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}" />
+
+		<!-- create ressource -->
+		<propertyfile file="${build.dir}/${resources.file}">
+			<entry key="service.pid" value="${bundle.name}" />
+			<entry key="vdr.nom" value="${vdh.nom}" />
+			<entry key="vdr.date.exp" value="${now}" />
+			<entry key="jex.date.deb" value="${jex.date.deb}" />
+			<entry key="jex.date.fin" value="${jex.date.fin}" />
+			<!-- <entry key="url.connection" value="http://localhost/data.jar" /> -->
+		</propertyfile>
+
+		<!-- compress data -->
+		<zip destfile="${build.dir}/data.jar" basedir="${data.dir}" filesonly="false" whenempty="skip" update="false" />
+
+		<!-- create bundle data -->
+		<jar destfile="${dist.dir}/${bundle.jar}" basedir="${build.dir}">
+			<manifest>
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Bundle-Name" value="${bundle.name}" />
+				<attribute name="Bundle-SymbolicName" value="${bundle.name}" />
+				<attribute name="Bundle-Version" value="1.0.0.${now}" />
+				<attribute name="Bundle-Vendor" value="mercur.fr" />
+				<attribute name="Bundle-ClassPath" value="." />
+				<attribute name="Import-Package" value="org.apache.log4j,
+								org.avm.elementary.common, 
+								org.osgi.framework" />
+				<attribute name="Export-Package" value="org.avm.elementary.data" />
+				<attribute name="Bundle-Activator" value="org.avm.elementary.common.AbstractDataDeployer" />
+			</manifest>
+		</jar>
+	</target>
+
+</project>

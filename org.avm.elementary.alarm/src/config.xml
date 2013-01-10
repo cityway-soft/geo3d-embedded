@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.elementary.alarm.Alarm" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.elementary.alarm.Alarm</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">initial@reference:file:../../DLA/projets/EN-COURS/AVM/common/dev/workspace/avm-v1/org.avm.elementary.alarm/</value>
+</property>
+<property name="0">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		org.avm.elementary.alarm.acknowledge=false
+		org.avm.elementary.alarm.index=0
+		org.avm.elementary.alarm.notify=true
+		org.avm.elementary.alarm.source=org.avm.business.ecall.EcallService
+	</value>
+</property>
+<property name="1">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		org.avm.elementary.alarm.acknowledge=false
+		org.avm.elementary.alarm.index=1
+		org.avm.elementary.alarm.notify=false
+		org.avm.elementary.alarm.source=org.avm.device.gps.Gps
+	</value>
+</property>
+<property name="2">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		org.avm.elementary.alarm.acknowledge=false
+		org.avm.elementary.alarm.index=2
+		org.avm.elementary.alarm.notify=false
+		org.avm.elementary.alarm.source=org.avm.device.wifi.Wifi
+	</value>
+</property>
+<property name="3">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		org.avm.elementary.alarm.acknowledge=false
+		org.avm.elementary.alarm.index=3
+		org.avm.elementary.alarm.notify=true
+		org.avm.elementary.alarm.source=org.avm.business.core.Avm
+	</value>
+</property>
+<property name="4">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		org.avm.elementary.alarm.acknowledge=false
+		org.avm.elementary.alarm.index=4
+		org.avm.elementary.alarm.notify=true
+		org.avm.elementary.alarm.source=org.avm.business.recorder.action.SpeedAction
+	</value>
+</property>
+<property name="5">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		org.avm.elementary.alarm.acknowledge=false
+		org.avm.elementary.alarm.index=5
+		org.avm.elementary.alarm.notify=true
+		org.avm.elementary.alarm.source=org.avm.hmi.swt.alarm.AlarmIhm@PleineCharge
+	</value>
+</property>
+</configuration>
+</cm_data>

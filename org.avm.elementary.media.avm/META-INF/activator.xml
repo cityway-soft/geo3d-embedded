@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.elementary.media.avm.MediaAvm" immediate="true">
+	<implementation class="org.avm.elementary.media.avm.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.elementary.media.avm.MediaAvm"/>
+	<service>				
+		<provide interface="org.avm.elementary.common.Media"/>		
+	</service>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>	
+	<reference name="messenger" interface="org.avm.elementary.common.MediaListener"/>
+</component>

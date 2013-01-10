@@ -1,0 +1,92 @@
+%class ZonesManager 
+ 
+%package org.angolight.bo.states
+
+%start ANGO::ZoneStable
+
+%map ANGO
+%%
+ZoneStable
+Entry	{ 
+				
+		}
+Exit	{  
+		}
+{
+// State		Transition																End State			Action(s)
+				onKinetic()	[ ctxt.getSpeed() > ctxt.getVmaxUp() ]						VMax				{ debug("zs1" );zoneVMax();					}	
+
+				onKinetic()	[ ctxt.getSpeed() < ctxt.getVminDown() ]					VMin				{ debug("zs2" );zoneDown();					}	
+
+				onKinetic()	[ (ctxt.getNextZone() - ctxt.getCurrentZone()) == 0]		nil					{ debug("zs3" ); 							}	
+
+				onKinetic()	[ (ctxt.getNextZone() - ctxt.getCurrentZone()) == -1]		nil					{ debug("zs4" );zoneDown();					}	
+
+				onKinetic()	[ (ctxt.getNextZone() - ctxt.getCurrentZone()) == 1]		nil					{ debug("zs5" );zoneUp(); 					}	
+
+				onKinetic()	[ (ctxt.getNextZone() - ctxt.getCurrentZone()) > 1]			ZoneTransitoire		{ debug("zs6" );zoneUp();resetTimer(); 		}	
+
+				onKinetic()	[ (ctxt.getNextZone() - ctxt.getCurrentZone()) < -1]		ZoneTransitoire		{ debug("zs7" );zoneDown();resetTimer();	}	
+}
+
+ZoneTransitoire 
+Entry   {
+				
+		}
+Exit	{
+				killTimer();
+		}
+{
+				onTimer()  	[ ctxt.getSpeed() > ctxt.getVmaxUp() ]						VMax				{ debug("zt1" );zoneVMax(); 				}		
+			
+				onTimer()  	[ ctxt.getSpeed() < ctxt.getVminDown() ]					VMin				{ debug("zt2" );zoneDown(); 				}					
+								
+				onKinetic()	[ ctxt.getSpeed() > ctxt.getVmaxUp() ]						VMax				{ debug("zt3" );zoneVMax(); 				}	
+
+				onKinetic()	[ ctxt.getSpeed() < ctxt.getVminDown() ]					VMin				{ debug("zt4" );zoneDown();	 				}	
+
+				onTimer()	[ (ctxt.getNextZone() - ctxt.getCurrentZone()) == 0]		ZoneStable			{ debug("zt5" ); 							}	
+
+				onTimer()	[ (ctxt.getNextZone() - ctxt.getCurrentZone()) == -1]		ZoneStable			{ debug("zt6" );zoneDown();	 				}	
+
+				onTimer()	[ (ctxt.getNextZone() - ctxt.getCurrentZone()) == 1]		ZoneStable			{ debug("zt7" );zoneUp(); 					}	
+
+				onTimer()	[ (ctxt.getNextZone() - ctxt.getCurrentZone()) > 1]			ZoneTransitoire		{ debug("zt8" );zoneUp();resetTimer(); 		}	
+			
+				onTimer()	[ (ctxt.getNextZone() - ctxt.getCurrentZone()) < -1]		ZoneTransitoire		{ debug("zt9" );zoneDown();resetTimer(); 	}	
+							
+				onKinetic()																nil					{ debug("zt10" ); 							}						
+}
+
+VMax 
+Entry   {
+		}
+Exit	{
+		}
+{
+				onKinetic()	[ ctxt.getSpeed() < ctxt.getVmaxDown() ]					ZoneStable			{ debug("vmax1" ); zoneInit();	 	}	
+				
+				onKinetic()  	 														nil					{ debug("vmax2" ); 					}	
+}
+
+VMin 
+Entry   {
+				resetTimer();
+		}
+Exit	{
+				killTimer();
+		}
+{
+				onKinetic()	[ ctxt.getSpeed() > ctxt.getVminUp() ]						ZoneStable			{ debug("vmin1" ); zoneInit();	 }
+				
+				onTimer()  	[ ctxt.getSpeed() < ctxt.getVminDown() ]					VMin				{ debug("vmin2" ); zoneDown();	 }	
+				
+				onTimer()  	 															nil					{ debug("vmin3" ); zoneDown();	 }									
+
+				onKinetic()  	 														nil					{ debug("vmin4" ); zoneDown();	 }									
+}
+
+%%
+
+
+

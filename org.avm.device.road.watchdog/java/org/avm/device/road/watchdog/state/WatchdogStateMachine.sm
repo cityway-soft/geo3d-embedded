@@ -1,0 +1,45 @@
+%start WatchdogMap::APC
+%package org.avm.device.road.watchdog.state
+%class WatchdogStateMachine
+
+%import java.util.*
+
+%map WatchdogMap
+%%
+
+APC
+Entry{}
+Exit {}
+{
+		powerDown				NAPC		{}
+}
+
+NAPC
+Entry{startTimer();}
+Exit {stopTimer();}
+{
+		powerUp					APC			{}
+		timeout					Sleep		{}
+}
+
+Sleep
+Entry{sleep();}
+Exit {}
+{
+	powerUp	[ctxt.wakeUpRTC() == false ]		APC				{wakeUp();}
+	powerDown [ctxt.wakeUpRTC() == true ]		Shutdown		{}
+}
+
+Shutdown
+Entry{shutdown();}
+Exit {}
+{
+}
+
+Default
+{
+	powerDown					nil				{}
+	powerUp						nil				{}
+	timeout						nil				{}
+}
+%%

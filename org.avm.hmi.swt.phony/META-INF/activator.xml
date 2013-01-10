@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.hmi.swt.phony.Phony" immediate="true">
+	<implementation class="org.avm.hmi.swt.phony.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.hmi.swt.phony.Phony"/>
+	<service>						
+		<provide interface="org.avm.hmi.swt.phony.Phony"/>		
+	</service>
+	
+
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+	<reference name="wireadmin"	interface="org.osgi.service.wireadmin.WireAdmin" />
+	<reference name="desktop" interface="org.avm.hmi.swt.desktop.Desktop" />
+
+	<reference name="phony"  interface="org.avm.device.phony.Phony" 
+			   cardinality="0..1" policy="dynamic" bind="setPhony" unbind="unsetPhony" />
+			   
+	<reference name="gsm" interface="org.avm.device.gsm.Gsm"
+			   cardinality="0..1" policy="dynamic" bind="setGsm" unbind="unsetGsm" />
+			   
+	<reference name="jdb" interface="org.avm.elementary.jdb.JDB" 
+				cardinality="0..1" policy="dynamic" bind="setJdb" unbind="unsetJdb" />
+	
+	
+	<reference name="directory" interface="org.avm.elementary.directory.Directory"
+			   cardinality="0..1" policy="dynamic" bind="setDirectory" unbind="unsetDirectory" />
+
+	<reference name="usersession" interface="org.avm.elementary.useradmin.UserSessionService" 
+		cardinality="0..1" policy="dynamic" bind="setUserSessionService" unbind="unsetUserSessionService" />
+</component>

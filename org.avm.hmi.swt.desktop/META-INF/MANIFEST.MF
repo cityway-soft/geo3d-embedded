@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: IHM Desktop
+Bundle-SymbolicName: org.avm.hmi.swt.desktop
+Bundle-Version: 1.0.0.qualifier
+Service-Component: META-INF/activator.xml
+Bundle-ClassPath: .
+Import-Package: EDU.oswego.cs.dl.util.concurrent,
+ org.apache.log4j,
+ org.avm.device.plateform,
+ org.avm.elementary.common,
+ org.avm.hmi.swt.application.display,
+ org.knopflerfish.service.console,
+ org.osgi.service.cm,
+ org.osgi.service.component,
+ org.osgi.service.wireadmin,
+ org.osgi.util.measurement
+Bundle-Vendor: cityway.fr
+Export-Package: org.avm.hmi.swt.desktop

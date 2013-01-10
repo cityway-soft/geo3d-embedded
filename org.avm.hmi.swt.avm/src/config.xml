@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.hmi.swt.avm.Avm" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.hmi.swt.avm.Avm</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">initial@reference:file:../../../home/didier/Projets/workspa
+ces/embarque-geolia-CVS/avm/hmi/swt/org.avm.hmi.swt.avm/</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">2</value>
+</property>
+<property name="periode">
+<value type="String">15</value>
+</property>
+<property name="config.date">
+<value type="String">Fri May 25 17:31:43 CEST 2012</value>
+</property>
+</configuration>
+</cm_data>

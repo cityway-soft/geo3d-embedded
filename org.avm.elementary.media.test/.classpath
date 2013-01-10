@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src-test"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
+	<classpathentry kind="lib" path="/org.avm.business.protocol.phoebus/dist/phoebus.jar"/>
+	<classpathentry kind="lib" path="/org.avm.business.protocol.phoebus/lib/flavor.jar" sourcepath="/flavor/src"/>
+	<classpathentry kind="lib" path="/org.avm.business.protocol.management/dist/management.jar"/>
+	<classpathentry kind="lib" path="/org.avm.elementary.common/lib/jibx-run.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

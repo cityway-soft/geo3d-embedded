@@ -1,0 +1,301 @@
+<html>
+  <head>
+    <title>ConnectionStateMachine_sm</title>
+  </head>
+
+  <body>
+    <table align=center border=3 cellspacing=2 cellpadding=2>
+      <caption align="top">
+        ConnectionMap Finite State Machine
+      </caption>
+      <tr>
+        <th rowspan=2>
+          State
+        </th>
+        <th colspan=2>
+          Actions
+        </th>
+        <th colspan=15>
+          Transition
+        </th>
+      </tr>
+      <tr>
+        <th>
+          Entry
+        </th>
+        <th>
+         Exit
+        </th>
+        <th>
+          acknolege
+        </th>
+        <th>
+          acknolege
+          <br>
+          (Message)
+        </th>
+        <th>
+          connect
+        </th>
+        <th>
+          connected
+        </th>
+        <th>
+          connected
+          <br>
+          (Message)
+        </th>
+        <th>
+          disconnect
+        </th>
+        <th>
+          ping
+        </th>
+        <th>
+          ping
+          <br>
+          (Message)
+        </th>
+        <th>
+          pong
+        </th>
+        <th>
+          pong
+          <br>
+          (Message)
+        </th>
+        <th>
+          receive
+        </th>
+        <th>
+          receive
+          <br>
+          (Message)
+        </th>
+        <th>
+          send
+        </th>
+        <th>
+          send
+          <br>
+          (Message)
+        </th>
+        <th>
+          <b>Default</b>
+        </th>
+      </tr>
+      <tr>
+        <td>
+          Disconnected
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+          <pre>
+[ ctxt.connectingCallback() == true ]
+  Connecting
+  {}
+
+[ ctxt.connectingCallback() == false ]
+  Disconnected
+  {
+    disconnectingCallback();
+  }
+          </pre>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Connecting
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+          <pre>
+[ ctxt.connectedCallback(msg) == true ]
+  Connected
+  {}
+
+[ ctxt.connectedCallback(msg) == false ]
+  Disconnected
+  {
+    disconnectingCallback();
+  }
+          </pre>
+        </td>
+        <td>
+          <pre>
+  Disconnected
+  {
+    disconnectingCallback();
+  }
+          </pre>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Connected
+        </td>
+        <td>
+          <pre>
+    startTimer();
+          </pre>
+        </td>
+        <td>
+          <pre>
+    stopTimer();
+          </pre>
+        </td>
+        <td>
+        </td>
+        <td>
+          <pre>
+[ ctxt.acknolegeCallback(msg) == true ]
+  Connected
+  {}
+
+[ ctxt.acknolegeCallback(msg) == false ]
+  Disconnected
+  {
+    disconnectingCallback();
+  }
+          </pre>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+          <pre>
+  Disconnected
+  {
+    disconnectingCallback();
+  }
+          </pre>
+        </td>
+        <td>
+        </td>
+        <td>
+          <pre>
+[ ctxt.pingCallback(msg) == true ]
+  Connected
+  {}
+
+[ ctxt.pingCallback(msg) == false ]
+  Disconnected
+  {
+    disconnectingCallback();
+  }
+          </pre>
+        </td>
+        <td>
+        </td>
+        <td>
+          <pre>
+[ ctxt.pongCallback(msg) == true ]
+  Connected
+  {}
+
+[ ctxt.pongCallback(msg) == false ]
+  Disconnected
+  {
+    disconnectingCallback();
+  }
+          </pre>
+        </td>
+        <td>
+        </td>
+        <td>
+          <pre>
+[ ctxt.receiveCallback(msg) == true ]
+  Connected
+  {}
+
+[ ctxt.receiveCallback(msg) == false ]
+  Disconnected
+  {
+    disconnectingCallback();
+  }
+          </pre>
+        </td>
+        <td>
+        </td>
+        <td>
+          <pre>
+[ ctxt.sendCallback(msg) == true ]
+  Connected
+  {}
+
+[ ctxt.sendCallback(msg) == false ]
+  Disconnected
+  {
+    disconnectingCallback();
+  }
+          </pre>
+        </td>
+        <td>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

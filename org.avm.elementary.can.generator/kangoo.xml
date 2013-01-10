@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<can-specifications>
+	<slots>
+		<slot name="Renaultvl02">
+			<type>Velocity_Linear</type>
+			<unit>kph</unit>
+			<scaling>0.01</scaling>
+			<range-min>0</range-min>
+			<range-max>655.34</range-max>
+			<offset>0</offset>
+			<length>2</length>
+			<val-type>byte</val-type>
+		</slot>
+	</slots>
+	<cans>
+		<can name="kangoo" pgn-mask="000FFF" mode="normal" check-spn="false">
+			<pgns>
+				<pgn pgnID="102">
+					<spns>
+						<spn spnID="VehicleSpeed">
+							<name>Average Front Wheel</name>
+							<slot>Renaultvl02</slot>
+							<start-byte-position>1</start-byte-position>
+							<start-bit-position>1</start-bit-position>
+							<msb>true</msb>
+						</spn>
+					</spns>
+				</pgn>
+			</pgns>
+		</can>
+	</cans>
+</can-specifications>

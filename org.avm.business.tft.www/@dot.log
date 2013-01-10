@@ -1,0 +1,20 @@
+# 15/11/10 18:58:00 CET
+# Eclipse Compiler for Java(TM) 0.A58, 3.6.0, Copyright IBM Corp 2000, 2010. All rights reserved.
+----------
+1. WARNING in /home/didier/Projets/geolia/common/dev/workspace/avmrefactor/avm/business/org.avm.business.tft/src/org/avm/business/tft/TftImpl.java (at line 3)
+	import java.io.IOException;
+	       ^^^^^^^^^^^^^^^^^^^
+The import java.io.IOException is never used
+----------
+2. WARNING in /home/didier/Projets/geolia/common/dev/workspace/avmrefactor/avm/business/org.avm.business.tft/src/org/avm/business/tft/TftImpl.java (at line 32)
+	private TftConfig _config;
+	                  ^^^^^^^
+The field TftImpl._config is never read locally
+----------
+----------
+3. WARNING in /home/didier/Projets/geolia/common/dev/workspace/avmrefactor/avm/business/org.avm.business.tft/src/org/avm/business/tft/bundle/CommandGroupImpl.java (at line 14)
+	private TftImpl _peer;
+	                ^^^^^
+The field CommandGroupImpl._peer is never read locally
+----------
+3 problems (3 warnings)

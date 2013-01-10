@@ -1,0 +1,312 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <termios.h>
+#include <sys/ioctl.h>
+
+#include "comm.h"
+
+#define info(...)	fprintf(stderr, __VA_ARGS__)
+#ifdef _DEBUG
+#define debug(...)	fprintf(stderr, __VA_ARGS__)
+#else
+#define debug(...)
+#endif
+
+// int _timeout = 0;
+
+void throwIOException(JNIEnv* jenv, char* message) {
+	jclass e;
+	e = (*jenv)->FindClass(jenv, "java/io/IOException");
+	(*jenv)->ThrowNew(jenv, e, message);
+}
+
+JNIEXPORT jint JNICALL Java_org_avm_device_protocol_comm_CommConnection_openImpl(
+		JNIEnv *jenv, jobject jobj, jint port, jint baud, jint flags,
+		jint timeout) {
+
+	int handle = 0;
+	char name[256];
+	char* message = (char *) 0;
+	struct termios options;
+	speed_t speed = B19200;
+
+	bzero(&options, sizeof(options));
+
+	sprintf(name, "/dev/ttyS%d", port);
+	debug("[DSU] comm : open port %s \n", name);
+
+	if ((handle = open(name, O_RDWR | O_NOCTTY)) < 0) {
+		goto error;
+	}
+
+
+
+	tcgetattr(handle, &options);
+
+	// baud rates
+	switch (baud) {
+
+	case org_avm_device_protocol_comm_CommConnection_B300:
+		speed = B300;
+		break;
+	case org_avm_device_protocol_comm_CommConnection_B1200:
+		speed = B1200;
+		break;
+	case org_avm_device_protocol_comm_CommConnection_B2400:
+		speed = B2400;
+		break;
+	case org_avm_device_protocol_comm_CommConnection_B4800:
+		speed = B4800;
+		break;
+	case org_avm_device_protocol_comm_CommConnection_B9600:
+		speed = B9600;
+		break;
+	case org_avm_device_protocol_comm_CommConnection_B19200:
+		speed = B19200;
+		break;
+	case org_avm_device_protocol_comm_CommConnection_B38400:
+		speed = B38400;
+		break;
+	case org_avm_device_protocol_comm_CommConnection_B57600:
+		speed = B57600;
+		break;
+	case org_avm_device_protocol_comm_CommConnection_B115200:
+		speed = B115200;
+		break;
+	case org_avm_device_protocol_comm_CommConnection_B230400:
+		speed = B230400;
+		break;
+	default:
+		speed = B19200;
+		break;
+	}
+
+	cfsetispeed(&options, speed);
+	cfsetospeed(&options, speed);
+
+	debug("[DSU] comm : set speed  = %d  (%d) \n", baud, speed);
+
+	// stop bits
+	if ((flags & org_avm_device_protocol_comm_CommConnection_STOPBITS2)
+			== org_avm_device_protocol_comm_CommConnection_STOPBITS2) {
+		options.c_cflag |= CSTOPB;
+		debug("[DSU] comm : set 2 stop bits \n");
+	} else {
+		options.c_cflag &= ~CSTOPB;
+		debug("[DSU] comm : set 1 stop bits \n");
+	}
+
+	// parity
+	if ((flags & org_avm_device_protocol_comm_CommConnection_PARITY_ODD)
+			== org_avm_device_protocol_comm_CommConnection_PARITY_ODD) {
+		options.c_cflag |= PARENB;
+		options.c_cflag |= PARODD;
+		debug("[DSU] comm : set parity odd \n");
+	} else if ((flags & org_avm_device_protocol_comm_CommConnection_PARITY_EVEN)
+			== org_avm_device_protocol_comm_CommConnection_PARITY_EVEN) {
+		options.c_cflag |= PARENB;
+		options.c_cflag &= ~PARODD;
+		debug("[DSU] comm : set parity even \n");
+	} else {
+		options.c_cflag &= ~PARENB;
+		debug("[DSU] comm : set parity none \n");
+	}
+	// bits/char
+	if ((flags & org_avm_device_protocol_comm_CommConnection_BITSPERCHAR7)
+			== org_avm_device_protocol_comm_CommConnection_BITSPERCHAR7) {
+		options.c_cflag &= ~CSIZE;
+		options.c_cflag |= CS7;
+		debug("[DSU] comm : set 7 bits/char \n");
+	}
+
+	if ((flags & org_avm_device_protocol_comm_CommConnection_BITSPERCHAR8)
+			== org_avm_device_protocol_comm_CommConnection_BITSPERCHAR8) {
+		options.c_cflag &= ~CSIZE;
+		options.c_cflag |= CS8;
+		debug("[DSU] comm : set 8 bits/char \n");
+	}
+
+	// hardware flow control
+	if ((flags & org_avm_device_protocol_comm_CommConnection_AUTORTS)
+			== org_avm_device_protocol_comm_CommConnection_AUTORTS || (flags
+			& org_avm_device_protocol_comm_CommConnection_AUTOCTS)
+			== org_avm_device_protocol_comm_CommConnection_AUTOCTS) {
+		options.c_cflag |= CRTSCTS;
+		debug("[DSU] comm : set hardware flow control \n");
+
+	} else {
+		options.c_cflag &= ~CRTSCTS;
+		debug("[DSU] comm : disable hardware flow control \n");
+
+	}
+
+	//	options.c_cflag |= (CLOCAL | CREAD);
+	//	options.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+
+	cfmakeraw(&options);
+	debug("[DSU] comm : set raw mode \n");
+
+	debug("[DSU] comm : set read timeout %d \n", timeout);
+
+	//	if (timeout == 0) {
+	//		fcntl(handle, F_SETFL, FNDELAY);
+	//	} else {
+	//		fcntl(handle, F_SETFL, 0);
+	//		options.c_cc[VMIN] = 0;
+	//		options.c_cc[VTIME] = timeout / 100; //dixièmes de seconde
+	//	}
+
+	options.c_cc[VMIN] = 255;
+	options.c_cc[VTIME] = 1;
+
+	tcsetattr(handle, TCSANOW, &options);
+
+	debug("[DSU] comm : port %d  opened \n", handle);
+
+	return (jint) handle;
+
+	error:
+
+	message = strerror(errno);
+	info("[DSU] comm : echec open port : %s \n", message);
+	throwIOException(jenv, message);
+	return -1;
+
+}
+
+/*
+ * Class:     org_avm_device_protocol_comm_CommConnection
+ * Method:    closeImpl
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_org_avm_device_protocol_comm_CommConnection_closeImpl(
+		JNIEnv *jebv, jobject jobj, jint handle) {
+
+	info("[DSU] comm : close port handle = %d \n", handle);
+	if (handle > 0) {
+		close(handle);
+	}
+}
+
+/*
+ * Class:     org_avm_device_protocol_comm_CommConnection
+ * Method:    readImpl
+ * Signature: (I[BII)I
+ */
+JNIEXPORT jint JNICALL Java_org_avm_device_protocol_comm_CommConnection_readImpl(
+		JNIEnv *jenv, jobject jobj, jint handle, jbyteArray buffer, jint off,
+		jint len) {
+	char* message = (char *) 0;
+	int n = 0;
+
+	debug("[DSU] comm : call read handle = %d length %d bytes \n", handle, len);
+
+	jbyte* b = (jbyte *) malloc(len);
+
+	if ((n = read(handle, b, len)) < 0) {
+		if (errno == EAGAIN) {
+			n = 0;
+		} else {
+			goto error;
+		}
+	}
+
+	//	fd_set rfds;
+	//	struct timeval tv;
+	//	FD_ZERO(&rfds);
+	//	FD_SET(handle,&rfds);
+	//	tv.tv_sec = _timeout / 1000;
+	//	tv.tv_usec = (_timeout - tv.tv_sec *1000) *1000;
+	//	if (select(FD_SETSIZE, &rfds, NULL, NULL, &tv) > 0
+	//			&& FD_ISSET(handle,&rfds)) {
+	//
+	//		if ((n = read(handle, b, len)) < 0) {
+	//			if (errno == EAGAIN) {
+	//				n = 0;
+	//			} else {
+	//				goto error;
+	//			}
+	//		}
+	//	} else {
+	//		debug("[DSU] comm : aucune donnée disponible, ou timeout expiré \n");
+	//	}
+
+	(*jenv)->SetByteArrayRegion(jenv, buffer, off, n, b);
+
+	free(b);
+	b = NULL;
+
+	debug("[DSU] comm : read handle = %d length %d bytes \n", handle, n);
+	return n;
+
+	error: message = strerror(errno);
+	if (b != NULL) {
+		free(b);
+	}
+	info("[DSU] comm : echec read handle = %d : (%d) %s\n", handle, errno, message);
+	throwIOException(jenv, message);
+	return -1;
+}
+
+/*
+ * Class:     org_avm_device_protocol_comm_CommConnection
+ * Method:    writeImpl
+ * Signature: (I[BII)V
+ */
+JNIEXPORT void JNICALL Java_org_avm_device_protocol_comm_CommConnection_writeImpl(
+		JNIEnv *jenv, jobject jobj, jint handle, jbyteArray buffer, jint off,
+		jint len) {
+	char* message = (char *) 0;
+	int n = 0;
+
+	debug("[DSU] comm : call write handle = %d length %d bytes \n", handle, len);
+	jbyte* b = (jbyte *) malloc(len);
+	(*jenv)->GetByteArrayRegion(jenv, buffer, off, len, b);
+
+	if ((n = write(handle, b, len)) < 0) {
+		goto error;
+	}
+
+	//	int index = 0;
+	//	int count = len;
+	//	while (count > 0) {
+	//		if ((n = write(handle, &b[index], count)) < 0) {
+	//			goto error;
+	//		}
+	//		count -= n;
+	//		index += n;
+	//	}
+
+	free(b);
+	b = NULL;
+
+	debug("[DSU] comm : write handle = %d length %d errno %d \n ", handle, n, errno);
+	return;
+
+	error:
+
+	message = strerror(errno);
+	if (b != NULL) {
+		free(b);
+	}
+	info("[DSU] comm : echec write handle = %d : (%d) %s\n", handle, errno, message);
+	throwIOException(jenv, message);
+
+}
+
+/*
+ * Class:     org_avm_device_protocol_comm_CommConnection
+ * Method:    availableImpl
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_org_avm_device_protocol_comm_CommConnection_availableImpl(
+		JNIEnv *jebv, jobject jobj, jint handle) {
+	int n = 0;
+	// ioctl(handle, FIONREAD, &n);
+	return n;
+}
+

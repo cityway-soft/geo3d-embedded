@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.elementary.media.sms.MediaSMS" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.elementary.media.sms.MediaSMS</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">initial@reference:file:../../DLA/projets/EN-COURS/AVM/common/dev/workspace/avm-v1/org.avm.elementary.media.sms/</value>
+</property>
+<property name="org.knopflerfish.dummy.property">
+<value type="String">org.knopflerfish.dummy.property</value>
+</property>
+<property name="org.avm.elementary.media.sms.smscenter">
+<value type="String">0609001390</value>
+</property>
+</configuration>
+</cm_data>

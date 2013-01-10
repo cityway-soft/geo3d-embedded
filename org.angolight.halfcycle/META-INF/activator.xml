@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.angolight.halfcycle.HalfCycleService" immediate="true">
+	<implementation class="org.angolight.halfcycle.bundle.Activator"/>
+	<property name="service.pid" value="org.angolight.halfcycle.HalfCycleService"/>
+	<service>				
+		<provide interface="org.angolight.halfcycle.HalfCycleService"/>		
+	</service>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>	
+</component>

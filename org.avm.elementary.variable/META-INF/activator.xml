@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.elementary.variable.VariableService" immediate="true">
+	<implementation class="org.avm.elementary.variable.bundle.Activator"/>	
+	<property name="service.pid" value="org.avm.elementary.variable.VariableService"/>
+	<service>				
+		<provide interface="org.avm.elementary.variable.VariableService"/>
+	</service>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+	<reference name="org.avm.elementary.variable.DigitalVariable" interface="org.osgi.service.component.ComponentFactory"
+		target="(component.factory=org.avm.elementary.variable.DigitalVariable)"/>
+	<reference name="org.avm.elementary.variable.AnalogVariable" interface="org.osgi.service.component.ComponentFactory"
+		target="(component.factory=org.avm.elementary.variable.AnalogVariable)"/>	
+	<reference name="org.avm.elementary.variable.CounterVariable" interface="org.osgi.service.component.ComponentFactory"
+		target="(component.factory=org.avm.elementary.variable.CounterVariable)"/>				
+</component>
+

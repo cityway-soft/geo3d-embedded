@@ -1,0 +1,1551 @@
+class CString {
+	
+	%pragma array=256
+	int count = 0;
+    do {
+        unsigned int(8) _value[[count]];
+        count++;
+    }
+    while (_value[count -1] != '\0');
+    
+	
+	%.j{
+	public CString() {
+		this("");
+	}
+    
+	public CString(String value) {		
+		setValue(value);
+	}
+
+	public String getValue() {
+		byte[] buffer = new byte[count -1];
+		for (int i = 0; i < buffer.length; i++) {
+			buffer[i] = (byte) _value[i];
+		}
+		return new String(buffer);
+	}
+
+	public void setValue(String value) {
+		byte[] buffer = value.getBytes();
+		for (int i = 0; i < buffer.length; i++) {
+			_value[i] = buffer[i];
+		}
+		_value[buffer.length] = 0;
+		count = buffer.length+1;
+	}
+	
+	public String toString() {
+		return getValue();
+	}  
+	%.j}	  
+}
+
+class Varchar
+{
+	int(8) _longueur;
+	%pragma array=256
+	unsigned char(8) _value[_longueur];
+	
+	%.j{
+	public Varchar() {
+		this("");
+	}
+
+	public Varchar(String value) {
+		setValue(value);
+	}
+	
+	public String getValue() {
+		return new String(_value).substring(0, _longueur);	
+	}
+	
+	public void setValue(String value) {
+		char[] tmp = value.toCharArray();		
+		System.arraycopy(tmp, 0, _value, 0, tmp.length );		
+		_longueur = tmp.length;
+	}
+	
+	public String toString() {
+		return getValue();
+	}
+	%.j}	  
+}
+
+class IntArray
+{
+	int(8) _longueur;
+	%pragma array=256
+	unsigned int(32) _value[_longueur];
+	
+	%.j{
+	public IntArray() {
+
+	}
+
+	public IntArray(int[] value) {
+		setValue(value);
+	}
+
+	public int[] getValue() {
+		return _value;
+	}
+
+	public void setValue(int[] value) {
+		_longueur = value.length;
+		_value = value;
+	}
+
+	public String toString() {
+		StringBuffer result = new StringBuffer();
+
+		for (int i = 0; i < _longueur; i++) {
+	        if (i > 0) {
+	        	result.append(' ');
+	        }
+	        result.append(_value[i]);
+	    }
+
+		return result.toString();
+	}
+	%.j}	  
+}
+
+class Date {
+	unsigned int(6) _annee;
+	unsigned int(4) _mois;
+	unsigned int(5) _jour;
+	
+	%.j{	
+	public Date() {
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		_annee = cal.get(java.util.Calendar.YEAR) - 1990;
+		_mois = cal.get(java.util.Calendar.MONTH) +1;
+		_jour = cal.get(java.util.Calendar.DAY_OF_MONTH);
+	}
+
+	public Date(int _annee, int _mois, int _jour) {
+		super();
+		this._annee = _annee;
+		this._mois = _mois;
+		this._jour = _jour;
+	}
+
+	public int getAnnee() {
+		return _annee;
+	}
+
+	public void setAnnee(int annee) {
+		_annee = annee;
+	}
+
+	public int getJour() {
+		return _jour;
+	}
+
+	public void setJour(int jour) {
+		_jour = jour;
+	}
+
+	public int getMois() {
+		return _mois;
+	}
+
+	public void setMois(int mois) {
+		_mois = mois;
+	}
+
+	public String toString() {
+		return "[" + (_annee + 1990) + "/" + _mois + "/" + _jour + "]";
+	}    
+	%.j}
+}
+
+class Heure {
+
+	unsigned int(5) _heure;
+	unsigned int(6) _minute;
+	unsigned int(6) _seconde;
+	
+	%.j{	
+   public Heure() {
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		_heure = cal.get(java.util.Calendar.HOUR_OF_DAY);
+		_minute = cal.get(java.util.Calendar.MINUTE);
+		_seconde = cal.get(java.util.Calendar.SECOND);
+	}
+
+	public Heure(int heure, int minute, int seconde) {
+		super();
+		_heure = heure;
+		_minute = minute;
+		_seconde = seconde;
+	}
+
+	public int getHeure() {
+		return _heure;
+	}
+
+	public void setHeure(int heure) {
+		_heure = heure;
+	}
+
+	public int getMinute() {
+		return _minute;
+	}
+
+	public void setMinute(int minute) {
+		_minute = minute;
+	}
+
+	public int getSeconde() {
+		return _seconde;
+	}
+
+	public void setSeconde(int seconde) {
+		_seconde = seconde;
+	}
+
+	public String toString() {
+		return "[ " + _heure + ":" + _minute + ":" + _seconde + "]";
+	}
+	%.j}
+}
+
+class Horodate
+{
+	unsigned int(6) _annee;
+	unsigned int(4) _mois;
+	unsigned int(5) _jour;
+	unsigned int(5) _heure;
+	unsigned int(6) _minute;
+	unsigned int(6) _seconde;
+	
+	%.j{	
+	public Horodate() {
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		_annee = cal.get(java.util.Calendar.YEAR) - 1990;
+		_mois = cal.get(java.util.Calendar.MONTH) +1 ;
+		_jour = cal.get(java.util.Calendar.DAY_OF_MONTH);
+		_heure = cal.get(java.util.Calendar.HOUR_OF_DAY);
+		_minute = cal.get(java.util.Calendar.MINUTE);
+		_seconde = cal.get(java.util.Calendar.SECOND);
+	}
+
+	public Horodate(int annee, int mois, int jour, int heure, int minute,
+			int seconde) {
+		super();
+		_annee = annee;
+		_mois = mois;
+		_jour = jour;
+		_heure = heure;
+		_minute = minute;
+		_seconde = seconde;
+	}
+
+	public int getAnnee() {
+		return _annee;
+	}
+
+	public void setAnnee(int annee) {
+		_annee = annee;
+	}
+
+	public int getHeure() {
+		return _heure;
+	}
+
+	public void setHeure(int heure) {
+		_heure = heure;
+	}
+
+	public int getJour() {
+		return _jour;
+	}
+
+	public void setJour(int jour) {
+		_jour = jour;
+	}
+
+	public int getMinute() {
+		return _minute;
+	}
+
+	public void setMinute(int minute) {
+		_minute = minute;
+	}
+
+	public int getMois() {
+		return _mois;
+	}
+
+	public void setMois(int mois) {
+		_mois = mois;
+	}
+
+	public int getSeconde() {
+		return _seconde;
+	}
+
+	public void setSeconde(int seconde) {
+		_seconde = seconde;
+	}
+
+	public String toString() {
+		return "[" + (_annee + 1990) + "/" + _mois + "/" + _jour + " " + _heure
+				+ ":" + _minute + ":" + _seconde + "]";
+	}
+	
+	public byte[] toByteArray() throws IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		Bitstream bs = new Bitstream(out);
+		put(bs);
+		bs.close();
+		return out.toByteArray();
+	}	
+	%.j}
+};
+
+class Programmation{
+	Date _dateDebut;
+	Date _dateFin;
+	unsigned int(1) _lun;
+	unsigned int(1) _mar;
+	unsigned int(1) _mer;
+	unsigned int(1) _jeu;
+	unsigned int(1) _ven;
+	unsigned int(1) _sam;
+	unsigned int(1) _dim;	
+	Heure _heureDebut;
+	Heure _heureFin;
+	unsigned int(17) _periode;
+	
+	%.j{
+	public Programmation() {
+		_dateDebut = new Date();
+		_dateFin = new Date();
+		_lun = _mar = _mer = _jeu = _ven = _sam = _dim = 1;
+		_heureDebut = new Heure();
+		_heureFin = new Heure();
+		_periode = 60;
+	}
+
+	public Programmation(Date dateDebut, Date dateFin, int lun, int mar,
+			int mer, int jeu, int ven, int sam, int dim, Heure heureDebut,
+			Heure heureFin, int periode) {
+		super();
+		_dateDebut = dateDebut;
+		_dateFin = dateFin;
+		_lun = lun;
+		_mar = mar;
+		_mer = mer;
+		_jeu = jeu;
+		_ven = ven;
+		_sam = sam;
+		_dim = dim;
+		_heureDebut = heureDebut;
+		_heureFin = heureFin;
+		_periode = periode;
+	}
+
+	public Date getDateDebut() {
+		return _dateDebut;
+	}
+
+	public void setDateDebut(Date dateDebut) {
+		_dateDebut = dateDebut;
+	}
+
+	public Date getDateFin() {
+		return _dateFin;
+	}
+
+	public void setDateFin(Date dateFin) {
+		_dateFin = dateFin;
+	}
+
+	public int getDim() {
+		return _dim;
+	}
+
+	public void setDim(int dim) {
+		_dim = dim;
+	}
+
+	public Heure getHeureDebut() {
+		return _heureDebut;
+	}
+
+	public void setHeureDebut(Heure heureDebut) {
+		_heureDebut = heureDebut;
+	}
+
+	public Heure getHeureFin() {
+		return _heureFin;
+	}
+
+	public void setHeureFin(Heure heureFin) {
+		_heureFin = heureFin;
+	}
+
+	public int getJeu() {
+		return _jeu;
+	}
+
+	public void setJeu(int jeu) {
+		_jeu = jeu;
+	}
+
+	public int getLun() {
+		return _lun;
+	}
+
+	public void setLun(int lun) {
+		_lun = lun;
+	}
+
+	public int getMar() {
+		return _mar;
+	}
+
+	public void setMar(int mar) {
+		_mar = mar;
+	}
+
+	public int getMer() {
+		return _mer;
+	}
+
+	public void setMer(int mer) {
+		_mer = mer;
+	}
+
+	public int getPeriode() {
+		return _periode;
+	}
+
+	public void setPeriode(int periode) {
+		_periode = periode;
+	}
+
+	public int getSam() {
+		return _sam;
+	}
+
+	public void setSam(int sam) {
+		_sam = sam;
+	}
+
+	public int getVen() {
+		return _ven;
+	}
+
+	public void setVen(int ven) {
+		_ven = ven;
+	}
+
+	public String toString() {
+		return "[date debut: " + _dateDebut + " date fin: " + _dateFin
+				+ " jour de la semaine " + _lun + "" + _mar + "" + _mer + ""
+				+ _jeu + "" + _ven + "" + _sam + "" + _dim + " heure debut: "
+				+ _heureDebut + " heure fin: " + _heureFin + " periode "
+				+ _periode + "]";
+	}
+	%.j}
+	
+};
+
+class Reference
+{
+	unsigned long(40) _id;		
+	unsigned int(1) _acquittement;	
+	unsigned int(1) _annulation;	
+	
+	%.j{
+	public Reference() {
+
+	}
+
+	public Reference(long id, int acquittement, int annulation) {
+		super();
+		_id = id;
+		_acquittement = acquittement;
+		_annulation = annulation;
+	}
+
+	public long getId() {
+		return _id;
+	}
+
+	public void setId(long id) {
+		_id = id;
+	}
+
+	public int getAcquittement() {
+		return _acquittement;
+	}
+
+	public void setAcquittement(int acquittement) {
+		_acquittement = acquittement;
+	}
+
+	public int getAnnulation() {
+		return _annulation;
+	}
+
+	public void setAnnulation(int annulation) {
+		_annulation = annulation;
+	}
+
+	public String toString() {
+		return "[id " + _id + " acquittement "+ _acquittement + " annulation " + _annulation +"]";
+	}
+	%.j}
+};
+
+class Anomalie
+{
+	unsigned int(1) _alarme_0;
+	unsigned int(1) _alarme_1;
+	unsigned int(1) _alarme_2;
+	unsigned int(1) _alarme_3;
+	unsigned int(1) _alarme_4;
+	unsigned int(1) _alarme_5;
+	unsigned int(1) _alarme_6;
+	unsigned int(1) _alarme_7;
+	unsigned int(1) _alarme_8;
+	unsigned int(1) _alarme_9;
+	unsigned int(1) _alarme_10;
+	unsigned int(1) _alarme_11;
+	unsigned int(1) _alarme_12;
+	unsigned int(1) _alarme_13;
+	unsigned int(1) _alarme_14;
+	unsigned int(1) _alarme_15;
+	unsigned int(1) _alarme_16;
+	unsigned int(1) _alarme_17;
+	unsigned int(1) _alarme_18;
+	unsigned int(1) _alarme_19;
+	unsigned int(1) _alarme_20;
+	unsigned int(1) _alarme_21;
+	unsigned int(1) _alarme_22;
+	unsigned int(1) _alarme_23;
+	unsigned int(1) _alarme_24;
+	unsigned int(1) _alarme_25;
+	unsigned int(1) _alarme_26;
+	unsigned int(1) _alarme_27;
+	unsigned int(1) _alarme_28;
+	unsigned int(1) _alarme_29;
+	unsigned int(1) _alarme_30;
+	unsigned int(1) _alarme_31;
+
+	
+	%.j{
+	public Anomalie() {
+
+	}
+
+	public Anomalie(int alarme_0, int alarme_1, int alarme_2, int alarme_3,
+			int alarme_4, int alarme_5, int alarme_6, int alarme_7,
+			int alarme_8, int alarme_9, int alarme_10, int alarme_11,
+			int alarme_12, int alarme_13, int alarme_14, int alarme_15,
+			int alarme_16, int alarme_17, int alarme_18, int alarme_19,
+			int alarme_20, int alarme_21, int alarme_22, int alarme_23,
+			int alarme_24, int alarme_25, int alarme_26, int alarme_27,
+			int alarme_28, int alarme_29, int alarme_30, int alarme_31) {
+		super();
+		_alarme_0 = alarme_0;
+		_alarme_1 = alarme_1;
+		_alarme_2 = alarme_2;
+		_alarme_3 = alarme_3;
+		_alarme_4 = alarme_4;
+		_alarme_5 = alarme_5;
+		_alarme_6 = alarme_6;
+		_alarme_7 = alarme_7;
+		_alarme_8 = alarme_8;
+		_alarme_9 = alarme_9;
+		_alarme_10 = alarme_10;
+		_alarme_11 = alarme_11;
+		_alarme_12 = alarme_12;
+		_alarme_13 = alarme_13;
+		_alarme_14 = alarme_14;
+		_alarme_15 = alarme_15;
+		_alarme_16 = alarme_16;
+		_alarme_17 = alarme_17;
+		_alarme_18 = alarme_18;
+		_alarme_19 = alarme_19;
+		_alarme_20 = alarme_20;
+		_alarme_21 = alarme_21;
+		_alarme_22 = alarme_22;
+		_alarme_23 = alarme_23;
+		_alarme_24 = alarme_24;
+		_alarme_25 = alarme_25;
+		_alarme_26 = alarme_26;
+		_alarme_27 = alarme_27;
+		_alarme_28 = alarme_28;
+		_alarme_29 = alarme_29;
+		_alarme_30 = alarme_30;
+		_alarme_31 = alarme_31;
+	}
+
+	public int getAlarme_0() {
+		return _alarme_0;
+	}
+
+	public void setAlarme_0(int alarme_0) {
+		_alarme_0 = alarme_0;
+	}
+
+	public int getAlarme_1() {
+		return _alarme_1;
+	}
+
+	public void setAlarme_1(int alarme_1) {
+		_alarme_1 = alarme_1;
+	}
+
+	public int getAlarme_10() {
+		return _alarme_10;
+	}
+
+	public void setAlarme_10(int alarme_10) {
+		_alarme_10 = alarme_10;
+	}
+
+	public int getAlarme_11() {
+		return _alarme_11;
+	}
+
+	public void setAlarme_11(int alarme_11) {
+		_alarme_11 = alarme_11;
+	}
+
+	public int getAlarme_12() {
+		return _alarme_12;
+	}
+
+	public void setAlarme_12(int alarme_12) {
+		_alarme_12 = alarme_12;
+	}
+
+	public int getAlarme_13() {
+		return _alarme_13;
+	}
+
+	public void setAlarme_13(int alarme_13) {
+		_alarme_13 = alarme_13;
+	}
+
+	public int getAlarme_14() {
+		return _alarme_14;
+	}
+
+	public void setAlarme_14(int alarme_14) {
+		_alarme_14 = alarme_14;
+	}
+
+	public int getAlarme_15() {
+		return _alarme_15;
+	}
+
+	public void setAlarme_15(int alarme_15) {
+		_alarme_15 = alarme_15;
+	}
+
+	public int getAlarme_16() {
+		return _alarme_16;
+	}
+
+	public void setAlarme_16(int alarme_16) {
+		_alarme_16 = alarme_16;
+	}
+
+	public int getAlarme_17() {
+		return _alarme_17;
+	}
+
+	public void setAlarme_17(int alarme_17) {
+		_alarme_17 = alarme_17;
+	}
+
+	public int getAlarme_18() {
+		return _alarme_18;
+	}
+
+	public void setAlarme_18(int alarme_18) {
+		_alarme_18 = alarme_18;
+	}
+
+	public int getAlarme_19() {
+		return _alarme_19;
+	}
+
+	public void setAlarme_19(int alarme_19) {
+		_alarme_19 = alarme_19;
+	}
+
+	public int getAlarme_2() {
+		return _alarme_2;
+	}
+
+	public void setAlarme_2(int alarme_2) {
+		_alarme_2 = alarme_2;
+	}
+
+	public int getAlarme_20() {
+		return _alarme_20;
+	}
+
+	public void setAlarme_20(int alarme_20) {
+		_alarme_20 = alarme_20;
+	}
+
+	public int getAlarme_21() {
+		return _alarme_21;
+	}
+
+	public void setAlarme_21(int alarme_21) {
+		_alarme_21 = alarme_21;
+	}
+
+	public int getAlarme_22() {
+		return _alarme_22;
+	}
+
+	public void setAlarme_22(int alarme_22) {
+		_alarme_22 = alarme_22;
+	}
+
+	public int getAlarme_23() {
+		return _alarme_23;
+	}
+
+	public void setAlarme_23(int alarme_23) {
+		_alarme_23 = alarme_23;
+	}
+
+	public int getAlarme_24() {
+		return _alarme_24;
+	}
+
+	public void setAlarme_24(int alarme_24) {
+		_alarme_24 = alarme_24;
+	}
+
+	public int getAlarme_25() {
+		return _alarme_25;
+	}
+
+	public void setAlarme_25(int alarme_25) {
+		_alarme_25 = alarme_25;
+	}
+
+	public int getAlarme_26() {
+		return _alarme_26;
+	}
+
+	public void setAlarme_26(int alarme_26) {
+		_alarme_26 = alarme_26;
+	}
+
+	public int getAlarme_27() {
+		return _alarme_27;
+	}
+
+	public void setAlarme_27(int alarme_27) {
+		_alarme_27 = alarme_27;
+	}
+
+	public int getAlarme_28() {
+		return _alarme_28;
+	}
+
+	public void setAlarme_28(int alarme_28) {
+		_alarme_28 = alarme_28;
+	}
+
+	public int getAlarme_29() {
+		return _alarme_29;
+	}
+
+	public void setAlarme_29(int alarme_29) {
+		_alarme_29 = alarme_29;
+	}
+
+	public int getAlarme_3() {
+		return _alarme_3;
+	}
+
+	public void setAlarme_3(int alarme_3) {
+		_alarme_3 = alarme_3;
+	}
+
+	public int getAlarme_30() {
+		return _alarme_30;
+	}
+
+	public void setAlarme_30(int alarme_30) {
+		_alarme_30 = alarme_30;
+	}
+
+	public int getAlarme_31() {
+		return _alarme_31;
+	}
+
+	public void setAlarme_31(int alarme_31) {
+		_alarme_31 = alarme_31;
+	}
+
+	public int getAlarme_4() {
+		return _alarme_4;
+	}
+
+	public void setAlarme_4(int alarme_4) {
+		_alarme_4 = alarme_4;
+	}
+
+	public int getAlarme_5() {
+		return _alarme_5;
+	}
+
+	public void setAlarme_5(int alarme_5) {
+		_alarme_5 = alarme_5;
+	}
+
+	public int getAlarme_6() {
+		return _alarme_6;
+	}
+
+	public void setAlarme_6(int alarme_6) {
+		_alarme_6 = alarme_6;
+	}
+
+	public int getAlarme_7() {
+		return _alarme_7;
+	}
+
+	public void setAlarme_7(int alarme_7) {
+		_alarme_7 = alarme_7;
+	}
+
+	public int getAlarme_8() {
+		return _alarme_8;
+	}
+
+	public void setAlarme_8(int alarme_8) {
+		_alarme_8 = alarme_8;
+	}
+
+	public int getAlarme_9() {
+		return _alarme_9;
+	}
+
+	public void setAlarme_9(int alarme_9) {
+		_alarme_9 = alarme_9;
+	}
+
+	public String toString() {
+		return "[" + _alarme_0 + "" + _alarme_1 + "" + _alarme_2
+				+ "" + _alarme_3 + "" + _alarme_4 + "" + _alarme_5 + ""
+				+ _alarme_6 + "" + _alarme_7 + "" + _alarme_8 + "" + _alarme_9
+				+ "" + _alarme_10 + "" + _alarme_11 + "" + _alarme_12 + ""
+				+ _alarme_13 + "" + _alarme_14 + "" + _alarme_15 + ""
+				+ _alarme_16 + "" + _alarme_17 + "" + _alarme_18 + ""
+				+ _alarme_19 + "" + _alarme_20 + "" + _alarme_21 + ""
+				+ _alarme_22 + "" + _alarme_23 + "" + _alarme_24 + ""
+				+ _alarme_25 + "" + _alarme_26 + "" + _alarme_27 + ""
+				+ _alarme_28 + "" + _alarme_29 + "" + _alarme_30 + ""
+				+ _alarme_31 + "]";
+	}
+	%.j}	
+};
+
+class Options
+{
+	unsigned int(3) _priorite;
+	unsigned int(1) _acquittement;	
+	
+	%.j{
+	public Options() {
+		_priorite = 4;
+	}
+
+	public Options(int priorite, int acquittement) {		
+		_priorite = priorite;
+		_acquittement = acquittement;
+	}
+
+	public int getAcquittement() {
+		return _acquittement;
+	}
+
+	public void setAcquittement(int acquittement) {
+		_acquittement = acquittement;
+	}
+
+	public int getPriorite() {
+		return _priorite;
+	}
+
+	public void setPriorite(int priorite) {
+		_priorite = priorite;
+	}
+
+	public String toString() {
+		return "[priorite " + _priorite + " acquittement " + _acquittement + "]";
+	}
+	%.j}
+};
+
+class Service
+{
+	unsigned int(32) _conducteur;
+	unsigned int(32) _serviceAgent;
+	unsigned int(32) _serviceVehicule;
+	unsigned int(32) _course;
+	
+	%.j{
+	public Service() {
+
+	}
+
+	public Service(int conducteur, int serviceAgent, int serviceVehicule, int course) {		
+		_conducteur = conducteur;
+		_serviceAgent = serviceAgent;
+		_serviceVehicule = serviceVehicule;
+		_course = course;
+	}
+
+	public int getConducteur() {
+		return _conducteur;
+	}
+
+	public void setConducteur(int conducteur) {
+		_conducteur = conducteur;
+	}
+
+	public int getCourse() {
+		return _course;
+	}
+
+	public void setCourse(int course) {
+		_course = course;
+	}
+
+	public int getServiceAgent() {
+		return _serviceAgent;
+	}
+
+	public void setServiceAgent(int serviceAgent) {
+		_serviceAgent = serviceAgent;
+	}
+
+	public int getServiceVehicule() {
+		return _serviceVehicule;
+	}
+
+	public void setServiceVehicule(int serviceVehicule) {
+		_serviceVehicule = serviceVehicule;
+	}
+
+	public String toString() {
+		return "[conducteur " + _conducteur + " service-agent " + _serviceAgent
+				+ " service-vehicule " + _serviceVehicule
+				+ " course " + _course + "]";
+	}
+	%.j}
+};
+
+class Position
+{
+	int(32) _longitude;
+	int(32) _latitude;
+	unsigned int(7) _vitesse;
+	unsigned int(9) _cap;	   
+	%.j{
+		public Position() {		
+	}
+
+	public Position(int longitude, int latitude, int vitesse, int cap) {	
+		_longitude = longitude;
+		_latitude = latitude;
+		_vitesse = vitesse;
+		_cap = cap;
+	}
+	
+	
+	public int getCap() {
+		return _cap;
+	}
+
+	public void setCap(int cap) {
+		_cap = cap;
+	}
+
+	public int getLatitude() {
+		return _latitude;
+	}
+
+	public void setLatitude(int latitude) {
+		_latitude = latitude;
+	}
+
+	public int getLongitude() {
+		return _longitude;
+	}
+
+	public void setLongitude(int longitude) {
+		_longitude = longitude;
+	}
+
+	public int getVitesse() {
+		return _vitesse;
+	}
+
+	public void setVitesse(int vitesse) {
+		_vitesse = vitesse;
+	}
+
+	public String toString() {
+		return "[longitude " + _longitude + " latitude " + _latitude + " vitesse "
+				+ _vitesse + " cap " + _cap + "]";
+	}
+	%.j}
+};
+
+class ChampsOptionnels
+{
+	int(1) _date;	
+	int(1) _position;	
+	int(1) _service;	
+	int(1) _reference;			
+	int(1) _progression;
+	int(1) _programmation;	
+	int(1) _anomalie;	
+	int(1) _options;		
+	
+	%.j{
+	public ChampsOptionnels() {
+
+	}
+
+	public ChampsOptionnels(int date, int position, int service, int reference,
+			int progression, int programmation, int anomalie, int options) {		
+		_date = date;
+		_position = position;
+		_service = service;
+		_reference = reference;
+		_progression = progression;
+		_programmation = programmation;
+		_anomalie = anomalie;
+		_options = options;
+	}
+
+	public int getAnomalie() {
+		return _anomalie;
+	}
+
+	public void setAnomalie(int anomalie) {
+		_anomalie = anomalie;
+	}
+
+	public int getDate() {
+		return _date;
+	}
+
+	public void setDate(int date) {
+		_date = date;
+	}
+
+	public int getOptions() {
+		return _options;
+	}
+
+	public void setOptions(int options) {
+		_options = options;
+	}
+
+	public int getPosition() {
+		return _position;
+	}
+
+	public void setPosition(int position) {
+		_position = position;
+	}
+
+	public int getprogrammation() {
+		return _programmation;
+	}
+
+	public void setprogrammation(int programmation) {
+		_programmation = programmation;
+	}
+
+	public int getProgression() {
+		return _progression;
+	}
+
+	public void setProgression(int progression) {
+		_progression = progression;
+	}
+
+	public int getReference() {
+		return _reference;
+	}
+
+	public void setReference(int reference) {
+		_reference = reference;
+	}
+
+	public int getService() {
+		return _service;
+	}
+
+	public void setService(int service) {
+		_service = service;
+	}
+
+	public String toString() {
+		return "[" + _date + "" + _position + "" + _service
+				+ "" + _reference + "" + _progression + "" + _programmation + ""
+				+ _anomalie + "" + _options + "]";
+	}
+	%.j}
+	
+};
+
+class Progression{
+
+	signed int(16) _avanceRetard;
+	unsigned int(32) _iduDernierArret;
+	unsigned int(8) _rangDernierArret;
+	unsigned int(7) _progression;
+	unsigned int(1) _deviation;
+	
+	%.j{
+	public Progression(){
+    	
+    }
+    
+    public Progression(int retard, int iduDernierArret, int rangDernierArret, int progression, int deviation) {
+		_avanceRetard = retard;
+		_iduDernierArret	= iduDernierArret;
+		_rangDernierArret = rangDernierArret;
+		_progression = progression;
+		_deviation = deviation;
+	}
+
+	public int getDeviation() {
+		return _deviation;
+	}
+
+	public void setDeviation(int deviation) {
+		_deviation = deviation;
+	}
+
+	public int getProgression() {
+		return _progression;
+	}
+
+	public void setProgression(int progression) {
+		_progression = progression;
+	}
+
+	public int getIduDernierArret() {
+		return _iduDernierArret;
+	}
+
+	public int getRangDernierArret() {
+		return _rangDernierArret;
+	}
+
+	public void setIduDernierArret(int iduDernierArret) {
+		_iduDernierArret = iduDernierArret;
+	}	
+	
+	public void setRangDernierArret(int rangDernierArret) {
+		_rangDernierArret = rangDernierArret;
+	}
+
+	public int getRetard() {
+		return _avanceRetard;
+	}
+
+	public void setRetard(int retard) {
+		_avanceRetard = retard;
+	}
+	
+	public String toString() {
+		return "[retard " + _avanceRetard + " rang dernier arret " + _rangDernierArret + " idu dernier arret " + _iduDernierArret
+		+ " progression " + _progression + " deviation " + _deviation + "]";
+	}
+	%.j}
+}
+
+class Identite
+{
+	unsigned int(4) _type;
+	unsigned int(17) _id;
+	unsigned int(11) _exploitant;
+	
+	%.j{
+	public Identite() {
+
+	}
+
+	public Identite(int type, int id, int exploitant) {
+		
+		_type = type;
+		_id = id;
+		_exploitant = exploitant;
+	}
+
+	public int getExploitant() {
+		return _exploitant;
+	}
+
+	public void setExploitant(int exploitant) {
+		_exploitant = exploitant;
+	}
+
+	public int getId() {
+		return _id;
+	}
+
+	public void setId(int id) {
+		_id = id;
+	}
+
+	public int getType() {
+		return _type;
+	}
+
+	public void setType(int type) {
+		_type = type;
+	}
+
+	public String toString() {
+		return "[type " + _type + " id " + _id + " exploitant " + _exploitant
+				+ "]";
+	}
+	%.j}
+};
+
+class Entete
+{
+	unsigned int(8) _protocole;
+	unsigned int(8) _type;
+	unsigned int(32) _version;	
+	Identite _source;
+	Identite _destination;
+	unsigned long(40) _id;	
+	ChampsOptionnels _champs;
+	
+	if(_champs._date >0){
+		Horodate _date;
+	}
+	
+	if(_champs._position >0){
+		Position _position;
+	}
+	
+		
+	if(_champs._service >0){
+		Service _service;
+	}
+
+	if(_champs._reference >0){
+		Reference _reference;
+	}	
+	
+	if(_champs._progression >0){
+		Progression _progression;
+	}
+	
+	if(_champs._programmation >0){
+		Programmation _programmation;
+	}	
+
+	if(_champs._anomalie >0){
+		Anomalie _anomalie;
+	}
+		
+	if(_champs._options >0){
+		Options _options;
+	}
+		
+	%.j{
+	public static final int PROTOCOL_ID = 0x0c;
+
+	public static final String PROTOCOL_NAME = "PHOEBUS_NG";
+
+	protected static int _count;
+
+	public Entete() {
+		_protocole = PROTOCOL_ID;
+		_source = new Identite();
+		_destination = new Identite();
+		_champs = new ChampsOptionnels();
+		_date = new Horodate();
+
+		try {
+			byte[] value = _date.toByteArray();
+			_id = 0;
+			for (int i = 0; i < value.length; i++) {
+				_id |= (value[i] & 0xff);
+				_id = _id << 8;
+			}
+			_id |= (_count++ % 256);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public Entete(int protocole, int type, int version, Identite source,
+			Identite destination, long id, ChampsOptionnels champs,
+			Horodate date, Position position, Service service,
+			Reference reference, Progression progression,
+			Programmation programmation, Anomalie anomalie, Options options) {
+
+		_protocole = protocole;
+		_type = type;
+		_version = version;
+		_source = source;
+		_destination = destination;
+		_id = id;
+		_champs = champs;
+		_date = date;
+		_position = position;
+		_service = service;
+		_reference = reference;
+		_progression = progression;
+		_programmation = programmation;
+		_anomalie = anomalie;
+		_options = options;
+	}
+
+	public Anomalie getAnomalie() {
+		return _anomalie;
+	}
+
+	public void setAnomalie(Anomalie anomalie) {
+		_anomalie = anomalie;
+	}
+
+	public ChampsOptionnels getChamps() {
+		return _champs;
+	}
+
+	public void setChamps(ChampsOptionnels champs) {
+		_champs = champs;
+	}
+
+	public Horodate getDate() {
+		return _date;
+	}
+
+	public void setDate(Horodate date) {
+		_date = date;
+	}
+
+	public Identite getDestination() {
+		return _destination;
+	}
+
+	public void setDestination(Identite destination) {
+		_destination = destination;
+	}
+
+	public long getId() {
+		return _id;
+	}
+
+	public void setId(long id) {
+		_id = id;
+	}
+
+	public Options getOptions() {
+		return _options;
+	}
+
+	public void setOptions(Options options) {
+		_options = options;
+	}
+
+	public Position getPosition() {
+		return _position;
+	}
+
+	public void setPosition(Position position) {
+		_position = position;
+	}
+
+	public Programmation getProgrammation() {
+		return _programmation;
+	}
+
+	public void setProgrammation(Programmation programmation) {
+		_programmation = programmation;
+	}
+
+	public Progression getProgression() {
+		return _progression;
+	}
+
+	public void setProgression(Progression progression) {
+		_progression = progression;
+	}
+
+	public int getProtocole() {
+		return _protocole;
+	}
+
+	public void setProtocole(int protocole) {
+		_protocole = protocole;
+	}
+
+	public Reference getReference() {
+		return _reference;
+	}
+
+	public void setReference(Reference reference) {
+		_reference = reference;
+	}
+
+	public Service getService() {
+		return _service;
+	}
+
+	public void setService(Service service) {
+		_service = service;
+	}
+
+	public Identite getSource() {
+		return _source;
+	}
+
+	public void setSource(Identite source) {
+		_source = source;
+	}
+
+	public int getType() {
+		return _type;
+	}
+
+	public void setType(int type) {
+		_type = type;
+	}
+
+    public int getVersion() {
+        return _version;
+    }
+
+    public void setVersion(int version) {
+        _version = version;
+    }
+	
+	public String toString() {
+		return "[protocol "
+				+ _protocole
+				+ " type "
+				+ _type
+				+ " version "
+				+ _version
+				+ " source: "
+				+ _source
+				+ " destination: "
+				+ _destination
+				+ " id "
+				+ _id
+				+ " champs optionnels: "
+				+ _champs
+				+ ((_date != null) ? " date: " + _date : "")
+				+ ((_position != null) ? " position: " + _position : "")
+				+ ((_service != null) ? " service: " + _service : "")
+				+ ((_reference != null) ? " reference: " + _reference : "")
+				+ ((_progression != null) ? " progression: " + _progression : "")
+				+ ((_programmation != null) ? " programmation: " + _programmation
+						: "")
+				+ ((_anomalie != null) ? " anomalie: " + _anomalie : "")
+				+ ((_options != null) ? " options: " + _options : "")
+				+ "]";
+	}
+	%.j}
+};
+
+
+class Message
+{
+	Entete _entete;
+	
+	%.j{	 
+	public static final int MESSAGE_TYPE = 0;
+
+	public static final String MESSAGE_NAME = "message";
+	
+	public Message() {
+		_entete = new Entete();
+	}
+
+	public Message(Entete entete) {
+		_entete = entete;
+	}
+
+	public Entete getEntete() {
+		return _entete;
+	}
+
+	public void setEntete(Entete entete) {
+		_entete = entete;
+	}
+
+	public String toString() {
+		String result = "";
+		if (_entete != null)
+			result += "entete: " + _entete.toString();
+		return result;
+	}
+
+	public void put(OutputStream out) throws Exception {
+		Bitstream bs = new Bitstream(out);
+		put(bs);
+		bs.close();
+	}
+
+	public void marshal(OutputStream out) throws Exception {
+		IBindingFactory factory = BindingDirectory.getFactory(this.getClass());
+		IMarshallingContext context = factory.createMarshallingContext();
+		context.marshalDocument(this, null, null, out);
+	}
+
+	public static class DefaultMessageFactory extends MessageFactory {
+
+		protected Message unmarshal(InputStream in) throws Exception {
+			IBindingFactory factory = BindingDirectory
+					.getFactory(Message.class);
+			IUnmarshallingContext context = factory
+					.createUnmarshallingContext();
+			return (Message) context.unmarshalDocument(in, null);
+
+		}
+
+		protected Message get(InputStream in) throws Exception {
+			Bitstream bs = new Bitstream(in);
+			Message message = new Message();
+			message.get(bs);
+			bs.close();
+			in.reset();
+			return message;
+		}
+
+	}
+
+	static {
+		MessageFactory.factories.put(new Integer(MESSAGE_TYPE),
+				new DefaultMessageFactory());
+	}
+
+	%.j}
+}
+

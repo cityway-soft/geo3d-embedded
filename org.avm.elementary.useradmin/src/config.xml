@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.elementary.useradmin.manager.UserAdminManager" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.elementary.useradmin.manager.UserAdminManager</value>
+</property>
+
+<property name="org.avm.config.version">
+<value type="Integer">15</value>
+</property>
+
+<property name="service.bundleLocation">
+<value type="String">ftp://avm:avm++@ftpserver.avm.org/aton/default/bundles/org.avm.elementary.useradmin.jar</value>
+</property>
+
+<property name="filename">
+<value type="String">{0}/data/useradmin/19700101000001/users.csv</value>
+</property>
+
+<property name="groups">
+<value type="String">conducteur,phone,sae,demo,tab,alarm,admin,georef,test</value>
+</property>
+
+<property name="authenticate">
+<value type="String">true</value>
+</property>
+
+<property name="default-roles">
+<value type="String">conducteur</value>
+</property>
+
+<property name="user.admin">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+user.matricule=0000
+property.nom=Admin
+property.prenom=Admin
+credential.codesecret=5252
+groups.1=phone
+groups.2=admin
+groups.3=alarm
+groups.4=georef
+</value>
+</property>
+
+<property name="user.test">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+user.matricule=0001
+property.nom=Test
+property.prenom=Test
+credential.codesecret=2525
+groups.1=phone
+groups.2=alarm
+groups.3=demo
+groups.4=conducteur
+</value>
+</property>
+
+
+
+<property name="config.date">
+<value type="String">Wed Feb 25 14:54:09 CET 2009</value>
+</property>
+
+</configuration>
+</cm_data>

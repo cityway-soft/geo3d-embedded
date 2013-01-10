@@ -1,0 +1,59 @@
+%start ConnectionMap::Disconnected
+%package org.avm.elementary.protocol.avm.state
+%class ConnectionStateMachine
+
+%import java.util.*
+%import org.avm.elementary.protocol.avm.parser.Message
+
+%map ConnectionMap
+%%
+
+Disconnected
+{
+		connect						[ ctxt.connectingCallback() == true ]		Connecting				{}
+		connect						[ ctxt.connectingCallback() == false ]		Disconnected			{disconnectingCallback();}
+}
+
+Connecting
+{
+		connected(msg: Message)		[ ctxt.connectedCallback(msg) == true ]		Connected				{}
+		connected(msg: Message)		[ ctxt.connectedCallback(msg) == false ]	Disconnected			{disconnectingCallback();}	
+		
+		disconnect 																Disconnected			{disconnectingCallback();}	
+}
+
+Connected
+Entry{startTimer();}
+Exit {stopTimer();}
+{
+		ping(msg: Message)			[ ctxt.pingCallback(msg) == true ]			nil						{}
+		ping(msg: Message)			[ ctxt.pingCallback(msg) == false ]			Disconnected			{disconnectingCallback();}	
+			
+		pong(msg: Message)			[ ctxt.pongCallback(msg) == true ]			nil						{}
+		pong(msg: Message)			[ ctxt.pongCallback(msg) == false ]			Disconnected			{disconnectingCallback();}	
+			
+		send(msg: Message)			[ ctxt.sendCallback(msg) == true ]			nil						{}
+		send(msg: Message)			[ ctxt.sendCallback(msg) == false ]			Disconnected			{disconnectingCallback();}	
+		
+		receive(msg: Message)		[ ctxt.receiveCallback(msg) == true ]		nil						{}
+		receive(msg: Message)		[ ctxt.receiveCallback(msg) == false ]		Disconnected			{disconnectingCallback();}	
+		
+		acknolege(msg: Message)		[ ctxt.acknolegeCallback(msg) == true ]		nil						{}
+		acknolege(msg: Message)		[ ctxt.acknolegeCallback(msg) == false ]	Disconnected			{disconnectingCallback();}	
+				
+		disconnect 																Disconnected			{disconnectingCallback();}	
+}
+
+Default
+{
+	connect							nil			{defaultCallback();}
+	connected						nil			{defaultCallback();}
+	disconnect						nil			{defaultCallback();}
+	ping							nil			{defaultCallback();}
+	pong							nil			{defaultCallback();}
+	send							nil			{defaultCallback();}
+	receive							nil			{defaultCallback();}
+	acknolege						nil			{defaultCallback();}
+}
+
+%%

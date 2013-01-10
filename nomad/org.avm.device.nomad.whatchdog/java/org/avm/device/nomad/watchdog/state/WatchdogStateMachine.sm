@@ -1,0 +1,37 @@
+%start WatchdogMap::Running
+%package org.avm.device.nomad.watchdog.state
+%class WatchdogStateMachine
+
+%import java.util.*
+
+%map WatchdogMap
+%%
+
+Running
+Entry{}
+Exit {}
+{
+		powerDown				Waiting			{}
+}
+
+Waiting
+Entry{startTimer();}
+Exit {stopTimer();}
+{
+		powerUp					Running			{}
+		shutdown 				Halted			{}
+}
+
+Halted
+Entry{shutdownCallback();}
+Exit {}
+{
+}
+
+Default
+{
+	powerDown					nil				{}
+	powerUp						nil				{}
+	shutdown					nil				{}
+}
+%%

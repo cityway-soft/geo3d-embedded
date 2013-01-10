@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF8"?>
+<toolchains>
+  <toolchain>
+     <type>jdk</type>
+     <provides>
+         <version>1.7</version>
+         <vendor>sun</vendor>
+         <id>default</id>
+     </provides>
+     <configuration>
+        <jdkHome>/opt/java/</jdkHome>
+     </configuration>
+  </toolchain>
+  <toolchain>
+     <type>jdk</type>
+     <provides>
+         <version>1.3</version>
+         <vendor>ibm</vendor>
+         <id>j9</id>
+     </provides>
+     <configuration>
+        <jdkHome>/opt/j9/</jdkHome>
+	 <bootClassPath>
+           <path>./lib/jclFoundation10/ext/swt.jar</path>
+        </bootClassPath>
+     </configuration>
+  </toolchain>
+</toolchains>
+

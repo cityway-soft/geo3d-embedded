@@ -1,0 +1,1380 @@
+%import "message.fl"
+
+class DemandeStatut extends Message
+{
+	ChampsOptionnels _statut;
+	
+	%.j{
+	public static final int MESSAGE_TYPE = 1;
+
+	public static final String MESSAGE_NAME = "demande-statut";
+
+	public DemandeStatut() {
+		super();
+		_entete._type = MESSAGE_TYPE;
+		_entete._champs._date = 1;
+		_entete._date = new Horodate();
+
+		_statut = new ChampsOptionnels();
+	}
+
+	public ChampsOptionnels getStatut() {
+		return _statut;
+	}
+
+	public void setStatut(ChampsOptionnels statut) {
+		_statut = statut;
+	}
+
+	public String toString() {
+		return MESSAGE_NAME + " [" + super.toString() + "]"
+				+ " champs optionnels: " + _statut.toString();
+	}
+
+	public static class DefaultMessageFactory extends MessageFactory {
+
+		protected Message unmarshal(InputStream in) throws Exception {
+			IBindingFactory factory = BindingDirectory
+					.getFactory(DemandeStatut.class);
+			IUnmarshallingContext context = factory
+					.createUnmarshallingContext();
+			return (Message) context.unmarshalDocument(in, null);
+
+		}
+
+		protected Message get(InputStream in) throws Exception {
+			Bitstream bs = new Bitstream(in);
+			Message message = new DemandeStatut();
+			message.get(bs);
+			bs.close();
+			in.reset();
+			return message;
+		}
+
+	}
+
+	static {
+		MessageFactory.factories.put(new Integer(MESSAGE_TYPE),
+				new DefaultMessageFactory());
+	}
+	%.j}	
+};
+
+class ReponseStatut extends Message
+{
+	
+	%.j{
+	public static final int MESSAGE_TYPE = 2;
+
+	public static final String MESSAGE_NAME = "reponse-statut";
+
+	public ReponseStatut() {
+		super();
+		_entete._type = MESSAGE_TYPE;
+		_entete._champs._date = 1;
+		_entete._date = new Horodate();
+	}
+
+	public String toString() {
+		return MESSAGE_NAME + " [" + super.toString() + "]";
+	}
+
+	public static class DefaultMessageFactory extends MessageFactory {
+
+		protected Message unmarshal(InputStream in) throws Exception {
+			IBindingFactory factory = BindingDirectory
+					.getFactory(ReponseStatut.class);
+			IUnmarshallingContext context = factory
+					.createUnmarshallingContext();
+			return (Message) context.unmarshalDocument(in, null);
+		}
+
+		protected Message get(InputStream in) throws Exception {
+			Bitstream bs = new Bitstream(in);
+			Message message = new ReponseStatut();
+			message.get(bs);
+			bs.close();
+			in.reset();
+			return message;
+		}
+
+	}
+
+	static {
+		MessageFactory.factories.put(new Integer(MESSAGE_TYPE),
+				new DefaultMessageFactory());
+	}
+	%.j}	
+};
+
+
+class Alerte extends Message
+{
+	%.j{
+	public static final int MESSAGE_TYPE = 3;
+
+	public static final String MESSAGE_NAME = "alerte";
+	
+	public Alerte() {
+		super();		
+		_entete._type =  MESSAGE_TYPE;
+		_entete._champs._date = 1;
+		_entete._champs._position = 1;
+		_entete._champs._service = 1;
+		_entete._champs._anomalie = 1;		
+		_entete._champs._options = 1;
+		
+		_entete._anomalie = new Anomalie();
+		//_entete._anomalie._alerte = 1;
+		
+		_entete._options = new Options(7,1);
+		
+	}
+
+	public String toString() {	
+		return MESSAGE_NAME + " [" + super.toString() + "]";
+	}
+	
+	public static class DefaultMessageFactory extends MessageFactory {
+
+		protected Message unmarshal(InputStream in) throws Exception {
+			IBindingFactory factory = BindingDirectory
+					.getFactory(Alerte.class);
+			IUnmarshallingContext context = factory
+					.createUnmarshallingContext();
+			return (Message) context.unmarshalDocument(in, null);
+
+		}
+
+		protected Message get(InputStream in) throws Exception {
+			Bitstream bs = new Bitstream(in);
+			Message message = new Alerte();
+			message.get(bs);
+			bs.close();
+			in.reset();
+			return message;
+		}
+
+	}
+
+	static {
+		MessageFactory.factories.put(new Integer(MESSAGE_TYPE),
+				new DefaultMessageFactory());
+	}
+	%.j}	
+};
+	
+class PriseEnCharge extends Message
+{
+	CString _tel;
+	
+	%.j{
+	public static final int MESSAGE_TYPE = 4;
+
+	public static final String MESSAGE_NAME = "prise-en-charge";
+
+	public PriseEnCharge() {
+		super();
+		_entete._type =  MESSAGE_TYPE;
+		_entete._champs._date = 1;
+		_entete._champs._position = 0;
+		_entete._champs._service = 0;
+		_entete._champs._anomalie = 0;
+		_entete._champs._options = 0;
+		_tel = new CString();
+	}
+	
+
+	public String getTel() {
+		return _tel.getValue();	
+	}
+	
+	public void setTel(String value) {		
+		_tel.setValue(value);		
+	}
+	
+	public String toString() {
+		return MESSAGE_NAME + " [" + super.toString() + "]"
+		+ " tel: " + _tel.toString();
+	}
+
+	public static class DefaultMessageFactory extends MessageFactory {
+
+		protected Message unmarshal(InputStream in) throws Exception {
+			IBindingFactory factory = BindingDirectory
+					.getFactory(PriseEnCharge.class);
+			IUnmarshallingContext context = factory
+					.createUnmarshallingContext();
+			return (Message) context.unmarshalDocument(in, null);
+
+		}
+
+		protected Message get(InputStream in) throws Exception {
+			Bitstream bs = new Bitstream(in);
+			Message message = new PriseEnCharge();
+			message.get(bs);
+			bs.close();
+			in.reset();
+			return message;
+		}
+
+	}
+
+	static {
+		MessageFactory.factories.put(new Integer(MESSAGE_TYPE),
+				new DefaultMessageFactory());
+	}
+	%.j}
+};
+
+class ClotureAlerte extends Message
+{
+	%.j{
+	public static final int MESSAGE_TYPE = 5;
+
+	public static final String MESSAGE_NAME = "cloture-alerte";
+	
+	public ClotureAlerte() {
+		super();		
+		_entete._type =  MESSAGE_TYPE;
+		_entete._champs._date = 1;
+		_entete._champs._position = 0;
+		_entete._champs._service = 0;
+		_entete._champs._anomalie = 0;
+		_entete._champs._options = 0;
+	}
+
+	public String toString() {	
+		return MESSAGE_NAME + " [" + super.toString() + "]";
+	}
+	
+	public static class DefaultMessageFactory extends MessageFactory {
+
+		protected Message unmarshal(InputStream in) throws Exception {
+			IBindingFactory factory = BindingDirectory
+					.getFactory(ClotureAlerte.class);
+			IUnmarshallingContext context = factory
+					.createUnmarshallingContext();
+			return (Message) context.unmarshalDocument(in, null);
+
+		}
+
+		protected Message get(InputStream in) throws Exception {
+			Bitstream bs = new Bitstream(in);
+			Message message = new ClotureAlerte();
+			message.get(bs);
+			bs.close();
+			in.reset();
+			return message;
+		}
+
+	}
+
+	static {
+		MessageFactory.factories.put(new Integer(MESSAGE_TYPE),
+				new DefaultMessageFactory());
+	}
+	%.j}	
+};
+
+class MessageText extends Message
+{
+	CString _message;
+	int(8) _type;
+	IntArray _affectation;
+	
+	%.j{
+	public static final int MESSAGE_TYPE = 6;
+
+	public static final String MESSAGE_NAME = "message-text";
+
+	public MessageText() {
+		super();
+		_entete._type = MESSAGE_TYPE;
+		_entete._champs._date = 1;
+		_message = new CString();
+		_affectation = new IntArray();
+		_type = 0;
+	}
+
+	public String getMessage() {
+		return _message.getValue();
+	}
+
+	public void setMessage(String value) {
+		_message.setValue(value);
+	}
+
+	public int getType() {
+		return _type;
+	}
+
+	public void setType(int type) {
+		_type = type;
+	}
+
+	public IntArray getAffectation() {
+		return _affectation;
+	}
+
+	public void setAffectation(IntArray affectation) {
+		_affectation = affectation;
+	}
+
+	public static String serializeIntArray(IntArray values) {
+		StringBuffer buffer = new StringBuffer();
+		for (int i = 0; i < values._longueur; i++) {
+			if (i > 0) {
+				buffer.append(' ');
+			}
+			buffer.append(values.getValue()[i]);
+		}
+		return buffer.toString();
+	}
+
+	private static int[] resizeArray(int[] array, int size) {
+		int[] copy = new int[size];
+		System.arraycopy(array, 0, copy, 0, Math.min(array.length, size));
+		return copy;
+	}
+
+	public static IntArray deserializeIntArray(String text) {
+		IntArray result = new IntArray();
+		int[] array = new int[256];
+		int i = 0;
+		for (StringTokenizer tokenizer = new StringTokenizer(text); tokenizer
+				.hasMoreElements(); i++) {
+			int value = Integer.parseInt((String) tokenizer.nextElement());
+			array[i] = value;
+		}
+		result.setValue(resizeArray(array, i));
+
+		return result;
+
+	}
+
+	public String toString() {
+		return MESSAGE_NAME + " [" + super.toString() + "]" + " message: "
+				+ _message.toString() + " type: " + _type 
+				+ " affectation: " + _affectation.toString() ;
+	}
+	
+	public static class DefaultMessageFactory extends MessageFactory {
+
+		protected Message unmarshal(InputStream in) throws Exception {
+			IBindingFactory factory = BindingDirectory
+					.getFactory(MessageText.class);
+			IUnmarshallingContext context = factory
+					.createUnmarshallingContext();
+			return (Message) context.unmarshalDocument(in, null);
+
+		}
+
+		protected Message get(InputStream in) throws Exception {
+			Bitstream bs = new Bitstream(in);
+			Message message = new MessageText();
+			message.get(bs);
+			bs.close();
+			in.reset();
+			return message;
+		}
+
+	}
+
+	static {
+		MessageFactory.factories.put(new Integer(MESSAGE_TYPE),
+				new DefaultMessageFactory());
+	}
+
+	%.j}
+};
+
+class PrisePoste extends Message
+{
+	unsigned int(32) _planification;
+	unsigned int(16) _checksum;
+	unsigned int(32) _conducteurRemplacement;
+	unsigned int(16) _vehiculeRemplacement;
+	unsigned int(32) _password;
+	
+	%.j{
+	public static final int MESSAGE_TYPE = 7;
+
+	public static final String MESSAGE_NAME = "prise-poste";
+
+	public PrisePoste() {
+		super();
+		_entete._type = MESSAGE_TYPE;
+		_entete._champs._date = 1;
+		_entete._date = new Horodate();
+
+		_entete._champs._service = 1;
+		_entete._service = new Service();
+	}
+
+	public PrisePoste(int planification, int checksum) {
+		this();
+		_planification = planification;
+		_checksum = checksum;
+	}
+
+	public int getPlanification() {
+		return _planification;
+	}
+
+	public int getChecksum() {
+		return _checksum;
+	}
+
+	public void setPlanification(int planification) {
+		_planification = planification;
+	}
+
+	public void setChecksum(int checksum) {
+		_checksum = checksum;
+	}
+
+	public int getConducteurRemplacement() {
+		return _conducteurRemplacement;
+	}
+
+	public int getVehiculeRemplacement() {
+		return _vehiculeRemplacement;
+	}
+
+	public void setConducteurRemplacement(int conducteurRemplacement) {
+		_conducteurRemplacement = conducteurRemplacement;
+	}
+
+	public void setVehiculeRemplacement(int vehiculeRemplacement) {
+		_vehiculeRemplacement = vehiculeRemplacement;
+	}
+
+	public int getPassword() {
+		return _password;
+	}
+
+	public void setPassword(int password) {
+		_password = password;
+	}
+
+	public String toString() {
+		return MESSAGE_NAME + " [" + super.toString() + "]" + " planification "
+				+ _planification + " checksum " + _checksum + " conducteur "
+				+ _conducteurRemplacement + " vehicule "
+				+ _vehiculeRemplacement + " password " + _password;
+	}
+
+	public static class DefaultMessageFactory extends MessageFactory {
+
+		protected Message unmarshal(InputStream in) throws Exception {
+			IBindingFactory factory = BindingDirectory
+					.getFactory(PrisePoste.class);
+			IUnmarshallingContext context = factory
+					.createUnmarshallingContext();
+			return (Message) context.unmarshalDocument(in, null);
+
+		}
+
+		protected Message get(InputStream in) throws Exception {
+			Bitstream bs = new Bitstream(in);
+			Message message = new PrisePoste();
+			message.get(bs);
+			bs.close();
+			in.reset();
+			return message;
+		}
+
+	}
+
+	static {
+		MessageFactory.factories.put(new Integer(MESSAGE_TYPE),
+				new DefaultMessageFactory());
+	}
+	%.j}	
+};
+
+class FinPrisePoste extends Message
+{
+		
+	%.j{
+	public static final int MESSAGE_TYPE = 8;
+
+	public static final String MESSAGE_NAME = "fin-prise-poste";
+
+	public FinPrisePoste() {
+		super();
+		_entete._type = MESSAGE_TYPE;
+		_entete._champs._date = 1;
+		_entete._date = new Horodate();
+		
+		_entete._champs._service = 1;
+		_entete._service = new Service();
+	}
+
+	public String toString() {
+		return MESSAGE_NAME + " [" + super.toString() + "]";
+	}
+
+	public static class DefaultMessageFactory extends MessageFactory {
+
+		protected Message unmarshal(InputStream in) throws Exception {
+			IBindingFactory factory = BindingDirectory
+					.getFactory(FinPrisePoste.class);
+			IUnmarshallingContext context = factory
+					.createUnmarshallingContext();
+			return (Message) context.unmarshalDocument(in, null);
+
+		}
+
+		protected Message get(InputStream in) throws Exception {
+			Bitstream bs = new Bitstream(in);
+			Message message = new FinPrisePoste();
+			message.get(bs);
+			bs.close();
+			in.reset();
+			return message;
+		}
+
+	}
+
+	static {
+		MessageFactory.factories.put(new Integer(MESSAGE_TYPE),
+				new DefaultMessageFactory());
+	}
+	%.j}	
+};
+
+
+class PriseService extends Message
+{
+	unsigned int(32) _conducteurRemplacement;
+	unsigned int(16) _vehiculeRemplacement;
+	
+	%.j{
+	public static final int MESSAGE_TYPE = 9;
+
+    public static final String MESSAGE_NAME = "prise-service";
+
+    public PriseService() {
+	super();
+	_entete._type = MESSAGE_TYPE;
+	_entete._champs._date = 1;
+	_entete._date = new Horodate();
+
+	_entete._champs._service = 1;
+	_entete._service = new Service();
+    }
+
+    public PriseService(int conducteur, int vehicule) {
+	super();
+	_conducteurRemplacement = conducteur;
+	_vehiculeRemplacement = vehicule;
+    }
+
+    public int getConducteurRemplacement() {
+	return _conducteurRemplacement;
+    }
+
+    public int getVehiculeRemplacement() {
+	return _vehiculeRemplacement;
+    }
+
+    public void setConducteurRemplacement(int conducteurRemplacement) {
+	_conducteurRemplacement = conducteurRemplacement;
+    }
+
+    public void setVehiculeRemplacement(int vehiculeRemplacement) {
+	_vehiculeRemplacement = vehiculeRemplacement;
+    }
+
+    public String toString() {
+	return MESSAGE_NAME + " [" + super.toString() + "]" + " conducteur "
+		+ _conducteurRemplacement + " vehicule "
+		+ _vehiculeRemplacement;
+    }
+
+    public static class DefaultMessageFactory extends MessageFactory {
+
+	protected Message unmarshal(InputStream in) throws Exception {
+	    IBindingFactory factory = BindingDirectory
+		    .getFactory(PriseService.class);
+	    IUnmarshallingContext context = factory
+		    .createUnmarshallingContext();
+	    return (Message) context.unmarshalDocument(in, null);
+
+	}
+
+	protected Message get(InputStream in) throws Exception {
+	    Bitstream bs = new Bitstream(in);
+	    Message message = new PriseService();
+	    message.get(bs);
+	    bs.close();
+	    in.reset();
+	    return message;
+	}
+
+    }
+
+    static {
+	MessageFactory.factories.put(new Integer(MESSAGE_TYPE),
+		new DefaultMessageFactory());
+    }
+	%.j}	
+};
+
+class FinPriseService extends Message
+{
+	
+	%.j{
+	public static final int MESSAGE_TYPE = 10;
+
+	public static final String MESSAGE_NAME = "fin-prise-service";
+
+	public FinPriseService() {
+		super();
+		_entete._type = MESSAGE_TYPE;
+		_entete._champs._date = 1;
+		_entete._date = new Horodate();
+		
+		_entete._champs._service = 1;
+		_entete._service = new Service();
+	}
+
+	public String toString() {
+		return MESSAGE_NAME + " [" + super.toString() + "]";
+	}
+
+	public static class DefaultMessageFactory extends MessageFactory {
+
+		protected Message unmarshal(InputStream in) throws Exception {
+			IBindingFactory factory = BindingDirectory
+					.getFactory(FinPriseService.class);
+			IUnmarshallingContext context = factory
+					.createUnmarshallingContext();
+			return (Message) context.unmarshalDocument(in, null);
+
+		}
+
+		protected Message get(InputStream in) throws Exception {
+			Bitstream bs = new Bitstream(in);
+			Message message = new FinPriseService();
+			message.get(bs);
+			bs.close();
+			in.reset();
+			return message;
+		}
+
+	}
+
+	static {
+		MessageFactory.factories.put(new Integer(MESSAGE_TYPE),
+				new DefaultMessageFactory());
+	}
+	%.j}	
+};
+
+class DepartCourse extends Message
+{
+	
+	%.j{
+	public static final int MESSAGE_TYPE = 11;
+
+	public static final String MESSAGE_NAME = "depart-course";
+
+	public DepartCourse() {
+		super();
+		_entete._type = MESSAGE_TYPE;
+		_entete._champs._date = 1;
+		_entete._date = new Horodate();
+		
+		_entete._champs._service = 1;
+		_entete._service = new Service();
+	}
+
+	public String toString() {
+		return MESSAGE_NAME + " [" + super.toString() + "]";
+	}
+
+	public static class DefaultMessageFactory extends MessageFactory {
+
+		protected Message unmarshal(InputStream in) throws Exception {
+			IBindingFactory factory = BindingDirectory
+					.getFactory(DepartCourse.class);
+			IUnmarshallingContext context = factory
+					.createUnmarshallingContext();
+			return (Message) context.unmarshalDocument(in, null);
+
+		}
+
+		protected Message get(InputStream in) throws Exception {
+			Bitstream bs = new Bitstream(in);
+			Message message = new DepartCourse();
+			message.get(bs);
+			bs.close();
+			in.reset();
+			return message;
+		}
+
+	}
+
+	static {
+		MessageFactory.factories.put(new Integer(MESSAGE_TYPE),
+				new DefaultMessageFactory());
+	}
+	%.j}	
+};
+
+
+class FinCourse extends Message
+{
+	
+	%.j{
+	public static final int MESSAGE_TYPE = 12;
+
+	public static final String MESSAGE_NAME = "fin-course";
+
+	public FinCourse() {
+		super();
+		_entete._type = MESSAGE_TYPE;
+		_entete._champs._date = 1;
+		_entete._date = new Horodate();
+		
+		_entete._champs._service = 1;
+		_entete._service = new Service();
+	}
+
+	public String toString() {
+		return MESSAGE_NAME + " [" + super.toString() + "]";
+	}
+
+	public static class DefaultMessageFactory extends MessageFactory {
+
+		protected Message unmarshal(InputStream in) throws Exception {
+			IBindingFactory factory = BindingDirectory
+					.getFactory(FinCourse.class);
+			IUnmarshallingContext context = factory
+					.createUnmarshallingContext();
+			return (Message) context.unmarshalDocument(in, null);
+
+		}
+
+		protected Message get(InputStream in) throws Exception {
+			Bitstream bs = new Bitstream(in);
+			Message message = new FinCourse();
+			message.get(bs);
+			bs.close();
+			in.reset();
+			return message;
+		}
+
+	}
+
+	static {
+		MessageFactory.factories.put(new Integer(MESSAGE_TYPE),
+				new DefaultMessageFactory());
+	}
+	%.j}	
+};
+
+
+class AvanceRetard extends Message
+{
+	%.j{
+	public static final int MESSAGE_TYPE = 13;
+
+	public static final String MESSAGE_NAME = "avance-retard";
+	
+	public AvanceRetard() {
+		super();		
+		_entete._type =  MESSAGE_TYPE;
+		_entete._champs._date = 1;
+		_entete._champs._position = 1;
+		_entete._champs._service = 1;
+		_entete._champs._progression = 1;		
+	}
+
+	public String toString() {	
+		return MESSAGE_NAME + " [" + super.toString() + "]";
+	}
+	
+	public static class DefaultMessageFactory extends MessageFactory {
+
+		protected Message unmarshal(InputStream in) throws Exception {
+			IBindingFactory factory = BindingDirectory
+					.getFactory(AvanceRetard.class);
+			IUnmarshallingContext context = factory
+					.createUnmarshallingContext();
+			return (Message) context.unmarshalDocument(in, null);
+
+		}
+
+		protected Message get(InputStream in) throws Exception {
+			Bitstream bs = new Bitstream(in);
+			Message message = new AvanceRetard();
+			message.get(bs);
+			bs.close();
+			in.reset();
+			return message;
+		}
+
+	}
+
+	static {
+		MessageFactory.factories.put(new Integer(MESSAGE_TYPE),
+				new DefaultMessageFactory());
+	}
+	%.j}	
+};
+
+class PassageArret extends Message
+{
+	unsigned int(16) _attente;	
+
+	%.j{
+	public static final int MESSAGE_TYPE = 14;
+
+	public static final String MESSAGE_NAME = "passage-arret";
+	
+	public PassageArret() {
+		super();		
+		_entete._type =  MESSAGE_TYPE;
+		_entete._champs._date = 1;
+		_entete._champs._position = 1;
+		_entete._champs._service = 1;
+		_entete._champs._progression = 1;		
+	}
+	
+	public int getAttente() {
+		return _attente;
+	}
+
+	public void setAttente(int attente) {
+		_attente = attente;
+	}
+
+	public String toString() {	
+		return MESSAGE_NAME + " [" + super.toString() + "]" + " attente: " + _attente;
+	}
+	
+	public static class DefaultMessageFactory extends MessageFactory {
+
+		protected Message unmarshal(InputStream in) throws Exception {
+			IBindingFactory factory = BindingDirectory
+					.getFactory(PassageArret.class);
+			IUnmarshallingContext context = factory
+					.createUnmarshallingContext();
+			return (Message) context.unmarshalDocument(in, null);
+
+		}
+
+		protected Message get(InputStream in) throws Exception {
+			Bitstream bs = new Bitstream(in);
+			Message message = new PassageArret();
+			message.get(bs);
+			bs.close();
+			in.reset();
+			return message;
+		}
+
+	}
+
+	static {
+		MessageFactory.factories.put(new Integer(MESSAGE_TYPE),
+				new DefaultMessageFactory());
+	}
+	%.j}	
+};
+
+// 12+x octets
+class Arret
+{
+	unsigned int(32) _point;
+	int(32) _longitude;
+	int(32) _latitude;
+	CString _nom;
+	CString _code;
+	
+	%.j{
+	public Arret() {
+		super();
+		_nom = new CString();;
+		_code = new CString();
+	}
+
+	public Arret(int point, int longitude, int latitude, CString nom,
+			CString code) {
+		super();
+		_point = point;
+		_longitude = longitude;
+		_latitude = latitude;
+		_nom = nom;
+		_code = code;
+	}
+
+	public int getPoint() {
+		return _point;
+	}
+
+	public void setPoint(int point) {
+		_point = point;
+	}
+
+	public int getLongitude() {
+		return _longitude;
+	}
+
+	public void setLongitude(int longitude) {
+		_longitude = longitude;
+	}
+
+	public int getLatitude() {
+		return _latitude;
+	}
+
+	public void setLatitude(int latitude) {
+		_latitude = latitude;
+	}
+
+	public CString getNom() {
+		return _nom;
+	}
+
+	public void setNom(CString nom) {
+		_nom = nom;
+	}
+
+	public CString getCode() {
+		return _code;
+	}
+
+	public void setCode(CString code) {
+		_code = code;
+	}
+
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(" [point " + _point + " longitude " + _longitude
+				+ " latitude " + _latitude + " nom " + _nom + " code " + _code);
+		sb.append("]");
+		return sb.toString();
+	}
+	%.j}
+}
+
+// 13 octets
+class Horaire
+{
+	unsigned int(32) _point;
+	unsigned int(24) _distance;
+	signed int(20) _arrivee;
+	signed int(20) _attente;	
+	unsigned int(16) _girouette;
+	
+	%.j{
+	public Horaire() {
+		super();
+    }
+
+    public Horaire(int point, int distance, int arrivee, int attente,
+	    int girouette) {
+		super();
+		_point = point;
+		_distance = distance;
+		_arrivee = arrivee;
+		_attente = attente;
+		_girouette = girouette;
+    }
+
+    public int getPoint() {
+		return _point;
+    }
+
+    public int getDistance() {
+		return _distance;
+    }
+
+    public int getArrivee() {
+		return _arrivee;
+    }
+
+    public int getAttente() {
+		return _attente;
+    }
+
+    public int getGirouette() {
+		return _girouette;
+    }
+
+    public void setPoint(int point) {
+	_point = point;
+    }
+
+    public void setDistance(int distance) {
+		_distance = distance;
+    }
+
+    public void setArrivee(int arrivee) {
+		_arrivee = arrivee;
+    }
+
+    public void setAttente(int attente) {
+		_attente = attente;
+    }
+
+    public void setGirouette(int girouette) {
+		_girouette = girouette;
+    }
+
+    public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(" [point " + _point + " distance " + _distance + " arrivee "
+			+ _arrivee + " attente " + _attente + " girouette "
+			+ _girouette);
+		sb.append("]");
+		return sb.toString();
+    }
+	%.j}
+}
+
+// 13 octets
+class Course
+{
+	unsigned int(32) _course;
+	unsigned int(17) _depart;
+	unsigned int(32) _ligne;
+	unsigned int(8) _amplitude;
+	unsigned int(7) _chevauchement;
+	
+	unsigned int(8) _longueur;
+	%pragma array=256
+	Horaire _horaires[_longueur];
+	%.j{
+	public Course() {
+		super();
+    }
+
+    public Course(int course, int depart, int ligne, int amplitude,
+	    int chevauchement, Horaire[] horaires) {
+		super();
+		_course = course;
+		_depart = depart;
+		_ligne = ligne;
+		_amplitude = amplitude;
+		_chevauchement = chevauchement;
+		_longueur = horaires.length;
+		_horaires = horaires;
+    }
+
+    public int getCourse() {
+		return _course;
+    }
+
+    public int getDepart() {
+	return _depart;
+    }
+
+    public int getLigne() {
+		return _ligne;
+    }
+
+    public int getAmplitude() {
+		return _amplitude;
+    }
+
+    public int getChevauchement() {
+		return _chevauchement;
+    }
+
+    public void setCourse(int course) {
+		_course = course;
+    }
+
+    public void setDepart(int depart) {
+		_depart = depart;
+    }
+
+    public void setLigne(int ligne) {
+		_ligne = ligne;
+    }
+
+    public void setAmplitude(int amplitude) {
+		_amplitude = amplitude;
+    }
+
+    public void setChevauchement(int chevauchement) {
+		_chevauchement = chevauchement;
+    }
+
+	public Horaire[] getHoraires() {
+		Horaire[] horaires = new Horaire[_longueur];
+		for (int i = 0; i < horaires.length; i++) {
+		    horaires[i] = _horaires[i];
+		}
+		return horaires;
+    }
+
+    public void setHoraires(Horaire[] horaires) {
+		for (int i = 0; i < horaires.length; i++) {
+		    _horaires[i] = horaires[i];
+		}
+		_longueur = horaires.length;
+    }
+    
+    public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(" [course " + _course + " depart " + _depart + " ligne "
+			+ _ligne + " amplitude " + _amplitude + " _chevauchement "
+			+ _chevauchement + " longueur " + _longueur);
+		for (int i = 0; i < _longueur; i++) {
+		    sb.append(" " + _horaires[i].toString() + " ");
+		}
+		sb.append("]");
+		return sb.toString();
+    }
+
+	%.j}
+	
+}
+
+// 11 octets
+class Planification extends Message
+{
+	int(32) _planification;
+	unsigned int(16) _checksum;
+	unsigned int(32) _service;
+	
+	unsigned int(8) _nbcrs;
+	%pragma array=256
+	Course _courses[_nbcrs];
+	
+	unsigned int(16) _nbpnt;
+	%g.j{_points = new Arret[_nbpnt]; %g.j}
+	%pragma array=1
+	Arret _points[_nbpnt];
+	
+%.j{
+	public static final int MESSAGE_TYPE = 15;
+
+    public static final String MESSAGE_NAME = "planification";
+
+   public Planification() {
+		super();
+		_entete._type = MESSAGE_TYPE;
+		_entete._champs._date = 1;
+	}
+
+	public Planification(int planification, int checksum, int service, Course[] courses, Arret[] points) {
+		super();
+		_planification = planification;
+		_checksum = checksum;
+		_service = service;
+		_nbcrs = courses.length;
+		_courses = courses;
+		_nbpnt = points.length;
+		_points = points;
+	}
+
+	public int getPlanification() {
+		return _planification;
+	}
+
+	public void setPlanification(int planification) {
+		_planification = planification;
+	}
+
+	public int getChecksum() {
+		return _checksum;
+	}
+
+	public void setChecksum(int checksum) {
+		_checksum = checksum;
+	}
+
+	public int getService() {
+		return _service;
+	}
+
+	public void setService(int service) {
+		_service = service;
+	}
+
+	public Course[] getCourses() {
+		Course[] courses = new Course[_nbcrs];
+		for (int i = 0; i < courses.length; i++) {
+			courses[i] = _courses[i];
+		}
+		return courses;
+	}
+
+	public void setCourses(Course[] courses) {
+		for (int i = 0; i < courses.length; i++) {
+			_courses[i] = courses[i];
+		}
+		_nbcrs = courses.length;
+	}
+
+	public Arret[] getPoints() {
+		Arret[] points = new Arret[_nbpnt];
+		for (int i = 0; i < points.length; i++) {
+			points[i] = _points[i];
+		}
+		return points;
+	}
+
+	public void setPoints(Arret[] points) {		 
+	     _points = new Arret[points.length]; 
+	     _nbpnt = _points.length;
+		for (int i = 0; i < points.length; i++) {
+			_points[i] = points[i];
+		}
+		_nbpnt = _points.length;
+	}
+
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(MESSAGE_NAME + " [" + super.toString());
+		sb.append(" [planification " + _planification + " checksum "
+				+ _checksum + " service " + _service + " nbcrs " + _nbcrs);
+		for (int i = 0; i < _nbcrs; i++) {
+			sb.append(" " + _courses[i].toString() + " ");
+		}
+		sb.append("nbpnt " + _nbpnt);
+		for (int i = 0; i < _nbpnt; i++) {
+			sb.append(" " + _points[i].toString() + " ");
+		}
+		sb.append("]");
+		return sb.toString();
+	}
+	
+    public static class DefaultMessageFactory extends MessageFactory {
+
+	protected Message unmarshal(InputStream in) throws Exception {
+	    IBindingFactory factory = BindingDirectory
+		    .getFactory(Planification.class);
+	    IUnmarshallingContext context = factory
+		    .createUnmarshallingContext();
+	    return (Message) context.unmarshalDocument(in, null);
+
+	}
+
+	protected Message get(InputStream in) throws Exception {
+	    Bitstream bs = new Bitstream(in);
+	    Message message = new Planification();
+	    message.get(bs);
+	    bs.close();
+	    in.reset();
+	    return message;
+	}
+
+    }
+
+    static {
+	MessageFactory.factories.put(new Integer(MESSAGE_TYPE),
+		new DefaultMessageFactory());
+    }
+	%.j}	
+}
+/*
+class Annulation extends Message
+{
+	%.j{
+	public static final int MESSAGE_TYPE = 16;
+
+	public static final String MESSAGE_NAME = "annulation";
+	
+	public Annulation() {
+		super();		
+		_entete._type =  MESSAGE_TYPE;
+		_entete._champs._date = 1;
+		_entete._champs._reference = 1;		
+		_entete._reference = new Reference();
+	}
+
+	public String toString() {	
+		return MESSAGE_NAME + " [" + super.toString() + "]";
+	}
+	
+	public static class DefaultMessageFactory extends MessageFactory {
+
+		protected Message unmarshal(InputStream in) throws Exception {
+			IBindingFactory factory = BindingDirectory
+					.getFactory(Annulation.class);
+			IUnmarshallingContext context = factory
+					.createUnmarshallingContext();
+			return (Message) context.unmarshalDocument(in, null);
+
+		}
+
+		protected Message get(InputStream in) throws Exception {
+			Bitstream bs = new Bitstream(in);
+			Message message = new Annulation();
+			message.get(bs);
+			bs.close();
+			in.reset();
+			return message;
+		}
+
+	}
+
+	static {
+		MessageFactory.factories.put(new Integer(MESSAGE_TYPE),
+				new DefaultMessageFactory());
+	}
+	%.j}	
+};
+*/
+class Deviation extends Message
+{
+	%.j{
+	public static final int MESSAGE_TYPE = 17;
+
+	public static final String MESSAGE_NAME = "deviation";
+	
+	public Deviation() {
+		super();		
+		_entete._type =  MESSAGE_TYPE;
+		_entete._champs._date = 1;
+		_entete._champs._position = 1;
+		_entete._champs._service = 1;
+		_entete._champs._progression = 1;		
+	}
+
+	public String toString() {	
+		return MESSAGE_NAME + " [" + super.toString() + "]";
+	}
+	
+	public static class DefaultMessageFactory extends MessageFactory {
+
+		protected Message unmarshal(InputStream in) throws Exception {
+			IBindingFactory factory = BindingDirectory
+					.getFactory(Deviation.class);
+			IUnmarshallingContext context = factory
+					.createUnmarshallingContext();
+			return (Message) context.unmarshalDocument(in, null);
+
+		}
+
+		protected Message get(InputStream in) throws Exception {
+			Bitstream bs = new Bitstream(in);
+			Message message = new Deviation();
+			message.get(bs);
+			bs.close();
+			in.reset();
+			return message;
+		}
+
+	}
+
+	static {
+		MessageFactory.factories.put(new Integer(MESSAGE_TYPE),
+				new DefaultMessageFactory());
+	}
+	%.j}	
+};
+
+
+
+
+
+

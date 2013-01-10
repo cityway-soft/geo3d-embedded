@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.knet.gps.Gps" immediate="true">
+	<implementation class="org.avm.device.knet.gps.bundle.Activator" />
+	<property name="service.pid" value="org.avm.device.knet.gps.Gps" />
+	<service>
+		<provide interface="org.avm.device.gps.Gps" />
+	</service>
+	<reference name="wireadmin"
+		interface="org.osgi.service.wireadmin.WireAdmin" />
+	<reference name="cm"
+		interface="org.osgi.service.cm.ConfigurationAdmin" />
+	<reference name="knet"
+		interface="org.avm.device.knet.KnetAgentFactory" />
+</component>

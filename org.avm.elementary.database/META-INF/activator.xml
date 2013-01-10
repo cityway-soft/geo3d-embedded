@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.elementary.database.Database" immediate="true">
+	<implementation class="org.avm.elementary.database.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.elementary.database.Database"/>
+	<service>				
+		<provide interface="org.avm.elementary.database.Database"/>			
+	</service>	
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+</component>

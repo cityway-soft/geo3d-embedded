@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.elementary.geofencing.GeoFencing" immediate="true">
+	<implementation class="org.avm.elementary.geofencing.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.elementary.geofencing.GeoFencing"/>		
+	<service>						
+		<provide interface="org.avm.elementary.geofencing.GeoFencing"/>																
+	</service>	
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin" />	
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>	
+</component>
