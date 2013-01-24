@@ -143,7 +143,7 @@
 	<properties>
 		<tycho-version>0.16.0</tycho-version>
 		<tycho-extras-version>0.16.0</tycho-extras-version>
-		<tycho.scmUrl>scm:git:git://git.paris.cityway.fr/home/git/repos/sae/embarque/tab.git</tycho.scmUrl>
+		<tycho.scmUrl>scm:git:git://git.paris.cityway.fr/home/git/repos/sae/embarque/geo3d.git</tycho.scmUrl>
 	</properties>
 	<build>
 		<defaultGoal>compile</defaultGoal>
