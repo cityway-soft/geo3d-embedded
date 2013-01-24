@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.elementary.common
 Bundle-SymbolicName: org.avm.elementary.common
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Bundle-ClassPath: .,
  classes/
 Export-Package: EDU.oswego.cs.dl.util.concurrent,
@@ -34,3 +34,4 @@ Import-Package: javax.xml.parsers,
  org.w3c.dom,
  org.xml.sax,
  org.xml.sax.helpers
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

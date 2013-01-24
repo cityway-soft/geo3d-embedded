@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.avm.device.knet
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .,
  lib/crimson.jar
-Bundle-Vendor: MERCUR
+Bundle-Vendor: Cityway
 Bundle-Localization: plugin
 Service-Component: META-INF/activator.xml
 Import-Package: EDU.oswego.cs.dl.util.concurrent,
@@ -21,3 +21,4 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.xml.sax
 Export-Package: org.avm.device.knet,
  org.avm.device.knet.model
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

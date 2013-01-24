@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.hmi.mmi.phony.
 Bundle-SymbolicName: org.avm.device.knet.girouette
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Import-Package: org.apache.log4j,
  org.avm.device.girouette,
  org.avm.device.knet,
@@ -16,3 +16,4 @@ Import-Package: org.apache.log4j,
  org.osgi.util.tracker
 Bundle-ClassPath: .
 Service-Component: META-INF/activator.xml
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

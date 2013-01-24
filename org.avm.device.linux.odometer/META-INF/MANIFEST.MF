@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.device.linux.odometer
 Bundle-SymbolicName: org.avm.device.linux.odometer
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: cityway.fr
+Bundle-Vendor: Cityway
 Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.apache.log4j,
  org.avm.device.gps,
@@ -16,3 +16,4 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.osgi.util.measurement,
  org.osgi.util.position
 Export-Package: org.avm.device.linux.odometer
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Rsync Plug-in
 Bundle-SymbolicName: org.avm.elementary.rsync
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Import-Package: 
  org.apache.log4j,
  org.avm.elementary.common,
@@ -14,4 +14,4 @@ Import-Package:
  org.osgi.service.component
 Bundle-ClassPath: .
 Service-Component: META-INF/activator.xml
-
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

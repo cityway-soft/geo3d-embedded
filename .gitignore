@@ -1,0 +1,6 @@
+*/@dot.log
+*/@dot/*
+*/bin/*
+*/.settings/*
+*/${buildDirectory}/*
+*/target/*

@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.elementary.interface
 Bundle-SymbolicName: org.avm.elementary.interface
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Export-Package: org.avm.elementary.alarm,
  org.avm.elementary.can.parser,
  org.avm.elementary.command,
@@ -22,3 +22,4 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.osgi.service.component,
  org.osgi.util.measurement;version="1.0.0"
 Bundle-ClassPath: .
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

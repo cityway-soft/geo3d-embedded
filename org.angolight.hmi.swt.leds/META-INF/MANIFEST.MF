@@ -16,3 +16,4 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.osgi.service.wireadmin,
  org.osgi.util.measurement
 Service-Component: META-INF/activator.xml
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

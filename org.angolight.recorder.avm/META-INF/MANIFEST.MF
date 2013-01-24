@@ -20,3 +20,4 @@ Import-Package: org.angolight.bo,
  org.stringtree.json
 Service-Component: META-INF/activator.xml
  
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

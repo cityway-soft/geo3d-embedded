@@ -3,9 +3,9 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.device.fm6000.system
 Bundle-SymbolicName: org.avm.device.fm6000.plateform
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Export-Package: org.avm.device.plateform
 Import-Package: org.osgi.framework
 Bundle-Activator: org.avm.device.plateform.Activator
 Bundle-NativeCode: lib/comvs_netconfig.dll ; lib/comvs_power.dll ; lib/comvs_screen.dll ; lib/comvs_system.dll ; osname = WindowsCE ; processor = ARM
-
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

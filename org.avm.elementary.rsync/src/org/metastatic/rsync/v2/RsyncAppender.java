@@ -54,9 +54,9 @@ final class RsyncAppender extends AppenderSkeleton {
 
 	/**
 	 * Create a new RsyncAppender. Messages that are logged to this appender
-	 * will be written to the {@link
-	 * MultiplexedOutputStream#writeMessage(int,java.lang.String)} method of
-	 * <i>out</i>.
+	 * will be written to the
+	 * {@link MultiplexedOutputStream#writeMessage(int,java.lang.String)} method
+	 * of <i>out</i>.
 	 * 
 	 * @param out
 	 *            The output stream to log messages to.

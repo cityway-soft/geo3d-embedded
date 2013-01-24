@@ -17,4 +17,5 @@ Import-Package: org.apache.log4j,
  org.osgi.service.useradmin;version="1.1.0",
  org.osgi.service.wireadmin,
  org.osgi.util.measurement;version="1.0.0"
-Bundle-Vendor: cityway.fr
+Bundle-Vendor: Cityway
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

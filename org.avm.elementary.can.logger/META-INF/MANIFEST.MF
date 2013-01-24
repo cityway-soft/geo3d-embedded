@@ -15,3 +15,4 @@ Import-Package: org.apache.log4j,
  org.osgi.service.wireadmin
 Export-Package: org.avm.elementay.can.logger
 Service-Component: META-INF/activator.xml
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

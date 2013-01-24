@@ -16,3 +16,4 @@ Import-Package: org.angolight.kinetic,
  org.osgi.service.component,
  org.osgi.service.wireadmin
 Service-Component: META-INF/activator.xml
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

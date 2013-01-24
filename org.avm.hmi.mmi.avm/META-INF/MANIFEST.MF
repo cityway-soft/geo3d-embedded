@@ -22,5 +22,6 @@ Import-Package: org.apache.log4j,
  org.osgi.service.component,
  org.osgi.service.wireadmin,
  org.osgi.util.measurement;version="1.0.0"
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Export-Package: org.avm.hmi.mmi.avm
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

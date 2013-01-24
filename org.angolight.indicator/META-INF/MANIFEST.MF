@@ -23,3 +23,4 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.osgi.util.measurement,
  org.osgi.util.position
 Service-Component: META-INF/activator.xml
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

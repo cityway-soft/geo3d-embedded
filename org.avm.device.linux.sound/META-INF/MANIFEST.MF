@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.device.linux.sound
 Bundle-SymbolicName: org.avm.device.linux.sound
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Import-Package: org.apache.log4j,
  org.avm.device.player,
  org.avm.device.sound,
@@ -17,3 +17,4 @@ Service-Component: META-INF/alsa.xml,
  META-INF/mp3.xml
  
  
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

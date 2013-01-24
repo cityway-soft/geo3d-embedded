@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.device.generic.girouette.hanover
 Bundle-SymbolicName: org.avm.device.generic.girouette.hanover
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Import-Package: org.apache.log4j,
  org.avm.device.afficheur,
  org.avm.device.girouette,
@@ -16,3 +16,4 @@ Import-Package: org.apache.log4j,
 Bundle-ClassPath: .
 Service-Component: META-INF/girouette.xml,
  META-INF/afficheur.xml
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

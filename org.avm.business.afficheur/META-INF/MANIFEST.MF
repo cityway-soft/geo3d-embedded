@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.business.afficheur
 Bundle-SymbolicName: org.avm.business.afficheur
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.apache.log4j,
  org.avm.business.core,
@@ -18,3 +18,4 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.osgi.service.wireadmin;version="1.0.0",
  org.osgi.util.measurement;version="1.0.0"
 Service-Component: META-INF/activator.xml
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

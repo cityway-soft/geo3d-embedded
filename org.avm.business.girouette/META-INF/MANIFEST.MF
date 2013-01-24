@@ -4,7 +4,7 @@ Bundle-Name: org.avm.business.girouette
 Bundle-SymbolicName: org.avm.business.girouette
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .
-Bundle-Vendor: mercur
+Bundle-Vendor: Cityway
 Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.apache.log4j,
  org.avm.business.core,
@@ -19,4 +19,4 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.osgi.service.wireadmin;version="1.0.0",
  org.osgi.util.measurement;version="1.0.0"
 Service-Component: META-INF/activator.xml
-
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

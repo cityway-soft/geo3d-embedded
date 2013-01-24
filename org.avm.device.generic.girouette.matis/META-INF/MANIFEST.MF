@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.device.generic.girouette.matis
 Bundle-SymbolicName: org.avm.device.generic.girouette.matis
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: cityway.fr
+Bundle-Vendor: Cityway
 Import-Package: org.apache.log4j,
  org.avm.device.girouette,
  org.avm.elementary.common,
@@ -14,3 +14,4 @@ Import-Package: org.apache.log4j,
  org.osgi.util.tracker
 Bundle-ClassPath: .
 Service-Component: META-INF/activator.xml
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

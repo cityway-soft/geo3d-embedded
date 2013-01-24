@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.avm.device.afficheur.Afficheur;
+import org.avm.device.afficheur.Utils;
 import org.avm.elementary.common.AbstractDriver;
 import org.avm.elementary.common.DeviceConfig;
 import org.osgi.framework.ServiceReference;
@@ -53,7 +54,7 @@ public class AfficheurService extends AbstractDriver implements Afficheur {
 		}
 
 		_log.debug("[DSU] print " + "[" + this + "] " + message);
-		byte[] buffer = generate(format(message));
+		byte[] buffer = generate(Utils.format(message));
 		_log.debug("[DSU] send " + "[" + this + "] " + toHexaString(buffer));
 
 		try {
@@ -80,46 +81,6 @@ public class AfficheurService extends AbstractDriver implements Afficheur {
 		}
 	}
 
-	public static final String format(String message) {
-		StringBuffer buffer = new StringBuffer();
-		message = message.toLowerCase();
-
-		for (int i = 0; i < message.length(); i++) {
-			char c = message.charAt(i);
-
-			switch (c) {
-			case 'é':
-			case 'è':
-			case 'ê':
-			case 'ë':
-				buffer.append('e');
-				break;
-			case 'à':
-			case 'â':
-				buffer.append('a');
-				break;
-			case 'ï':
-			case 'î':
-				buffer.append('i');
-				break;
-			case 'ô':
-				buffer.append('o');
-				break;
-			case 'û':
-			case 'ù':
-			case 'ü':
-				buffer.append('u');
-				break;
-			case 'ç':
-				buffer.append('c');
-				break;
-			default:
-				buffer.append(c);
-			}
-		}
-
-		return buffer.toString().toUpperCase();
-	}
 
 	private byte[] generate(String message) {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();

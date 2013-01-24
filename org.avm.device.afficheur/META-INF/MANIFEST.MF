@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.device.afficheur
 Bundle-SymbolicName: org.avm.device.afficheur
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Import-Package: org.apache.log4j,
  org.avm.elementary.common,
  org.knopflerfish.service.console,
@@ -12,3 +12,4 @@ Import-Package: org.apache.log4j,
  org.osgi.service.device
 Service-Component: META-INF/activator.xml
 Export-Package: org.avm.device.afficheur
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

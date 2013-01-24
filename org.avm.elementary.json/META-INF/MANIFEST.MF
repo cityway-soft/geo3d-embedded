@@ -3,7 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.elementary.json
 Bundle-SymbolicName: org.avm.elementary.json
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Bundle-Localization: plugin
 Export-Package: org.json,
  org.stringtree.json
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

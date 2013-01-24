@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.avm.device.generic.phony
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .
 Service-Component: META-INF/activator.xml
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Import-Package: org.apache.log4j,
  org.avm.device.gsm,
  org.avm.device.phony,
@@ -20,3 +20,4 @@ Import-Package: org.apache.log4j,
  org.osgi.service.wireadmin,
  org.osgi.util.measurement;version="1.0.0",
  statemap
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

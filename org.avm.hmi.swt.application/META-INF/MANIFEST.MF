@@ -8,7 +8,7 @@ Import-Package: org.avm.elementary.management.core,
  org.osgi.framework;version="1.3.0",
  org.osgi.service.startlevel;version="1.0.0",
  org.osgi.util.tracker;version="1.3.1"
-Bundle-Vendor: cityway.fr
+Bundle-Vendor: Cityway
 Bundle-Activator: org.avm.hmi.swt.application.bundle.Activator
 Export-Package: org.avm.hmi.swt.application.display
-
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

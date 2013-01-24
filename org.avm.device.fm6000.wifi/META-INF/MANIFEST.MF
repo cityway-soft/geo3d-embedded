@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.device.fm6000.wifi
 Bundle-SymbolicName: org.avm.device.fm6000.wifi
 Bundle-Version: 1.0.0.20090928000000
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.apache.log4j,
  org.avm.device.plateform,
@@ -22,3 +22,4 @@ Export-Package:
  org.avm.device.fm6000.wifi.bundle
 Service-Component: META-INF/activator.xml
 Bundle-NativeCode: lib/comvs_wifi.dll ; osname = WindowsCE; processor = ARM
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

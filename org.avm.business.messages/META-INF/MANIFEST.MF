@@ -17,4 +17,5 @@ Service-Component: META-INF/activator.xml
 Export-Package: org.avm.business.messages,
  org.avm.business.messages.bundle
 Bundle-ClassPath: .
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

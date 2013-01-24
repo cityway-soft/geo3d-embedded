@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.device.knet.wifi
 Bundle-SymbolicName: org.avm.device.knet.wifi
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.apache.log4j,
  org.avm.device.knet,
@@ -25,3 +25,4 @@ Bundle-ClassPath: .
 Export-Package: org.avm.device.knet.wifi
 Service-Component: META-INF/activator.xml
 
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

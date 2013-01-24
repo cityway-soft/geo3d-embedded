@@ -10,3 +10,4 @@ Import-Package: org.osgi.framework,
  org.osgi.service.packageadmin,
  org.osgi.service.startlevel;version="1.0.0"
 Bundle-Activator: org.avm.elementary.management.core.bundle.Activator
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

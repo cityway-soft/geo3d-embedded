@@ -22,5 +22,5 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.osgi.util.measurement;version="1.0.0",
  org.osgi.util.position;version="1.0.0",
  org.osgi.util.tracker
-Bundle-Vendor: cityway.fr
-
+Bundle-Vendor: Cityway
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

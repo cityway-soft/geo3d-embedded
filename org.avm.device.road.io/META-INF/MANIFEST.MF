@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.device.road.io
 Bundle-SymbolicName: org.avm.device.road.io
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: cityway.fr
+Bundle-Vendor: Cityway
 Import-Package: org.apache.log4j,
  org.avm.device.gps,
  org.avm.device.io,
@@ -20,5 +20,4 @@ Service-Component: META-INF/digitalinput.xml,
  META-INF/counter.xml,
  META-INF/digitaloutput.xml
 Bundle-NativeCode: lib/libroad_io.so ;osname = Linux; processor = ARM
- 
-
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

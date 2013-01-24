@@ -29,3 +29,4 @@ Export-Package: org.avm.business.tft,
  org.avm.business.tft.www,
  org.avm.business.tft.www.bundle
 Bundle-ClassPath: .
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

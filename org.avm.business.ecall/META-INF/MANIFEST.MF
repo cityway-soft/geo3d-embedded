@@ -22,3 +22,4 @@ Import-Package: org.apache.log4j,
  org.osgi.service.wireadmin,
  org.osgi.util.measurement;version="1.0.0",
  statemap
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

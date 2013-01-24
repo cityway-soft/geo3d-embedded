@@ -1,5 +1,8 @@
 package org.avm.hmi.swt.browser;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.apache.log4j.Logger;
 import org.avm.elementary.common.ConsumerService;
 import org.avm.elementary.common.ManageableService;
@@ -57,6 +60,14 @@ public class BrowserImpl implements ManageableService, ConsumerService,
 			}
 		});
 	}
+	
+	public void setUrl(final URL url){
+		_display.syncExec(new Runnable() {
+			public void run() {
+				_browserIhm.setUrl(url);
+			}
+		});
+	}
 
 	public void close() {
 		_display.syncExec(new Runnable() {
@@ -85,6 +96,12 @@ public class BrowserImpl implements ManageableService, ConsumerService,
 	public void login() {
 		if (_session != null && !_logged) {
 			open();
+			try {
+				setUrl(new URL("http://localhost:8082/tft/index.html"));
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			_logged = true;
 		}
 	}

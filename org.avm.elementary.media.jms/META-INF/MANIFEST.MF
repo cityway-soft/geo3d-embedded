@@ -14,6 +14,7 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
 Bundle-ClassPath: .,
  lib/jboss-messenger.jar
 Service-Component: META-INF/activator.xml
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Export-Package: org.avm.elementary.media.jms,
  org.avm.elementary.media.jms.bundle
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

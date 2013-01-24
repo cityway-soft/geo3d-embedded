@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: IO Plug-in
 Bundle-SymbolicName: org.avm.device.io
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Bundle-ClassPath: .
 Export-Package: org.avm.device.io,
  org.avm.device.io.iocardbus
@@ -13,3 +13,4 @@ Import-Package: org.apache.log4j,
  org.osgi.framework,
  org.osgi.service.component,
  org.osgi.service.device
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

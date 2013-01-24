@@ -19,4 +19,5 @@ Import-Package: org.apache.log4j,
  org.osgi.service.useradmin,
  org.osgi.service.wireadmin,
  org.osgi.util.measurement
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

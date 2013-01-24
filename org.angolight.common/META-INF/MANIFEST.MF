@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: org.angolight.elementary.common
-Bundle-SymbolicName: org.angolight.common
-Bundle-Version: 1.0.0.qualifier

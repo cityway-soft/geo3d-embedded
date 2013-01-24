@@ -18,4 +18,5 @@ Bundle-ClassPath: .
 Export-Package: org.avm.device.knet.bearer,
  org.avm.device.knet.bearer.bundle
 Service-Component: META-INF/activator.xml
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

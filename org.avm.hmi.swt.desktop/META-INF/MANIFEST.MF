@@ -15,5 +15,6 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.osgi.service.component,
  org.osgi.service.wireadmin,
  org.osgi.util.measurement
-Bundle-Vendor: cityway.fr
+Bundle-Vendor: Cityway
 Export-Package: org.avm.hmi.swt.desktop
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

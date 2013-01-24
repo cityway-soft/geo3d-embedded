@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import javax.microedition.io.ConnectionNotFoundException;
-
-
 
 public class CMDataXLMSerializer {
 
@@ -48,9 +45,7 @@ public class CMDataXLMSerializer {
 			final FileOutputStream fos = new FileOutputStream(filename, false);
 			fos.write(buffer.toString().getBytes());
 			fos.flush();
-		} catch (final ConnectionNotFoundException e) {
-			e.printStackTrace();
-		} catch (final IOException e) {
+		}  catch (final IOException e) {
 			e.printStackTrace();
 		}
 		return true;

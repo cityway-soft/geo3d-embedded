@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.elementary.alarm
 Bundle-SymbolicName: org.avm.elementary.alarm
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.apache.log4j,
  org.avm.business.protocol.phoebus,
@@ -18,4 +18,5 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.osgi.util.tracker
 Bundle-ClassPath: .
 Service-Component: META-INF/activator.xml
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
 

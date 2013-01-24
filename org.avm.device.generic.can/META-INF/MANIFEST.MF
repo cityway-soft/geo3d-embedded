@@ -18,3 +18,4 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.osgi.util.tracker
 Service-Component: META-INF/activator.xml,
  META-INF/manager.xml 
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

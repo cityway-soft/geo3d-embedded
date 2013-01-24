@@ -12,5 +12,5 @@ Export-Package: org.angolight.bo,
 Import-Package: org.apache.commons.pool,
  org.apache.log4j,
  org.osgi.util.measurement
-
-
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
+Bundle-Vendor: Cityway

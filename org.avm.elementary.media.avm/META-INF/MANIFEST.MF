@@ -6,7 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .,
  lib/avm.jar
 Service-Component: META-INF/activator.xml
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Export-Package: org.avm.elementary.media.avm
 Import-Package: EDU.oswego.cs.dl.util.concurrent,
  flavor,
@@ -20,3 +20,4 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.osgi.util.measurement,
  org.osgi.util.position,
  statemap
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

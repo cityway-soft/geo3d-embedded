@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.device.generic.comptage.elinap
 Bundle-SymbolicName: org.avm.device.generic.comptage.elinap
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: cityway.fr
+Bundle-Vendor: Cityway
 Import-Package: org.apache.log4j,
  org.avm.device.comptage,
  org.avm.elementary.common,
@@ -15,3 +15,4 @@ Import-Package: org.apache.log4j,
 Bundle-ClassPath: .
 Service-Component: META-INF/activator.xml
 Export-Package: org.avm.device.generic.comptage.elinap
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

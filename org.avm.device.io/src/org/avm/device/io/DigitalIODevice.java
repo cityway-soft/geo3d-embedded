@@ -3,12 +3,10 @@ package org.avm.device.io;
 import java.text.MessageFormat;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.avm.elementary.common.IndexedPropertyChangeEvent;
 import org.avm.elementary.common.PropertyChangeEvent;
 import org.avm.elementary.common.PropertyChangeListener;
 import org.avm.elementary.common.PropertyChangeSupport;
-import org.avm.elementary.log4j.Activator;
 import org.osgi.service.device.Device;
 
 public class DigitalIODevice implements Device, PropertyChangeListener {
@@ -71,7 +69,7 @@ public class DigitalIODevice implements Device, PropertyChangeListener {
 
 	public void setDriver(DigitalIODriver driver) {
 		if (driver != null) {
-			_driver = (DigitalIODriver) driver;			
+			_driver = (DigitalIODriver) driver;
 			_driver.addPropertyChangeListener(this);
 		} else {
 			if (_driver != null)

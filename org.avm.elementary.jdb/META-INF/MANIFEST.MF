@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.elementary.jdb
 Bundle-SymbolicName: org.avm.elementary.jdb
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Import-Package: 
  org.apache.log4j,
  org.apache.log4j.spi,
@@ -19,3 +19,4 @@ Import-Package:
  org.osgi.util.position
 Bundle-ClassPath: .
 Service-Component: META-INF/activator.xml
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

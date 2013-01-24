@@ -14,5 +14,6 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.osgi.service.wireadmin
 Bundle-ClassPath: .
 Service-Component: META-INF/activator.xml
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Export-Package: org.avm.elementary.media.sms
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

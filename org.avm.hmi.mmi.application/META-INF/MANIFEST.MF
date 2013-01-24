@@ -11,9 +11,9 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.osgi.framework;version="1.3.0",
  org.osgi.service.startlevel;version="1.0.0",
  org.osgi.util.tracker;version="1.3.1"
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Bundle-Activator: org.avm.hmi.mmi.application.bundle.Activator
 Export-Package: org.avm.hmi.mmi.application.actions,
  org.avm.hmi.mmi.application.display,
  org.avm.hmi.mmi.application.screens
-
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.business.command
 Bundle-SymbolicName: org.avm.elementary.command
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Import-Package: 
  EDU.oswego.cs.dl.util.concurrent,
  javax.xml.parsers,
@@ -32,3 +32,4 @@ Bundle-ClassPath: .,
 Export-Package: org.avm.elementary.command.commands,
  org.avm.elementary.command.impl
 Service-Component: META-INF/activator.xml
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

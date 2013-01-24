@@ -12,4 +12,5 @@ Import-Package: org.osgi.framework,
  org.osgi.service.log,
  org.osgi.util.tracker
 Bundle-Activator: org.avm.elementary.log4j.Activator
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

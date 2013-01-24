@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.device.road.watchdog
 Bundle-SymbolicName: org.avm.device.road.watchdog
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Import-Package: org.apache.log4j,
  org.avm.elementary.common,
  org.osgi.framework,
@@ -12,7 +12,4 @@ Import-Package: org.apache.log4j,
  statemap
 Bundle-Activator: org.avm.device.road.watchdog.bundle.Activator
 Bundle-NativeCode: lib/libklk_pic.so ;osname = Linux; processor = ARM
-
-
-
-
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

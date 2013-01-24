@@ -15,5 +15,6 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.osgi.service.component,
  org.osgi.util.tracker
 Service-Component: META-INF/activator.xml
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Export-Package: org.avm.elementary.database.bundle
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

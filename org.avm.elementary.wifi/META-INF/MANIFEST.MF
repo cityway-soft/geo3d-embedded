@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.elementary.wifi
 Bundle-SymbolicName: org.avm.elementary.wifi
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Import-Package: org.apache.log4j,
  org.avm.device.wifi,
  org.avm.elementary.common,
@@ -18,4 +18,4 @@ Import-Package: org.apache.log4j,
 Service-Component: META-INF/activator.xml
 Export-Package: org.avm.elementary.wifi,
  org.avm.elementary.wifi.bundle
-
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

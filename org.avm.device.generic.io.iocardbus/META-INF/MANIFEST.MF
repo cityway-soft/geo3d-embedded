@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.device.generic.io.iocardbus
 Bundle-SymbolicName: org.avm.device.generic.io.iocardbus
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: mercur.fr
+Bundle-Vendor: Cityway
 Bundle-ClassPath: .
 Export-Package: org.avm.device.generic.io.iocardbus
 Import-Package: org.apache.log4j,
@@ -17,3 +17,4 @@ Import-Package: org.apache.log4j,
  org.osgi.service.device,
  org.osgi.util.tracker
 Service-Component: META-INF/activator.xml
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
