@@ -48,7 +48,7 @@
 		<module>../org.avm.device.generic.io.iocardbus</module>
 		<!-- <module>../org.avm.device.generic.io.k8055</module> -->
 		<module>../org.avm.device.generic.io.memory</module>
-		<module>../org.avm.device.generic.odometer</module>
+		<!-- <module>../org.avm.device.generic.odometer</module> -->
 		<module>../org.avm.device.generic.phony</module>
 		<module>../org.avm.device.girouette</module>
 		<module>../org.avm.device.interface</module>
