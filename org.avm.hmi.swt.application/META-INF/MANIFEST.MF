@@ -11,4 +11,4 @@ Import-Package: org.avm.elementary.management.core,
 Bundle-Vendor: Cityway
 Bundle-Activator: org.avm.hmi.swt.application.bundle.Activator
 Export-Package: org.avm.hmi.swt.application.display
-Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
+xBundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
