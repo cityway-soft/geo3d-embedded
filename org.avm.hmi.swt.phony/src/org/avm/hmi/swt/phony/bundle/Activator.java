@@ -13,11 +13,12 @@ import org.avm.elementary.jdb.JDB;
 import org.avm.elementary.useradmin.UserSessionService;
 import org.avm.elementary.useradmin.UserSessionServiceInjector;
 import org.avm.hmi.swt.desktop.Desktop;
+import org.avm.hmi.swt.phony.Phony;
 import org.avm.hmi.swt.phony.PhonyImpl;
 import org.osgi.service.component.ComponentContext;
 
 public class Activator extends AbstractActivator implements
-		UserSessionServiceInjector, DirectoryInjector, GsmInjector,
+		UserSessionServiceInjector, DirectoryInjector, GsmInjector, Phony,
 		PhonyInjector {
 
 	private PhonyImpl _peer;
@@ -155,7 +156,7 @@ public class Activator extends AbstractActivator implements
 		_log.debug("unsetUserSessionService");
 		_peer.unsetUserSessionService(service);
 	}
-	
+
 	public void setJdb(JDB jdb) {
 		_log.debug("setJdb = " + jdb);
 		_peer.setJdb(jdb);
@@ -164,5 +165,25 @@ public class Activator extends AbstractActivator implements
 	public void unsetJdb(JDB jdb) {
 		_log.debug("unsetJdb");
 		_peer.unsetJdb(null);
+	}
+
+	public void call(String contactName) throws Exception {
+		_peer.call(contactName);
+	}
+
+	public void setVolume(int value) {
+		_peer.setVolume(value);
+	}
+
+	public void dial(String number) {
+		_peer.dial(number);
+	}
+
+	public void answer() {
+		_peer.answer();
+	}
+
+	public void hangup() {
+		_peer.hangup();
 	}
 }
