@@ -17,4 +17,4 @@ Import-Package: org.apache.log4j,
  org.osgi.util.measurement;version="1.0.0",
  org.osgi.util.position;version="1.0.0"
 Bundle-Vendor: Cityway
-Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
+xBundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
