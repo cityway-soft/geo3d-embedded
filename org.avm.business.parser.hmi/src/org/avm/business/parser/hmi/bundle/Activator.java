@@ -7,12 +7,9 @@ import java.util.Enumeration;
 
 import org.apache.log4j.Logger;
 import org.avm.business.parser.hmi.ParserImpl;
-import org.avm.elementary.common.ConfigurableService;
-import org.avm.elementary.common.MediaListener;
 import org.avm.elementary.parser.Parser;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 
 public class Activator implements Parser {
@@ -23,18 +20,10 @@ public class Activator implements Parser {
 
 	private ComponentContext _context;
 
-	private ConfigurationAdmin _cm;
-
 	private ParserImpl _peer;
 
-	private ConfigImpl _config;
-
-	private CommandGroupImpl _commands;
-
-	private MediaListener _messenger;
-
 	public Activator() {
-		_log = Logger.getInstance(this.getClass());
+		_log = Logger.getInstance(this.getClass().getName());
 	}
 
 	private void initializeParser() {
@@ -53,49 +42,10 @@ public class Activator implements Parser {
 		_log.debug("Components activated");
 		_context = context;
 		initializeParser();
-		initializeConfiguration();
-		initializeCommandGroup();
 	}
 
 	protected void deactivate(ComponentContext context) {
 		_log.debug("Component deactivated");
-		disposeCommandGroup();
-		disposeConfiguration();
-	}
-
-	// config
-	private void initializeConfiguration() {
-
-		_cm = (ConfigurationAdmin) _context.locateService("cm");
-		try {
-			_config = new ConfigImpl(_context, _cm);
-			_config.start();
-			if (_peer instanceof ConfigurableService) {
-				((ConfigurableService) _peer).configure(_config);
-
-			}
-		} catch (Exception e) {
-			_log.error(e.getMessage(), e);
-		}
-
-	}
-
-	private void disposeConfiguration() {
-		_config.stop();
-		if (_peer instanceof ConfigurableService) {
-			((ConfigurableService) _peer).configure(null);
-		}
-	}
-
-	// commands
-	private void initializeCommandGroup() {
-		_commands = new CommandGroupImpl(_context, _peer, _config);
-		_commands.start();
-	}
-
-	private void disposeCommandGroup() {
-		if (_commands != null)
-			_commands.stop();
 	}
 
 	public String getProtocolName() {

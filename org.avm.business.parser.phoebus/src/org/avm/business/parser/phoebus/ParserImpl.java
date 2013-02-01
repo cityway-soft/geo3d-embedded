@@ -15,14 +15,9 @@ import org.apache.log4j.Logger;
 import org.avm.business.protocol.phoebus.Entete;
 import org.avm.business.protocol.phoebus.Message;
 import org.avm.business.protocol.phoebus.MessageFactory;
-import org.avm.elementary.common.Config;
-import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.parser.AbstractParser;
 
-public class ParserImpl extends AbstractParser implements ConfigurableService {
-
-	private ParserConfig _config;
-
+public class ParserImpl extends AbstractParser {
 
 	protected ClassLoader _loader;
 
@@ -72,7 +67,7 @@ public class ParserImpl extends AbstractParser implements ConfigurableService {
 	public void marshal(Object n, OutputStream out) throws Exception {
 		if (n instanceof Message) {
 			Message message = (Message) n;
-			message.marshal(out);			
+			message.marshal(out);
 		} else {
 			throw new RuntimeException("Protocole non supporte");
 		}
@@ -98,9 +93,4 @@ public class ParserImpl extends AbstractParser implements ConfigurableService {
 		}
 	}
 
-	public void configure(Config config) {
-		_config = (ParserConfig) config;
-	}
-
-	
 }
