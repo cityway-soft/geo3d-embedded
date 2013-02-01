@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component name="org.avm.device.usbmass.Usbmass" immediate="true">
+<component name="org.avm.device.usbmass.UsbMass" immediate="true">
 	<implementation class="org.avm.device.usbmass.bundle.Activator"/>
-	<property name="service.pid" value="org.avm.device.usbmass.Usbmass"/>
+	<property name="service.pid" value="org.avm.device.usbmass.UsbMass"/>
 	<service>						
-		<provide interface="org.avm.device.usbmass.Usbmass"/>		
+		<provide interface="org.avm.device.usbmass.UsbMass"/>		
 	</service>
 	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>		
 	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
