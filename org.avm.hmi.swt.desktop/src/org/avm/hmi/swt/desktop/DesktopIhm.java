@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.avm.elementary.common.Config;
 import org.avm.elementary.common.Scheduler;
 import org.avm.hmi.swt.application.display.Application;
@@ -63,14 +64,7 @@ public class DesktopIhm {
 
 	private HashMap _hashItem = new HashMap();
 
-	// private Font _fontNormal;
-	//
-	// private Font _fontInformation2;
-	//
-	// private Font _fontTabFolder;
-	//
-	// private Font _fontSmall;
-
+	private Logger logger = Logger.getInstance(DesktopIhm.class.getName());
 	private Button _buttonNightMode;
 
 	private Date _beginDay;
@@ -86,35 +80,48 @@ public class DesktopIhm {
 	public static HashMap _hashFonts = null;
 
 	private void createLogo() {
+		logger.debug("Creation logo - step 1");
 		GridData gridData11 = new GridData();
 		gridData11.horizontalAlignment = GridData.FILL;
 		gridData11.grabExcessHorizontalSpace = false;
 		gridData11.grabExcessVerticalSpace = false;
 		gridData11.verticalAlignment = GridData.FILL;
 
+		logger.debug("Creation logo - step 2");
+
 		_labelLogo = new Label(_shell, SWT.NONE);
 		_labelLogo.setText("Logo");
 		_labelLogo.setLayoutData(gridData11);
+		logger.debug("Creation logo - step 3");
+
 		String version = System.getProperty("org.avm.version");
 		if (version != null) {
 			_labelLogo.setToolTipText("Version " + version);
 		}
+		logger.debug("Creation logo - step 4");
+
 
 		Image imglogo = null;
 		String filename = System.getProperty("org.avm.home") + "/data/logo.jpg";
 		File file = new File(filename);
+		logger.debug("Creation logo - step 5");
+
 		if (file.exists()) {
 			imglogo = new Image(_display, filename); //$NON-NLS-1$
 		} else {
 			imglogo = new Image(_display, getClass().getResourceAsStream(
 					"/resources/logo.jpg")); //$NON-NLS-1$
 		}
+		logger.debug("Creation logo - step 6");
+
 		_labelLogo.setImage(imglogo);
 
 		if (ENABLE_RIGHT_PANEL == false) {
 			_labelLogo.setEnabled(false);
 			_labelLogo.setVisible(false);
 		}
+		logger.debug("Creation logo - step 7");
+
 	}
 
 	public void configure(Config config) {
@@ -176,8 +183,8 @@ public class DesktopIhm {
 
 		_labelInformation2 = new Label(_compositeActivite, SWT.CENTER);
 
-		Font _fontInformation2 = Application.getFont(Desktop.DEFAULT_FONTSIZE + 8,
-				SWT.ITALIC);
+		Font _fontInformation2 = Application.getFont(
+				Desktop.DEFAULT_FONTSIZE + 8, SWT.ITALIC);
 		_labelInformation2.setFont(_fontInformation2);
 		GridData gridData = new GridData();
 		gridData.verticalAlignment = GridData.FILL;
@@ -255,12 +262,14 @@ public class DesktopIhm {
 		_display.asyncExec(new Runnable() {
 
 			public void run() {
+				logger.debug("Debut (run)");
 				GridLayout gridLayout = new GridLayout();
 				gridLayout.numColumns = ENABLE_RIGHT_PANEL ? 2 : 1;
 				gridLayout.verticalSpacing = 0;
 				gridLayout.marginWidth = 1;
 				gridLayout.marginHeight = 1;
 				gridLayout.horizontalSpacing = 0;
+				logger.debug("Creation Shell");
 				_shell = new Shell();
 
 				_shell.setText(Desktop.APPLICATION_NAME);
@@ -269,20 +278,29 @@ public class DesktopIhm {
 
 				Rectangle window = Geometry.parse(_display.getClientArea(),
 						System.getProperty("org.avm.hmi.swt.geometry"));
+				logger.debug("Resize fenetre (bis) :  " + window +"geometry=" + System.getProperty("org.avm.hmi.swt.geometry"));
+				logger.debug("Localisation fenetre");
 				_shell.setLocation(new Point(window.x, window.y));
+				logger.debug("Resize fenetre");
 				_shell.setSize(new Point(window.width, window.height));
 
+				logger.debug("Creation logo");
 				createLogo();
 
+				logger.debug("Creation activite");
 				createCompositeActivite();
 
+				logger.debug("Creation boutons");
 				createCompositeButtons();
 
+				logger.debug("Creation tabfolder");
 				createTabFolder();
 
+				logger.debug("Creation polices");
 				Font _fontNormal = getFont(10, SWT.NORMAL);
 				Font _fontSmall = getFont(0, SWT.NORMAL);
 
+				logger.debug("Creation info vehicule");
 				GridData gridData = new GridData();
 				gridData.grabExcessVerticalSpace = false;
 				gridData.horizontalAlignment = GridData.FILL;
@@ -327,6 +345,7 @@ public class DesktopIhm {
 				_labelHeure.setLayoutData(gridData);
 				startClock();
 
+				logger.debug("Creation bouton nightmode");
 				_buttonNightMode = new Button(_compositeButtons, SWT.NONE
 						| SWT.TOGGLE);
 				_buttonNightMode.setSelection(DesktopStyle.isNightMode());
@@ -349,13 +368,18 @@ public class DesktopIhm {
 
 				_compositeButtons.layout();
 				_compositeActivite.layout();
+				logger.debug("Ouvertude de la fenetre");
 				_shell.open();
+
 				window = Geometry.parse(_display.getClientArea(),
 						System.getProperty("org.avm.hmi.swt.geometry"));
+				logger.debug("Resize fenetre (bis) :  " + window +"geometry=" + System.getProperty("org.avm.hmi.swt.geometry"));
 				_shell.setLocation(new Point(window.x, window.y));
 				_shell.setSize(new Point(window.width, window.height));
+				logger.debug("Mise a jour info vehicule");
 				updateVehiculeDetails();
 
+				logger.debug("Verification nightmode");
 				checkNightMode();
 
 				_shell.addListener(SWT.Close, new Listener() {
@@ -364,6 +388,7 @@ public class DesktopIhm {
 						System.exit(0);
 					}
 				});
+				logger.debug("Fin (run)");
 			}
 
 		});
@@ -574,26 +599,25 @@ public class DesktopIhm {
 			_display = display;
 		}
 	}
-	
+
 	public static Font getFont(int deltasize, int style) {
 		return Application.getFont(deltasize, style);
 	}
 
-//	public static Font getFont(int deltasize, int style) {
-//		Font font = null;
-//		String key = deltasize + "_" + style;
-//
-//		if (_hashFonts == null) {
-//			_hashFonts = new HashMap();
-//		}
-//		font = (Font) _hashFonts.get(key);
-//		if (font == null) {
-//			font = new Font(Display.getDefault(), Desktop.DEFAULT_FONT,
-//					Desktop.DEFAULT_FONTSIZE + deltasize, style);
-//			_hashFonts.put(key, font);
-//		}
-//		return font;
-//	}
-
+	// public static Font getFont(int deltasize, int style) {
+	// Font font = null;
+	// String key = deltasize + "_" + style;
+	//
+	// if (_hashFonts == null) {
+	// _hashFonts = new HashMap();
+	// }
+	// font = (Font) _hashFonts.get(key);
+	// if (font == null) {
+	// font = new Font(Display.getDefault(), Desktop.DEFAULT_FONT,
+	// Desktop.DEFAULT_FONTSIZE + deltasize, style);
+	// _hashFonts.put(key, font);
+	// }
+	// return font;
+	// }
 
 }

@@ -17,4 +17,4 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.osgi.util.measurement
 Bundle-Vendor: Cityway
 Export-Package: org.avm.hmi.swt.desktop
-Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
+xBundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
