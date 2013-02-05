@@ -41,12 +41,14 @@
 		<module>../org.avm.device.generic.afficheur.hanover</module>
 		<module>../org.avm.device.generic.afficheur.matis</module>
 		<module>../org.avm.device.generic.afficheur.mobitec</module>
+		<module>../org.avm.device.generic.afficheur.aesys</module>
 		<module>../org.avm.device.generic.can</module>
 		<module>../org.avm.device.generic.comptage.elinap</module>
 		<module>../org.avm.device.generic.girouette.duhamel</module>
 		<module>../org.avm.device.generic.girouette.hanover</module>
 		<module>../org.avm.device.generic.girouette.matis</module>
 		<module>../org.avm.device.generic.girouette.spec</module>
+		<module>../org.avm.device.generic.girouette.aesys</module>
 		<module>../org.avm.device.generic.gps</module>
 		<module>../org.avm.device.generic.gsm</module>
 		<module>../org.avm.device.generic.io.iocardbus</module>
