@@ -13,3 +13,5 @@ Import-Package: org.apache.log4j,
  org.osgi.service.device,
  org.osgi.util.tracker
 Service-Component: META-INF/activator.xml
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
+
