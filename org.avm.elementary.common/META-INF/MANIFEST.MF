@@ -5,7 +5,9 @@ Bundle-SymbolicName: org.avm.elementary.common
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Cityway
 Bundle-ClassPath: .,
- classes/
+ lib/concurrent.jar,
+ lib/jibx-run.jar,
+ lib/xpp3.jar
 Export-Package: EDU.oswego.cs.dl.util.concurrent,
  flavor,
  javax.xml.namespace,

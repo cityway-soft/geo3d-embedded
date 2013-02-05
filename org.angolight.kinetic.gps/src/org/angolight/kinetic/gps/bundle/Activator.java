@@ -1,5 +1,6 @@
 package org.angolight.kinetic.gps.bundle;
 
+import org.angolight.kinetic.KineticService;
 import org.angolight.kinetic.gps.KineticServiceImpl;
 import org.avm.elementary.common.AbstractActivator;
 import org.avm.elementary.common.ConfigurableService;
@@ -9,7 +10,7 @@ import org.avm.elementary.common.ProducerService;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 
-public class Activator extends AbstractActivator {
+public class Activator extends AbstractActivator implements KineticService {
 
 	private static Activator _plugin;
 

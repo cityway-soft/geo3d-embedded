@@ -8,21 +8,17 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 import org.apache.log4j.Logger;
-import org.avm.business.protocol.hmi.JiBX_hmiState_access;
 import org.avm.business.protocol.hmi.MessageFactory;
 import org.avm.business.protocol.hmi.State;
-import org.avm.elementary.common.Config;
-import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.parser.AbstractParser;
 
-public class ParserImpl extends AbstractParser implements ConfigurableService {
+public class ParserImpl extends AbstractParser {
 
-	private ParserConfig _config;
 
 	protected ClassLoader _loader;
 
 	public ParserImpl(URL url) {
-		_log = Logger.getInstance(this.getClass());
+		_log = Logger.getInstance(this.getClass().getName());
 		URLConnection conn;
 		try {
 			conn = url.openConnection();
@@ -32,8 +28,6 @@ public class ParserImpl extends AbstractParser implements ConfigurableService {
 		}
 	}
 
-	
-	
 	private void initialize(URLConnection conn) throws Exception {
 		JarInputStream zip = new JarInputStream(conn.getInputStream());
 		JarEntry entry;
@@ -77,7 +71,7 @@ public class ParserImpl extends AbstractParser implements ConfigurableService {
 	}
 
 	public Object unmarshal(InputStream in) throws Exception {
-		State message = null;		
+		State message = null;
 		try {
 			message = MessageFactory.unmarshal(in);
 		} catch (Throwable e) {
@@ -101,8 +95,5 @@ public class ParserImpl extends AbstractParser implements ConfigurableService {
 		}
 	}
 
-	public void configure(Config config) {
-		_config = (ParserConfig) config;
-	}
 
 }

@@ -16,7 +16,6 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
 Bundle-ClassPath: .,
  lib/management.jar
 Export-Package: org.avm.business.parser.management,
- org.avm.business.parser.management.bundle,
  org.avm.business.protocol.management
 Service-Component: META-INF/activator.xml
 Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
