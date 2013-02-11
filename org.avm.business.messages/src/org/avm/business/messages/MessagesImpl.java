@@ -491,7 +491,7 @@ public class MessagesImpl implements Messages, ConfigurableService,
 			message.getEntete().setReference(reference);
 			message.getEntete().getReference().setAcquittement(1);
 			message.getEntete().getReference().setId(Long.parseLong(msgId));
-			message.setMessage("LU :" + msg.getProperty(Messages.MESSAGE));
+			message.setMessage("LU '" + msg.getProperty(Messages.MESSAGE)+"'");
 			_log.info("Emission du message d'acquittement : " + message);
 			send(message);
 		}
