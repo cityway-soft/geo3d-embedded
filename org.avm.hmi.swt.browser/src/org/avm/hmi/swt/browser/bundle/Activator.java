@@ -24,6 +24,8 @@ public class Activator extends AbstractActivator {
 
 	private ConsumerImpl _consumer;
 
+	private CommandGroupImpl _commands;
+
 	public Activator() {
 		_log = Logger.getInstance(this.getClass());
 		_log.setPriority(Priority.DEBUG);
@@ -31,8 +33,9 @@ public class Activator extends AbstractActivator {
 	}
 
 	protected void start(ComponentContext context) {
-		initializeBaseIhm();
+		initializeDesktop();
 		initializeUserSessionService();
+		initializeCommandGroup();
 		startService();
 		initializeConsumer();
 	}
@@ -41,7 +44,8 @@ public class Activator extends AbstractActivator {
 		disposeConsumer();
 		stopService();
 		disposeUserSessionService();
-		disposeBaseIhm();
+		disposeCommandGroup();
+		disposeDesktop();
 	}
 
 	// UserSessionService
@@ -54,17 +58,27 @@ public class Activator extends AbstractActivator {
 	private void disposeUserSessionService() {
 		_peer.unsetUserSessionService(null);
 	}
-	
-	// Base
-	private void initializeBaseIhm() {
+
+	// commands
+	private void initializeCommandGroup() {
+		_commands = new CommandGroupImpl(_context, _peer);
+		_commands.start();
+	}
+
+	private void disposeCommandGroup() {
+		if (_commands != null)
+			_commands.stop();
+	}
+
+	// Desktop
+	private void initializeDesktop() {
 		Desktop base = (Desktop) _context.locateService("base");
 		_peer.setBase(base);
 	}
 
-	private void disposeBaseIhm() {
+	private void disposeDesktop() {
 		_peer.setBase(null);
 	}
-
 
 	// consumer
 	private void initializeConsumer() {
@@ -100,7 +114,5 @@ public class Activator extends AbstractActivator {
 	public void stop() {
 		_peer.stop();
 	}
-
-
 
 }

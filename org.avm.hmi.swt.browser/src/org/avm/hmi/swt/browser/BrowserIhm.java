@@ -12,10 +12,7 @@ import org.eclipse.swt.widgets.Display;
 
 public class BrowserIhm extends Composite {
 
-
-
 	private Browser browser;
-
 
 	public BrowserIhm(Composite parent, int style) {
 		super(parent, style);
@@ -33,6 +30,7 @@ public class BrowserIhm extends Composite {
 		this.setLayout(gridLayout);
 		this.setBackground(Display.getCurrent().getSystemColor(
 				Desktop.DEFAULT_BACKGROUND_COLOR));
+		// this.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_CYAN));
 		create();
 	}
 
@@ -45,21 +43,22 @@ public class BrowserIhm extends Composite {
 			System.out.println("[BrowserIHM] creating browser ...");
 			browser = new Browser(this, SWT.NONE);
 			GridData gridData = new GridData();
-			gridData.horizontalAlignment = GridData.FILL_HORIZONTAL;
-			gridData.verticalAlignment = GridData.FILL_VERTICAL;
+			gridData.horizontalAlignment = GridData.FILL;
+			gridData.verticalAlignment = GridData.FILL;
 			gridData.grabExcessHorizontalSpace = true;
 			gridData.grabExcessVerticalSpace = true;
 			browser.setLayoutData(gridData);
-			
+			browser.setBackground(Display.getCurrent().getSystemColor(
+					SWT.COLOR_YELLOW));
+
 			System.out.println("[BrowserIHM] browser created.");
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
 	}
-	
-	
-	public void setUrl(URL url){
-		if (browser != null){
+
+	public void setUrl(URL url) {
+		if (browser != null) {
 			browser.setUrl(url.toExternalForm());
 		}
 	}

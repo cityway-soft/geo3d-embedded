@@ -97,7 +97,7 @@ public class BrowserImpl implements ManageableService, ConsumerService,
 		if (_session != null && !_logged) {
 			open();
 			try {
-				setUrl(new URL("http://localhost:8082/tft/index.html"));
+				setUrl(new URL("http://www.google.fr"));
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
