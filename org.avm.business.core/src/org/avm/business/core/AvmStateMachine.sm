@@ -74,6 +74,7 @@ Entry{ stateChange(AvmModel.STATE_ATTENTE_SAISIE_COURSE);
 	   checkCourse();
    	   resetCourse();
    	   serialize();
+   	   checkAutomaticCourse();
    	  // journalize("HORSCOURSE");
    	 }
 Exit { }
