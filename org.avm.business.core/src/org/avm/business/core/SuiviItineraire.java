@@ -623,7 +623,8 @@ public class SuiviItineraire implements ConfigurableService {
 		}
 
 		Point p = getCourse().getPointAPartirRangAvecId(currentRang, balise);
-
+		
+		
 		if (p != null) {
 			updateAttente(p, true);
 			getCourse().setPointDesservi(p);
