@@ -704,6 +704,7 @@ public class AvmStateMachineContext
             ctxt.checkCourse();
             ctxt.resetCourse();
             ctxt.serialize();
+            ctxt.checkAutomaticCourse();
             return;
         }
 
