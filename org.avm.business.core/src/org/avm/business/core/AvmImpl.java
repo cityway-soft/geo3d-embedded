@@ -576,13 +576,14 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 				ServiceAgent currentSa = _model.getServiceAgent();
 				_log.info("isCourseCorrect  - currentSA=" + currentSa);
 				_log.info("datasource = " + _currentDatasource);
-				Course course = _currentDatasource.getCourse(currentSa, courseIDU);
+				Course course = _currentDatasource.getCourse(currentSa,
+						courseIDU);
 				_log.info("getcourse = " + course);
-				if (course != null){
+				if (course != null) {
 					course.setTerminee(false);
 				}
-//				_model.getServiceAgent().getCourseByIdu(course.getIdu())
-//						.setTerminee(false);
+				// _model.getServiceAgent().getCourseByIdu(course.getIdu())
+				// .setTerminee(false);
 				_model.setCourse(course);
 			} catch (Throwable t) {
 				_log.error(t);
@@ -726,6 +727,10 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 			_model.setVehiculeFull(false);
 			_model.setHorsItineraire(false);
 			_model.setDepart(false);
+
+			// FLA ajout de la sauvegarde dernier idu de course
+			_model.setLastCourseIdu(_model.getCourse().getIdu());
+
 		}
 		_model.setDepart(false);
 		_model.setCourse(null);
@@ -994,12 +999,12 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 	}
 
 	public void synchronize(String reason) {
-		//if (_lastState != _model.getState().getValue()) {
-			_log.debug("Synchronize IHM (" + reason + ": new state = " + _model.getState()); //$NON-NLS-1$ //$NON-NLS-2$
-			_producer.publish(_model.getState());
-			_log.info("new state published.");
-			//_lastState = _model.getState().getValue();
-		//}
+		// if (_lastState != _model.getState().getValue()) {
+		_log.debug("Synchronize IHM (" + reason + ": new state = " + _model.getState()); //$NON-NLS-1$ //$NON-NLS-2$
+		_producer.publish(_model.getState());
+		_log.info("new state published.");
+		// _lastState = _model.getState().getValue();
+		// }
 	}
 
 	public void sendMessage(Message msg) {
@@ -1243,7 +1248,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 
 		file = new File(AVM_SERIALIZATION_FILE);
 		if (file.exists() == false || isOlderThanToday(file)) {
-			info("Fichier serialisé trop vieux : ignoré (et détruit)");
+			info("Fichier serialisï¿½ trop vieux : ignorï¿½ (et dï¿½truit)");
 			file.delete();
 			return new AvmImpl();
 		}
@@ -1254,10 +1259,10 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 
 			appInstance = (AvmImpl) istream.readObject();
 			appInstance.init();
-			info("Fichier serialisé chargé");
+			info("Fichier serialisï¿½ chargï¿½");
 
 		} catch (Exception t) {
-			info("Destruction du fichier sérialisé"); //$NON-NLS-1$
+			info("Destruction du fichier sï¿½rialisï¿½"); //$NON-NLS-1$
 			file.delete();
 		} finally {
 			istream.close();
@@ -1274,7 +1279,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 		try {
 			avm = deserialize();
 		} catch (Exception e) {
-			info("Erreur de déserialisation"); //$NON-NLS-1$
+			info("Erreur de dï¿½serialisation"); //$NON-NLS-1$
 			e.printStackTrace();
 			avm = null;
 		}
@@ -1292,6 +1297,18 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 				finService();
 			} else {
 				debug("Controle pour fin service : derniere course non terminee	 (pas de FinService)");
+				// FLA ajout passage automatique Ã  la course suivante
+				/*
+				 * new Thread (){ public void run (){ try { Thread.sleep(1000);
+				 * } catch (InterruptedException e) { // TODO Auto-generated
+				 * catch block e.printStackTrace(); }
+				 */
+				System.out.println("OOOOOOOOOOOOPPPPPPPPPPPPSSSSSSSSSSS");
+				// ServiceAgent sa = _model.getServiceAgent();
+
+				/*
+				 * } }.start();
+				 */
 			}
 		}
 	}
@@ -1379,6 +1396,20 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 	private void debug(Object debug) {
 		if (_log.isDebugEnabled() && debug != null) {
 			_log.debug(debug.toString());
+		}
+	}
+
+	public void checkAutomaticCourse() {
+		if (_model.getServiceAgent() != null) {
+			ServiceAgent sa = _model.getServiceAgent();
+			if (sa != null && sa.isAutomaticCourse()) {
+				int idu = _model.getLastCourseIdu();
+				if (idu != -1) {
+					Course nextCourse = sa.getNextCourse(idu);
+					resetCourse();
+					priseCourse(nextCourse.getIdu());
+				}
+			}
 		}
 	}
 
