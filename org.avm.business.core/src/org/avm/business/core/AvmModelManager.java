@@ -55,6 +55,16 @@ public class AvmModelManager implements AvmModel, Serializable {
 
 	private int _debugCount=0;
 	
+	private transient int lastCourseIdu = -1;
+	
+
+	public int getLastCourseIdu() {
+		return lastCourseIdu;
+	}
+
+	public void setLastCourseIdu(int lastCourseIdu) {
+		this.lastCourseIdu = lastCourseIdu;
+	}
 
 	public Point getDernierPoint() {
 		return _dernierPoint;
