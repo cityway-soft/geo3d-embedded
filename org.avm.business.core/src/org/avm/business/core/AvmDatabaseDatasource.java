@@ -260,6 +260,7 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 		int sag_id = -1; // SAG_ID
 		ServiceAgent result = null;
 		long time = System.currentTimeMillis();
+		String sag_lib = null;
 
 		_log.info("Algorithme AVEC controle de validite des courses");
 		checkCurrentDay();
@@ -268,7 +269,8 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 			ResultSet rs = null;
 			String request = null;
 
-			request = "select sag_id from service_agent where sag_idu='"
+			// FLA ajout sag_lib, pour détection mode automatic
+			request = "select sag_id, sag_lib from service_agent where sag_idu='"
 					+ sag_idu + "'";
 
 			rs = getDatabase().sql(request);
@@ -280,7 +282,8 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 			try {
 				if (rs != null && rs.next()) {
 					sag_id = rs.getInt(1);
-
+					sag_lib = rs.getString(2);
+					
 					request = getCoursesIdValides(sag_id, _listePeriodes,
 							_listeProprietes);
 					rsCourses = getDatabase().sql(request);
@@ -344,6 +347,7 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 				} else {
 					_log.warn("rs.next()==false !!!");
 					result = new ServiceAgent(false, sag_idu, null);
+					result.setLibelle(sag_lib);
 					throw new AvmDatabaseException(
 							AvmDatabaseException.ERR_SERVICE_AGENT_INCONNU);
 				}
