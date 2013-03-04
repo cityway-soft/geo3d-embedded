@@ -1401,7 +1401,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 	}
 
 	public void checkAutomaticCourse() {
-		if (_model.getServiceAgent() != null) {
+		if (_config.isAutomaticCourseMode() && _model.getServiceAgent() != null) {
 			ServiceAgent sa = _model.getServiceAgent();
 			if (sa != null && sa.isAutomaticCourse()) {
 				int idu = _model.getLastCourseIdu();
