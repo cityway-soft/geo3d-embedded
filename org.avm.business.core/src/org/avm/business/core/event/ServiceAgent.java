@@ -22,6 +22,16 @@ public class ServiceAgent implements Event, Serializable {
 	boolean _termine = false;
 
 	private final static String AUTOMATIC = "automatic";
+	
+	private String automaticLabel = AUTOMATIC;
+
+	public String getAutomaticLabel() {
+		return automaticLabel;
+	}
+
+	public void setAutomaticLabel(String automaticLabel) {
+		this.automaticLabel = automaticLabel;
+	}
 
 	// FLA ajout de la notion de libelle
 	private String libelle = null;
@@ -36,7 +46,7 @@ public class ServiceAgent implements Event, Serializable {
 
 	public boolean isAutomaticCourse() {
 		return true;
-		//return this.libelle.equals(AUTOMATIC);
+		//return this.libelle.equals(automaticLabel);
 	}
 
 	public ServiceAgent(boolean correct, int idu, Course[] courses) {
