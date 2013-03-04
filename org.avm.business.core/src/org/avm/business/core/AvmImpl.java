@@ -813,6 +813,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 			ServiceAgent sa;
 			try {
 				sa = _currentDatasource.getServiceAgent(sag_idu);
+				sa.setAutomaticLabel(_config.getAutomaticSALabel());
 				debug("service planifie " + sag_idu + " termine ? => "
 						+ sa.isTermine());
 				if (sa.isTermine() == false) {
