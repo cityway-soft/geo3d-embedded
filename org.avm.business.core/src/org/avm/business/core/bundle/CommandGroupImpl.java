@@ -33,18 +33,13 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 	public final static String[] HELP_TRANSITION = new String[] {
 			"Activation des transitions",
-			"\tListe des transitions:\n" 
-			+ "\t\t- c[ourse] -p <idu course>\n"
-			+ "\t\t- dep[art]\n"	
-			+ "\t\t- dev[iation]\n"
-			+ "\t\t- e[ntree] -p <id arret>\n"
-			+ "\t\t- finc[ourse]\n" 
-			+ "\t\t- fins[ervice]\n"
-			+ "\t\t- p[oste] [-p <conducteur/vehicule>]\n" 
-			+ "\t\t- se[rvice] -p <idu service>\n"
-			+ "\t\t- so[rtie] -p <id arret>\n"
-			+ "\t\t- su[ivant]\n" 
-			};
+			"\tListe des transitions:\n" + "\t\t- c[ourse] -p <idu course>\n"
+					+ "\t\t- dep[art]\n" + "\t\t- dev[iation]\n"
+					+ "\t\t- e[ntree] -p <id arret>\n" + "\t\t- finc[ourse]\n"
+					+ "\t\t- fins[ervice]\n"
+					+ "\t\t- p[oste] [-p <conducteur/vehicule>]\n"
+					+ "\t\t- se[rvice] -p <idu service>\n"
+					+ "\t\t- so[rtie] -p <id arret>\n" + "\t\t- su[ivant]\n" };
 
 	public int cmdTransition(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
@@ -54,7 +49,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		int length = transition.length();
 		try {
 
-			if ("poste".startsWith(transition) && length>=3) {//-- poste
+			if ("poste".startsWith(transition) && length >= 3) {// -- poste
 				int c = 0, v = 0;
 				String params = (String) opts.get(FLAG_PARAM);
 				if (params != null) {
@@ -63,14 +58,14 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 						c = Integer.parseInt((String) t.nextToken());
 						v = Integer.parseInt((String) t.nextToken());
 					} catch (Throwable e) {
-						out
-								.println("Impossible de traiter le parametre : "
-										+ params
-										+ " - verifier le format <conducteur>/<vehicule>");
+						out.println("Impossible de traiter le parametre : "
+								+ params
+								+ " - verifier le format <conducteur>/<vehicule>");
 					}
 				}
 				_peer.prisePoste(v, c);
-			} else if ("suivant".startsWith(transition)&& length>=1) {//-- suivant
+			} else if ("suivant".startsWith(transition) && length >= 1) {// --
+																			// suivant
 				if (_peer.getModel().isInsidePoint()) {
 					Point dernier = _peer.getModel().getDernierPoint();
 					if (dernier != null) {
@@ -85,29 +80,37 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 					}
 				}
 				infoArret(out);
-			} else if ("deviation".startsWith(transition) && length>=3 ) { //-- deviation
+			} else if ("deviation".startsWith(transition) && length >= 3) { // --
+																			// deviation
 				_peer.sortieItineraire();
-			} else if ("depart".startsWith(transition) && length>=3) { //-- depart
+			} else if ("depart".startsWith(transition) && length >= 3) { // --
+																			// depart
 				_peer.depart();
-			} else if ("fincourse".startsWith(transition) && length>=4 ) {//-- fincourse
+			} else if ("fincourse".startsWith(transition) && length >= 4) {// --
+																			// fincourse
 				_peer.finCourse();
-			} else if ("finservice".startsWith(transition) && length>=4 ) {//-- finservice
+			} else if ("finservice".startsWith(transition) && length >= 4) {// --
+																			// finservice
 				_peer.finService();
-			} else if ("entree".startsWith(transition) && length>=1) {//-- entree
+			} else if ("entree".startsWith(transition) && length >= 1) {// --
+																		// entree
 				int id = Integer.valueOf((String) opts.get(FLAG_PARAM))
 						.intValue();
 				_peer.entree(id);
 				infoArret(out);
-			} else if ("sortie".startsWith(transition) && length>=3) {//-- sortie
+			} else if ("sortie".startsWith(transition) && length >= 3) {// --
+																		// sortie
 				int id = Integer.valueOf((String) opts.get(FLAG_PARAM))
 						.intValue();
 				_peer.sortie(id);
 				infoArret(out);
-			} else if ("course".startsWith(transition) && length>=1) {//- course
+			} else if ("course".startsWith(transition) && length >= 1) {// -
+																		// course
 				String course = ((String) opts.get(FLAG_PARAM)).trim();
 				_peer.priseCourse(Integer.parseInt(course));
 				showCourse(out);
-			} else if ("service".startsWith(transition) && length>=2) { //-- se
+			} else if ("service".startsWith(transition) && length >= 2) { // --
+																			// se
 				String service = ((String) opts.get(FLAG_PARAM)).trim();
 				_peer.priseService(Integer.parseInt(service));
 				serviceAgent(out);
@@ -126,8 +129,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		Point dernier = _peer.getModel().getDernierPoint();
 		if (dernier != null) {
 			out.println((_peer.getModel().isInsidePoint() ? "* A l'arret *  : "
-					: "Dernier arret  : ")
-					+ dernier);
+					: "Dernier arret  : ") + dernier);
 		} else {
 			out.println("Aucun arret desservi.");
 		}
@@ -301,7 +303,8 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			}
 		}
 
-		out.println("Controle de la validite des courses = " + ((AvmConfig) _config).isCheckValidite());
+		out.println("Controle de la validite des courses = "
+				+ ((AvmConfig) _config).isCheckValidite());
 		return 0;
 	}
 
@@ -316,4 +319,40 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		return 0;
 	}
 
+	// Set sa auto
+	public final static String USAGE_SETAUTOSA = "[<automatic>]";
+
+	public final static String[] HELP_SETAUTOSA = new String[] { "Active le mode service agent automatique" };
+
+	public int cmdSetautosa(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+		String auto = ((String) opts.get("automatic")).trim();
+		boolean current = ((AvmConfig) _config).isAutomaticCourseMode();
+		if (auto != null) {
+			boolean newVal = auto.toLowerCase().equals("true");
+			if (current != newVal) {
+				((AvmConfig) _config).setAutomaticCourseMode(newVal);
+				_config.updateConfig(true);
+			}
+		}
+		out.println("Mode SA auto = "
+				+ ((AvmConfig) _config).isAutomaticCourseMode());
+		return 0;
+	}
+
+	// Set automatic sa label
+	public final static String USAGE_SETAUTOMATICSALABEL = "[<label>]";
+
+	public final static String[] HELP_SETAUTOMATICSALABEL = new String[] { "Definit le libellé pour SA automatic" };
+
+	public int cmdSetautomaticsalabel(Dictionary opts, Reader in,
+			PrintWriter out, Session session) {
+		String label = ((String) opts.get("label")).trim();
+		if (label != null) {
+			((AvmConfig) _config).setAutomaticSALabel(label);
+			_config.updateConfig();
+		}
+		out.println("Lablel SA automatic = " + ((AvmConfig) _config).getAutomaticSALabel());
+		return 0;
+	}
 }
