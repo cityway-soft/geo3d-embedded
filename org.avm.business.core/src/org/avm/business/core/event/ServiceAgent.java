@@ -45,8 +45,8 @@ public class ServiceAgent implements Event, Serializable {
 	}
 
 	public boolean isAutomaticCourse() {
-		return true;
-		//return this.libelle.equals(automaticLabel);
+		//return true;
+		return this.libelle.equals(automaticLabel);
 	}
 
 	public ServiceAgent(boolean correct, int idu, Course[] courses) {
