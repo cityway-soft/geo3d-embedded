@@ -34,7 +34,7 @@
 			<value type="String">automatic</value>
 		</property>
 		<property name="org.avm.business.core.sa.automatic.course">
-			<value type="Boolean">false</value>
+			<value type="String">false</value>
 		</property>
 
 	</configuration>
