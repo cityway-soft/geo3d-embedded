@@ -46,6 +46,9 @@ public class ServiceAgent implements Event, Serializable {
 
 	public boolean isAutomaticCourse() {
 		//return true;
+		if (this.libelle == null){
+			return false;
+		}
 		return this.libelle.equals(automaticLabel);
 	}
 

@@ -1304,7 +1304,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 				 * } catch (InterruptedException e) { // TODO Auto-generated
 				 * catch block e.printStackTrace(); }
 				 */
-				System.out.println("OOOOOOOOOOOOPPPPPPPPPPPPSSSSSSSSSSS");
+				//System.out.println("OOOOOOOOOOOOPPPPPPPPPPPPSSSSSSSSSSS");
 				// ServiceAgent sa = _model.getServiceAgent();
 
 				/*
@@ -1401,10 +1401,17 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 	}
 
 	public void checkAutomaticCourse() {
+		System.out.println("auto: "+_config.isAutomaticCourseMode());
+		System.out.println("sa: "+_model.getServiceAgent());
+		
 		if (_config.isAutomaticCourseMode() && _model.getServiceAgent() != null) {
 			ServiceAgent sa = _model.getServiceAgent();
+			System.out.println("sa auto " + sa.isAutomaticCourse());
+			System.out.println("sa lib " + sa.getLibelle());
+			System.out.println("sa lab " + sa.getAutomaticLabel());
 			if (sa != null && sa.isAutomaticCourse()) {
 				int idu = _model.getLastCourseIdu();
+				System.out.println("idu " + idu);
 				if (idu != -1) {
 					Course nextCourse = sa.getNextCourse(idu);
 					resetCourse();
