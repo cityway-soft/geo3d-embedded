@@ -287,7 +287,7 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 				if (rs != null && rs.next()) {
 					sag_id = rs.getInt(1);
 					sag_lib = rs.getString(2);
-
+					System.out.println("sag_lib:"+sag_lib);
 					request = getCoursesIdValides(sag_id, _listePeriodes,
 							_listeProprietes);
 					rsCourses = getDatabase().sql(request);
@@ -348,6 +348,7 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 						System.arraycopy(list, 0, courses, 0, list.length);
 					}
 					result = new ServiceAgent(courses != null, sag_idu, courses);
+					result.setLibelle(sag_lib);
 				} else {
 					_log.warn("rs.next()==false !!!");
 					result = new ServiceAgent(false, sag_idu, null);
