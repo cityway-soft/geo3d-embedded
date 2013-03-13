@@ -855,8 +855,8 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 						// -- retourne adresse actuelle de 'host'
 						if (hostAlreadyExist && ipaddress == null) {
-							out.println(addr);
-							return null;
+							//out.println(addr);
+							return new StringBuffer(addr);
 						}
 
 						// -- ajout de l'hote si necessaire
