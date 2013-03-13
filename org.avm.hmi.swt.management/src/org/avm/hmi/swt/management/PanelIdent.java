@@ -346,11 +346,11 @@ public class PanelIdent extends AbstractPanel implements ConsoleFacadeInjector,
 		}
 
 		public void widgetSelected(SelectionEvent e) {
-			KeyboardDialog dialog = new KeyboardDialog(_display.getShells()[0],
+			KeyboardDialog dialog = new KeyboardDialog(getCurrentShell(),
 					SWT.NONE); //$NON-NLS-1$
 			dialog.setTitle(Messages
 					.getString("ItemIdent.titre_identification_vehicule")); //$NON-NLS-1$
-			Keyboard keyboard = new Keyboard(getCurrentShell(), SWT.NONE);
+			Keyboard keyboard = new Keyboard(dialog.getShell(), SWT.NONE);
 			keyboard.setDisposeParent(true);
 			GridData gridData = new GridData();
 			gridData.horizontalAlignment = GridData.FILL;
@@ -389,7 +389,7 @@ public class PanelIdent extends AbstractPanel implements ConsoleFacadeInjector,
 					SWT.NONE); //$NON-NLS-1$
 			dialog.setTitle(Messages
 					.getString("ItemIdent.titre_identification_exploitation")); //$NON-NLS-1$
-			Keyboard keyboard = new Keyboard(getCurrentShell(), SWT.NONE);
+			Keyboard keyboard = new Keyboard(dialog.getShell(), SWT.NONE);
 			keyboard.setDisposeParent(true);
 			GridData gridData = new GridData();
 			gridData.horizontalAlignment = GridData.FILL;
