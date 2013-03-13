@@ -21,8 +21,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 public class PanelIdent extends AbstractPanel implements ConsoleFacadeInjector,
@@ -92,6 +92,10 @@ public class PanelIdent extends AbstractPanel implements ConsoleFacadeInjector,
 		super(parent, style);
 	}
 
+	private Shell getCurrentShell(){
+        return PanelIdent.this.getShell();
+    }
+	
 	protected void initialize() {
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 3;
@@ -381,7 +385,7 @@ public class PanelIdent extends AbstractPanel implements ConsoleFacadeInjector,
 		}
 
 		public void widgetSelected(SelectionEvent e) {
-			KeyboardDialog dialog = new KeyboardDialog(_display.getShells()[0],
+			KeyboardDialog dialog = new KeyboardDialog(getCurrentShell(),
 					SWT.NONE); //$NON-NLS-1$
 			dialog.setTitle(Messages
 					.getString("ItemIdent.titre_identification_exploitation")); //$NON-NLS-1$
@@ -423,7 +427,7 @@ public class PanelIdent extends AbstractPanel implements ConsoleFacadeInjector,
 		}
 
 		public void widgetSelected(SelectionEvent e) {
-			KeyboardDialog dialog = new KeyboardDialog(_display.getShells()[0],
+			KeyboardDialog dialog = new KeyboardDialog(getCurrentShell(),
 					SWT.NONE); //$NON-NLS-1$
 			AzertyCompleteKeyboard keyboard = new AzertyCompleteKeyboard(
 					dialog.getShell(), SWT.NONE);
