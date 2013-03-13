@@ -855,8 +855,8 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 						// -- retourne adresse actuelle de 'host'
 						if (hostAlreadyExist && ipaddress == null) {
-							//out.println(addr);
-							return new StringBuffer(addr);
+							out.println(addr);
+							return null;
 						}
 
 						// -- ajout de l'hote si necessaire
@@ -871,7 +871,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 						// -- ajout de la ligne dans le fichier si au moins un
 						// host
 						if (!newLineBuf.toString().trim().equals(addr)) {
-							buffer.append(newLineBuf);
+							buffer.append(newLineBuf.toString());
 							buffer.append("\n");
 							if (buffer.toString().indexOf(host) != -1
 									|| (ipaddress != null && ipaddress
