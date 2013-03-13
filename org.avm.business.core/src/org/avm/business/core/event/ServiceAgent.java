@@ -41,11 +41,11 @@ public class ServiceAgent implements Event, Serializable {
 	}
 
 	public void setLibelle(String libelle) {
+		System.out.println("libelle:"+libelle);
 		this.libelle = libelle;
 	}
 
 	public boolean isAutomaticCourse() {
-		//return true;
 		if (this.libelle == null){
 			return false;
 		}
