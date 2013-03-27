@@ -108,7 +108,11 @@ Exit {  }
 		[ctxt.isArret(balise) == false]				EnCourseMap::HorsItineraire					{ actionDepart(); }
 				
 		sortie(balise:  int)
-		[ctxt.isTerminusDepart(balise) == true]		EnCourseMap::InterArretSurItineraire		{ actionDepart();actionEntreeArret(balise);actionSortieArret(balise); }	
+		[ctxt.isTerminusDepart(balise) && ctxt.isArretCourant(balise)]		EnCourseMap::InterArretSurItineraire		{ actionDepart();actionSortieArret(balise); }	
+	
+		sortie(balise:  int)
+		[ctxt.isTerminusDepart(balise) && ! ctxt.isArretCourant(balise)]		EnCourseMap::InterArretSurItineraire		{ actionDepart();actionEntreeArret(balise);actionSortieArret(balise); }	
+	
 	
 		entree(balise:  int)
 		[ctxt.isTerminusDepart(balise) == true]		nil											{ actionEntreeArret(balise); }	

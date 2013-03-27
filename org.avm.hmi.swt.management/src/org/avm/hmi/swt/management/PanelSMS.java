@@ -15,6 +15,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 public class PanelSMS extends AbstractPanel implements SelectionListener {
@@ -33,6 +34,10 @@ public class PanelSMS extends AbstractPanel implements SelectionListener {
 		super(parent, style);
 	}
 
+	private Shell getCurrentShell(){
+        return PanelSMS.this.getShell();
+    }
+	
 	protected void initialize() {
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 3;
@@ -242,7 +247,7 @@ public class PanelSMS extends AbstractPanel implements SelectionListener {
 		public void widgetSelected(SelectionEvent arg0) {
 			final KeyboardDialog dialog = new KeyboardDialog(getDisplay()
 					.getShells()[0], SWT.NONE);
-			AzertyCompleteKeyboard keyboard = new AzertyCompleteKeyboard(dialog.getShell(), SWT.NONE);
+			AzertyCompleteKeyboard keyboard = new AzertyCompleteKeyboard(getCurrentShell(), SWT.NONE);
 			keyboard.setDisposeParent(true);
 			GridData gridData = new GridData();
 			gridData.horizontalAlignment = GridData.FILL;
@@ -274,8 +279,7 @@ public class PanelSMS extends AbstractPanel implements SelectionListener {
 		}
 
 		public void widgetSelected(SelectionEvent arg0) {
-			final KeyboardDialog dialog = new KeyboardDialog(getDisplay()
-					.getShells()[0], SWT.NONE);
+			final KeyboardDialog dialog = new KeyboardDialog(getCurrentShell(), SWT.NONE);
 			Keyboard keyboard = new Keyboard(dialog.getShell(), SWT.NONE);
 			keyboard.setDisposeParent(true);
 			GridData gridData = new GridData();
