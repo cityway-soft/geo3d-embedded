@@ -26,28 +26,23 @@ public class Activator implements BundleActivator, Management {
 	private boolean DEBUG;
 
 	public Activator() {
-		
-	}
 
+	}
 
 	public StartLevel getStartLevelService() {
 		return _peer.getStartLevelService();
 	}
 
-
-
 	public void start(BundleContext context) throws Exception {
-		DEBUG = Boolean.valueOf(System.getProperty("org.avm.debug", "false")).booleanValue();
+		DEBUG = Boolean.valueOf(System.getProperty("org.avm.debug", "false"))
+				.booleanValue();
 		_peer = new ManagementImpl();
 		debug("activating.......");
 		_peer.setBundleContext(context);
-		debug("starting...");
+		_sr = context.registerService(Management.class.getName(), _peer, null);
+//		debug(_sr + " registered.");
+//		debug("starting...");
 		_peer.start();
-		// Dictionary dic = new Properties();
-		// dic.put("service.pid", ManagementService.class.getName());
-		_sr = context.registerService(Management.class.getName(), _peer,
-				null);
-		debug(_sr + " registered.");
 		debug("activated.");
 	}
 
@@ -59,8 +54,6 @@ public class Activator implements BundleActivator, Management {
 		debug("deactivated.");
 	}
 
-
-
 	private void debug(String debug) {
 		if (DEBUG) {
 			System.out.println(LOGTAG + debug);
@@ -71,19 +64,16 @@ public class Activator implements BundleActivator, Management {
 		return _peer.getPackageAdminService();
 	}
 
-
-
 	public void shutdown(PrintWriter out, int timeout, int exitcode) {
 		_peer.shutdown(out, timeout, exitcode);
 	}
-
 
 	public void synchronize(PrintWriter p) throws Exception {
 		_peer.synchronize(p);
 	}
 
 	public URL getDownloadURL() {
-		return  _peer.getDownloadURL();
+		return _peer.getDownloadURL();
 	}
 
 	public URL getUploadURL() {
@@ -96,6 +86,10 @@ public class Activator implements BundleActivator, Management {
 
 	public void setUploadURL(URL url) throws MalformedURLException {
 		_peer.setUploadURL(url);
+	}
+
+	public void sendBundleList() {
+		_peer.sendBundleList();
 	}
 
 }

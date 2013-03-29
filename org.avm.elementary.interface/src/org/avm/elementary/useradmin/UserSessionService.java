@@ -32,5 +32,4 @@ public interface UserSessionService {
 	public Dictionary getUserProperties();
 
 	public boolean hasRole(String role);
-
 }

@@ -113,13 +113,13 @@ public class MessageImpl implements MessageIhm, ManageableService,
 			Alarm a = (Alarm) o;
 			_log.info("#reception alarm :" + a); //$NON-NLS-1$
 
-			if (a.description.equals("defmat") && a.status == true) { //$NON-NLS-1$
+			if (a.getKey().equals("defmat") && a.isStatus() == true) { //$NON-NLS-1$
 				MessageBox.setMessage(org.avm.hmi.swt.message.Messages
 						.getString("Message.Alarm"), //$NON-NLS-1$
 						org.avm.hmi.swt.message.Messages
 								.getString("Message.demande-saisie-matricule"), //$NON-NLS-1$
 						MessageBox.MESSAGE_ALARM, SWT.CENTER);
-			} else if (a.description.equals("speed") && a.status == true) { //$NON-NLS-1$
+			} else if (a.getKey().equals("speed") && a.isStatus() == true) { //$NON-NLS-1$
 				MessageBox
 						.setMessage(
 								org.avm.hmi.swt.message.Messages

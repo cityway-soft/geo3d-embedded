@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Management Bootstrap
+Bundle-SymbolicName: org.avm.elementary.management.bootstrap
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: .
+Import-Package: org.osgi.framework
+Bundle-Activator: org.avm.elementary.management.bootstrap.Boot
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

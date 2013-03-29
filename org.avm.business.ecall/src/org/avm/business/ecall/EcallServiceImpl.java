@@ -1,6 +1,5 @@
 package org.avm.business.ecall;
 
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -52,8 +51,10 @@ public class EcallServiceImpl implements EcallService, ConfigurableService,
 	public EcallServiceImpl() {
 		_log = Logger.getInstance(this.getClass());
 		// _log.setPriority(Priority.DEBUG);
-		_alarm = new Alarm(false, APPEL_URGENCE, new Date(), EcallService.class
-				.getName(), Alarm.MAX_PRIORITY);
+		// _alarm = new Alarm(false, APPEL_URGENCE, new Date(),
+		// EcallService.class
+		// .getName(), Alarm.MAX_PRIORITY);
+		_alarm = new Alarm(new Integer(0));
 	}
 
 	public void start() {
@@ -84,7 +85,7 @@ public class EcallServiceImpl implements EcallService, ConfigurableService,
 			ack(phone);
 		}
 		if (o instanceof ClotureAlerte) {
-			_alarm.priority = Alarm.MIN_PRIORITY;
+			// _alarm.priority = Alarm.MIN_PRIORITY;
 			endEcall();
 		} else if (o instanceof DigitalVariable) {
 			DigitalVariable v = (DigitalVariable) o;
@@ -115,7 +116,6 @@ public class EcallServiceImpl implements EcallService, ConfigurableService,
 	private void initialize() {
 		_initialized = true;
 	}
-
 
 	// -- Transitions
 	public boolean ack(String phone) {
@@ -159,16 +159,16 @@ public class EcallServiceImpl implements EcallService, ConfigurableService,
 		_log.debug("Etat initial : pas d'alerte");
 		_state = new State(0, STATE_NO_ALERT);
 		_producer.publish(_state);
-		_alarm.date = new Date();
-		_alarm.status = false;
+		// _alarm.date = new Date();
+		_alarm.setStatus(false);
 		_producer.publish(_alarm);
 	}
 
 	public void entryWaitAck() {
 		_log.debug("Etat : attente prise en charge");
-		_alarm.date = new Date();
-		_alarm.status = true;
-		_alarm.priority = Alarm.MAX_PRIORITY;
+		// _alarm.date = new Date();
+		_alarm.setStatus(true);
+		// _alarm.priority = Alarm.MAX_PRIORITY;
 		_state = new State(1, STATE_WAIT_ACK);
 		_producer.publish(_state);
 		_producer.publish(_alarm);
@@ -181,7 +181,7 @@ public class EcallServiceImpl implements EcallService, ConfigurableService,
 	}
 
 	public List getAlarm() {
-		if (_alarm != null && _alarm.status) {
+		if (_alarm != null && _alarm.isStatus()) {
 			LinkedList list = new LinkedList();
 			list.add(_alarm);
 			return list;
@@ -228,7 +228,7 @@ public class EcallServiceImpl implements EcallService, ConfigurableService,
 	}
 
 	public void unsetPhony(Phony phony) {
-		_phony=null;
+		_phony = null;
 	}
 
 }

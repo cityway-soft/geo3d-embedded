@@ -8,4 +8,7 @@
 	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>		
 	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
 	<reference name="messenger" interface="org.avm.elementary.messenger.Messenger"/>
+	<reference name="jdb" interface="org.avm.elementary.jdb.JDB" 
+				cardinality="0..1" policy="dynamic" bind="setJdb" unbind="unsetJdb" />
+	
 </component>

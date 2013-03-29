@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.avm.business.command
+Bundle-Name: Command Plug-in
 Bundle-SymbolicName: org.avm.elementary.command
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Cityway
@@ -12,12 +12,12 @@ Import-Package:
  org.apache.log4j,
  org.avm.business.core,
  org.avm.business.core.event,
- org.avm.business.protocol.phoebus,
  org.avm.device.gps,
  org.avm.elementary.alarm,
  org.avm.elementary.command,
  org.avm.elementary.common,
  org.avm.elementary.parser,
+ org.avm.business.protocol.phoebus,
  org.knopflerfish.service.console,
  org.osgi.framework,
  org.osgi.service.cm,

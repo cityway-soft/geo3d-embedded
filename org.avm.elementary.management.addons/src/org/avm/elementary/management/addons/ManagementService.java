@@ -16,30 +16,31 @@ public interface ManagementService {
 	public static final boolean DEBUG = Boolean.valueOf(
 			System.getProperty("org.avm.debug", "false")).booleanValue();
 	
-	public static final String VEHICULE_PROPERTY=Management.VEHICULE_PROPERTY;
-	
-	public static final String EXPLOITATION_PROPERTY=Management.EXPLOITATION_PROPERTY;
-	
-	public static final String PLATEFORM_PROPERTY=Management.PLATEFORM_PROPERTY;
-
 	public StartLevel getStartLevelService();
 
 	public PackageAdmin getPackageAdminService();
 
-	public void setDownloadURL(URL url) throws MalformedURLException;
+	public void setDownloadURL(URL url) throws MalformedURLException, Exception;
 
-	public void setUploadURL(URL url) throws MalformedURLException;
+	public void setUploadURL(URL url) throws MalformedURLException, Exception;
 
-	public URL getDownloadURL();
+	public URL getDownloadURL() throws Exception;
 
-	public URL getUploadURL();
+	public URL getUploadURL() throws Exception;
 
 	public void runScript(URL url);
 
 	public void synchronize(PrintWriter out) throws Exception;
 
-	public void shutdown(PrintWriter out, int waittime, int exitCode);
+	public void shutdown(PrintWriter out, int waittime, int exitCode) throws Exception;
 
 	public void send(String result);
+	
+	public boolean isWLANMode();
+	
+	public void setWLANMode(boolean b)throws MalformedURLException;
+	
+	
+	
 
 }

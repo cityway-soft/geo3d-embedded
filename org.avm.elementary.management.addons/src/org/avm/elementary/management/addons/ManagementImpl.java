@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.util.Hashtable;
 import java.util.Properties;
@@ -34,11 +35,9 @@ import org.osgi.service.startlevel.StartLevel;
 import org.osgi.util.measurement.State;
 
 public class ManagementImpl implements ManageableService, ManagementService,
-		ManagementControler, ConsumerService, MessengerInjector {
+		ConsumerService, MessengerInjector {
 
 	private Logger _log;
-
-	private ManagementControler _managementControler;
 
 	private ConsoleService _cs;
 
@@ -51,11 +50,16 @@ public class ManagementImpl implements ManageableService, ManagementService,
 	private USBManagementImpl _usbManagement;
 
 	private Scheduler _scheduler;
-	
-	private boolean _disableUpload=false;
+
+	private boolean _disableUpload = false;
 
 	private Messenger _messenger;
 
+	private boolean isWLANMode = true;
+
+	private Management _managementService;
+
+	private ServiceReference managementServiceReference;
 
 	public ManagementImpl() {
 		_log = Logger.getInstance(ManagementService.class);
@@ -71,8 +75,14 @@ public class ManagementImpl implements ManageableService, ManagementService,
 			public void run() {
 				int count = 1;
 				boolean uploadDone = false;
-				while (count < MAX_TRY && uploadDone == false && !_disableUpload) {
-					uploadDone = synchronizeData();
+				while (count < MAX_TRY && uploadDone == false
+						&& !_disableUpload) {
+					try {
+						uploadDone = synchronizeData();
+					} catch (Exception e) {
+						_log.error(e);
+
+					}
 					if (!uploadDone) {
 						_log.debug("Upload data failed : " + count + "/"
 								+ MAX_TRY);
@@ -82,15 +92,14 @@ public class ManagementImpl implements ManageableService, ManagementService,
 						} catch (Throwable t) {
 						}
 					}
-					
+
 				}
 				if (uploadDone) {
 					_log.debug("Upload data done.");
 				} else {
-					_log.debug("Upload data failed after #"+ MAX_TRY);
+					_log.debug("Upload data failed after #" + MAX_TRY);
 				}
 			}
-
 
 		}, 10000);
 	}
@@ -160,7 +169,7 @@ public class ManagementImpl implements ManageableService, ManagementService,
 			getPackageAdminService().refreshPackages(bundles);
 			getPackageAdminService().resolveBundles(bundles);
 		}
-		out.println("[DLA] Time to check management core : "
+		out.println("Time to check management core : "
 				+ (System.currentTimeMillis() - t0) + "ms.");
 
 	}
@@ -175,27 +184,30 @@ public class ManagementImpl implements ManageableService, ManagementService,
 					_wifiManagement = new WifiManagementImpl(this);
 					_wifiManagement.setSyslog(_syslog);
 				}
-				_disableUpload=true;
+				_disableUpload = true;
 				_wifiManagement.notify(o);
 			} else if (stateName.indexOf("usb") != -1) {
 				if (_usbManagement == null) {
 					_usbManagement = new USBManagementImpl(this);
 				}
-				_disableUpload=true;
+				_disableUpload = true;
 				_usbManagement.notify(o);
 			}
 		} else if (o instanceof org.avm.business.protocol.management.Management) {
 			org.avm.business.protocol.management.Management cmd = (org.avm.business.protocol.management.Management) o;
-			String script = cmd.getText().trim();
-			_log.debug("Receive management : '" + script + "'");
-			StringTokenizer t = new StringTokenizer(script, "\n");
+			String commands = cmd.getText().trim();
+			_log.debug("Receive management : '" + commands + "'");
+			String cmds = URLDecoder.decode(commands);
+			_log.debug("Receive management urldecoded : '" + cmds + "'");
+			StringTokenizer t = new StringTokenizer(cmds, "\n");
 			while (t.hasMoreTokens()) {
 				String s = t.nextToken();
-				_log.debug("Run management command : '" + s + "'");
+				_log.info("Run management command : '" + s + "'");
 				String result = runScript(s);
-//				org.avm.business.protocol.management.Management response = new org.avm.business.protocol.management.Management();
-//				response.setText(result);
-//				send(response);
+				// org.avm.business.protocol.management.Management response =
+				// new org.avm.business.protocol.management.Management();
+				// response.setText(result);
+				// send(response);
 
 			}
 
@@ -272,7 +284,7 @@ public class ManagementImpl implements ManageableService, ManagementService,
 				String result;
 				while (cmd != null) {
 					_log.info("Running in console : " + cmd);
-					result  = _cs.runCommand(cmd);
+					result = _cs.runCommand(cmd);
 					_log.info("Result:" + result);
 					cmd = r.readLine();
 				}
@@ -307,15 +319,12 @@ public class ManagementImpl implements ManageableService, ManagementService,
 				service.setAlias("start",
 						new String[] { "/management", "start" });
 				service.setAlias("sync", new String[] { "/management",
-						"autoupdate" });
+						"synchronize" });
 				service.setAlias("restart", new String[] { "/management",
 						"restart" });
 				service.setAlias("update", new String[] { "/management",
 						"update" });
-//				service.setAlias(
-//						"id",
-//						new String[] { "/management", "getprop",
-//								"org.avm.vehicule.id,org.avm.exploitation.id,org.avm.exploitation.name" });
+				service.setAlias("id", new String[] { "/management", "id" });
 				service.setAlias("ss", new String[] { "/management", "status",
 						"-c", "true" });
 				service.setAlias("close", new String[] { "/management",
@@ -342,6 +351,8 @@ public class ManagementImpl implements ManageableService, ManagementService,
 				service.setAlias("zcat", new String[] { "/management", "shell",
 						"zcat" });
 				service.setAlias("exec", new String[] { "/management", "shell",
+						"exec" });
+				service.setAlias("run", new String[] { "/management", "shell",
 						"exec" });
 				service.setAlias("touch", new String[] { "/management",
 						"shell", "touch" });
@@ -389,10 +400,10 @@ public class ManagementImpl implements ManageableService, ManagementService,
 		synchronizeData();
 	}
 
-	public boolean synchronizeData() {
+	public boolean synchronizeData() throws Exception {
 		boolean result = false;
-		if (getUploadURL() == null){
-			System.out.println("Cannot upload data : ");
+		if (getUploadURL() == null) {
+			_log.debug("Cannot upload data : getUploadURL() == null");
 			return false;
 		}
 		_log.debug("Upload data...");
@@ -433,27 +444,25 @@ public class ManagementImpl implements ManageableService, ManagementService,
 		return (StartLevel) _context.getService(sr);
 	}
 
-	public void setDownloadURL(URL url) throws MalformedURLException {
+	public void setDownloadURL(URL url) throws Exception {
 		Management managementService = getManagementService();
-		if (managementService != null){
+		if (managementService != null) {
 			managementService.setDownloadURL(url);
-		}
-		else{
+		} else {
 			_log.error("Management service is null !");
 		}
 	}
 
-	public void setUploadURL(URL url) throws MalformedURLException {
+	public void setUploadURL(URL url) throws Exception {
 		Management managementService = getManagementService();
-		if (managementService != null){
+		if (managementService != null) {
 			managementService.setUploadURL(url);
-		}
-		else{
+		} else {
 			_log.error("Management service is null !");
 		}
 	}
 
-	public URL getDownloadURL() {
+	public URL getDownloadURL() throws Exception {
 		URL url = getManagementService().getDownloadURL();
 		if (url == null) {
 			try {
@@ -466,7 +475,7 @@ public class ManagementImpl implements ManageableService, ManagementService,
 		return url;
 	}
 
-	public URL getUploadURL() {
+	public URL getUploadURL() throws Exception {
 		URL url = getManagementService().getUploadURL();
 		if (url == null) {
 			try {
@@ -479,16 +488,45 @@ public class ManagementImpl implements ManageableService, ManagementService,
 		return url;
 	}
 
-	public void shutdown(PrintWriter out, int waittime, int exitCode) {
+	public void shutdown(PrintWriter out, int waittime, int exitCode)
+			throws Exception {
 		getManagementService().shutdown(out, waittime, exitCode);
 	}
 
-	public void setManagementService(ManagementControler management) {
-		_managementControler = management;
-	}
+	public Management getManagementService() throws Exception {
+		Object service = null;
 
-	public Management getManagementService() {
-		return _managementControler.getManagementService();
+		if (managementServiceReference != null) {
+			service = _context.getService(managementServiceReference);
+			if (service == null) {
+				_context.ungetService(managementServiceReference);
+			} else {
+				return (Management) service;
+			}
+		}
+		if (_log.isDebugEnabled()){
+			_log.debug("BundleContext="+_context);
+		}
+
+		String managementServiceName=Management.class.getName();
+		managementServiceReference = _context
+				.getServiceReference(managementServiceName);
+		
+		if (_log.isDebugEnabled()){
+			_log.debug("ManagementServiceReference("+managementServiceName+")="+managementServiceReference);
+		}
+
+		if (managementServiceReference == null) {
+			throw new Exception("Management Service Reference not available");
+		} else {
+			service = _context.getService(managementServiceReference);
+
+			if (service == null) {
+				throw new Exception("Management Service not available");
+			}
+		}
+
+		return (Management) service;
 	}
 
 	public void setMessenger(Messenger messenger) {
@@ -496,10 +534,10 @@ public class ManagementImpl implements ManageableService, ManagementService,
 	}
 
 	public void unsetMessenger(Messenger messenger) {
-		_messenger = null;	
+		_messenger = null;
 	}
-	
-	public void send(String response){
+
+	public void send(String response) {
 		org.avm.business.protocol.management.Management message = new org.avm.business.protocol.management.Management();
 		message.setText(response);
 		Hashtable d = new Hashtable();
@@ -512,4 +550,31 @@ public class ManagementImpl implements ManageableService, ManagementService,
 			_log.error(e); //$NON-NLS-1$
 		}
 	}
+
+	public boolean isWLANMode() {
+		return isWLANMode;
+	}
+
+	public void setWLANMode(boolean b) {
+		isWLANMode = b;
+	}
+
+	public void updateUrls() throws Exception {
+		ManagementPropertyFile configuration = ManagementPropertyFile
+				.getInstance();
+		configuration.reload();
+		if (isWLANMode) {
+			setDownloadURL(new URL(configuration.getPrivateDownloadUrl()));
+			setUploadURL(new URL(configuration.getPrivateUploadUrl()));
+
+		} else {
+			setDownloadURL(new URL(configuration.getPublicDownloadUrl()));
+			setUploadURL(new URL(configuration.getPublicUploadUrl()));
+		}
+	}
+
+	public void sendBundleList() throws Exception {
+		getManagementService().sendBundleList();
+	}
+
 }

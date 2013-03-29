@@ -154,6 +154,9 @@ public class MessengerImpl implements Messenger, MediaListener, MediaService,
 						parser.put(data, out);
 						break;
 					} catch (Exception e) {
+						if (_log.isDebugEnabled()){
+							_log.debug(e);
+						}
 					}
 				}
 				buffer = out.toByteArray();

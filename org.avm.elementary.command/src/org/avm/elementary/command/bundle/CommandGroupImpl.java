@@ -15,36 +15,35 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 	public static final String COMMAND_GROUP = "command";
 
-	private CommandChain _peer;
-
-	CommandGroupImpl(ComponentContext context, CommandChain peer,
-			ConfigImpl config) {
-		super(context, config, COMMAND_GROUP,
-				"Configuration commands for the command chain.");
-		_peer = peer;
-	}
+	private final CommandChain _peer;
 
 	// test
 	public final static String USAGE_TEST = "";
 
 	public final static String[] HELP_TEST = new String[] { "Test command chain", };
 
-	public int cmdTest(Dictionary opts, Reader in, PrintWriter out,
-			Session session) {
-		ReponseStatut o = new ReponseStatut();
-		o.getEntete().getChamps().setPosition(1);
-		try {
-			MessengerContext context = new MessengerContext();
-			context.setComponentContext(_context);
-			context.setMessage(o);
-			out
-					.println("Test command chain result : "
-							+ _peer.execute(context));
+	CommandGroupImpl(final ComponentContext context, final CommandChain peer,
+			final ConfigImpl config) {
 
-		} catch (Exception e) {
+		super(context, config, CommandGroupImpl.COMMAND_GROUP,
+				"Configuration commands for the command chain.");
+		this._peer = peer;
+	}
+
+	public int cmdTest(final Dictionary opts, final Reader in,
+			final PrintWriter out, final Session session) {
+
+		final org.avm.business.protocol.phoebus.ReponseStatut o = new ReponseStatut();
+		// o.getEntete().getChamps().setPosition(1);
+		try {
+			final MessengerContext context = new MessengerContext();
+			context.setComponentContext(this._context);
+			context.setMessage(o);
+			out.println("Test command chain result : "
+					+ this._peer.execute(context));
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 		return 0;
 	}
-
 }

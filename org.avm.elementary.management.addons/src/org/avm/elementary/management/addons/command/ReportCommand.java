@@ -3,6 +3,7 @@ package org.avm.elementary.management.addons.command;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Properties;
 
 import org.avm.elementary.management.addons.AbstractCommand;
@@ -10,8 +11,8 @@ import org.avm.elementary.management.addons.BundleAction;
 import org.avm.elementary.management.addons.Command;
 import org.avm.elementary.management.addons.ManagementImpl;
 import org.avm.elementary.management.addons.ManagementService;
-import org.avm.elementary.management.addons.Utils;
-import org.avm.elementary.management.core.SimpleFTPClient;
+import org.avm.elementary.management.core.utils.DataUploadClient;
+import org.avm.elementary.management.core.utils.Utils;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
@@ -44,26 +45,24 @@ class ReportCommand extends AbstractCommand implements BundleAction {
 				result = result.substring(0, Math.min(result.length(), 159));
 				result = result.replace('\n', ',');
 				result = result.replace('\r', ' ');
-				String cmd = "/sms sendmsg  -d " + number + " -t texto -m \""
+				String cmd = "/media.sms sendmsg  -d " + number + " -t texto -m \""
 						+ result + "\"";
 				out.println("Execute cmd :" + cmd);
 				result = ((ManagementImpl) _management).runScript(cmd);
 				out.println("result :" + result);
 			} else if (destination.startsWith(FTP_PROTOCOL_TAG)) {
-				String path = destination;
-				path = Utils.replace(path, "$u", System
-						.getProperty("org.avm.vehicule.id"));
-				path = Utils.replace(path, "$r", System
-						.getProperty("org.avm.exploitation.id"));
+				String path = Utils.formatURL(destination, false);
+				String remotefile = Utils.formatURL("$i_response.txt", false);
 				out.println("ftp path :" + path);
 				try {
-					SimpleFTPClient client = new SimpleFTPClient();
-					client.put(new URL(path), new StringBuffer(result));
+					DataUploadClient client = new DataUploadClient(new URL(path));
+					client.put(new StringBuffer(result), remotefile );
 				} catch (IOException e) {
 					out.println("ERROR:" + e.getMessage());
 				}
 			}else if (destination.startsWith(CTW_PROTOCOL_TAG)) {
-				_management.send(result);
+				String response = URLEncoder.encode(result);
+				_management.send(response);
 			}
 		}
 

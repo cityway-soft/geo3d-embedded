@@ -1,13 +1,16 @@
 package org.avm.elementary.alarm.bundle;
 
-import java.util.BitSet;
+import java.util.Collection;
 
+import org.avm.elementary.alarm.Alarm;
 import org.avm.elementary.alarm.AlarmService;
 import org.avm.elementary.alarm.impl.AlarmServiceImpl;
 import org.avm.elementary.common.AbstractActivator;
 import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ConsumerService;
 import org.avm.elementary.common.ManageableService;
+import org.avm.elementary.common.ProducerService;
+import org.avm.elementary.jdb.JDB;
 import org.avm.elementary.messenger.Messenger;
 import org.avm.elementary.messenger.MessengerInjector;
 import org.osgi.service.cm.ConfigurationAdmin;
@@ -27,6 +30,8 @@ public class Activator extends AbstractActivator implements AlarmService {
 
 	private CommandGroupImpl _commands;
 
+	private org.avm.elementary.alarm.bundle.ProducerImpl _producer;
+
 	public Activator() {
 		_plugin = this;
 		_peer = new AlarmServiceImpl();
@@ -40,13 +45,15 @@ public class Activator extends AbstractActivator implements AlarmService {
 		initializeConfiguration();
 		initializeMessenger();
 		initializeCommandGroup();
-		initializeConsumer();
+		initializeProducer();
 		startService();
+		initializeConsumer();
 	}
 
 	protected void stop(ComponentContext context) {
 		stopService();
 		disposeConsumer();
+		disposeProducer();
 		disposeCommandGroup();
 		disposeMessenger();
 		disposeConfiguration();
@@ -56,6 +63,7 @@ public class Activator extends AbstractActivator implements AlarmService {
 	private void initializeConfiguration() {
 
 		_cm = (ConfigurationAdmin) _context.locateService("cm");
+		
 		try {
 			_config = new ConfigImpl(_context, _cm);
 			_config.start();
@@ -72,6 +80,22 @@ public class Activator extends AbstractActivator implements AlarmService {
 		_config.stop();
 		if (_peer instanceof ConfigurableService) {
 			((ConfigurableService) _peer).configure(null);
+		}
+	}
+	
+	// producer
+	private void initializeProducer() {
+		if (_peer instanceof ProducerService) {
+			_producer = new ProducerImpl(_context);
+			_producer.start();
+			((ProducerService) _peer).setProducer(_producer);
+		}
+	}
+
+	private void disposeProducer() {
+		if (_peer instanceof ProducerService) {
+			((ProducerService) _peer).setProducer(null);
+			_producer.stop();
 		}
 	}
 
@@ -128,12 +152,32 @@ public class Activator extends AbstractActivator implements AlarmService {
 		}
 	}
 
-	public long getCounter() {
-		return _peer.getCounter();
+	public boolean isAlarm() {
+		return _peer.isAlarm();
 	}
 
-	public BitSet getAlarms() {
-		return _peer.getAlarms();
+
+	public Collection getList() {
+		return _peer.getList();
 	}
+
+	public Alarm getAlarm(Integer id) {
+		return _peer.getAlarm(id);
+	}
+	
+	public void setJdb(JDB jdb) {
+		_log.debug("setJdb = " + jdb);
+		_peer.setJdb(jdb);
+	}
+
+	public void unsetJdb(JDB jdb) {
+		_log.debug("unsetJdb");
+		_peer.unsetJdb(null);
+	}
+
+	public Alarm getAlarmByKey(String name) {
+		return _peer.getAlarmByKey(name);
+	}
+
 
 }

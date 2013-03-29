@@ -7,6 +7,5 @@ public abstract class AbstractParser implements Parser {
 
 	public AbstractParser() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 }

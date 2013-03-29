@@ -11,10 +11,10 @@ import org.avm.elementary.management.addons.AbstractCommand;
 import org.avm.elementary.management.addons.Command;
 import org.avm.elementary.management.addons.CommandException;
 import org.avm.elementary.management.addons.ManagementService;
-import org.avm.elementary.management.addons.Utils;
 import org.avm.elementary.management.core.BundleList;
 import org.avm.elementary.management.core.BundleProperties;
 import org.avm.elementary.management.core.Management;
+import org.avm.elementary.management.core.utils.Utils;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
@@ -65,36 +65,31 @@ class GetbundlelistCommand extends AbstractCommand {
 		return ver;
 	}
 	
-	private String getBundleListURL(String filename, boolean defaut, ManagementService management) {
-		String vehiculeid = System.getProperty(Management.VEHICULE_PROPERTY);
-		if (defaut) {
-			vehiculeid = "default";
-		}
-		String exploitant = System
-				.getProperty(Management.EXPLOITATION_PROPERTY);
-		String plateform = System.getProperty(Management.PLATEFORM_PROPERTY);
+	private String getBundleListURL(String filename, boolean useDefault, ManagementService management) throws Exception {
 		String strurl = management.getDownloadURL() + "/" + filename;
-		strurl = Utils.formatURL(strurl, vehiculeid, exploitant, plateform);
+		strurl = Utils.formatURL(strurl, useDefault);
 		return strurl;
 	}
 
 	private BundleList getBundleList(String filename,
 			ManagementService management) {
-		String strurl = getBundleListURL(filename, false, management);
+		String strurl;
 		BundleList bundleList = null;
 
 		try {
+			strurl = getBundleListURL(filename, false, management);
 			bundleList = loadFromURL(strurl);
 			System.out.println(strurl + "|vehicule===>" + bundleList);
-		} catch (IOException e) {
+		} catch (Exception e) {
 		}
 		
 		if (bundleList == null) {
-			strurl = getBundleListURL(filename, true, management);
+			
 			try {
+				strurl = getBundleListURL(filename, true, management);
 				bundleList = loadFromURL(strurl);
 				System.out.println(strurl + "|default===>" + bundleList);
-			} catch (IOException e) {
+			} catch (Exception e) {
 			}
 		}
 		return bundleList;

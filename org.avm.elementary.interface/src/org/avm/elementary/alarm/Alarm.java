@@ -3,31 +3,90 @@ package org.avm.elementary.alarm;
 import java.util.Date;
 
 public class Alarm {
-	public static final String INDEX = "org.avm.elementary.alarm.index";
-	public static final String SOURCE = "org.avm.elementary.alarm.source";
-	public static final String NOTIFY = "org.avm.elementary.alarm.notify";
-	public static final String ACKNOWLEDGE = "org.avm.elementary.alarm.acknowledge";
-	public static int MIN_PRIORITY = 0;
-	public static int NORM_PRIORITY = 4;
-	public static int MAX_PRIORITY = 9;
-	public boolean status;
-	public String description;
-	public Date date;
-	public String source;
-	public int priority;
+	public static final String INDEX = "index";
+	public static final String NAME = "name";
+	public static final String KEY = "key";
+	public static final String NOTIFY_UP = "notify-up";
+	public static final String NOTIFY_DOWN = "notify-down";
+	public static final String ACKNOWLEDGE = "acknowledge";
+	public static final String TYPE = "type";
+	public static final String ORDER = "order";
+	public static final String READONLY = "readonly";
 
-	public Alarm(boolean status, String description, Date date, String source,
-			int priority) {
+	
+	public static final int ALARM_EXPLOITATION=1;
+	public static final int ALARM_TECHNICAL=0;
+
+	private boolean status;
+	private String name;
+	private Date date;
+	private String key;
+	private int order;
+	private int type;
+	private Integer index;
+	private boolean readonly=false;
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public int getOrder() {
+		return order;
+	}
+
+	public Integer getIndex() {
+		return index;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	
+	public Alarm(Integer index) {
 		super();
+		this.index= index;
+	}
+	
+	public Alarm(Integer index, int order, boolean status, String name, Date date, String key, int type, boolean readonly) {
+		super();
+		this.index= index;
+		this.order=order;
 		this.status = status;
-		this.description = description;
+		this.name = name;
 		this.date = date;
-		this.source = source;
-		this.priority = priority;
+		this.key = key;
+		this.type = type;
+		this.readonly= readonly;
 	}
 
 	public String toString() {
-		return "status: " + status + " description: " + description + " date: "
-				+ date + " source: " + source + " priority: " + priority;
+		return "index: "+index+ ", order: " + order +", status: " + status + ", name: " + name + ", date: "
+				+ date +  " type:"+type + " key: " + key + " readonly: " + readonly;
+	}
+	
+	
+	public int getType(){
+		return this.type;
+	}
+
+	public void setStatus(boolean status) {
+		this.status=status;
+	}
+
+	public boolean isReadOnly() {
+		return readonly;
 	}
 }

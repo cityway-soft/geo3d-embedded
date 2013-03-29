@@ -18,6 +18,8 @@ public class DefaultPrisePoste implements Runnable, AvmInjector, JDBInjector,
 
 	public static final String ALARM_NAME = "defmat";
 
+	private static final int DEFAUT_PRISE_POSTE_ALARM = 1;
+
 	private Variable _odometer;
 
 	private ProducerManager _producer;
@@ -30,7 +32,7 @@ public class DefaultPrisePoste implements Runnable, AvmInjector, JDBInjector,
 
 	private boolean _sendNeeded = false;
 
-	private Alarm _alarm;
+	private Alarm _alarm = new Alarm(new Integer(DEFAUT_PRISE_POSTE_ALARM));;
 
 	private Scheduler _scheduler = null;
 
@@ -85,27 +87,21 @@ public class DefaultPrisePoste implements Runnable, AvmInjector, JDBInjector,
 
 	private void avertissement() {
 		_log.debug("Defaut de prise de service : avertissement !");
-		Alarm alarm = new Alarm(true, ALARM_NAME, new Date(), Avm.class
-				.getName(), Alarm.MIN_PRIORITY);
-		_alarm = alarm;
-		_producer.publish(alarm);
+//		_alarm.setStatus(true);
+//		_producer.publish(_alarm);
 	}
 
 	private void alarme() {
 		_log.debug("Defaut de prise de service : alarme !");
-		Alarm alarm = new Alarm(true, ALARM_NAME, new Date(), Avm.class
-				.getName(), Alarm.MAX_PRIORITY);
-		_alarm = alarm;
-		_producer.publish(alarm);
+		_alarm.setStatus(true);
+		_producer.publish(_alarm);
 	}
 
 	private void annulation() {
 		_log.debug("Defaut de prise de service : annulation !");
 		_lastIndexOdo = -1;
-		Alarm alarm = new Alarm(false, ALARM_NAME, new Date(), Avm.class
-				.getName(), Alarm.MIN_PRIORITY);
-		_alarm = alarm;
-		_producer.publish(alarm);
+		_alarm.setStatus(false);
+		_producer.publish(_alarm);
 	}
 
 	public void run() {

@@ -99,7 +99,6 @@ public class XmlCatalogFactory extends CatalogFactoryBase {
 							parent.addCommand(command);
 						catalog.addCommand(name, command);
 					} catch (ClassNotFoundException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 

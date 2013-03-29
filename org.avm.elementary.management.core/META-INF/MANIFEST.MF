@@ -2,10 +2,16 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Management Core
 Bundle-SymbolicName: org.avm.elementary.management.core
-Bundle-Version: 1.0.0.qualifier
-Bundle-ClassPath: .
+Bundle-Version: 2.0.0.qualifier
+Bundle-ClassPath: .,
+ lib/commons-codec-1.3.jar,
+ lib/commons-httpclient-3.0.jar,
+ lib/commons-logging-1.1.1.jar
 Service-Component: META-INF/activator.xml
-Export-Package: org.avm.elementary.management.core
+Export-Package: org.apache.commons.codec,
+ org.apache.commons.codec.binary,
+ org.avm.elementary.management.core,
+ org.avm.elementary.management.core.utils
 Import-Package: org.osgi.framework,
  org.osgi.service.packageadmin,
  org.osgi.service.startlevel;version="1.0.0"

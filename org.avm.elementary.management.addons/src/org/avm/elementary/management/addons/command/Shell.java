@@ -4,8 +4,7 @@
  */
 package org.avm.elementary.management.addons.command;
 
-// TODO Auto-generated catch block
-
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,7 +13,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
@@ -123,8 +122,8 @@ public class Shell {
 		String sfilter = null;
 		File file;
 
-		if (dir != null) {
-			file = new File(dir);
+		try {
+			file = getPath(dir);
 			if (file.isDirectory()) {
 				currentDir = file;
 			} else if (file.getParentFile().isDirectory()) {
@@ -133,26 +132,30 @@ public class Shell {
 			} else {
 				sfilter = dir;
 			}
+
+			if (sfilter != null) {
+				FilenameFilter filter = new MyFilenameFilter(sfilter);
+				list = currentDir.listFiles(filter);
+			} else {
+				list = currentDir.listFiles();
+			}
+
+			for (int i = 0; i < list.length; i++) {
+				file = list[i];
+				buf.append(file.isDirectory() ? "d " : "- ");
+				buf.append(DF.format(new Date(file.lastModified())));
+				buf.append(" ");
+				buf.append(formatFileSize(file));
+				buf.append(" ");
+				buf.append(file.getName());
+				buf.append("\n");
+			}
+
+			println(buf.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
-		if (sfilter != null) {
-			FilenameFilter filter = new MyFilenameFilter(sfilter);
-			list = currentDir.listFiles(filter);
-		} else {
-			list = currentDir.listFiles();
-		}
-
-		for (int i = 0; i < list.length; i++) {
-			file = list[i];
-			buf.append(file.isDirectory() ? "d " : "- ");
-			buf.append(DF.format(new Date(file.lastModified())));
-			buf.append(" ");
-			buf.append(formatFileSize(file));
-			buf.append(" ");
-			buf.append(file.getName());
-			buf.append("\n");
-		}
-		println(buf.toString());
 	}
 
 	private String formatFileSize(File file) {
@@ -174,6 +177,7 @@ public class Shell {
 	public void cd(String dir) {
 		if (dir == null) {
 			defaultDir();
+			println(_currentDir.getAbsolutePath());
 			return;
 		} else if (dir.equals("..")) {
 			cd(_currentDir.getParent());
@@ -183,8 +187,10 @@ public class Shell {
 		File newDir;
 		try {
 			newDir = getDir(dir);
+
 			_currentDir = new File(newDir.getCanonicalPath());
 			println(_currentDir.getAbsolutePath());
+
 		} catch (Exception e) {
 			println("Echec :" + e.getMessage());
 			e.printStackTrace();
@@ -193,14 +199,11 @@ public class Shell {
 
 	public void mkdir(String dir) {
 		try {
-			if (dir.startsWith("/")) {
-				File newDir = new File(dir);
-				newDir.mkdirs();
-			} else {
-				String path = _currentDir.getAbsolutePath() + "/" + dir;
-				File newDir = new File(path);
-				newDir.mkdirs();
-			}
+			File newDir = getPath(dir);
+
+			newDir.mkdirs();
+			println("new : " + newDir.getAbsolutePath());
+
 		} catch (Exception e) {
 			println("Echec : " + e.getMessage());
 			e.printStackTrace();
@@ -215,8 +218,12 @@ public class Shell {
 		File file;
 		try {
 			file = getFile(fichier);
-			file.delete();
-			println("Fichier :" + file + " supprime.");
+			if (file != null && file.isFile()) {
+				file.delete();
+				println("Fichier :" + file + " supprime.");
+			} else {
+				println("Err: impossible de supprimer le fichier:" + fichier);
+			}
 		} catch (Exception e) {
 			println("Echec : " + e.getMessage());
 			e.printStackTrace();
@@ -251,8 +258,8 @@ public class Shell {
 				File remoteFile = new File(remote.getPath());
 
 				filename = file.getAbsolutePath() + "/" + remoteFile.getName();
+
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -306,7 +313,8 @@ public class Shell {
 	}
 
 	public void touch(String filename) throws IOException {
-		File file = new File(filename);
+
+		File file = getPath(filename);
 		file.createNewFile();
 	}
 
@@ -372,7 +380,36 @@ public class Shell {
 		_log.debug("exec : " + name + " " + args);
 		long result = org.avm.device.plateform.System.exec(name, args)
 				.longValue();
+		_out.println("#handle:" + result);
 		_log.debug("exec : " + name + " " + args);
+	}
+
+	public void run(String name, String args) {
+		_log.debug("run : " + name + " " + args);
+		String[] array = { "sh", "-c", name + " " + args };
+
+		try {
+			Process process = Runtime.getRuntime().exec(array);
+			BufferedReader in = new BufferedReader(new InputStreamReader (process.getInputStream()));
+			StringBuffer buf = new StringBuffer();
+			String line="";
+			int cpt=0;
+			while ((line = in.readLine()) != null && cpt<10) {
+					_log.debug(line);
+					buf.append(line);
+					buf.append("\n");
+					cpt++;
+			}
+			if (cpt>=10){
+				buf.append("...");
+			}
+			_out.println(buf);
+			_out.flush();
+			_log.debug(name +": done. ");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		_log.debug("run : " + name + " " + args);
 	}
 
 	public void kill(String spid) {
@@ -382,15 +419,25 @@ public class Shell {
 		_log.debug("kill returns : " + result);
 	}
 
-	private File getFile(String filename) throws Exception {
+	private File getPath(String path) {
 		File file = null;
-		if (filename.startsWith("/")) {
-			file = new File(filename);
+		if (path != null) {
+			if (path.startsWith("/")) {
+				file = new File(path);
+			} else {
+				file = new File(_currentDir.getAbsoluteFile() + "/" + path);
+			}
 		} else {
-			file = new File(_currentDir.getAbsoluteFile() + "/" + filename);
+			file = _currentDir;
 		}
 
-		if (file.exists() == false) {
+		return file;
+	}
+
+	private File getFile(String filename) throws Exception {
+		File file = getPath(filename);
+
+		if (file == null || file.exists() == false) {
 			throw new FileNotFoundException(filename
 					+ " : ce fichier n'existe pas !");
 		} else if (file.isFile() == false) {
@@ -401,24 +448,16 @@ public class Shell {
 	}
 
 	private File getDir(String dirname) throws Exception {
-		File file = null;
-		if (dirname == null) {
-			_currentDir = new File(System.getProperty("org.avm.home"));
-			return _currentDir;
-		}
-		if (dirname.startsWith("/")) {
-			file = new File(dirname);
-		} else {
-			file = new File(_currentDir.getAbsoluteFile() + "/" + dirname);
-		}
+		File file = getPath(dirname);
 
-		if (file.exists() == false) {
+		if (file == null || file.exists() == false) {
 			throw new FileNotFoundException(dirname
 					+ " : ce repertoire n'existe pas !");
 		} else if (file.isDirectory() == false) {
 			throw new FileNotFoundException(dirname
 					+ " : n'est pas un repertoire !");
 		}
+
 		return file;
 	}
 

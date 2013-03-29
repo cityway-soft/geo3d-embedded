@@ -1,20 +1,17 @@
 package org.avm.elementary.management.addons.command;
 
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 import org.avm.elementary.management.addons.AbstractCommand;
 import org.avm.elementary.management.addons.BundleAction;
 import org.avm.elementary.management.addons.Command;
 import org.avm.elementary.management.addons.Constants;
 import org.avm.elementary.management.addons.ManagementService;
-import org.avm.elementary.management.addons.Utils;
-import org.avm.elementary.management.core.SimpleFTPClient;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
@@ -30,8 +27,6 @@ class StatusCommand extends AbstractCommand implements BundleAction {
 	private StringBuffer buffer;
 
 	private boolean isColored;
-
-	private boolean isReportRequired;
 
 	private ManagementService _management;
 
@@ -49,32 +44,15 @@ class StatusCommand extends AbstractCommand implements BundleAction {
 
 		isColored = Boolean.valueOf(p.getProperty("colored", "false"))
 				.booleanValue();
-		
+
 		isComplete = Boolean.valueOf(p.getProperty("complete", "false"))
-		.booleanValue();
-		
-		isReportRequired = Boolean.valueOf(p.getProperty("report", "true"))
 				.booleanValue();
+
 		buffer = new StringBuffer();
 		execute(this, filter, context, out, false);
 
 		out.println(buffer);
 
-		if (isReportRequired) {
-			String filename = "status_$u.log";
-			String username = System.getProperty("org.avm.vehicule.id");
-
-			String path = Utils.replace(management.getUploadURL().toString(),
-					"$u", username);
-			filename = Utils.replace(filename, "$u", username);
-			try {
-				SimpleFTPClient client = new SimpleFTPClient();
-				client.put(new URL(path + "/" + filename), buffer);
-			} catch (IOException e) {
-				out.println("ERROR:" + e.getMessage());
-			}
-
-		}
 	}
 
 	private String getStatus(int status, boolean colored) {
@@ -130,6 +108,34 @@ class StatusCommand extends AbstractCommand implements BundleAction {
 		if (isComplete) {
 			buffer.append(" (");
 			buffer.append(b.getHeaders().get("Bundle-Name"));
+			Object builtby = b.getHeaders().get("Built-By");
+			String commitId = null;
+
+			Object commitIdTemp = b.getHeaders()
+					.get("Eclipse-SourceReferences");
+			if (commitIdTemp != null) {
+				StringTokenizer t = new StringTokenizer((String)commitIdTemp, ";");
+				int idx;
+				while (t.hasMoreElements()) {
+					String token = t.nextToken();
+					if (token.startsWith("commitId")) {
+						idx = token.indexOf("=");
+						commitId = token.substring(idx + 1);
+					}
+				}
+			}
+			
+			if (commitId != null){
+				buffer.append(" ");
+				buffer.append(commitId);
+				buffer.append(" ");
+			}
+			
+			if (builtby != null){
+				buffer.append("by ");
+				buffer.append(builtby);
+			}
+
 			buffer.append(")");
 		}
 		buffer.append(System.getProperty("line.separator"));

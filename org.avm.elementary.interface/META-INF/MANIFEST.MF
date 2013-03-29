@@ -16,6 +16,7 @@ Export-Package: org.avm.elementary.alarm,
  org.avm.elementary.rsync,
  org.avm.elementary.useradmin
 Import-Package: EDU.oswego.cs.dl.util.concurrent,
+ junit.framework;version="3.8.2";resolution:=optional,
  org.apache.commons.chain,
  org.apache.commons.pool,
  org.apache.log4j,

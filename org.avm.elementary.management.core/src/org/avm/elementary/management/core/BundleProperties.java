@@ -2,6 +2,8 @@ package org.avm.elementary.management.core;
 
 import java.io.IOException;
 
+import org.avm.elementary.management.core.utils.ManifestReader;
+
 /*
  * Created on 1 sept. 2005
  * Copyright (c) Mercur

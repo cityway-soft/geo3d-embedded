@@ -12,11 +12,9 @@ class ShutdownCommand extends AbstractCommand {
 
 	private ManagementService _management;
 
-	public static final int REBOOT_SYSTEM = 3;
+	public static final int REBOOT_SYSTEM = 3000;
 
-	public static final int REBOOT_FRAMEWORK = 2;
-
-	public static final int REBOOT_FRAMEWORK_IN_DEBUG_MODE = 1;
+	public static final int REBOOT_FRAMEWORK = 1000;
 
 	public void execute(BundleContext context, Properties p, PrintWriter out,
 			ManagementService management) {
@@ -28,16 +26,19 @@ class ShutdownCommand extends AbstractCommand {
 		String reboot = p.getProperty("reboot");
 		if (reboot != null) {
 			if (reboot.equals("fwk")) {
-				exitCode = 1;
-			} else if (reboot.equals("debug")) {
-				exitCode = 2;
+				exitCode = REBOOT_FRAMEWORK;
 			} else if (reboot.equals("sys")) {
-				exitCode = 3;
+				exitCode = REBOOT_SYSTEM;
 			}
 		} else {
 			exitCode = 0;
 		}
+		try{
 		_management.shutdown(out, timeout, exitCode);
+		}	
+		catch(Exception e){
+			out.println("Error :" + e.getMessage());
+		}
 	}
 
 	public static class ShutdownCommandFactory extends CommandFactory {

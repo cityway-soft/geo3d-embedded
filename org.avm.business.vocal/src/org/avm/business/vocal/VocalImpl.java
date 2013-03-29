@@ -216,8 +216,8 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 	}
 
 	protected void onMessageAlerte(Alarm alarm) {
-		if (alarm.description.equals("defmat")) {
-			if (_defmatAlarm == false && alarm.status) {
+		if (alarm.getKey().equals("defmat")) {
+			if (_defmatAlarm == false && alarm.isStatus()) {
 				String[] messages = { CONDUCTEUR_ALARM_MATRICULE };
 				try {
 					annonceConducteur(messages);
@@ -227,8 +227,8 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 			} else {
 				_defmatAlarm = false;
 			}
-		} else if (alarm.description.equals("speed")) {
-			if (_speedAlarm == false && alarm.status) {
+		} else if (alarm.getKey().equals("speed")) {
+			if (_speedAlarm == false && alarm.isStatus()) {
 				String[] messages = { CONDUCTEUR_ALARM_SPEED };
 				try {
 					annonceConducteur(messages);

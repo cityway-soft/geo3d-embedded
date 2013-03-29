@@ -57,14 +57,14 @@ public class AlarmIhmImpl extends Composite implements AlarmIhm,
 
 		StateButton button = new StateButton(this, SWT.BORDER);
 		button.setLayoutData(gridData);
-		button.setText(alarm.description);
+		button.setText(alarm.getName());
 		button.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 
 			public void widgetSelected(SelectionEvent e) {
 				StateButton b = (StateButton) e.getSource();
-				alarm.status = b.getSelection();
+				alarm.setStatus(b.getSelection());
 				send(alarm);
 			}
 		});
@@ -83,14 +83,14 @@ public class AlarmIhmImpl extends Composite implements AlarmIhm,
 		StateButton button = new StateButton(this, SWT.BORDER);
 		button.setLayoutData(gridData);
 		final Alarm alarm = command.getAlarm();
-		button.setText(alarm.description);
+		button.setText(alarm.getName());
 		button.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 
 			public void widgetSelected(SelectionEvent e) {
 				StateButton b = (StateButton) e.getSource();
-				alarm.status = b.getSelection();
+				alarm.setStatus(b.getSelection());
 				command.activate(b.getSelection());
 				send(alarm);
 			}
@@ -114,7 +114,7 @@ public class AlarmIhmImpl extends Composite implements AlarmIhm,
 	}
 
 	public List getAlarm() {
-		if (_alarm != null && _alarm.status) {
+		if (_alarm != null && _alarm.isStatus()) {
 			LinkedList list = new LinkedList();
 			list.add(_alarm);
 			return list;

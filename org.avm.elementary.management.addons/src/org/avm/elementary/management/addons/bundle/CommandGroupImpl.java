@@ -5,20 +5,25 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.net.InetAddress;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.UnknownHostException;
+import java.net.URLConnection;
 import java.util.Dictionary;
+import java.util.Enumeration;
 import java.util.StringTokenizer;
 
+import org.apache.commons.codec.binary.Base64;
 import org.avm.elementary.common.AbstractCommandGroup;
 import org.avm.elementary.management.addons.CommandException;
 import org.avm.elementary.management.addons.ManagementImpl;
+import org.avm.elementary.management.addons.ManagementPropertyFile;
 import org.avm.elementary.management.addons.ManagementService;
-import org.avm.elementary.management.core.Terminal;
+import org.avm.elementary.management.core.utils.Terminal;
+import org.avm.elementary.management.core.utils.Utils;
 import org.knopflerfish.service.console.Session;
 import org.osgi.service.component.ComponentContext;
 
@@ -155,66 +160,191 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		return 0;
 	}
 
-	// -- SETDOWNLOADURL
-	public final static String USAGE_SETDOWNLOADURL = "[<url>]";
+	// -- SETPUBLICDURL
+	public final static String USAGE_SETPUBLICURL = "[-u #U#][-d #D#][-s #s#]";
 
-	public final static String[] HELP_SETDOWNLOADURL = new String[] {
-			"Set download url", "'setdownloadurl default' to reset to default" };
+	public final static String[] HELP_SETPUBLICURL = new String[] { "-u upload -d download -s save(true|false)" };
 
-	public int cmdSetdownloadurl(Dictionary opts, Reader in, PrintWriter out,
+	public int cmdSetpublicurl(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
-		String url = ((String) opts.get("url"));
-		if (url != null) {
+		String downloadURL = ((String) opts.get("-d"));
+		String uploadURL = ((String) opts.get("-u"));
+		String save = ((String) opts.get("-s"));
+		boolean bSave = (save != null && save.equalsIgnoreCase("true"));
+
+		if (save != null) {
+			bSave = true;
+		}
+		if (downloadURL != null) {
 			try {
-				if (url.equals("default")) {
+				if (downloadURL.equals("default")) {
 					_peer.setDownloadURL(null);
 				} else {
-					_peer.setDownloadURL(new URL(url));
+					_peer.setDownloadURL(new URL(downloadURL));
+					if (bSave) {
+						ManagementPropertyFile configuration = ManagementPropertyFile
+								.getInstance();
+						configuration.setPublicDownloadUrl(downloadURL);
+						try {
+							configuration.save();
+						} catch (IOException e) {
+							out.println("Error:" + e.getMessage());
+						}
+
+					}
 				}
-			} catch (MalformedURLException e) {
+
+			} catch (Exception e) {
 				out.println("Error :" + e.getMessage());
 			}
 		}
-		out.println(_peer.getDownloadURL());
-		return 0;
-	}
-
-	// -- SETUPLOADURL
-	public final static String USAGE_SETUPLOADURL = "[<url>]";
-
-	public final static String[] HELP_SETUPLOADURL = new String[] {
-			"Set upload url", "'setuploadurl default' to reset to default" };
-
-	public int cmdSetuploadurl(Dictionary opts, Reader in, PrintWriter out,
-			Session session) {
-		String url = ((String) opts.get("url"));
-		if (url != null) {
+		if (uploadURL != null) {
 			try {
-				if (url.equals("default")) {
+				if (uploadURL.equals("default")) {
 					_peer.setUploadURL(null);
 				} else {
-					_peer.setUploadURL(new URL(url));
+					_peer.setUploadURL(new URL(uploadURL));
+					if (bSave) {
+						ManagementPropertyFile configuration = ManagementPropertyFile
+								.getInstance();
+						configuration.setPublicUploadUrl(uploadURL);
+						try {
+							configuration.save();
+						} catch (IOException e) {
+							out.println("Error:" + e.getMessage());
+						}
+
+					}
 				}
 
-			} catch (MalformedURLException e) {
+			} catch (Exception e) {
 				out.println("Error :" + e.getMessage());
 			}
 		}
-		out.println(_peer.getUploadURL());
+
+		try {
+			out.println("download:" + _peer.getDownloadURL());
+			out.println("upload:" + _peer.getUploadURL());
+		} catch (Exception e) {
+			out.println("Error :" + e.getMessage());
+		}
 		return 0;
 	}
 
-	// -- AUTOUPDATE
+	// -- SETPRIVATEDURL
+	public final static String USAGE_SETPRIVATEURL = "[-u #U#][-d #D#][-s #s#]";
+
+	public final static String[] HELP_SETPRIVATEURL = new String[] { "-u upload -d download -s save(true|false)" };
+
+	public int cmdSetprivateurl(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+		String downloadURL = ((String) opts.get("-d"));
+		String uploadURL = ((String) opts.get("-u"));
+		String save = ((String) opts.get("-s"));
+		boolean bSave = (save != null && save.equalsIgnoreCase("true"));
+
+		if (save != null) {
+			bSave = true;
+		}
+		if (downloadURL != null) {
+			try {
+				if (downloadURL.equals("default")) {
+					_peer.setDownloadURL(null);
+				} else {
+					_peer.setDownloadURL(new URL(downloadURL));
+					if (bSave) {
+						ManagementPropertyFile configuration = ManagementPropertyFile
+								.getInstance();
+						configuration.setPrivateDownloadUrl(downloadURL);
+						try {
+							configuration.save();
+						} catch (IOException e) {
+							out.println("Error:" + e.getMessage());
+						}
+
+					}
+				}
+
+			} catch (Exception e) {
+				out.println("Error :" + e.getMessage());
+			}
+		}
+		if (uploadURL != null) {
+			try {
+				if (uploadURL.equals("default")) {
+					_peer.setUploadURL(null);
+				} else {
+					_peer.setUploadURL(new URL(uploadURL));
+					if (bSave) {
+						ManagementPropertyFile configuration = ManagementPropertyFile
+								.getInstance();
+						configuration.setPrivateUploadUrl(uploadURL);
+						try {
+							configuration.save();
+						} catch (IOException e) {
+							out.println("Error:" + e.getMessage());
+						}
+
+					}
+				}
+
+			} catch (Exception e) {
+				out.println("Error :" + e.getMessage());
+			}
+		}
+		try {
+			out.println("download:" + _peer.getDownloadURL());
+			out.println("upload:" + _peer.getUploadURL());
+		} catch (Exception e) {
+			out.println("Error :" + e.getMessage());
+		}
+		return 0;
+	}
+
+	// -- SYNCHRONIZE
+	public final static String USAGE_SYNCHRONIZE = "";
+
+	public final static String[] HELP_SYNCHRONIZE = new String[] { "Synchronize bundles" };
+
+	public int cmdSynchronize(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+		synchronize(out);
+		return 0;
+	}
+
+	// -- AUTOUPDATE (DEPRECATED!)
 	public final static String USAGE_AUTOUPDATE = "";
 
 	public final static String[] HELP_AUTOUPDATE = new String[] { "Autoupdate all bundles" };
 
 	public int cmdAutoupdate(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
+		out.println("OK, but 'autoupdate' will be deprecated - use 'synchronize'");
+		synchronize(out);
+		return 0;
+	}
+
+	private void synchronize(PrintWriter out) {
 		try {
+			((ManagementImpl) _peer).updateUrls();
 			((ManagementImpl) _peer).synchronize(out);
 		} catch (Exception e) {
 			out.println(e);
+		}
+	}
+
+	// -- SENDBUNDLELIST
+	public final static String USAGE_SENDBUNDLELIST = "";
+
+	public final static String[] HELP_SENDBUNDLELIST = new String[] { "Send bundle list bundles" };
+
+	public int cmdSendbundlelist(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+		out.println("Sending bundle list");
+		try {
+			((ManagementImpl) _peer).sendBundleList();
+		} catch (Exception e) {
+			out.println("Error :" + e.getMessage());
 		}
 		return 0;
 	}
@@ -358,7 +488,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 	public final static String[] HELP_SHUTDOWN = new String[] { "Shutdown framework "
 			+ "-t <time in sec before shutdown>"
-			+ "-r <fwk|debug|sys> reboot framework or system" };
+			+ "-r <fwk|sys> reboot framework or system" };
 
 	public int cmdShutdown(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
@@ -611,13 +741,14 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			forceCopy = "true";
 		}
 		String remove = ((String) opts.get("-r"));
-		if (remove == null || !remove.equalsIgnoreCase("false")) {
-			remove = "true";
+		if (remove == null || !remove.equalsIgnoreCase("true")) {
+			remove = "false";
 		}
 		String filepath = ((String) opts.get("file"));
 		if (filepath == null) {
 			filepath = System.getProperty("org.avm.home") + "/data/upload";
 		}
+
 		StringBuffer parameters = new StringBuffer();
 		parameters.append("filepath=" + filepath);
 		parameters.append(";remove=" + remove);
@@ -675,6 +806,12 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			Session session) {
 		String cmd = "shell";
 
+		Enumeration enumeration = opts.elements();
+		int cpt = 0;
+		while (enumeration.hasMoreElements()) {
+			_log.debug("Opts[" + cpt + "] : " + enumeration.nextElement());
+			cpt++;
+		}
 		String[] params = (String[]) opts.get("cmd");
 		if (params != null) {
 			StringBuffer bufparameters = new StringBuffer();
@@ -685,10 +822,11 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 				bufparameters.append(p);
 				bufparameters.append(" ");
 			}
+			String parameters = replace(bufparameters.toString(), "[pipe]", "|");
 
+			_log.debug("Parameters : " + parameters);
 			try {
-				((ManagementImpl) _peer).execute(cmd, bufparameters.toString(),
-						out);
+				((ManagementImpl) _peer).execute(cmd, parameters, out);
 			} catch (CommandException e) {
 				out.println(e.getMessage());
 			} catch (IOException e) {
@@ -697,6 +835,25 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		}
 
 		return 0;
+	}
+
+	public static String replace(String chaine, String tag, String tag2) {
+
+		if (tag == null || tag2 == null || chaine == null) {
+			// System.err.println("Null !!!! " + chaine +", "+ tag+ ", " +tag2);
+			return chaine;
+		}
+		int idx = chaine.indexOf(tag);
+		if (idx != -1) {
+			StringBuffer buf = new StringBuffer();
+			buf.append(chaine.substring(0, idx));
+			buf.append(tag2);
+			return buf.toString()
+					+ replace(chaine.substring(idx + tag.length()), tag, tag2);
+		} else {
+			return chaine;
+		}
+
 	}
 
 	public final static String USAGE_DEPENDENCY = "[<bundle>]";
@@ -763,18 +920,69 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 		String name = (String) opts.get("-n");
 		String owner = (String) opts.get("-o");
-
+		boolean changed = false;
 		if (name == null && owner == null) {
+			out.println("id=" + Terminal.getInstance().getId());
 			out.println("name=" + Terminal.getInstance().getName());
 			out.println("owner=" + Terminal.getInstance().getOwner());
-			out.println("exp.name="
-					+ System.getProperty("org.avm.exploitation.name"));
-		}
-		else{
-			
+			out.println("platf=" + Terminal.getInstance().getPlateform());
+		} else {
+			if (name != null && !name.equals(Terminal.getInstance().getName())) {
+				changed = true;
+				Terminal.getInstance().setName(name);
+			}
+			if (owner != null
+					&& !owner.equals(Terminal.getInstance().getOwner())) {
+				changed = true;
+				Terminal.getInstance().setOwner(owner);
+			}
+			try {
+				if (changed) {
+					Terminal.getInstance().save();
+					if (!updateIdent(name, owner)) {
+						out.println("Error : cannot update on server!");
+					}
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				out.println("Erreur:" + e.getMessage());
+			}
+
 		}
 
 		return 0;
+	}
+
+	private boolean updateIdent(String terminalName, String terminalOwner)
+			throws Exception {
+		try {
+			String surl = Utils.formatURL(_peer.getDownloadURL().toString(),
+					false);
+			_log.info("update ident : url=" + surl);
+			URL url = new URL(surl);
+
+			URLConnection connection = url.openConnection();
+			String userinfo = url.getUserInfo();
+			if (userinfo != null && url.getProtocol().equals("http")) {
+				int idx = userinfo.indexOf(":");
+				String password = userinfo.substring(idx + 1);
+				String user = userinfo.substring(0, idx);
+				String encoded = new String(
+						Base64.encodeBase64((user + ":" + password).getBytes()));
+				connection.setRequestProperty("Authorization", "Basic "
+						+ encoded);
+			}
+
+			InputStream in = null;
+
+			in = connection.getInputStream();
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String result = br.readLine();
+			return (result != null && result.equals("OK"));
+		} catch (IOException e) {
+			throw new Exception("Error : cannot update terminal on server");
+		}
 	}
 
 	public final static String USAGE_HOST = "[-f #F#] <host> [<ipaddress>]";

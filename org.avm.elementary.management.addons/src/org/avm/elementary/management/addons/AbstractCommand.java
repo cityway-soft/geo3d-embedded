@@ -145,18 +145,6 @@ public abstract class AbstractCommand implements Command {
 		return null;
 	}
 
-	/**
-	 * Envoi le buffer <code>buffer</code> vers l'URL (protocole file ou ftp)
-	 * 
-	 * @param surl
-	 * @param filename
-	 * @param buffer
-	 * @throws IOException
-	 */
-	public void sendReport(String surl, StringBuffer buffer) throws IOException {
-		SimpleFTPClient client = new SimpleFTPClient();
-		client.put(new URL(surl), buffer);
-	}
 
 	public String getName() {
 		String pack = this.getClass().getPackage().getName();

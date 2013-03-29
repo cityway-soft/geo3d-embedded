@@ -84,31 +84,31 @@ public class PatchManagerActivator implements BundleActivator, Constants,
 	}
 
 	private void runonce(String process, String params) {
-		_log.info("[DLA] running '" + process + " " + params + "' ?"
+		_log.info("Running '" + process + " " + params + "' ?"
 				+ (isExecuted() == false));
 		if (isExecuted() == false) {
-			_log.info("[DLA] exec: " + params);
+			_log.info("Exec: " + params);
 			org.avm.device.plateform.System.exec(process, params);
 			executed();
-			_log.info("[DLA] end exec: " + params);
+			_log.info("End exec: " + params);
 		} else {
-			_log.info("[DLA] already executed: " + params);
+			_log.info("Already executed: " + params);
 		}
 	}
 
 	private void runonce(String managementscript) {
-		_log.info("[DLA] running management " + managementscript + " ? "
+		_log.info("Running management " + managementscript + " ? "
 				+ (isManagementScriptExecuted() == false));
 		URL url;
 		try {
 			url = new URL("file://" + managementscript);
 			if (isManagementScriptExecuted() == false) {
-				_log.info("[DLA] runscript: " + url);
+				_log.info("Runscript: " + url);
 				runScript(url);
 				managementScriptExecuted();
-				_log.info("[DLA] end exec: " + url);
+				_log.info("End exec: " + url);
 			} else {
-				_log.info("[DLA] management script already executed: " + url);
+				_log.info("Management script already executed: " + url);
 			}
 		} catch (MalformedURLException e) {
 			_log.error(e);
@@ -216,7 +216,6 @@ public class PatchManagerActivator implements BundleActivator, Constants,
 			is.close();
 			_log.info("File Created :" + file.getAbsolutePath());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -257,8 +256,9 @@ public class PatchManagerActivator implements BundleActivator, Constants,
 				init();
 
 				String plateform = System.getProperty("org.avm.plateform");
-				
-				//--debut [DLA] astuce necessaire pour la MAJ des (vieux!) fm6000
+
+				// --debut [DLA] astuce necessaire pour la MAJ des (vieux!)
+				// fm6000
 				if (plateform == null) {
 					String osname = System.getProperty("os.name");
 					if (osname != null && osname.equalsIgnoreCase("Windows CE")) {
@@ -266,10 +266,8 @@ public class PatchManagerActivator implements BundleActivator, Constants,
 					} else {
 						plateform = "unknown";
 					}
-				}//--fin 
-				
-				
-				
+				}// --fin
+
 				String shellScript = "runonce.sh";
 
 				String options = "";
@@ -288,11 +286,12 @@ public class PatchManagerActivator implements BundleActivator, Constants,
 					_log.info("Context:" + _context);
 					Enumeration iter = _context.getBundle().findEntries(
 							"/patch", "*", true);
-					_log.info("[DLA] iter: " + iter);
 					if (iter != null) {
 						while (iter.hasMoreElements()) {
 							URL url = (URL) iter.nextElement();
-							_log.debug("[DLA] entry: " + url);
+							if (_log.isDebugEnabled()) {
+								_log.debug("Entry: " + url);
+							}
 							String file = deploy(url);
 							if (file != null
 									&& file.toLowerCase().indexOf("runonce") != -1

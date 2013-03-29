@@ -12,7 +12,7 @@ import java.util.StringTokenizer;
 import org.avm.elementary.management.addons.AbstractCommand;
 import org.avm.elementary.management.addons.Command;
 import org.avm.elementary.management.addons.ManagementService;
-import org.avm.elementary.management.addons.Utils;
+import org.avm.elementary.management.core.utils.Utils;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
@@ -50,7 +50,12 @@ class UpdateCommand extends AbstractCommand {
 					}
 				}
 				else{
-					bundleURL = management.getDownloadURL().toString();
+					try {
+						bundleURL = management.getDownloadURL().toString();
+					} catch (Exception e) {
+						out.println("Error :" + e.getMessage());
+						break;
+					}
 				}
 				hashBundleURL.put(bundleName, bundleURL);
 				

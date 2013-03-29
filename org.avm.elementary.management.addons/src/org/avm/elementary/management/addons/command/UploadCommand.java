@@ -1,18 +1,9 @@
 package org.avm.elementary.management.addons.command;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URL;
-import java.net.URLConnection;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
@@ -22,7 +13,8 @@ import org.avm.elementary.management.addons.AbstractCommand;
 import org.avm.elementary.management.addons.Command;
 import org.avm.elementary.management.addons.CommandException;
 import org.avm.elementary.management.addons.ManagementService;
-import org.avm.elementary.management.addons.Utils;
+import org.avm.elementary.management.core.utils.DataUploadClient;
+import org.avm.elementary.management.core.utils.Utils;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -32,8 +24,7 @@ import org.osgi.framework.BundleContext;
  */
 class UploadCommand extends AbstractCommand {
 
-	private static final SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd");
-	private static final SimpleDateFormat HF = new SimpleDateFormat("HHMMss");
+
 
 	public static final String PROP_FILEPATH = "filepath";
 
@@ -62,24 +53,62 @@ class UploadCommand extends AbstractCommand {
 			throws CommandException {
 
 		try {
-			String localFilename = parameters.getProperty(PROP_FILEPATH);
 			boolean remove = Boolean.valueOf(
 					parameters.getProperty("remove", "false")).booleanValue();
 			boolean force = Boolean.valueOf(
 					parameters.getProperty("force", "false")).booleanValue();
+			String localFilename = parameters.getProperty(PROP_FILEPATH);
+			if (localFilename != null){
+				if (localFilename.startsWith("/") == false){
+					localFilename = System.getProperty("org.avm.home") + "/data/" + localFilename;
+				}
+				out.println("File to upload : " + localFilename);
+			}
+			
 			trace(out, "remove files:" + remove);
 			trace(out, "force copy:" + force);
-			String url = Utils.formatURL(management.getUploadURL().toString());
+			URL u = management.getUploadURL();
+			if (u == null){
+				throw new Exception("Upload URL not set.");
+			}
+
+			String surl = Utils.formatURL(u.toString(), false);
+	
+			URL url = new URL(surl);
+
 			upload(out, localFilename, url, remove, force);
 
 		} catch (Exception e) {
+			trace(out, e.getMessage());
 			throw new CommandException(e.getMessage());
 		}
 	}
 
-	private void upload(PrintWriter out, String filepath, String remotedir,
+	private void upload(PrintWriter out, String filepath, URL urlRemoteDir,
 			boolean removeAfterCopy, boolean forceCopy) throws IOException {
-		_upload(out, filepath, remotedir, removeAfterCopy, true, forceCopy);
+		File[] files = _upload(out, filepath, urlRemoteDir, removeAfterCopy, forceCopy);
+		
+		
+		if (files != null ){
+			StringBuffer buf = new StringBuffer();
+			for (int i = 0; i < files.length; i++) {
+				buf.append(files[i].getName());
+				buf.append("\n");
+				
+			}
+			trace(out, "Uploading :");
+			trace(out, buf.toString());
+			
+			if (urlRemoteDir.getProtocol().equalsIgnoreCase("ftp")){
+				String remotefilename  = Utils.getRemoteFilename(null, ".ready");
+				copy(buf, urlRemoteDir, remotefilename, out);
+			}
+			
+		}
+			
+		
+		
+
 	}
 
 	private void trace(PrintWriter out, String trace) {
@@ -88,9 +117,11 @@ class UploadCommand extends AbstractCommand {
 			_log.debug(trace);
 		}
 	}
+	
 
-	private void _upload(PrintWriter out, String filepath, String remotedir,
-			boolean removeAfterCopy, boolean notify, boolean forceCopy) throws IOException {
+
+	private File[] _upload(PrintWriter out, String filepath, URL urlRemoteDir,
+			boolean removeAfterCopy, boolean forceCopy) throws IOException {
 
 		File file = new File(filepath);
 		if (file.isDirectory()) {
@@ -100,36 +131,20 @@ class UploadCommand extends AbstractCommand {
 				buf.append(files[i].getName());
 				buf.append("\n");
 				if (files[i].isFile() && (forceCopy || isOlderThanToday(files[i])) ) {
-					_upload(out, files[i].getAbsolutePath(), remotedir,
-							removeAfterCopy, false, forceCopy);
+					_upload(out, files[i].getAbsolutePath(), urlRemoteDir,
+							removeAfterCopy, forceCopy);
 				}
 			}
-			trace(out, "Uploading :");
-			trace(out, buf.toString());
-			if (files.length > 0) {
-				ByteArrayInputStream in = new ByteArrayInputStream(buf
-						.toString().getBytes());
-				URL url = new URL(remotedir + "/"
-						+ System.getProperty("org.avm.exploitation.id") + "_"
-						+ System.getProperty("org.avm.vehicule.id") + ".ready");
-
-				copy(in, url);
-			}
+			return files;
 		} else {
-			String filename = file.getName();
-			InputStream in = new BufferedInputStream(new FileInputStream(
-					filepath));
+
+			String localfilename = file.getAbsolutePath();
+			String remotefilename = Utils.getRemoteFilename(file, file.getName());
 			
-			Date modified = new Date(file.lastModified());
-			URL url = new URL(remotedir + "/"
-					+ System.getProperty("org.avm.exploitation.id") + "_"
-					+ System.getProperty("org.avm.vehicule.id") + "_"
-					+ "M"+ DF.format(modified) + "-" + HF.format(modified)
-					+ "R" + DF.format(new Date()) 
-					+ "_" + filename);
 			long t = System.currentTimeMillis();
-			copy(in, url);
-			trace(out, "File '" + filename + "' copied in "
+
+			copy(localfilename, urlRemoteDir, remotefilename);
+			trace(out, "File '" + localfilename + "' copied in "
 					+ (System.currentTimeMillis() - t) + " ms.");
 
 			if (removeAfterCopy) {
@@ -140,16 +155,7 @@ class UploadCommand extends AbstractCommand {
 					trace(out, "File '" + file + "' NOT removed.");
 				}
 			}
-
-			if (notify == true) {
-				trace(out, "Uploading :" + filename);
-				ByteArrayInputStream in2 = new ByteArrayInputStream(filename
-						.getBytes());
-				url = new URL(remotedir + "/"
-						+ System.getProperty("org.avm.exploitation.id") + "_"
-						+ System.getProperty("org.avm.vehicule.id") + ".ready");
-				copy(in2, url);
-			}
+			return new File[]{file};
 		}
 	}
 	
@@ -167,46 +173,34 @@ class UploadCommand extends AbstractCommand {
 		return modifiedDate.before(today);
 	}
 
-	private void copy(InputStream in, URL url) throws IOException {
+	private void copy(String localfile, URL url, String remotefilename) throws IOException {
 		try {
-			OutputStream os;
-			if (url.getProtocol().equals("ftp")) {
-				URLConnection connection = url.openConnection();
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					System.out.println("writeFTPReport sleep interrupted !");
-				}
-
-				connection.setDoOutput(true);
-
-				os = connection.getOutputStream();
-
-			} else {
-				String filename = url.getFile();
-				File file = new File(filename);
-				file = file.getParentFile();
-				if (!file.exists()) {
-					file.mkdirs();
-				}
-				os = new FileOutputStream(filename, false);
+			File file = new File(localfile);
+			DataUploadClient client = new DataUploadClient(url);
+			if (remotefilename==null){
+				remotefilename = file.getName();
 			}
-			BufferedOutputStream out = new BufferedOutputStream(os);
+			client.put(file, remotefilename);
 
-			int c;
-			while ((c = in.read()) > -1) {
-				out.write(c);
-			}
-
-			out.flush();
-			out.close();
 		} catch (IOException e) {
 			System.err
-					.println("[Management Upload] Erreur pendant la copie  : "
-							+ url);
+					.println("[Management Upload] Erreur pendant la copie de " + localfile + " vers "
+							+ url + " dans " + remotefilename + ":" + e.getMessage() );
 			throw e;
 		}
-
+	}
+	
+	private void copy(StringBuffer buffer, URL url, String remotefilename, PrintWriter out) throws IOException {
+		try {
+			DataUploadClient client = new DataUploadClient(url);
+			String result = client.put(buffer, remotefilename);
+			out.println("Server:" + result);
+		} catch (IOException e) {
+			System.err
+			.println("[Management Upload] Erreur pendant la copie de " + buffer + " vers "
+					+ url + " dans " + remotefilename);
+			throw e;
+		}
 	}
 
 	public static class UploadpCommandFactory extends CommandFactory {

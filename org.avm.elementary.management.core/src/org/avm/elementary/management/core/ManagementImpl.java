@@ -1,7 +1,6 @@
 package org.avm.elementary.management.core;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
@@ -9,12 +8,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.zip.GZIPOutputStream;
 
+import org.avm.elementary.management.core.utils.DataUploadClient;
+import org.avm.elementary.management.core.utils.Terminal;
+import org.avm.elementary.management.core.utils.Utils;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
@@ -25,10 +27,14 @@ import org.osgi.service.startlevel.StartLevel;
 
 /**
  * 
- * @author didier.lallemand@mercur.fr
+ * @author didier.lallemand@cityway.fr
  * 
  */
 public class ManagementImpl implements Management {
+	private static final String REPORT_FILENAME = "update.log.gz";
+
+	private static final int DELAY_BETWEEN_UPDATE = 5;
+
 	private static int MAX_RETRY;
 
 	private static final String AUTOUPDATE_TAG = Management.class.getPackage()
@@ -60,6 +66,16 @@ public class ManagementImpl implements Management {
 		_instance = this;
 	}
 
+	public void debug(String trace) {
+		if (DEBUG) {
+			System.out.println("[ManagementCore] " + trace);
+		}
+	}
+	
+	public void error(String trace) {
+		System.err.println("[ManagementCore] " + trace);
+	}
+	
 	public void start() {
 		boolean update = System.getProperty(AUTOUPDATE_TAG, "true").equals(
 				"true");
@@ -77,23 +93,47 @@ public class ManagementImpl implements Management {
 
 	public void setBundleContext(BundleContext context) {
 		_context = context;
-		setVersion();
+		updateVersion();
 	}
 
-	private void setVersion() {
-		double ver = 0;
-		String version = null;
+	private long getBundleVersionDate(String version) {
+		long result = -1;
+		StringBuffer buf = new StringBuffer();
+		int idx = version.lastIndexOf(".");
+		if (idx != -1) {
+			buf.append(version.substring(idx + 1));
+			while (buf.length() < 14) {
+				buf.append("0");
+			}
+			try {
+				result = Long.parseLong(buf.toString());
+			} catch (Throwable t) {
+
+			}
+		}
+
+		return result;
+	}
+
+	private void updateVersion() {
+		long ver = 0;
+		String version = "";
 
 		for (int i = 0; i < _context.getBundles().length; i++) {
 			Bundle bundle = _context.getBundles()[i];
-			String sver = (String) bundle.getHeaders().get("Bundle-Version");
-			double v = formatVersion(sver);
-			if ((bundle.getSymbolicName().indexOf("org.angolight") != -1 || bundle
-					.getSymbolicName().indexOf("org.avm") != -1)
-					&& !bundle.getSymbolicName().endsWith((".data"))) {
-				if (v > ver) {
-					ver = v;
-					version = sver;
+			String vendor = (String) bundle.getHeaders().get("Bundle-Vendor");
+			if (vendor != null && vendor.toLowerCase().indexOf("cityway") != -1) {
+				String sver = (String) bundle.getHeaders()
+						.get("Bundle-Version");
+				long v = getBundleVersionDate(sver);
+				if ((bundle.getSymbolicName().indexOf("org.angolight") != -1 || bundle
+						.getSymbolicName().indexOf("org.avm") != -1)
+						&& !bundle.getSymbolicName().endsWith((".data"))) {
+					if (v > ver) {
+						ver = v;
+						version = Long.toString(v);
+					}
+
 				}
 			}
 		}
@@ -103,50 +143,48 @@ public class ManagementImpl implements Management {
 
 	}
 
-	/**
-	 * converti un numero de version au format 1.0.0.1.2 dans un format
-	 * numérique 1.0012 (pour pouvoir effectuer des comparaisons)
-	 * 
-	 * @param version
-	 * @return
-	 */
-	private double formatVersion(String version) {
-		if (version == null)
-			return Double.NaN;
-		StringBuffer buf = new StringBuffer();
-		boolean dotfound = false;
-		for (int i = 0; i < version.length(); i++) {
-			char c = version.charAt(i);
-			if (Character.isDigit(c)) {
-				buf.append(c);
-			} else if (dotfound == false && c == '.') {
-				dotfound = true;
-				buf.append(c);
-			}
-		}
-		double ver;
-		try {
-			ver = Double.parseDouble(buf.toString());
-		} catch (NumberFormatException e) {
-			ver = 0;
-		}
-		return ver;
-	}
-
-	
 	public void init() {
-		System.out.println("Init management...");
+		debug("Init management...");
 
 		// -- load property files
-		File dir = new File(System.getProperty(AVMHOME_TAG)
-				+ System.getProperty("file.separator") + "bin");
-		if (dir.exists()) {
-			PropertyFileFilter filter = new PropertyFileFilter();
-			File[] list = dir.listFiles(filter);
-			for (int i = 0; i < list.length; i++) {
-				loadProperties(list[i].getAbsolutePath());
+		String filename = "avm.properties";
+		String filepath = System.getProperty(AVMHOME_TAG)
+				+ System.getProperty("file.separator") + "bin"
+				+ System.getProperty("file.separator") + filename;
+		Properties p = Utils.loadProperties(filepath);
+		boolean changed = checkAvmProperties(p);
+		changed = updateWithSystemProperties(p) || changed;
+		if (changed) {
+			debug("Properties for avm.properties changed.");
+			try {
+				Utils.saveProperties(p, filepath);
+				Terminal.getInstance().save();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
+
+		filename = "management.properties";
+		filepath = System.getProperty(AVMHOME_TAG)
+				+ System.getProperty("file.separator") + "bin"
+				+ System.getProperty("file.separator") + filename;
+		p = Utils.loadProperties(filepath);
+		changed = updateWithSystemProperties(p);
+		if (changed) {
+			debug("Properties for management.properties changed.");
+			try {
+				Utils.saveProperties(p, filepath);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+
+		debug("Terminal Info: " + Terminal.getInstance());
 
 		// -- set default download & upload URL
 		try {
@@ -155,6 +193,8 @@ public class ManagementImpl implements Management {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
+
+		debug("Check packages...");
 
 		// -- check package and refresh if necessairy
 		PrintWriter out = new PrintWriter(System.out);
@@ -175,9 +215,9 @@ public class ManagementImpl implements Management {
 			}
 			refresh(bundles, out);
 		} else {
-			out.println("[DLA] Packages seem ok.");
+			out.println("Packages seem ok.");
 		}
-
+		debug("Init finished...");
 	}
 
 	public void setUploadURL(URL url) throws MalformedURLException {
@@ -228,13 +268,13 @@ public class ManagementImpl implements Management {
 
 	public void synchronize(boolean update, PrintWriter out) throws Exception {
 		_retry = 1;
-		MAX_RETRY = Integer.parseInt(System.getProperty(
-				Management.class.getPackage() + ".autoupdate.maxtry", "5"));
+		MAX_RETRY = Integer.parseInt(System.getProperty(Management.class
+				.getPackage().getName() + ".autoupdate.maxtry", "5"));
 
 		if (_synchronizeBundlesThread == null
 				|| _synchronizeBundlesThread.isAlive() == false) {
 
-			_synchronizeBundlesThread = new SynchronizeBundleThread(update, out);
+			_synchronizeBundlesThread = new SynchronizeBundleThread(out);
 			_synchronizeBundlesThread.start();
 		} else {
 			throw new Exception(
@@ -276,21 +316,22 @@ public class ManagementImpl implements Management {
 	}
 
 	class SynchronizeBundleThread implements Runnable {
+
 		private Thread _thread = null;
 
 		private PrintWriter _out = null;
+		
+		private boolean interrupted=false;
 
-		private boolean _update;
-
-		public SynchronizeBundleThread(boolean update, PrintWriter out) {
+		public SynchronizeBundleThread(PrintWriter out) {
 			_out = out;
-			_update = update;
 		}
 
 		public void start() {
 			if (_thread == null) {
 				_thread = new Thread(this);
 				_thread.setName("[AVM] management core");
+				interrupted=false;
 				_thread.start();
 			}
 		}
@@ -298,6 +339,7 @@ public class ManagementImpl implements Management {
 		public void stop() {
 			if (_thread != null) {
 				_thread.interrupt();
+				interrupted=true;
 				_thread = null;
 			}
 		}
@@ -316,44 +358,14 @@ public class ManagementImpl implements Management {
 			}
 		}
 
-		private boolean isUpdateForced() {
-			boolean result = false;
-			URL url = null;
-			try {
-				url = new URL(System.getProperty("osgi.configuration.area")
-						+ "avm.deployed");
-				File file = new File(url.getFile());
-				result = (file.exists() == false);
-			} catch (MalformedURLException e1) {
-				result = true;
-			}
-			return result;
-		}
-
 		public void run() {
-			int timeBeforeRetry = 3; // secondes
-			boolean updateForced = false;
 
-			if (isUpdateForced()) {
-				try {
-					setDownloadURL(new URL(
-							System.getProperty(PRIVATE_DOWNLOAD_URL_TAG)));
-					setUploadURL(new URL(
-							System.getProperty(PRIVATE_UPLOAD_URL_TAG)));
-				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				updateForced = true;
-				_update = true;
-				MAX_RETRY = Integer.MAX_VALUE;
-			}
 			if (getDownloadURL() == null) {
 				_out.println("Download URL is null : update operation is cancelled.");
 				return;
 			}
-			_out.println("Download url : " + getDownloadURL());
-			_out.println("Upload url   : " + getUploadURL());
+			_out.println("Download url template : " + getDownloadURL());
+			_out.println("Upload url template : " + getUploadURL());
 			_out.flush();
 
 			while (_retry <= MAX_RETRY && _thread.isInterrupted() == false) {
@@ -362,79 +374,68 @@ public class ManagementImpl implements Management {
 				try {
 					long t0 = System.currentTimeMillis();
 					SynchronizeBundlesCommand cmd = new SynchronizeBundlesCommand(
-							_update, _context, _instance, _out);
+							_context, _instance, _out);
 					cmd.exec();
 					long time = System.currentTimeMillis() - t0;
-					debug("auto update [done] (" + time + " ms.)");
-					if (updateForced) {
-						URL url = new URL(
-								System.getProperty("osgi.configuration.area")
-										+ "avm.deployed");
-						FileOutputStream out = new FileOutputStream(
-								url.getFile());
-						out.write(new Date().toString().getBytes());
-						out.close();
-					}
-
+					debug("Update [done] (" + time + " ms.)");
 					break;
 				} catch (IOException ioe) {
-					_out.println("[ERROR] AutoUpdate IOException : "
+					_out.println("[ERROR] Update IOException : "
 							+ ioe.getMessage());
-					int cpt = 0;
-					_out.println("[INFO] management.core - Retry in "
-							+ timeBeforeRetry + " sec : ");
-					while (cpt < timeBeforeRetry) {
-						try {
-							Thread.sleep(1000 + (_retry - 1) * 2000);
-						} catch (InterruptedException e) {
-							break;
-						}
-						cpt++;
+					try {
+						debug("Wait " + DELAY_BETWEEN_UPDATE + "s...");
+						Thread.sleep(DELAY_BETWEEN_UPDATE * 1000);
+					} catch (InterruptedException e) {
+						break;
 					}
 					_retry++;
 				}
 
 			}
-
-			startAllBundles(_out);
+			if (interrupted == false) {
+				updateVersion();
+				startAllBundles(_out);
+			}
 			_out.flush();
 
 			_synchronizeBundlesThread = null;
 		}
 	}
 
-	private void loadProperties(String filename) {
-		Properties p;
-		p = new Properties();
-		try {
-			p.load(new FileInputStream(filename));
-			System.out.println("Loading properties : " + filename);
-			System.out.println(p);
-			Enumeration e = p.keys();
-			boolean changed = false;
-			while (e.hasMoreElements()) {
-				String key = (String) e.nextElement();
-				String value = p.getProperty(key);
-				String currentValue = System.getProperty(key);
-				if (currentValue != null && !currentValue.equals(value)) {
-					changed = true;
-					p.setProperty(key, currentValue);
-				} else {
-					System.setProperty(key, value);
-				}
+	private boolean updateWithSystemProperties(Properties p) {
+		Enumeration e = p.keys();
+		boolean changed = false;
+		while (e.hasMoreElements()) {
+			String key = (String) e.nextElement();
+			String value = p.getProperty(key);
+			String currentValue = System.getProperty(key);
+			if (currentValue != null && !currentValue.equals(value)) {
+				changed = true;
+				p.setProperty(key, currentValue);
+			} else {
+				System.setProperty(key, value);
 			}
-			if (changed) {
-				p.store(new FileOutputStream(filename),
-						"Modified by Management Core");
-			}
-
-		} catch (FileNotFoundException e) {
-			System.err.println("FileNotFoundException (" + e.getMessage()
-					+ "): " + filename);
-		} catch (IOException e) {
-			System.err.println("IOException (" + e.getMessage() + "): "
-					+ filename);
 		}
+		return changed;
+	}
+
+	private boolean checkAvmProperties(Properties p) {
+		boolean mustBeSaved = false;
+
+		String vehiculeId = p.getProperty(Terminal.VEHICULE_PROPERTY); // -- old
+																		// version
+		if (vehiculeId != null) {
+			System.setProperty(Terminal.TERMINAL_NAME_PROPERTY, vehiculeId);
+			p.remove(Terminal.VEHICULE_PROPERTY);
+			mustBeSaved = true;
+		}
+		String exploitantId = p.getProperty(Terminal.EXPLOITATION_PROPERTY);
+		if (exploitantId != null) {
+			System.setProperty(Terminal.TERMINAL_OWNER_PROPERTY, exploitantId);
+			p.remove(Terminal.EXPLOITATION_PROPERTY);
+			mustBeSaved = true;
+		}
+		return mustBeSaved;
 	}
 
 	public StartLevel getStartLevelService() {
@@ -455,9 +456,6 @@ public class ManagementImpl implements Management {
 		try {
 			getPackageAdminService().refreshPackages(bundles);
 			getPackageAdminService().resolveBundles(bundles);
-			// if (DEBUG){
-			// out.println("[DLA] Packages refreshed.");
-			// }
 		} catch (Throwable t) {
 			out.println("[ManagementCore] Error on refresh : " + t.getMessage());
 		}
@@ -489,7 +487,7 @@ public class ManagementImpl implements Management {
 				}
 			}
 		}
-		out.println("[DLA] Time to check packages : "
+		out.println("Time to check packages : "
 				+ (System.currentTimeMillis() - t0) + "ms.");
 
 		return result;
@@ -502,10 +500,6 @@ public class ManagementImpl implements Management {
 				_shutdownTimer = new Timer();
 				_shutdownTimer.schedule(new ShutdownTimerTask(exitCode, out),
 						waittime * 1000);
-				// si pas d'arret au bout de n secondes...
-				// _exitTimer = new Timer();
-				// _exitTimer.schedule(new ExitTask(exitCode),
-				// (waittime + 60) * 1000);
 			}
 
 			if (waittime == -1 && _shutdownTimer != null) {
@@ -542,7 +536,7 @@ public class ManagementImpl implements Management {
 							active++;
 						}
 					}
-					System.out.println("[ManagementCore] Active bundles : "
+					ManagementImpl.this.debug("[ManagementCore] Active bundles : "
 							+ active);
 					if (active == 2) { // Bundle SystemOsgi + Bundle Management
 						_out.println("bye bye...");
@@ -554,7 +548,6 @@ public class ManagementImpl implements Management {
 						_out.println("force exit...");
 						System.exit(exitCode);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
@@ -574,6 +567,68 @@ public class ManagementImpl implements Management {
 	class PropertyFileFilter implements FilenameFilter {
 		public boolean accept(File dir, String filename) {
 			return filename.toLowerCase().endsWith(".properties");
+		}
+	}
+
+	private BundleList createFromFwk() {
+		BundleList bundleList = new BundleList();
+
+		Bundle[] bundles = _context.getBundles();
+		for (int i = 1; i < bundles.length; i++) {
+			BundleProperties bp = new BundleProperties();
+			String bundleName = bundles[i].getSymbolicName();
+			String bundleVersion = (String) bundles[i].getHeaders().get(
+					"Bundle-Version");
+			bundleList.put(bundleName, bp);
+			bp.setName(bundleName);
+			bp.setVersion(bundleVersion);
+
+			bp.setStartlevel(getStartLevelService().getBundleStartLevel(
+					bundles[i]));
+		}
+		return bundleList;
+	}
+
+	public void sendBundleList() {
+
+		BundleList bundleList = createFromFwk();
+		Enumeration enumeration = bundleList.elements();
+		String filepattern = "$e_$v_$i_" + REPORT_FILENAME;
+		String path = getUploadURL().toString();
+
+		String surl = Utils.formatURL(path, false);
+		String filename = Utils.formatURL(filepattern, false);
+
+		File file = new File(System.getProperty("java.io.tmpdir") + "/"
+				+ filename);
+		try {
+			GZIPOutputStream out = new GZIPOutputStream(new FileOutputStream(
+					file.getAbsoluteFile()));
+			// Transfer bytes from the input file to the GZIP output stream
+			while (enumeration.hasMoreElements()) {
+				BundleProperties element = (BundleProperties) enumeration
+						.nextElement();
+				String line = element.toString()
+						+ System.getProperty("line.separator");
+				byte[] data = line.getBytes();
+				out.write(data, 0, data.length);
+			}
+
+			// Complete the GZIP file
+			out.finish();
+			out.close();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
+			debug("Sending update report (" + file.getName() + ")");
+			DataUploadClient client = new DataUploadClient(new URL(surl));
+			client.put(file, filename);
+			debug("OK Sent " + file.getName() + "");
+
+		} catch (IOException e) {
+			error("IOException (sendReport) :" + e.getMessage());
 		}
 	}
 

@@ -1,7 +1,12 @@
 package org.avm.elementary.command.commands;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Dictionary;
+
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
+import org.apache.log4j.Logger;
 import org.avm.business.protocol.phoebus.Message;
 import org.avm.device.gps.Gps;
 import org.avm.elementary.command.MessengerContext;
@@ -12,70 +17,132 @@ import org.osgi.util.measurement.Unit;
 import org.osgi.util.position.Position;
 
 public class PositionCommand implements org.apache.commons.chain.Command {
-	private MessengerContext _context;
+	private SimpleDateFormat DF = new SimpleDateFormat(
+			"yyyy/MM/dd HH:mm:ss,SSS");
 
-	public boolean execute(Context context) throws Exception {
-		_context = (MessengerContext) context;
-		if (_context == null)
-			return true;
-		Message message = (Message) _context.getMessage();
-		if (message == null)
-			return true;
-		
-		if (message.getEntete().getChamps().getPosition() == 1) {
-			if (message.getEntete().getPosition() == null) {
-				message.getEntete().setPosition(
-						new org.avm.business.protocol.phoebus.Position());
-				Position current = getCurrentPosition();
-				int longitude = (int) (current.getLongitude().getValue()
-						* 180.00 / Math.PI * 360000.00);
-				int latitude = (int) (current.getLatitude().getValue() * 180.00
-						/ Math.PI * 360000.00);
-				int cap = (int) (current.getTrack().getValue() * 180.00 / Math.PI);
-				int vitesse = (int) (current.getSpeed().getValue());
-				org.avm.business.protocol.phoebus.Position position = message
-						.getEntete().getPosition();
-				position.setLongitude(longitude);
-				position.setLatitude(latitude);
-				position.setCap(cap);
-				position.setVitesse(vitesse);
-			}
+	private Logger logger = Logger.getInstance(PositionCommand.class);
+
+	/** Fabrique de classe */
+	public static class DefaultCommandFactory extends CommandFactory {
+
+		protected Command createCommand() {
+
+			return new PositionCommand();
+		}
+	}
+
+	private MessengerContext _context;
+	/** Referencement de la fabrique de classe */
+	static {
+		final CommandFactory factory = new DefaultCommandFactory();
+		CommandFactory.factories.put(PositionCommand.class.getName(), factory);
+	}
+
+	public boolean execute(final Context o) throws Exception {
+
+		final MessengerContext context = (MessengerContext) o;
+		_context = context;
+
+		computeMessage(context);
+
+		Dictionary header = context.getHeader();
+
+		final Position current = this.getCurrentPosition();
+		final int longitude = (int) (((current.getLongitude().getValue() * 180.00d) / Math.PI) * 360000.00d);
+		final int latitude = (int) (((current.getLatitude().getValue() * 180.00d) / Math.PI) * 360000.00d);
+		final int cap = (int) ((current.getTrack().getValue() * 180.00d) / Math.PI);
+		final int vitesse = (int) (current.getSpeed().getValue() * 3.6d);
+
+		Integer lon = (Integer) header.get("lon");
+		if (lon == null) {
+			lon = new Integer(longitude);
+			header.put("lon", lon);
+		}
+
+		Integer lat = (Integer) header.get("lat");
+		if (lat == null) {
+			lat = new Integer(latitude);
+			header.put("lat", lat);
+		}
+
+		Integer trk = (Integer) header.get("trk");
+		if (trk == null) {
+			trk = new Integer(cap);
+			header.put("trk", trk);
+		}
+
+		Integer spd = (Integer) header.get("spd");
+		if (spd == null) {
+			spd = new Integer(vitesse);
+			header.put("spd", spd);
+		}
+
+		Date date = (Date) header.get("date");
+		if (date == null) {
+			date = new Date();
+			header.put("date", date);
+		}
+
+		if (logger.isDebugEnabled()) {
+			header.put("date-text", DF.format(date));
+			logger.debug("header=" + header);
 		}
 
 		return false;
 	}
 
+	private void computeMessage(MessengerContext context) {
+		if (context == null)
+			return;
+
+		if (context.getMessage() instanceof Message) {
+			Message message = (Message) context.getMessage();
+			if (message == null)
+				return;
+
+			if (message.getEntete().getChamps().getPosition() == 1) {
+				if (message.getEntete().getPosition() == null) {
+					message.getEntete().setPosition(
+							new org.avm.business.protocol.phoebus.Position());
+					Position current = getCurrentPosition();
+					int longitude = (int) (current.getLongitude().getValue()
+							* 180.00 / Math.PI * 360000.00);
+					int latitude = (int) (current.getLatitude().getValue()
+							* 180.00 / Math.PI * 360000.00);
+					int cap = (int) (current.getTrack().getValue() * 180.00 / Math.PI);
+					int vitesse = (int) (current.getSpeed().getValue());
+					org.avm.business.protocol.phoebus.Position position = message
+							.getEntete().getPosition();
+					position.setLongitude(longitude);
+					position.setLatitude(latitude);
+					position.setCap(cap);
+					position.setVitesse(vitesse);
+				}
+			}
+		}
+
+	}
+
 	protected Position getCurrentPosition() {
+
 		Position result = null;
-		ComponentContext context = _context.getComponentContext();
-		Gps gps = (Gps) context.locateService("gps");
+		final ComponentContext context = this._context.getComponentContext();
+		final Gps gps = (Gps) context.locateService("gps");
 		if (gps != null) {
 			result = gps.getCurrentPosition();
 		} else {
-			long now = System.currentTimeMillis();
-			double value = 0d;
-			double error = -1d;
-			Measurement lon = new Measurement(value, error, Unit.rad, now);
-			Measurement lat = new Measurement(value, error, Unit.rad, now);
-			Measurement alt = new Measurement(value, error, Unit.m, now);
-			Measurement speed = new Measurement(value, error, Unit.m_s, now);
-			Measurement track = new Measurement(value, error, Unit.rad, now);
+			final long now = System.currentTimeMillis();
+			final double value = 0d;
+			final double error = -1d;
+			final Measurement lon = new Measurement(value, error, Unit.rad, now);
+			final Measurement lat = new Measurement(value, error, Unit.rad, now);
+			final Measurement alt = new Measurement(value, error, Unit.m, now);
+			final Measurement speed = new Measurement(value, error, Unit.m_s,
+					now);
+			final Measurement track = new Measurement(value, error, Unit.rad,
+					now);
 			result = new Position(lat, lon, alt, speed, track);
 		}
 		return result;
-	}
-
-	/** Fabrique de classe */
-	public static class DefaultCommandFactory extends CommandFactory {
-		protected Command createCommand() {
-			return new PositionCommand();
-		}
-	}
-
-	/** Referencement de la fabrique de classe */
-	static {
-		CommandFactory factory = new DefaultCommandFactory();
-		DefaultCommandFactory.factories.put(PositionCommand.class.getName(),
-				factory);
 	}
 }

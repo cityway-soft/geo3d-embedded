@@ -15,98 +15,104 @@ import org.avm.elementary.command.impl.CommandFactory;
 import org.osgi.service.component.ComponentContext;
 
 public class ServiceCommand implements org.apache.commons.chain.Command {
-	private MessengerContext _context;
-	private Avm _avm;
-
-	public boolean execute(Context context) throws Exception {
-		_context = (MessengerContext) context;
-		if (_context == null)
-			return true;
-		Message message = (Message) _context.getMessage();
-		if (message == null)
-			return true;
-
-		ComponentContext cc = _context.getComponentContext();
-		_avm = (Avm) cc.locateService("avm");
-
-		if (_avm != null) {
-			AvmModel model = _avm.getModel();
-
-			// message
-			Entete entete = message.getEntete();
-			entete.setVersion((model != null) ? model.getDatasourceVersion()
-					: 0);
-			ChampsOptionnels options = entete.getChamps();
-
-			// service
-			Service service = entete.getService();
-			options.setService(1);
-			if (service == null) {
-				entete.setService(new Service());
-				service = entete.getService();
-				int conducteur = (model.getAuthentification() != null) ? model
-						.getAuthentification().getMatricule() : 0;
-				service.setConducteur(conducteur);
-				int course = (_avm.getModel().getCourse() != null) ? model
-						.getCourse().getIdu() : 0;
-				service.setCourse(course);
-				int serviceAgent = (_avm.getModel().getServiceAgent() != null) ? model
-						.getServiceAgent().getIdU()
-						: 0;
-				service.setServiceAgent(serviceAgent);
-			}
-
-			// progression
-			Progression progression = entete.getProgression();
-			if (progression == null && options.getProgression() == 1) {
-				int avanceretard = model.getAvanceRetard();
-				progression = new Progression();
-				progression.setRetard(avanceretard);
-				progression.setDeviation(model.isHorsItineraire() ? 1 : 0);
-				Point point = model.getDernierPoint();
-				if (point != null) {
-					progression.setRangDernierArret(point.getRang());
-					progression.setIduDernierArret(point.getIdu());
-				} else {
-					progression.setRangDernierArret(0);
-					progression.setIduDernierArret(0);
-				}
-				entete.setProgression(progression);
-			}
-		} else {
-			
-			// message
-			Entete entete = message.getEntete();
-			entete.setVersion(0);
-			ChampsOptionnels options = entete.getChamps();
-		
-			// service
-			Service service = entete.getService();
-			if (service == null && options.getService() == 1) {
-				options.setService(0);
-			}
-
-			// progression
-			Progression progression = entete.getProgression();
-			if (progression == null && options.getProgression() == 1) {
-				options.setProgression(0);
-			}
-		}
-
-		return false;
-	}
 
 	/** Fabrique de classe */
 	public static class DefaultCommandFactory extends CommandFactory {
+
 		protected Command createCommand() {
+
 			return new ServiceCommand();
 		}
 	}
 
+	private MessengerContext _context;
+
+	private Avm _avm;
 	/** Referencement de la fabrique de classe */
 	static {
-		CommandFactory factory = new DefaultCommandFactory();
-		DefaultCommandFactory.factories.put(ServiceCommand.class.getName(),
-				factory);
+		final CommandFactory factory = new DefaultCommandFactory();
+		CommandFactory.factories.put(ServiceCommand.class.getName(), factory);
+	}
+
+	private void init(Service service, AvmModel model) {
+		if (model.getAuthentification() != null) {
+			int conducteur = model.getAuthentification().getMatricule();
+			service.setConducteur(conducteur);
+		} else {
+			service.setConducteur(0);
+		}
+
+		if (model.getCourse() != null) {
+			service.setCourse(model.getCourse().getIdu());
+		} else {
+			service.setCourse(0);
+		}
+	}
+
+	public boolean execute(final Context context) throws Exception {
+
+		this._context = (MessengerContext) context;
+		if (this._context == null) {
+			return true;
+		}
+		final Object msg = this._context.getMessage();
+		if (msg == null) {
+			return true;
+		}
+		if (msg instanceof Message) {
+			final Message message = (Message) msg;
+
+			final ComponentContext cc = this._context.getComponentContext();
+			this._avm = (Avm) cc.locateService("avm");
+			if (this._avm != null) {
+				final AvmModel model = this._avm.getModel();
+				// message
+				final Entete entete = message.getEntete();
+				entete.setVersion(0);
+				final ChampsOptionnels options = entete.getChamps();
+				// service
+				options.setService(1);
+				Service service = entete.getService();
+				if (service == null) {
+					service = new Service();
+					entete.setService(service);
+					init(service, _avm.getModel());
+				}
+
+				// progression
+				Progression progression = entete.getProgression();
+				if ((progression == null) && (options.getProgression() == 1)) {
+					final int avanceretard = model.getAvanceRetard();
+					progression = new Progression();
+					progression.setRetard(avanceretard);
+					progression.setDeviation(model.isHorsItineraire() ? 1 : 0);
+					final Point point = model.getDernierPoint();
+					if (point != null) {
+						progression.setRangDernierArret(point.getRang());
+						progression.setIduDernierArret(point.getIdu());
+					} else {
+						progression.setRangDernierArret(0);
+						progression.setIduDernierArret(0);
+					}
+					entete.setProgression(progression);
+				}
+			} else {
+				// message
+				final Entete entete = message.getEntete();
+				entete.setVersion(0);
+				final ChampsOptionnels options = entete.getChamps();
+				// service
+				final Service service = entete.getService();
+				if ((service == null) && (options.getService() == 1)) {
+					options.setService(0);
+				}
+				// progression
+				final Progression progression = entete.getProgression();
+				if ((progression == null) && (options.getProgression() == 1)) {
+					options.setProgression(0);
+				}
+			}
+		}
+		return false;
 	}
 }

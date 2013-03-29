@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.elementary.media.ctw.MediaCTW" mode="new">
+<property name="period">
+<value type="Integer">180</value>
+</property>
+<property name="port">
+<value type="Integer">8093</value>
+</property>
+<property name="service.pid">
+<value type="String">org.avm.elementary.media.ctw.MediaCTW</value>
+</property>
+<property name="address">
+<value type="String">saml.avm.org</value>
+</property>
+</configuration>
+</cm_data>

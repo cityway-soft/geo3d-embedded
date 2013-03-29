@@ -26,8 +26,8 @@ public class ConfigImpl extends AbstractConfig implements AlarmServiceConfig {
 		_config.remove(index);
 	}
 
-	public Properties get(String name) {
-		String text = (String) _config.get(name);
+	public Properties get(String index) {
+		String text = (String) _config.get(index);
 		return load(text);
 	}
 

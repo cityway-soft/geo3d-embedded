@@ -1,16 +1,29 @@
 package org.avm.elementary.management.core;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 
+import org.apache.commons.codec.binary.Base64;
+import org.avm.elementary.management.core.utils.Utils;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
@@ -24,8 +37,6 @@ class SynchronizeBundlesCommand implements BundleListener {
 
 	private Management _management;
 
-	private boolean _update;
-
 	private static PrintWriter _out = null;
 
 	private Timer _timerWaitForEndOfUpdateProcess;
@@ -34,13 +45,12 @@ class SynchronizeBundlesCommand implements BundleListener {
 
 	private boolean _fwkNeedRestart;
 
-	public SynchronizeBundlesCommand(boolean update, BundleContext context,
+	public SynchronizeBundlesCommand(BundleContext context,
 			Management management, PrintWriter out) {
 		_context = context;
 		_management = management;
 
 		_out = out;
-		_update = update;
 		_timerWaitForEndOfUpdateProcess = new Timer();
 		_task = new EndOfProcessTask();
 	}
@@ -66,12 +76,10 @@ class SynchronizeBundlesCommand implements BundleListener {
 	public void exec() throws IOException {
 
 		try {
-			if (_update) {
-				println("*     * A U T O M A T I C * U P D A T E *         *");
-				println("***************************************************");
-				flush();
-				deploy();
-			}
+			println("*     * A U T O M A T I C * U P D A T E *         *");
+			println("***************************************************");
+			flush();
+			deploy();
 		} catch (IOException e) {
 			throw e;
 		} catch (Throwable e) {
@@ -83,35 +91,165 @@ class SynchronizeBundlesCommand implements BundleListener {
 		}
 	}
 
-	private void sendReport() {
-		BundleList bundleList = createFromFwk();
-		Enumeration enumeration = bundleList.elements();
-		StringBuffer buffer = new StringBuffer();
-		while (enumeration.hasMoreElements()) {
-			BundleProperties element = (BundleProperties) enumeration
-					.nextElement();
-			buffer.append(element);
-			buffer.append(System.getProperty("line.separator"));
+	private void downloadFile(String filename, String destdir)
+			throws IOException {
+
+		File dest = new File(destdir + "/" + filename);
+		if (dest.exists()) {
+			dest.delete();
 		}
 
-		String filename = "$e_$v_$i_updateauto.log";
-		String path = _management.getUploadURL().toString();
-		
-		
-		String terminalName = Terminal.getInstance().getName();
-		String terminalOwner = Terminal.getInstance().getOwner();
-		String terminalPlateform =  Terminal.getInstance().getPlateform();
-		String terminalId =  Terminal.getInstance().getId();
+		OutputStream os = new BufferedOutputStream(new FileOutputStream(
+				dest.getAbsoluteFile()));
 
-		String surl = Utils.formatURL(path + "/" + filename, terminalId, terminalName,
-				terminalOwner, terminalPlateform);
+		InputStream is;
+
+		URLConnection connection = getRemoteFileURLConnection(filename);
+		if (connection != null) {
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				System.out.println("writeFTPReport sleep interrupted !");
+			}
+
+			is = connection.getInputStream();
+
+			BufferedOutputStream fileOut = new BufferedOutputStream(os);
+
+			int c;
+			while ((c = is.read()) > -1) {
+				fileOut.write(c);
+			}
+
+			fileOut.flush();
+			fileOut.close();
+
+			println("Management bundle downloaded.");
+		} else {
+			println("Unable to download management bundle !");
+		}
+
+	}
+
+	private void downloadManagementBundle() {
+		String bundlefilename = this.getClass().getPackage().getName() + ".jar";
+		println("/!\\ Downloading management bundle");
+		try {
+			String outdir = System.getProperty("java.io.tmpdir");
+			downloadFile(bundlefilename + ".md5", outdir);
+			downloadFile(bundlefilename, outdir);
+
+			File md5file = new File(outdir + "/" + bundlefilename + ".md5");
+			File jarfile = new File(outdir + "/" + bundlefilename);
+
+			if (checkFile(md5file)) {
+				if (md5file.length() != 0 && jarfile.length() != 0) {
+					String destdir = System.getProperty("org.avm.home")
+							+ "/lib";
+
+					File current_md5file = new File(destdir + "/"
+							+ md5file.getName());
+					File current_jarfile = new File(destdir + "/"
+							+ jarfile.getName());
+
+					if (current_md5file.exists()) {
+						current_md5file.delete();
+					}
+
+					if (current_jarfile.exists()) {
+						current_jarfile.delete();
+					}
+
+					move(md5file, current_md5file);
+					move(jarfile, current_jarfile);
+				} else {
+					println("Error: jar or md5 file empty");
+				}
+			}
+			else{
+				println("Error: md5 file does't match");
+			}
+		} catch (Throwable t) {
+			t.printStackTrace();
+			println("Error:" + t.getMessage());
+		}
+	}
+
+	private void move(File afile, File bfile) throws IOException {
+		InputStream inStream = null;
+		OutputStream outStream = null;
+
+		inStream = new FileInputStream(afile);
+		outStream = new FileOutputStream(bfile);
+
+		byte[] buffer = new byte[1024];
+
+		int length;
+		// copy the file content in bytes
+		while ((length = inStream.read(buffer)) > 0) {
+
+			outStream.write(buffer, 0, length);
+
+		}
+
+		inStream.close();
+		outStream.close();
+
+		// delete the original file
+		afile.delete();
+
+	}
+
+	public static String genMD5(File file) {
+		MessageDigest md;
+		String output = null;
+		try {
+			md = MessageDigest.getInstance("MD5");
+			InputStream inStream = new FileInputStream(file);
+			byte[] buffer = new byte[8192];
+			int read = 0;
+			while ((read = inStream.read(buffer)) > 0) {
+				md.update(buffer, 0, read);
+			}
+			byte[] md5sum = md.digest();
+			BigInteger bigInt = new BigInteger(1, md5sum);
+			output = bigInt.toString(16);
+
+			inStream.close();
+
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return output;
+	}
+
+	public static boolean checkFile(File md5file) {
+		boolean result = false;
 
 		try {
-			SimpleFTPClient client = new SimpleFTPClient();
-			client.put(new URL(surl), buffer);
+			BufferedReader br = new BufferedReader(new FileReader(
+					md5file.getAbsolutePath()));
+			String line = br.readLine();
+			int idx = line.indexOf(" ");
+			String md5 = line.substring(0, idx).trim();
+			String filename = line.substring(idx + 1).trim();
+
+			String genmd5 = genMD5(new File(md5file.getParentFile()
+					.getAbsoluteFile() + "/" + filename));
+
+			result = (genmd5 != null && md5.equals(genmd5));
+			System.out.println("genmd5=" + genmd5 + ", md5=" + md5 + "(check="
+					+ result + ")");
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
-			println("IOException (sendReport) :" + e.getMessage());
+			e.printStackTrace();
 		}
+
+		return result;
 	}
 
 	private void stopBundlesToUpdate(BundleList list) {
@@ -128,8 +266,6 @@ class SynchronizeBundlesCommand implements BundleListener {
 				if (isManagementBundle) {
 					// -- attention : ne pas stopper le bundle management (sinon
 					// redemarrage manuel!)
-					println(" update cannot stop management!!!!! ");
-					flush();
 					continue;
 				}
 				if (bundle != null) {
@@ -147,16 +283,14 @@ class SynchronizeBundlesCommand implements BundleListener {
 		}
 	}
 
-	public void deploy() throws IOException, BundleException {
-		String managementNeedToBeUpdated = null;
-
+	public void deploy() throws IOException {
 		BundleList bundleList = downloadBundleList();
 		if (bundleList == null) {
 			String url1 = getBundleListURL(BundleList.FILENAME, false);
 			println("Failed to get bundles list : " + url1);
 			String url2 = getBundleListURL(BundleList.FILENAME, true);
 			println("Failed to get default bundles list : " + url2);
-			throw new BundleException("Cannont get bundle.list from " + url1
+			throw new IOException("Cannot get bundle.list from " + url1
 					+ " or " + url2);
 		}
 
@@ -174,9 +308,10 @@ class SynchronizeBundlesCommand implements BundleListener {
 		boolean updated;
 		_context.removeBundleListener(this);
 		_context.addBundleListener(this);
-
+		boolean changed = false;
 		if (bundleList.size() > 0) {
 			Enumeration e = bundleList.elements();
+
 			while (e.hasMoreElements()) {
 				updated = false;
 				BundleProperties bundleProperties = (BundleProperties) e
@@ -190,6 +325,7 @@ class SynchronizeBundlesCommand implements BundleListener {
 				try {
 					if (bundleStartlevel < 0) {
 						if (bundle != null) {
+							changed = true;
 							bundle.uninstall();
 						}
 						continue;
@@ -199,6 +335,7 @@ class SynchronizeBundlesCommand implements BundleListener {
 							println(msg);
 							flush();
 							install(bundleProperties, bName);
+							changed = true;
 							updated = true;
 						} else {
 							String msg = "[update]" + bName + " UPDATE";
@@ -219,11 +356,14 @@ class SynchronizeBundlesCommand implements BundleListener {
 
 							if (_management.getClass().getPackage().getName()
 									.indexOf(bName) != -1) {
-								managementNeedToBeUpdated = bName;
+								// --ignore management.core himself !
+
+								downloadManagementBundle();
 								continue;
 							}
 
 							update(bName);
+							changed = true;
 							updated = true;
 						}
 						if (updated) {
@@ -242,7 +382,9 @@ class SynchronizeBundlesCommand implements BundleListener {
 
 		((ManagementImpl) _management).refresh(null, _out);
 
-		sendReport();
+		if (changed) {
+			_management.sendBundleList();
+		}
 
 		if (_fwkNeedRestart) {
 			URL url = new URL(System.getProperty("osgi.configuration.area")
@@ -253,10 +395,6 @@ class SynchronizeBundlesCommand implements BundleListener {
 			}
 			_management.shutdown(_out, Management.TIME_TO_FWK_SHUTDOWN,
 					Management.EXITCODE_REBOOT_PLATEFORM);
-		}
-
-		if (managementNeedToBeUpdated != null) {
-			update(managementNeedToBeUpdated);
 		}
 
 		_timerWaitForEndOfUpdateProcess = new Timer();
@@ -383,19 +521,9 @@ class SynchronizeBundlesCommand implements BundleListener {
 		return bundleList;
 	}
 
-	private String getBundleListURL(String filename, boolean defaut) {
-		String terminalName =  Terminal.getInstance().getName();
-		String terminalId =  Terminal.getInstance().getId();
-		String terminalOwner =  Terminal.getInstance().getOwner();
-		String plateform =  Terminal.getInstance().getPlateform();
-		
+	private String getBundleListURL(String filename, boolean useDefault) {
 		String strurl = _management.getDownloadURL() + "/" + filename;
-		
-		if (defaut) {
-			terminalId = "default";
-			terminalName = "default";
-		}
-		strurl = Utils.formatURL(strurl, terminalId, terminalName, terminalOwner, plateform);
+		strurl = Utils.formatURL(strurl, useDefault);
 		return strurl;
 	}
 
@@ -406,6 +534,7 @@ class SynchronizeBundlesCommand implements BundleListener {
 
 		try {
 			bundleList = loadFromURL(strurl);
+
 		} catch (IOException e) {
 		}
 
@@ -415,6 +544,10 @@ class SynchronizeBundlesCommand implements BundleListener {
 				bundleList = loadFromURL(strurl);
 			} catch (IOException e) {
 			}
+		}
+
+		if (bundleList != null) {
+			println("Bundle-List downloaded from : " + strurl);
 		}
 		return bundleList;
 	}
@@ -518,25 +651,6 @@ class SynchronizeBundlesCommand implements BundleListener {
 		return bundleList;
 	}
 
-	private BundleList createFromFwk() {
-		BundleList bundleList = new BundleList();
-
-		Bundle[] bundles = _context.getBundles();
-		for (int i = 1; i < bundles.length; i++) {
-			BundleProperties bp = new BundleProperties();
-			String bundleName = bundles[i].getSymbolicName();
-			String bundleVersion = (String) bundles[i].getHeaders().get(
-					"Bundle-Version");
-			bundleList.put(bundleName, bp);
-			bp.setName(bundleName);
-			bp.setVersion(bundleVersion);
-
-			bp.setStartlevel(_management.getStartLevelService()
-					.getBundleStartLevel(bundles[i]));
-		}
-		return bundleList;
-	}
-
 	protected Bundle getBundle(String bundlename) {
 
 		try {
@@ -567,48 +681,56 @@ class SynchronizeBundlesCommand implements BundleListener {
 		return result;
 	}
 
-	private URLConnection getRemoteBundleURLConnection(String bundlename)
+	private URLConnection getURLConnection(URL url) throws IOException {
+		URLConnection connection = url.openConnection();
+		String userinfo = url.getUserInfo();
+		if (userinfo != null && url.getProtocol().equals("http")) {
+			int idx = userinfo.indexOf(":");
+			String password = userinfo.substring(idx + 1);
+			String user = userinfo.substring(0, idx);
+			String encoded = new String(
+					Base64.encodeBase64((user + ":" + password).getBytes()));
+			connection.setRequestProperty("Authorization", "Basic " + encoded);
+		}
+		check(connection);
+		return connection;
+	}
+
+	private URLConnection getRemoteFileURLConnection(String filename)
 			throws MalformedURLException {
 		String downloadURL = _management.getDownloadURL().toString();
-
-		String terminalName =  Terminal.getInstance().getName();
-
-		String terminalOwner = Terminal.getInstance().getOwner();
-
-		String terminalPlateform =  Terminal.getInstance().getPlateform();
-		
-		String terminalId =  Terminal.getInstance().getId();
-
 
 		StringBuffer buf = new StringBuffer();
 		buf.append(downloadURL);
 		buf.append("/");
-		buf.append(bundlename);
-		buf.append(".jar");
+		buf.append(filename);
 
-		String surl = Utils.formatURL(buf.toString(), terminalId, terminalName,
-				terminalOwner, terminalPlateform);
+		String surl = Utils.formatURL(buf.toString(), false);
 		URL url = new URL(surl);
 		URLConnection connection = null;
+		String failure = "";
 		try {
-			connection = url.openConnection();
-			check(connection);
+			connection = getURLConnection(url);
 			return connection;
 		} catch (IOException e) {
-
+			failure = e.getMessage();
 		}
 
-		surl = Utils.formatURL(buf.toString(), "default", "default",
-				terminalOwner, terminalPlateform);
+		surl = Utils.formatURL(buf.toString(), true);
 		url = new URL(surl);
 		try {
-			connection = url.openConnection();
-			check(connection);
+			connection = getURLConnection(url);
 			return connection;
 		} catch (IOException e) {
-			println("IOException " + e.getMessage());
+			println("Error 1 : " + failure);
+			println("Error 2 : " + e.getMessage());
 		}
 		return null;
+	}
+
+	private URLConnection getRemoteBundleURLConnection(String bundlename)
+			throws MalformedURLException {
+		return getRemoteFileURLConnection(bundlename + ".jar");
 	}
 
 	private void check(URLConnection c) throws IOException {

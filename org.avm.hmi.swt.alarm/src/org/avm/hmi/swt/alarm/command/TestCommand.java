@@ -20,15 +20,11 @@ public class TestCommand implements Command {
 	public static class DefaultCommandFactory extends CommandFactory {
 		protected Command createCommand(ComponentContext context, Properties properties) {
 			boolean notify = ((String)properties.getProperty(Command.NOTIFY, "false")).equalsIgnoreCase("true");
-			int priority=notify?Alarm.MAX_PRIORITY:1;
+//			int priority=notify?Alarm.MAX_PRIORITY:1;
 			String source=properties.getProperty(Command.SOURCE);
 			return new TestCommand(
 					context,
-					new Alarm(
-							false,
-							Messages.getString("LBRCommand.name"), new Date(), 
-							AlarmIhm.class.getName() + "@" + source, 
-							priority)); //$NON-NLS-2$
+					new Alarm(new Integer(3))); //$NON-NLS-2$
 		}
 	}
 

@@ -1,9 +1,14 @@
 package org.avm.elementary.alarm;
 
-import java.util.BitSet;
+import java.util.Collection;
 
 public interface AlarmService {
-	public BitSet getAlarms();
 
-	public long getCounter();
+	public boolean isAlarm();
+
+	public Collection getList();
+	
+	public Alarm getAlarm(Integer id);
+	
+	public Alarm getAlarmByKey(String name);
 }

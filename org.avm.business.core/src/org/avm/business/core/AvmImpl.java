@@ -1023,7 +1023,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 
 	public List getAlarm() {
 		if (_defautPrisePosteService != null
-				&& _defautPrisePosteService.getAlarm().status) {
+				&& _defautPrisePosteService.getAlarm().isStatus()) {
 			LinkedList list = new LinkedList();
 			list.add(_defautPrisePosteService.getAlarm());
 			return list;
@@ -1243,7 +1243,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 
 		file = new File(AVM_SERIALIZATION_FILE);
 		if (file.exists() == false || isOlderThanToday(file)) {
-			info("Fichier serialisé trop vieux : ignoré (et détruit)");
+			info("Fichier serialisï¿½ trop vieux : ignorï¿½ (et dï¿½truit)");
 			file.delete();
 			return new AvmImpl();
 		}
@@ -1254,10 +1254,10 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 
 			appInstance = (AvmImpl) istream.readObject();
 			appInstance.init();
-			info("Fichier serialisé chargé");
+			info("Fichier serialisï¿½ chargï¿½");
 
 		} catch (Exception t) {
-			info("Destruction du fichier sérialisé"); //$NON-NLS-1$
+			info("Destruction du fichier sï¿½rialisï¿½"); //$NON-NLS-1$
 			file.delete();
 		} finally {
 			istream.close();
@@ -1274,7 +1274,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 		try {
 			avm = deserialize();
 		} catch (Exception e) {
-			info("Erreur de déserialisation"); //$NON-NLS-1$
+			info("Erreur de dï¿½serialisation"); //$NON-NLS-1$
 			e.printStackTrace();
 			avm = null;
 		}

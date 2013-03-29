@@ -1,8 +1,6 @@
 package org.avm.elementary.management.addons.command;
 
 import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Properties;
 
 import org.avm.elementary.management.addons.AbstractCommand;

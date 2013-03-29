@@ -2,7 +2,6 @@ package org.avm.elementary.management.addons.command;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URL;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -12,7 +11,6 @@ import org.avm.elementary.management.addons.AbstractCommand;
 import org.avm.elementary.management.addons.Command;
 import org.avm.elementary.management.addons.CommandException;
 import org.avm.elementary.management.addons.ManagementService;
-import org.avm.elementary.management.core.SimpleFTPClient;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -100,13 +98,6 @@ class GetpropCommand extends AbstractCommand {
 				}
 			}
 			out.println(buffer);
-
-			if (isReportRequired) {
-				String filename = "getprop_$u.log";
-				String path = management.getUploadURL().toString();
-				SimpleFTPClient client = new SimpleFTPClient();
-				client.put(new URL(path + "/" + filename), buffer);
-			}
 
 		} catch (Exception e) {
 			throw new CommandException(e.getMessage());

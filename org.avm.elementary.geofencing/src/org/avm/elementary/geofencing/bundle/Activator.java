@@ -1,5 +1,6 @@
 package org.avm.elementary.geofencing.bundle;
 
+import java.util.List;
 import java.util.Set;
 
 import org.avm.elementary.common.AbstractActivator;
@@ -143,5 +144,9 @@ public class Activator extends AbstractActivator implements GeoFencing {
 
 	public Set getZone() {
 		return _peer.getZone();
+	}
+
+	public void addZone(List list) {
+		_peer.addZone(list);
 	}
 }

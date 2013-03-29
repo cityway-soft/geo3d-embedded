@@ -43,15 +43,16 @@ public class SpeedAction extends Journalizable implements Action, AlarmProvider 
 	public SpeedAction() {
 		super();
 		_list = new LinkedList();
-		_list.add(new SpeedInterval(0, 85, new Alarm(false, ALARM_SPEED,
-				new Date(), SpeedAction.class.getName(), Alarm.MIN_PRIORITY)));
-		_list.add(new SpeedInterval(92, 110, new Alarm(true, ALARM_SPEED,
-				new Date(), SpeedAction.class.getName(), Alarm.MAX_PRIORITY)));
-		_list.add(new SpeedInterval(112, 120, new Alarm(true, ALARM_SPEED,
-				new Date(), SpeedAction.class.getName(), Alarm.MAX_PRIORITY)));
-		_list.add(new SpeedInterval(132, Double.MAX_VALUE, new Alarm(true,
-				ALARM_SPEED, new Date(), SpeedAction.class.getName(),
-				Alarm.MAX_PRIORITY)));
+		//TODO
+//		_list.add(new SpeedInterval(0, 85, new Alarm(false, ALARM_SPEED,
+//				new Date(), SpeedAction.class.getName(), Alarm.MIN_PRIORITY)));
+//		_list.add(new SpeedInterval(92, 110, new Alarm(true, ALARM_SPEED,
+//				new Date(), SpeedAction.class.getName(), Alarm.MAX_PRIORITY)));
+//		_list.add(new SpeedInterval(112, 120, new Alarm(true, ALARM_SPEED,
+//				new Date(), SpeedAction.class.getName(), Alarm.MAX_PRIORITY)));
+//		_list.add(new SpeedInterval(132, Double.MAX_VALUE, new Alarm(true,
+//				ALARM_SPEED, new Date(), SpeedAction.class.getName(),
+//				Alarm.MAX_PRIORITY)));
 	}
 
 	public void compute(Object o) {
@@ -158,7 +159,7 @@ public class SpeedAction extends Journalizable implements Action, AlarmProvider 
 	}
 
 	public List getAlarm() {
-		if (_alarm.status) {
+		if (_alarm.isStatus()) {
 			LinkedList list = new LinkedList();
 			list.add(_alarm);
 			return list;

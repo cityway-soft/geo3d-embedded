@@ -9,11 +9,11 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import org.avm.business.protocol.management.Management;
 import org.avm.elementary.management.addons.AbstractCommand;
 import org.avm.elementary.management.addons.Command;
 import org.avm.elementary.management.addons.CommandException;
 import org.avm.elementary.management.addons.ManagementService;
+import org.avm.elementary.management.core.utils.Terminal;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -88,12 +88,10 @@ class ConfigurationCommand extends AbstractCommand {
 		} catch (IOException e) {
 			out.println("IOException (" + e.getMessage() + "): " + pathfile);
 		}
-		p.setProperty(ManagementService.VEHICULE_PROPERTY, p.getProperty(ManagementService.VEHICULE_PROPERTY, "1"));
-		p.setProperty(ManagementService.EXPLOITATION_PROPERTY, p.getProperty(ManagementService.EXPLOITATION_PROPERTY, "1"));
-	
+		
 		return p;
 	}
-
+	
 	private String getFilePath(String filename) {
 		StringBuffer buf = new StringBuffer();
 		buf.append(System.getProperty("org.avm.home"));
@@ -113,6 +111,8 @@ class ConfigurationCommand extends AbstractCommand {
 		}
 	}
 
+
+	
 	private void saveProperties(String filename, Properties p, PrintWriter out) {
 		Properties props = new Properties();
 		Enumeration e = p.keys();
@@ -128,7 +128,6 @@ class ConfigurationCommand extends AbstractCommand {
 		try {
 			props.save(new FileOutputStream(filepath), new Date().toString());
 		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		out.println(props);

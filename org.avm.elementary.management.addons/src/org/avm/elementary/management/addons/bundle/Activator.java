@@ -14,7 +14,6 @@ import org.avm.elementary.common.ConsumerService;
 import org.avm.elementary.common.ManageableService;
 import org.avm.elementary.common.ProducerService;
 import org.avm.elementary.management.addons.CommandException;
-import org.avm.elementary.management.addons.ManagementControler;
 import org.avm.elementary.management.addons.ManagementImpl;
 import org.avm.elementary.management.addons.ManagementService;
 import org.avm.elementary.management.core.Management;
@@ -27,7 +26,7 @@ import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.service.startlevel.StartLevel;
 
 public class Activator extends AbstractActivator implements
-		ManagementControler, ManagementService {
+		ManagementService {
 
 	static final String PID = ManagementService.class.getName();
 
@@ -46,7 +45,6 @@ public class Activator extends AbstractActivator implements
 	public Activator() {
 		_log = Logger.getInstance(this.getClass());
 		_peer = new ManagementImpl();
-		_peer.setManagementService(this);
 		_log.setPriority(Priority.DEBUG);
 	}
 
@@ -193,7 +191,7 @@ public class Activator extends AbstractActivator implements
 		_peer.synchronize(out);
 	}
 
-	public void synchronizeData() {
+	public void synchronizeData() throws Exception {
 		_peer.synchronizeData();
 	}
 
@@ -221,19 +219,19 @@ public class Activator extends AbstractActivator implements
 		return _peer.getPackageAdminService();
 	}
 
-	public void setDownloadURL(URL url) throws MalformedURLException {
+	public void setDownloadURL(URL url) throws Exception {
 		_peer.setDownloadURL(url);
 	}
 
-	public void setUploadURL(URL url) throws MalformedURLException {
+	public void setUploadURL(URL url) throws Exception {
 		_peer.setUploadURL(url);
 	}
 
-	public URL getDownloadURL() {
+	public URL getDownloadURL() throws Exception{
 		return _peer.getDownloadURL();
 	}
 
-	public URL getUploadURL() {
+	public URL getUploadURL()throws Exception {
 		return _peer.getUploadURL();
 	}
 
@@ -241,11 +239,19 @@ public class Activator extends AbstractActivator implements
 		_peer.runScript(url);
 	}
 
-	public void shutdown(PrintWriter out, int waittime, int exitCode) {
+	public void shutdown(PrintWriter out, int waittime, int exitCode)throws Exception {
 		_peer.shutdown(out, waittime, exitCode);
 	}
 
 	public void send(String response) {
 		_peer.send(response);
+	}
+
+	public boolean isWLANMode() {
+		return _peer.isWLANMode();
+	}
+
+	public void setWLANMode(boolean b) throws MalformedURLException {
+		_peer.setWLANMode(b);
 	}
 }

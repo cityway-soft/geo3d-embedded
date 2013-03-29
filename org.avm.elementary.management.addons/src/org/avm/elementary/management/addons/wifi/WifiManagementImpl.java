@@ -1,11 +1,10 @@
 package org.avm.elementary.management.addons.wifi;
 
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
+import org.avm.elementary.management.addons.ManagementImpl;
 import org.avm.elementary.management.addons.ManagementService;
 import org.osgi.util.measurement.State;
 
@@ -37,33 +36,15 @@ public class WifiManagementImpl implements WifiManagement {
 		boolean isconnected = state.getValue() > 0;
 		_logger.debug("WifiStatut : "
 				+ ((isconnected) ? "connected" : "disconnected"));
-		if (isconnected) {
-			_logger
-					.info("Try 'update automatic' (wifi is currently available)");
-			try {
-				_management
-						.setDownloadURL(new URL(
-								System
-										.getProperty(org.avm.elementary.management.core.Management.PRIVATE_DOWNLOAD_URL_TAG)));
-				_management
-						.setUploadURL(new URL(
-								System
-										.getProperty(org.avm.elementary.management.core.Management.PRIVATE_UPLOAD_URL_TAG)));
-				_management.synchronize(new PrintWriter(System.out));
-			} catch (Exception e) {
-				_logger.error("Wifi/management synchronization failed.", e);
-			}
-		} else {
-			try {
-				_management.setDownloadURL(null);
-				_management.setUploadURL(null);
-			} catch (MalformedURLException e) {
-				_logger
-						.error(
-								"Wifi/management set default management url failed.",
-								e);
-			}
 
+		try {
+			_management.setWLANMode(isconnected);
+			((ManagementImpl)_management).updateUrls();
+			_management.synchronize(new PrintWriter(System.out));
+		} catch (Exception e) {
+			_logger.error("Wifi/management synchronization failed.", e);
+		}
+		if (!isconnected) {
 			if (_syslog != null) {
 				_syslog.disableSyslog();
 			}
