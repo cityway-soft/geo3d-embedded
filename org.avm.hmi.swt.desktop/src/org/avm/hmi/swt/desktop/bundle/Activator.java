@@ -7,6 +7,7 @@ import org.avm.elementary.common.ManageableService;
 import org.avm.hmi.swt.application.display.AVMDisplay;
 import org.avm.hmi.swt.desktop.Desktop;
 import org.avm.hmi.swt.desktop.DesktopImpl;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.osgi.service.cm.ConfigurationAdmin;
@@ -33,7 +34,7 @@ public class Activator extends AbstractActivator implements Desktop {
 	public static Activator getDefault() {
 		return _plugin;
 	}
-	
+
 	protected void start(ComponentContext context) {
 		initializeConfiguration();
 		initializeCommandGroup();
@@ -71,7 +72,7 @@ public class Activator extends AbstractActivator implements Desktop {
 			((ConfigurableService) _peer).configure(null);
 		}
 	}
-	
+
 	// display
 	private void initializeDisplay() {
 		AVMDisplay avmDislay = (AVMDisplay) _context.locateService("display");
@@ -143,8 +144,8 @@ public class Activator extends AbstractActivator implements Desktop {
 		return _peer.getDisplay();
 	}
 
-	public Composite getMiddlePanel() {
-		return _peer.getMiddlePanel();
+	public Composite getMainPanel() {
+		return _peer.getMainPanel();
 	}
 
 	public Composite getRightPanel() {
@@ -171,5 +172,12 @@ public class Activator extends AbstractActivator implements Desktop {
 		return _peer.getItems();
 	}
 
+	public void setTabItemImage(String name, Image image) {
+		_peer.setTabItemImage(name, image);
+	}
+
+	public void setFavorite(String name) {
+		_peer.setFavorite(name);
+	}
 
 }

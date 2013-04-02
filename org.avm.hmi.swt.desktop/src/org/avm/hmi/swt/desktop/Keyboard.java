@@ -1,12 +1,17 @@
 package org.avm.hmi.swt.desktop;
 
-
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.TouchEvent;
+import org.eclipse.swt.events.TouchListener;
+import org.eclipse.swt.events.TraverseEvent;
+import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
@@ -70,12 +75,9 @@ public class Keyboard extends Composite {
 
 	private boolean _disposeParent;
 
-
 	private Label _title;
 
 	private static final int INDENT = DEFAULT_FONTSIZE / 5;
-
-
 
 	public String getText() {
 		return getTextInBox();
@@ -84,22 +86,22 @@ public class Keyboard extends Composite {
 	public void setText(String text) {
 		setTextInBox(text);
 	}
-	
+
 	public void setTextColor(Color color) {
 		_title.setForeground(color);
 	}
 
 	public Keyboard(Composite parent, int ctrl) {
-		this("", parent, ctrl);
+		this(null, parent, ctrl);
 	}
-	
+
 	public Keyboard(String name, Composite parent, int ctrl) {
 		super(parent, ctrl);
 		_parent = parent;
 		_text = name;
 
 		create();
-		//parent.layout();
+		// parent.layout();
 	}
 
 	public void setCursorEnable(boolean b) {
@@ -123,7 +125,6 @@ public class Keyboard extends Composite {
 			}
 		}
 		if (_disposeParent) {
-			System.out.println("[DLA] Keyboard : Dispose parent....");
 			if (_parent.isDisposed() == false) {
 				_parent.dispose();
 			}
@@ -160,6 +161,10 @@ public class Keyboard extends Composite {
 		return n;
 	}
 
+	public void setFontKey(Font font) {
+		_fontsmallTitle = font;
+	}
+
 	private void create() {
 		Composite composite = this;
 		GridData data;
@@ -167,15 +172,13 @@ public class Keyboard extends Composite {
 		gridLayout.numColumns = getNumCol();
 		gridLayout.makeColumnsEqualWidth = true;
 
-		
 		_disposeParent = false;
-
 
 		composite.setLayout(gridLayout);
 		composite.setBackground(DesktopStyle.getBackgroundColor());
-		_fontTitle = DesktopImpl.getFont( 10, SWT.NORMAL);
-		_fontText = DesktopImpl.getFont( 10, SWT.NORMAL);
-		_fontsmallTitle = DesktopImpl.getFont( 3, SWT.NORMAL);
+		_fontTitle = DesktopImpl.getFont(10, SWT.NORMAL);
+		_fontText = DesktopImpl.getFont(10, SWT.NORMAL);
+		_fontsmallTitle = DesktopImpl.getFont(3, SWT.NORMAL);
 
 		if (_text != null) {
 			data = new GridData();
@@ -183,12 +186,12 @@ public class Keyboard extends Composite {
 			data.horizontalAlignment = GridData.FILL;
 			data.horizontalIndent = INDENT;
 
-		    _title = new Label(composite, SWT.NONE);
+			_title = new Label(composite, SWT.NONE);
 			_title.setBackground(DesktopStyle.getBackgroundColor());
 			_title.setLayoutData(data);
 			_title.setFont(_fontTitle);
 			_title.setText(_text);
-			
+
 		}
 
 		_field = new Text(composite, SWT.BORDER);
@@ -229,14 +232,14 @@ public class Keyboard extends Composite {
 					widget = new Label(composite, SWT.NONE);
 				} else {
 
-					Button button = new Button(composite, SWT.NONE);
+					Button button = new Button(composite, SWT.NONE|SWT.NO_FOCUS);
 					button.setText(key);
 					widget = button;
 					_buttons[cpt] = button;
 					addButtonSelectionAdapter(button);
 					cpt++;
 				}
-
+				
 				data = new GridData();
 
 				data.verticalAlignment = GridData.FILL;
@@ -265,7 +268,11 @@ public class Keyboard extends Composite {
 								SWT.COLOR_YELLOW));
 					}
 				} else {
-					widget.setFont(_fontsmallTitle);
+					if (key.length() == 1) {
+						widget.setFont(DesktopImpl.getFont(10, SWT.NORMAL));
+					} else {
+						widget.setFont(_fontsmallTitle);
+					}
 					widget.setBackground(DesktopStyle.getBackgroundColor());
 				}
 
@@ -319,6 +326,8 @@ public class Keyboard extends Composite {
 						if (text.length() > 0) {
 							text = text.substring(0, text.length() - 1);
 							setTextInBox(text);
+						} else {
+							validation(null);
 						}
 					} else if (key.equals(OK)) {
 						validation(getTextInBox());

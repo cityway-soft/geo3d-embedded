@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -17,6 +16,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -41,6 +41,17 @@ public class DesktopIhm {
 					"true")).booleanValue();
 
 	private final static SimpleDateFormat DF = new SimpleDateFormat("HH:mm");
+
+	public final static Color VERT = new Color(Display.getCurrent(), 146, 208,
+			80);
+	public final static Color BLEU = new Color(Display.getCurrent(), 153, 204,
+			255);
+	public final static Color JAUNE = new Color(Display.getCurrent(), 255, 255,
+			153);
+	public final static Color ROUGE = new Color(Display.getCurrent(), 255, 50,
+			50);
+	public final static Color ORANGE = new Color(Display.getCurrent(), 255,
+			133, 153);
 
 	private Display _display;
 
@@ -79,6 +90,8 @@ public class DesktopIhm {
 
 	public static HashMap _hashFonts = null;
 
+	private String _favorite;
+
 	private void createLogo() {
 		logger.debug("Creation logo - step 1");
 		GridData gridData11 = new GridData();
@@ -87,24 +100,18 @@ public class DesktopIhm {
 		gridData11.grabExcessVerticalSpace = false;
 		gridData11.verticalAlignment = GridData.FILL;
 
-		logger.debug("Creation logo - step 2");
-
 		_labelLogo = new Label(_shell, SWT.NONE);
 		_labelLogo.setText("Logo");
 		_labelLogo.setLayoutData(gridData11);
-		logger.debug("Creation logo - step 3");
 
 		String version = System.getProperty("org.avm.version");
 		if (version != null) {
 			_labelLogo.setToolTipText("Version " + version);
 		}
-		logger.debug("Creation logo - step 4");
-
 
 		Image imglogo = null;
 		String filename = System.getProperty("org.avm.home") + "/data/logo.jpg";
 		File file = new File(filename);
-		logger.debug("Creation logo - step 5");
 
 		if (file.exists()) {
 			imglogo = new Image(_display, filename); //$NON-NLS-1$
@@ -241,7 +248,7 @@ public class DesktopIhm {
 		}
 	}
 
-	public Composite getMiddlePanel() {
+	public Composite getMainPanel() {
 		return _tabFolder;
 	}
 
@@ -278,7 +285,8 @@ public class DesktopIhm {
 
 				Rectangle window = Geometry.parse(_display.getClientArea(),
 						System.getProperty("org.avm.hmi.swt.geometry"));
-				logger.debug("Resize fenetre (bis) :  " + window +"geometry=" + System.getProperty("org.avm.hmi.swt.geometry"));
+				logger.debug("Resize fenetre (bis) :  " + window + "geometry="
+						+ System.getProperty("org.avm.hmi.swt.geometry"));
 				logger.debug("Localisation fenetre");
 				_shell.setLocation(new Point(window.x, window.y));
 				logger.debug("Resize fenetre");
@@ -373,7 +381,8 @@ public class DesktopIhm {
 
 				window = Geometry.parse(_display.getClientArea(),
 						System.getProperty("org.avm.hmi.swt.geometry"));
-				logger.debug("Resize fenetre (bis) :  " + window +"geometry=" + System.getProperty("org.avm.hmi.swt.geometry"));
+				logger.debug("Resize fenetre (bis) :  " + window + "geometry="
+						+ System.getProperty("org.avm.hmi.swt.geometry"));
 				_shell.setLocation(new Point(window.x, window.y));
 				_shell.setSize(new Point(window.width, window.height));
 				logger.debug("Mise a jour info vehicule");
@@ -535,17 +544,13 @@ public class DesktopIhm {
 	}
 
 	private void updateVehiculeDetails() {
-		_labelVehicule
-				.setText(System.getProperty("org.avm.vehicule.id", "???"));
+		_labelVehicule.setText(System.getProperty("org.avm.terminal.name",
+				"???"));
+		_labelVehicule.setToolTipText(System.getProperty("org.avm.terminal.id",
+				"MAC???"));
 		StringBuffer buf = new StringBuffer();
 
-		buf.append(System.getProperty("org.avm.exploitation.id", "???"));
-		buf.append(" / ");
-		buf.append(System.getProperty("org.avm.branch", "??"));
-		buf.append("_");
-		buf.append(System.getProperty("org.avm.country", "??"));
-		buf.append("_");
-		buf.append(System.getProperty("org.avm.region", "??"));
+		buf.append(System.getProperty("org.avm.terminal.owner", "???"));
 		_labelVehiculeInfo.setText(buf.toString());
 	}
 
@@ -604,20 +609,15 @@ public class DesktopIhm {
 		return Application.getFont(deltasize, style);
 	}
 
-	// public static Font getFont(int deltasize, int style) {
-	// Font font = null;
-	// String key = deltasize + "_" + style;
-	//
-	// if (_hashFonts == null) {
-	// _hashFonts = new HashMap();
-	// }
-	// font = (Font) _hashFonts.get(key);
-	// if (font == null) {
-	// font = new Font(Display.getDefault(), Desktop.DEFAULT_FONT,
-	// Desktop.DEFAULT_FONTSIZE + deltasize, style);
-	// _hashFonts.put(key, font);
-	// }
-	// return font;
-	// }
+	public void setTabItemImage(String name, Image image) {
+		TabItem item = (TabItem) _hashItem.get(name);
+		if (item != null) {
+			item.setImage(image);
+		}
+	}
+
+	public void setFavorite(String name) {
+		_favorite = name;
+	}
 
 }
