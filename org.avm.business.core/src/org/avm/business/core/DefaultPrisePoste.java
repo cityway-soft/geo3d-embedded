@@ -18,7 +18,7 @@ public class DefaultPrisePoste implements Runnable, AvmInjector, JDBInjector,
 
 	public static final String ALARM_NAME = "defmat";
 
-	private static final int DEFAUT_PRISE_POSTE_ALARM = 1;
+	private static final int DEFAUT_PRISE_POSTE_ALARM = 7;
 
 	private Variable _odometer;
 
