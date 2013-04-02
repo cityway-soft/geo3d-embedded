@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.business.tracking.Tracking" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.business.tracking.Tracking</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">ftp://avm:avm++@ftpserver.avm.org/exploitants/1/plateform/automotive_rm/bundles/9/org.avm.business.tracking.jar</value>
+</property>
+<property name="frequency">
+<value type="String">0</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">2</value>
+</property>
+<property name="config.date">
+<value type="String">Tue Jan 08 20:19:33 GMT+01:00 1980</value>
+</property>
+
+</configuration>
+</cm_data>
