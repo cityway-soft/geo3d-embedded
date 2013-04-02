@@ -6,6 +6,7 @@
 		<provide interface="org.avm.elementary.alarm.AlarmProvider"/>	
 	</service>
 	<reference name="avm" interface="org.avm.business.core.Avm" cardinality="0..1" policy="dynamic" />
+	<reference name="alarm" interface="org.avm.elementary.alarm.AlarmService" />
 	<reference name="desktop" interface="org.avm.hmi.swt.desktop.Desktop" />
 	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin" />
 	<reference name="wireadmin"	interface="org.osgi.service.wireadmin.WireAdmin" />

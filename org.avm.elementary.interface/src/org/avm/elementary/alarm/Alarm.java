@@ -12,6 +12,7 @@ public class Alarm {
 	public static final String TYPE = "type";
 	public static final String ORDER = "order";
 	public static final String READONLY = "readonly";
+	public static final String VISIBLE = "visible";
 
 	
 	public static final int ALARM_EXPLOITATION=1;
@@ -25,6 +26,7 @@ public class Alarm {
 	private int type;
 	private Integer index;
 	private boolean readonly=false;
+	private boolean visible=true;
 
 	public boolean isStatus() {
 		return status;
@@ -60,7 +62,7 @@ public class Alarm {
 		this.index= index;
 	}
 	
-	public Alarm(Integer index, int order, boolean status, String name, Date date, String key, int type, boolean readonly) {
+	public Alarm(Integer index, int order, boolean status, String name, Date date, String key, int type, boolean readonly, boolean visible) {
 		super();
 		this.index= index;
 		this.order=order;
@@ -70,6 +72,7 @@ public class Alarm {
 		this.key = key;
 		this.type = type;
 		this.readonly= readonly;
+		this.visible = visible;
 	}
 
 	public String toString() {
@@ -88,5 +91,9 @@ public class Alarm {
 
 	public boolean isReadOnly() {
 		return readonly;
+	}
+
+	public boolean isVisible() {
+		return visible;
 	}
 }

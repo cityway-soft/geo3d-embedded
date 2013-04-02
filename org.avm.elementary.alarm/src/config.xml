@@ -10,7 +10,7 @@
 <value type="String">initial@reference:file:../../DLA/projets/EN-COURS/AVM/common/dev/workspace/avm-v1/org.avm.elementary.alarm/</value>
 </property>
 <property name="org.avm.config.version">
-<value type="Integer">14</value>
+<value type="Integer">16</value>
 </property>
 <property name="0">
 	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
@@ -94,6 +94,19 @@
 		name=Exploitation
 		type=1
 		key=exploitation
+	</value>
+</property>
+<property name="7">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		acknowledge=false
+		index=7
+		order=7
+		notify-up=true
+		notify-down=true
+		name=Defaut Prise Poste
+		type=1
+		key=defmat
+		visible=false
 	</value>
 </property>
 <property name="16">

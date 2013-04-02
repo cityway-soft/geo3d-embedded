@@ -4,34 +4,27 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
+import org.avm.elementary.alarm.AlarmProvider;
+import org.avm.elementary.alarm.AlarmService;
 import org.avm.elementary.common.AbstractActivator;
-import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ConsumerService;
 import org.avm.elementary.common.ManageableService;
 import org.avm.elementary.common.ProducerService;
-import org.avm.elementary.useradmin.UserSessionService;
-import org.avm.elementary.useradmin.UserSessionServiceInjector;
 import org.avm.hmi.swt.alarm.AlarmIhm;
 import org.avm.hmi.swt.alarm.AlarmImpl;
 import org.avm.hmi.swt.desktop.Desktop;
-import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 
-public class Activator extends AbstractActivator implements AlarmIhm, UserSessionServiceInjector {
+public class Activator extends AbstractActivator implements AlarmIhm, AlarmProvider{
 
 	static final String PID = AlarmIhm.class.getName();
-
-	private ConfigurationAdmin _cm;
-
 	private AlarmImpl _peer;
 
 	private ConsumerImpl _consumer;
 
 	private org.avm.hmi.swt.alarm.bundle.ProducerImpl _producer;
 
-	private org.avm.hmi.swt.alarm.bundle.ConfigImpl _config;
 
-	private org.avm.hmi.swt.alarm.bundle.CommandGroupImpl _commands;
 
 	private static AbstractActivator _plugin;
 
@@ -47,10 +40,9 @@ public class Activator extends AbstractActivator implements AlarmIhm, UserSessio
 	}
 
 	protected void start(ComponentContext context) {
-		initializeConfiguration();
-		initializeCommandGroup();
-		initializeContext();
-		initializeBaseIhm();
+		initializeAlarmService();
+//		initializeContext();
+		initializeDesktop();
 		initializeProducer();
 		startService();
 		initializeConsumer();
@@ -60,61 +52,30 @@ public class Activator extends AbstractActivator implements AlarmIhm, UserSessio
 		disposeConsumer();
 		stopService();
 		disposeProducer();
-		disposeBaseIhm();
-		disposeContext();
-		disposeCommandGroup();
-		disposeConfiguration();
-	}
-
-	// config
-	private void initializeConfiguration() {
-		ConfigurationAdmin cm = (ConfigurationAdmin) _context
-				.locateService("cm");
-		try {
-			_config = new ConfigImpl(_context, cm);
-			_config.start();
-			if (_peer instanceof ConfigurableService) {
-				((ConfigurableService) _peer).configure(_config);
-
-			}
-		} catch (Exception e) {
-			_log.error(e.getMessage(), e);
-		}
-	}
-
-	private void disposeConfiguration() {
-		_config.stop();
-		if (_peer instanceof ConfigurableService) {
-			((ConfigurableService) _peer).configure(null);
-		}
+		disposeDesktop();
+//		disposeContext();
+		disposeAlarmService();
 	}
 	
-	// commands
-	private void initializeCommandGroup() {
-		_commands = new CommandGroupImpl(_context, _peer, _config);
-		_commands.start();
+	// alarm service
+	private void initializeAlarmService() {
+		AlarmService alarmeService = (AlarmService) _context.locateService("alarm");
+		_peer.setAlarmService(alarmeService);
 	}
 
-	private void disposeCommandGroup() {
-		if (_commands != null)
-			_commands.stop();
+	private void disposeAlarmService() {
+		_peer.setAlarmService(null);
 	}
-	
-	private void initializeContext(){
-		_peer.setContext(_context);
-	}
-	
-	private void disposeContext(){
-		_peer.setContext(null);
-	}
+
+
 	
 	// Desktop
-	private void initializeBaseIhm() {
+	private void initializeDesktop() {
 		Desktop base = (Desktop) _context.locateService("desktop");
 		_peer.setBase(base);
 	}
 
-	private void disposeBaseIhm() {
+	private void disposeDesktop() {
 		_peer.setBase(null);
 	}
 
@@ -177,12 +138,12 @@ public class Activator extends AbstractActivator implements AlarmIhm, UserSessio
 		return _peer.getProducerPID();
 	}
 
-	public void setUserSessionService(UserSessionService service) {
-		_peer.setUserSessionService(service);
-	}
-
-	public void unsetUserSessionService(UserSessionService service) {
-		_peer.unsetUserSessionService(service);
-	}
+//	public void setUserSessionService(UserSessionService service) {
+//		_peer.setUserSessionService(service);
+//	}
+//
+//	public void unsetUserSessionService(UserSessionService service) {
+//		_peer.unsetUserSessionService(service);
+//	}
 
 }

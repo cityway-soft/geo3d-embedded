@@ -1,5 +1,6 @@
 package org.avm.hmi.swt.alarm.bundle;
 
+import org.avm.elementary.alarm.AlarmService;
 import org.avm.elementary.common.AbstractConsumer;
 import org.avm.elementary.common.ConsumerService;
 import org.avm.elementary.useradmin.UserSessionService;
@@ -10,6 +11,7 @@ import org.osgi.util.measurement.State;
 public class ConsumerImpl extends AbstractConsumer {
 
 	public static final String USERSESSION_PRODUCER_PID = UserSessionService.class.getName();
+	public static final String ALARM_SERVICE_PID = AlarmService.class.getName();
 
 
 	public ConsumerImpl(ComponentContext context, ConsumerService consumer) {
@@ -26,10 +28,12 @@ public class ConsumerImpl extends AbstractConsumer {
 		if (obj != null){
 			updated(wire, obj);
 		}
+		
+		_wireadmin.createWire(ALARM_SERVICE_PID, getConsumerPID(), null);
 	}
 
 	protected Class[] getConsumerFlavors() {
-		Class[] result = new Class[] { State.class };
+		Class[] result = new Class[] { State.class};
 		return result;
 	}
 

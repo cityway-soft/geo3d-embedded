@@ -84,12 +84,16 @@ public class AlarmServiceImpl implements AlarmService, ConfigurableService,
 				final String key = p.getProperty(Alarm.KEY);
 				final int type = Integer.parseInt(p.getProperty(Alarm.TYPE));
 				final int index = Integer.parseInt(p.getProperty(Alarm.INDEX));
-				final String temp = p.getProperty(Alarm.READONLY);
+				String temp = p.getProperty(Alarm.READONLY);
 				final boolean readonly = (temp == null) ? false : temp
+						.equals("true");
+				
+				temp = p.getProperty(Alarm.VISIBLE);
+				final boolean visible = (temp == null) ? true : temp
 						.equals("true");
 				final int order = Integer.parseInt(p.getProperty(Alarm.ORDER));
 				final Alarm alarm = new Alarm(new Integer(index), order,
-						status, name, date, key, type, readonly);
+						status, name, date, key, type, readonly, visible);
 				this._hashAlarmByKey.put(key, alarm);
 				this._hashAlarmById.put(alarm.getIndex(), alarm);
 			}
@@ -127,7 +131,7 @@ public class AlarmServiceImpl implements AlarmService, ConfigurableService,
 			Alarm alarm = (Alarm) _hashAlarmById.get(key);
 			Alarm alarmCopie = new Alarm(alarm.getIndex(), alarm.getOrder(),
 					alarm.isStatus(), alarm.getName(), alarm.getDate(),
-					alarm.getKey(), alarm.getType(), alarm.isReadOnly());
+					alarm.getKey(), alarm.getType(), alarm.isReadOnly(), alarm.isVisible());
 			copie.add(alarmCopie);
 		}
 
@@ -142,6 +146,9 @@ public class AlarmServiceImpl implements AlarmService, ConfigurableService,
 			boolean changed = false;
 			Alarm alarm = (Alarm) o;
 			Alarm previous = (Alarm) this._hashAlarmById.get(alarm.getIndex());
+			if (previous == null){
+				return;
+			}
 			changed = (previous.isStatus() != alarm.isStatus());
 			try {
 				final Properties p = (Properties) this._map.get(alarm

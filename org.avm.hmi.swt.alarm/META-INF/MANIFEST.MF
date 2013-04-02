@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: IHM Alarm
 Bundle-SymbolicName: org.avm.hmi.swt.alarm
-Bundle-Version: 1.0.1.qualifier
+Bundle-Version: 1.0.0.qualifier
 Service-Component: META-INF/activator.xml
 Bundle-ClassPath: .
 Import-Package: org.apache.log4j,
@@ -19,4 +19,4 @@ Import-Package: org.apache.log4j,
  org.osgi.util.measurement;version="1.0.0",
  org.osgi.util.position;version="1.0.0"
 Bundle-Vendor: Cityway
-xBundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
+XBundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
