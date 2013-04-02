@@ -216,6 +216,10 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 	}
 
 	protected void onMessageAlerte(Alarm alarm) {
+		_log.info(alarm);
+		if (alarm.getKey() == null){
+			return;
+		}
 		if (alarm.getKey().equals("defmat")) {
 			if (_defmatAlarm == false && alarm.isStatus()) {
 				String[] messages = { CONDUCTEUR_ALARM_MATRICULE };
