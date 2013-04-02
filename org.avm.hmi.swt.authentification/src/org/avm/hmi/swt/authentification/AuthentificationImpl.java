@@ -39,8 +39,8 @@ public class AuthentificationImpl implements ManageableService, ChoiceListener,
 				_authIhm.setChoiceListener(_instance);
 				_authIhm.loggedOut();
 				_authIhm.setUserSession(_session);
-				String vehicule = System.getProperty("org.avm.vehicule.id"); //$NON-NLS-1$
-				if (vehicule == null || vehicule.equals("1")) { //$NON-NLS-1$
+				String vehicule = System.getProperty("org.avm.terminal.name"); //$NON-NLS-1$
+				if (vehicule == null || vehicule.equals("0")) { //$NON-NLS-1$
 					MessageBox.setMessage(
 							Messages.getString("AuthentificationImpl.avertissement"), //$NON-NLS-1$
 							Messages.getString("AuthentificationImpl.numero-parc-non-defini"), //$NON-NLS-1$

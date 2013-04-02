@@ -67,7 +67,7 @@ public class AuthentificationIhm implements Authentification, SelectionListener 
 					gridData.verticalAlignment = GridData.FILL;
 					gridData.grabExcessVerticalSpace = true;
 
-					_loginPanel = new Composite(_desktop.getMiddlePanel(),
+					_loginPanel = new Composite(_desktop.getMainPanel(),
 							SWT.NONE);
 					_loginPanel.setLayoutData(gridData);
 					_stacklayout = new StackLayout();

@@ -85,7 +85,7 @@ public class AvmImpl implements ConsumerService, ManageableService,
 				if (_avmihm == null) {
 					try {
 						_log.info("instantiation AvmIHM...");
-						_avmihm = new AvmIhm(_desktop.getMiddlePanel(),
+						_avmihm = new AvmIhm(_desktop.getMainPanel(),
 								SWT.NONE);
 						_avmihm.setAvm(_avm);
 						_avmihm.setBase(_desktop);

@@ -23,7 +23,6 @@ public class SplashImpl implements Splash, ServiceListener,
 
 	private SplashVisibleTimerTask _task;
 
-	
 	public SplashImpl() {
 		super();
 		_splashIhm = new SplashIhm();
@@ -83,21 +82,22 @@ public class SplashImpl implements Splash, ServiceListener,
 		_task = new SplashVisibleTimerTask();
 		Timer timer = new Timer();
 		timer.schedule(_task, 6000);
-		
+
 	}
 
 	public void serviceChanged(ServiceEvent event) {
 		ServiceReference sr = event.getServiceReference();
-		
+
 		Object obj = _context.getService(sr);
-		Class[] interfaces = obj.getClass().getInterfaces();
-		_context.ungetService(sr);
-		if(interfaces.length>0){
-			String task = interfaces[0].getName();
-			show(task);
+		if (obj != null) {
+			Class[] interfaces = obj.getClass().getInterfaces();
+			_context.ungetService(sr);
+			if (interfaces.length > 0) {
+				String task = interfaces[0].getName();
+				show(task);
+			}
 		}
 	}
-
 
 	public void bundleChanged(BundleEvent evt) {
 		setMaxAtUpdate();
@@ -112,8 +112,6 @@ public class SplashImpl implements Splash, ServiceListener,
 		}
 	}
 
-
-
 	class SplashVisibleTimerTask extends TimerTask {
 		public void run() {
 			_splashIhm.setVisible(false);
@@ -121,10 +119,8 @@ public class SplashImpl implements Splash, ServiceListener,
 		}
 	}
 
-
-
 	public void setDisplay(Display display) {
-		_splashIhm.setDisplay( display );
+		_splashIhm.setDisplay(display);
 	}
 
 }

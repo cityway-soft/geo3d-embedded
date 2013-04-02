@@ -83,7 +83,7 @@ public class ManagementImpl implements Management, ManageableService,
 			public void run() {
 				if (_desktop != null) {
 					_managementihm = new ManagementIhm(_desktop
-							.getMiddlePanel(), SWT.NONE);
+							.getMainPanel(), SWT.NONE);
 					_managementihm.setConsoleService(_console);
 					_desktop.addTabItem(NAME, _managementihm, 0);
 					_managementihm.configure(_config);

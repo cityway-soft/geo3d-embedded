@@ -55,7 +55,7 @@ public class BrowserImpl implements ManageableService, ConsumerService,
 	public void open() {
 		_display.syncExec(new Runnable() {
 			public void run() {
-				_browserIhm = new BrowserIhm(_desktop.getMiddlePanel(), SWT.NONE);
+				_browserIhm = new BrowserIhm(_desktop.getMainPanel(), SWT.NONE);
 				_desktop.addTabItem(NAME, _browserIhm);
 			}
 		});

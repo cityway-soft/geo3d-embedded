@@ -79,7 +79,7 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 		if (_phonyihm == null) {
 			_display.syncExec(new Runnable() {
 				public void run() {
-					_phonyihm = new PhonyIhm(_desktop.getMiddlePanel(),
+					_phonyihm = new PhonyIhm(_desktop.getMainPanel(),
 							SWT.NONE);
 					_phonyihm.setPhony(_instance);
 					_phonyihm.update(_model);

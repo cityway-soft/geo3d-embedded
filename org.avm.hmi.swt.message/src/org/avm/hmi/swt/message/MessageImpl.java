@@ -112,7 +112,9 @@ public class MessageImpl implements MessageIhm, ManageableService,
 		} else if (o instanceof Alarm) {
 			Alarm a = (Alarm) o;
 			_log.info("#reception alarm :" + a); //$NON-NLS-1$
-
+			if (a.getKey() == null){
+				return;
+			}
 			if (a.getKey().equals("defmat") && a.isStatus() == true) { //$NON-NLS-1$
 				MessageBox.setMessage(org.avm.hmi.swt.message.Messages
 						.getString("Message.Alarm"), //$NON-NLS-1$
@@ -185,7 +187,7 @@ public class MessageImpl implements MessageIhm, ManageableService,
 			_display.asyncExec(new Runnable() {
 				public void run() {
 					if (_ihm == null || _ihm.isDisposed()) {
-						_ihm = new MessageIhmImpl(_desktop.getMiddlePanel(),
+						_ihm = new MessageIhmImpl(_desktop.getMainPanel(),
 								SWT.NONE);
 						_ihm.setLogger(_log);
 						_ihm.setMessenger(_messenger);
