@@ -5,12 +5,15 @@ import org.avm.business.tracking.TrackingImpl;
 import org.avm.elementary.common.AbstractActivator;
 import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ConsumerService;
+import org.avm.elementary.common.ManageableService;
 import org.avm.elementary.messenger.Messenger;
 import org.avm.elementary.messenger.MessengerInjector;
 import org.osgi.service.cm.ConfigurationAdmin;
+import org.osgi.service.cm.ConfigurationEvent;
 import org.osgi.service.component.ComponentContext;
 
-public class Activator extends AbstractActivator implements Tracking, MessengerInjector {
+public class Activator extends AbstractActivator implements Tracking,
+		MessengerInjector {
 
 	private static Activator _plugin;
 
@@ -35,14 +38,29 @@ public class Activator extends AbstractActivator implements Tracking, MessengerI
 
 	protected void start(ComponentContext context) {
 		initializeConfiguration();
-		initializeConsumer();
 		initializeCommandGroup();
+		startService();
+		initializeConsumer();
 	}
 
 	protected void stop(ComponentContext context) {
-		disposeCommandGroup();
 		disposeConsumer();
+		stopService();
+		disposeCommandGroup();
 		disposeConfiguration();
+	}
+
+	// service
+	private void stopService() {
+		if (_peer instanceof ManageableService) {
+			((ManageableService) _peer).stop();
+		}
+	}
+
+	private void startService() {
+		if (_peer instanceof ManageableService) {
+			((ManageableService) _peer).start();
+		}
 	}
 
 	// config
@@ -101,4 +119,16 @@ public class Activator extends AbstractActivator implements Tracking, MessengerI
 	public void unsetMessenger(Messenger messenger) {
 		_peer.unsetMessenger(messenger);
 	}
+
+	public void setFrequency(int freq) {
+		_peer.setFrequency(freq);
+	}
+
+	public void configurationEvent(ConfigurationEvent event) {
+
+		if (true) {
+			System.out.println();
+		}
+	}
+
 }
