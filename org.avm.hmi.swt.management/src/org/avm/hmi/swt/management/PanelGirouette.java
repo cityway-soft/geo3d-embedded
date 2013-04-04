@@ -1,15 +1,17 @@
 package org.avm.hmi.swt.management;
 
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.apache.log4j.Logger;
 import org.avm.elementary.common.Config;
 import org.avm.elementary.common.ConfigurableService;
 import org.avm.hmi.swt.desktop.DesktopStyle;
@@ -23,6 +25,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 
 public class PanelGirouette extends AbstractPanel implements KeyboardListener,
@@ -32,10 +35,17 @@ public class PanelGirouette extends AbstractPanel implements KeyboardListener,
 
 	private DriverSelection _driverSelection;
 
-	private Hashtable _hashGirouette;
-	
+	private Hashtable _hashGirouettePackage;
 
-	private Hashtable _hashConfigsGirouettes;
+	private Hashtable _hashConfigsDrivers;
+
+	private Hashtable _hashConfigs;
+
+	private ConsoleFacade _console;
+
+	private Config _config;
+
+	private Logger logger = Logger.getInstance(this.getClass());
 
 	public PanelGirouette(Composite parent, int style) {
 		super(parent, style);
@@ -43,8 +53,8 @@ public class PanelGirouette extends AbstractPanel implements KeyboardListener,
 
 	protected void initialize() {
 		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 1;
-		gridLayout.verticalSpacing = 1;
+		gridLayout.numColumns = 2;
+		gridLayout.verticalSpacing = 0;
 		gridLayout.marginWidth = 1;
 		gridLayout.marginHeight = 1;
 		gridLayout.horizontalSpacing = 1;
@@ -58,23 +68,25 @@ public class PanelGirouette extends AbstractPanel implements KeyboardListener,
 	 */
 	private void create() {
 		GridData gridData;
-		
-		gridData = new GridData();
-		gridData.horizontalAlignment = GridData.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.horizontalIndent = 10;
 
-		_driverSelection = new DriverSelection(this, SWT.NONE);
-		_driverSelection.addSelectionListener(this);
-		_driverSelection.setLayoutData(gridData);
-		
 		gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL;
 		gridData.verticalAlignment = GridData.FILL;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
-		gridData.horizontalIndent = 10;
-		gridData.heightHint = 40;
+
+		_driverSelection = new DriverSelection(this, SWT.NONE);
+		_driverSelection.addSelectionListener(this);
+		_driverSelection.setLayoutData(gridData);
+		_driverSelection.enableTest(true);
+
+		gridData = new GridData();
+		gridData.horizontalAlignment = GridData.FILL;
+		gridData.verticalAlignment = GridData.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		// gridData.horizontalIndent = 10;
+		// gridData.heightHint = 40;
 		_keyb = new Keyboard(this, SWT.NONE);
 		_keyb.setData(gridData);
 		_keyb.setListener(this);
@@ -86,16 +98,22 @@ public class PanelGirouette extends AbstractPanel implements KeyboardListener,
 
 	public void setConsoleFacade(ConsoleFacade console) {
 		super.setConsoleFacade(console);
-		configure();
+		_console = console;
+
+		if (_console != null && _config != null) {
+			configure();
+			testGirouette();
+		}
 	}
 
 	private void configure() {
-		_hashGirouette = new Hashtable();
-		getLogger().info("configure");
-		String result = runConsoleCommand("/mana status generic.girouette");
-		StringTokenizer t = new StringTokenizer(result, System.getProperty("line.separator"));
+
+		_hashGirouettePackage = new Hashtable();
+		String result = runConsoleCommand("/management status generic.girouette");
+		StringTokenizer t = new StringTokenizer(result,
+				System.getProperty("line.separator"));
 		while (t.hasMoreElements()) {
-			String line=t.nextToken();
+			String line = t.nextToken();
 			StringTokenizer t2 = new StringTokenizer(line, ":");
 			String ignore = t2.nextToken();
 			ignore = t2.nextToken();
@@ -109,11 +127,12 @@ public class PanelGirouette extends AbstractPanel implements KeyboardListener,
 
 			idx = val.lastIndexOf(".");
 			String name = val.substring(idx + 1);
-			_hashGirouette.put(name, val);
+			_hashGirouettePackage.put(name, val);
 		}
 
-		Enumeration e = _hashGirouette.keys();
-		String[] drivers = new String[_hashGirouette.size()];
+		Enumeration e = _hashGirouettePackage.keys();
+		String[] drivers = new String[_hashGirouettePackage.size()];
+
 		int i = 0;
 		while (e.hasMoreElements()) {
 			String keys = (String) e.nextElement();
@@ -122,19 +141,30 @@ public class PanelGirouette extends AbstractPanel implements KeyboardListener,
 		}
 		_driverSelection.setDrivers(drivers);
 
+		String protocol = runConsoleCommand("/girouette showparam protocol");
+		if (protocol != null) {
+			int idx = protocol.indexOf("protocol : ");
+			protocol = protocol.substring(idx + "protocol : ".length());
+			protocol = protocol.trim();
+		} else {
+			protocol = "defaut";
+		}
+		_driverSelection.setProtocol(protocol);
+
 		String driver = runConsoleCommand("/girouette showmodel");
 		if (driver != null) {
 			int idx = driver.lastIndexOf('.');
-			driver = driver.substring(idx+1);
+			driver = driver.substring(idx + 1);
 			driver = driver.trim();
 		} else {
 			driver = "?";
 		}
+
 		result = runConsoleCommand("/girouette showparam url");
 		if (result != null) {
 			int idx = result.indexOf("url : ");
 			result = result.substring(idx + "url : ".length());
-			result = "port="+result;
+			result = "port=" + result;
 			result = result.replace(';', '\n');
 			Properties p = new Properties();
 			try {
@@ -144,44 +174,65 @@ public class PanelGirouette extends AbstractPanel implements KeyboardListener,
 				_driverSelection.setStopbits(p.getProperty("stopbits"));
 				_driverSelection.setSpeed(p.getProperty("baudrate"));
 				_driverSelection.setBitsperchar(p.getProperty("bitsperchar"));
-				_driverSelection.setParity(p.getProperty("parity"));
 			} catch (IOException exp) {
 				exp.printStackTrace();
 			}
 		}
-		initConfig();
+
 	}
-	
-	private void initConfig(){
-		if (_hashConfigsGirouettes != null && _hashGirouette != null){
-			String[] configs = new String[_hashConfigsGirouettes.size()];
-			Enumeration en =  _hashConfigsGirouettes.keys();
-			int i=0;
-			while (en.hasMoreElements()){
-				String key = (String)en.nextElement();
-				String cmd= (String)_hashConfigsGirouettes.get(key);
-				int idx = cmd.indexOf("|");
-				cmd = cmd.substring(0, idx)+"";
-				if (_hashGirouette.get(cmd) != null){
-					configs[i] = key;
-					i++;
-				}
-			}
-			_driverSelection.setConfigs(configs);
-		}
-	}
-	
-	
+
 	public void configure(Config config) {
-		Properties p = ((ConfigImpl)config).getProperty("config-girouettes");
+		_config = config;
+		Properties p = ((ConfigImpl) config).getProperty("config-girouettes");
 		Set set = p.keySet();
-		Iterator iter =  set.iterator();
-		_hashConfigsGirouettes = new Hashtable();
-		while (iter.hasNext()){
-			String value = (String)iter.next();
-			_hashConfigsGirouettes.put(value, p.get(value));
+		Iterator iter = set.iterator();
+		_hashConfigsDrivers = new Hashtable();
+		_hashConfigs = new Hashtable();
+		List configNames = new ArrayList();
+		while (iter.hasNext()) {
+			String name = (String) iter.next();
+			String sconfig = p.getProperty(name);
+
+			StringTokenizer t = new StringTokenizer(sconfig, "|");
+			// --org.avm.device.girouette.duhamel|comm:0|1200|8|1|none
+			String driver = t.nextToken();
+
+			List listConfigs = (List) _hashConfigsDrivers.get(driver);
+			if (listConfigs == null) {
+				listConfigs = new ArrayList();
+			}
+
+			SerialPortConfig gconfig = new SerialPortConfig();
+			configNames.add(name);
+			gconfig.setName(name);
+			gconfig.setDriver(driver);
+			gconfig.setPort(t.nextToken());
+			gconfig.setSpeed(t.nextToken());
+			gconfig.setBitsperchar(t.nextToken());
+			gconfig.setStopbits(t.nextToken());
+			gconfig.setParity(t.nextToken());
+			String protocols = "default";
+			if (t.hasMoreElements()) {
+				protocols = t.nextToken();
+			}
+			t = new StringTokenizer(protocols, ",");
+			List ps = new ArrayList();
+			while (t.hasMoreElements()) {
+				String e = (String) t.nextElement();
+				ps.add(e.trim());
+			}
+			gconfig.setProtocols(ps);
+
+			listConfigs.add(config);
+
+			_hashConfigsDrivers.put(driver, listConfigs);
+			_hashConfigs.put(name, gconfig);
 		}
-		initConfig();
+		_driverSelection.setConfigs(configNames);
+		if (_console != null && _config != null) {
+			configure();
+			testGirouette();
+		}
 	}
 
 	public void validation(String str) {
@@ -195,45 +246,73 @@ public class PanelGirouette extends AbstractPanel implements KeyboardListener,
 	}
 
 	public void widgetDefaultSelected(SelectionEvent arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void widgetSelected(SelectionEvent event) {
-		if (event.getSource() instanceof Button){
-			updateConfig();
-		}
-		else{
-			setConfig();
+		if (event.getSource() instanceof Button) {
+			Button button = (Button) event.getSource();
+			if (button.getData().equals("configs")) {
+				updateConfig();
+			} else {
+				testGirouette();
+			}
+
+		} else if (event.getSource() instanceof Combo) {
+			Combo combo = (Combo) event.getSource();
+			if (combo.getData().equals("configs")) {
+				_driverSelection.setTestSucess(1);
+				setConfig();
+			} else {
+
+			}
 		}
 	}
-	
-	private void setConfig(){
+
+	private void testGirouette() {
+		int success = 100;
+		String result = null;
+		String cmd = "/girouette status";
+		result = runConsoleCommand(cmd);
+		logger.debug("PanelGirouette test: " + result);
+		if (result != null) {
+			if (result.startsWith("OK")) {
+				success = 0;
+			} else if (result.startsWith("Err")) {
+				success = -1;
+			}
+		}
+
+		_driverSelection.setTestSucess(success);
+
+	}
+
+	private void setConfig() {
 		String configName = _driverSelection.getConfig();
-		String params = (String)_hashConfigsGirouettes.get(configName);
-		StringTokenizer t= new StringTokenizer(params, "|");
-		//--org.avm.device.girouette.duhamel|comm:0|1200|8|1|none
-		String driver = t.nextToken();
-		String port = t.nextToken();
-		String speed = t.nextToken();
-		String bitsperchar = t.nextToken();
-		String stopbits = t.nextToken();
-		String parity = t.nextToken();
-		_driverSelection.setDriver(driver);
-		_driverSelection.setPort(port);
-		_driverSelection.setStopbits(stopbits);
-		_driverSelection.setSpeed(speed);
-		_driverSelection.setBitsperchar(bitsperchar);
-		_driverSelection.setParity(parity);
+		if (configName.equals("")) {
+			_driverSelection.enableValidation(false);
+		} else {
+			_driverSelection.enableValidation(true);
+			SerialPortConfig config = (SerialPortConfig) _hashConfigs
+					.get(configName);
+
+			_driverSelection.setDriver(config.getDriver());
+			_driverSelection.setPort(config.getPort());
+			_driverSelection.setStopbits(config.getStopbits());
+			_driverSelection.setSpeed(config.getSpeed());
+			_driverSelection.setBitsperchar(config.getBitsperchar());
+			_driverSelection.setParity(config.getParity());
+			_driverSelection.setProtocols(config.getProtocols());
+		}
 	}
-	
-	private void updateConfig(){
+
+	private void updateConfig() {
 		String port = _driverSelection.getPort();
 		String driver = _driverSelection.getDriver();
 		String speed = _driverSelection.getSpeed();
 		String bitsperchar = _driverSelection.getBitsperchar();
 		String stopbits = _driverSelection.getStopbits();
 		String parity = _driverSelection.getParity();
+		String protocol = _driverSelection.getProtocol();
 
 		StringBuffer buf = new StringBuffer();
 		buf.append(port);
@@ -250,7 +329,8 @@ public class PanelGirouette extends AbstractPanel implements KeyboardListener,
 
 		String desc = "\"Controleur de girouette " + driver + "\"";
 		String manufacturer = driver;
-		String pkge = (String) _hashGirouette.get(driver+"");
+
+		String pkge = (String) _hashGirouettePackage.get(driver + "");
 		String name = pkge;
 		String model = pkge;
 
@@ -280,9 +360,28 @@ public class PanelGirouette extends AbstractPanel implements KeyboardListener,
 		result = runConsoleCommand(cmd);
 		success &= (result != null && !result.trim().equals(""));
 
-		cmd = "/girouette updateconfig ";
+		cmd = "/girouette setparameter protocol " + protocol;
 		result = runConsoleCommand(cmd);
 		success &= (result != null && !result.trim().equals(""));
+
+		logger.debug("Update config success : " + success);
+		if (success) {
+			cmd = "/girouette updateconfig ";
+			result = runConsoleCommand(cmd);
+			logger.debug("Update config : " + result);
+
+			cmd = "/management restart device.girouette";
+			result = runConsoleCommand(cmd);
+			logger.debug("Restart device.girouette : " + result);
+
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+			}
+			testGirouette();
+
+		}
+
 	}
 
 	public void test(String destination) {
@@ -293,8 +392,7 @@ public class PanelGirouette extends AbstractPanel implements KeyboardListener,
 					SWT.NONE);
 		}
 	}
-	
-	
+
 	public static class ItemGirouetteFactory extends PanelFactory {
 		protected AbstractPanel create(Composite parent, int style) {
 			return new PanelGirouette(parent, style);
@@ -305,7 +403,5 @@ public class PanelGirouette extends AbstractPanel implements KeyboardListener,
 		PanelFactory.factories.put(PanelGirouette.class.getName(),
 				new ItemGirouetteFactory());
 	}
-
-	
 
 } // @jve:decl-index=0:visual-constraint="10,10"

@@ -110,6 +110,18 @@ public class PanelIdent extends AbstractPanel implements ConsoleFacadeInjector,
 		gridData.heightHint = BUTTON_HEIGHT;
 		button.setLayoutData(gridData);
 		_textExploitantId = text;
+		
+		
+		label = new Label(this, SWT.NONE);
+		label.setText(Messages.getString("ItemIdent.terminal_id")); //$NON-NLS-1$
+		label.setBackground(DesktopStyle.getBackgroundColor());
+		text = new Text(this, SWT.NONE);
+		text.setEditable(false);
+		text.setText(System.getProperty("org.avm.terminal.id","????")); //$NON-NLS-1$
+
+		gridData = new GridData();
+		gridData.heightHint = BUTTON_HEIGHT;
+		
 
 		// ----------------------
 		Composite panelActivite = new Composite(this, SWT.NONE);
@@ -216,6 +228,7 @@ public class PanelIdent extends AbstractPanel implements ConsoleFacadeInjector,
 						if (!data.equals(_textVehiculeId.getText())) {
 							_changed = true;
 							_textVehiculeId.setText(data);
+							PanelIdent.this.layout();
 							_terminalName = data;
 							dialog.dispose();
 						}
@@ -256,6 +269,7 @@ public class PanelIdent extends AbstractPanel implements ConsoleFacadeInjector,
 							_changed = true;
 							// _restartMedia = true;
 							_textExploitantId.setText(data);
+							PanelIdent.this.layout();
 							_terminalOwner = data;
 							dialog.dispose();
 						}

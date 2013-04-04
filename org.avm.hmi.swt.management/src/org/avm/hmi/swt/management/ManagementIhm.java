@@ -117,14 +117,14 @@ public class ManagementIhm extends Composite implements Management,
 		addItem(new MenuButtonSelectionListener(
 				Messages.getString("ManagementIhm.recette"), PanelRecette.class.getName(), null)); //$NON-NLS-1$
 
-		addItem(new MenuButtonSelectionListener(
-				Messages.getString("ManagementIhm.log"), PanelLog.class.getName(), null)); //$NON-NLS-1$
+//		addItem(new MenuButtonSelectionListener(
+//				Messages.getString("ManagementIhm.log"), PanelLog.class.getName(), null)); //$NON-NLS-1$
 
-		addItem(new MenuButtonSelectionListener(
-				Messages.getString("ManagementIhm.bundles"), PanelBundles.class.getName(), null)); //$NON-NLS-1$
+//		addItem(new MenuButtonSelectionListener(
+//				Messages.getString("ManagementIhm.bundles"), PanelBundles.class.getName(), null)); //$NON-NLS-1$
 
-		addItem(new MenuButtonSelectionListener(
-				Messages.getString("ManagementIhm.jvm"), PanelJvm.class.getName(), null)); //$NON-NLS-1$
+//		addItem(new MenuButtonSelectionListener(
+//				Messages.getString("ManagementIhm.jvm"), PanelJvm.class.getName(), null)); //$NON-NLS-1$
 		
 		addItem(new MenuButtonSelectionListener(
 				Messages.getString("ManagementIhm.sms"), PanelSMS.class.getName(), "sms")); //$NON-NLS-1$
