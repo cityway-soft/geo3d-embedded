@@ -68,29 +68,42 @@ public abstract class AbstractManager implements ManageableService,
 
 	protected abstract String getDeployerPID();
 
+	private boolean acquireLock() {
+		try {
+			_lock.acquire();
+		} catch (InterruptedException e) {
+			return false;
+		}
+		return true;
+	}
+
 	public void start() {
 		_tracker.open();
-		try {
-			// _lock.acquire();
-			if (!_initialized) {
-				_log.debug("[DSU] init manager: wait for manager initialized");
-				_initializedCondVar.timedwait(1000);
+		if (acquireLock()) {
+
+			try {
+				// _lock.acquire();
 				if (!_initialized) {
-					_log.debug("[DSU] init manager:  time out initialisation ");
-					return;
+					_log.debug("[DSU] init manager: wait for manager initialized");
+					_initializedCondVar.timedwait(1000);
+					if (!_initialized) {
+						_log.debug("[DSU] init manager:  time out initialisation ");
+						return;
+					}
 				}
+				_log.debug("[DSU] init manager: manager initialized");
+				while (!_deployed) {
+					_log.debug("[DSU] init manager: wait for data deployed");
+					_deployedCondVar.await();
+				}
+				_log.debug("[DSU] init manager: data deployed");
+			} catch (InterruptedException e) {
+				_log.error(e.getMessage());
+			} finally {
+				// _lock.release();
+				_started = true;
+				_lock.release();
 			}
-			_log.debug("[DSU] init manager: manager initialized");
-			while (!_deployed) {
-				_log.debug("[DSU] init manager: wait for data deployed");
-				_deployedCondVar.await();
-			}
-			_log.debug("[DSU] init manager: data deployed");
-		} catch (InterruptedException e) {
-			_log.error(e.getMessage());
-		} finally {
-			// _lock.release();
-			_started = true;
 		}
 		undeploy(_data);
 
@@ -105,20 +118,20 @@ public abstract class AbstractManager implements ManageableService,
 	public Object addingService(ServiceReference reference) {
 		_data = (DataDeployer) _context.getService(reference);
 		_log.info("[DSU] addingService " + reference);
-
-		// liberation du manager
-		try {
-			_lock.acquire();
-			_initialized = true;
-			_initializedCondVar.signal();
-		} catch (InterruptedException e) {
-			_log.error(e.getMessage());
-		} finally {
-			_lock.release();
+		if (acquireLock()) {
+			// liberation du manager
+			try {
+				// _lock.acquire();
+				_initialized = true;
+				_initializedCondVar.signal();
+			} // catch (InterruptedException e) {
+				// _log.error(e.getMessage());
+				// }
+			finally {
+				_lock.release();
+			}
 		}
-
 		_scheduler.execute(new Deployer());
-
 		return _data;
 	}
 
@@ -142,6 +155,7 @@ public abstract class AbstractManager implements ManageableService,
 			if (oldUrl == null) {
 				return;
 			}
+
 			String oldPath = oldUrl.getPath();
 
 			int iname = oldPath.lastIndexOf(URL_SEPARATOR);
@@ -157,12 +171,56 @@ public abstract class AbstractManager implements ManageableService,
 					.format(newVersion);
 			String root = oldPath.substring(iroot, iversion);
 			root = root.replace('/', File.separatorChar);
+
+			File path = new File(root + File.separatorChar + oldTextVersion);
+			String template = System.getProperty("org.avm.home")+File.separator+"data";
+			if (!path.exists() && path.getAbsolutePath().indexOf(template) != -1) {
+				String selectedFile = null;
+				Date selected = new Date(0);
+				String[] files = path.getParentFile().list();
+				if (files != null) {
+					for (int i = 0; i < files.length; i++) {
+						File dir = new File(files[i]);
+						String textVersion = dir.getName();
+						try {
+							Date version = _frVdrDateExpFormater
+									.parse(textVersion);
+							if (version.after(selected)) {
+								selected = version;
+								selectedFile = files[i];
+								System.out.println("=>>>>>>>>>>>>>>Selected="
+										+ selectedFile);
+							}
+						} catch (ParseException e) {
+
+						}
+					}
+				}
+				System.out.println("=>>>>>>>>>>>>>>previous oldPath=" + oldPath);
+				if (selectedFile != null) {
+					oldPath = root+File.separator+path.getParentFile().getName()
+							+ File.separator + selectedFile
+							+ File.separator + name;
+					newVersion = selected;
+					newTextVersion = selectedFile;
+					System.out.println("=>>>>>>>>>>>>>>newVersion=" + newVersion);
+					String oldDir = oldPath.substring(iroot, iname);
+					oldDir = oldDir.replace('/', File.separatorChar);
+					String newPath = oldPath.substring(0, iversion) + URL_SEPARATOR
+							+ newTextVersion + URL_SEPARATOR + name;
+					URL newURL = new URL(oldUrl.getProtocol(), oldUrl.getHost(),
+							oldUrl.getPort(), newPath);
+					updateUrlRepository(newURL, newTextVersion);
+					return;
+				}
+			}
+
 			String oldDir = oldPath.substring(iroot, iname);
 			oldDir = oldDir.replace('/', File.separatorChar);
 			String newPath = oldPath.substring(0, iversion) + URL_SEPARATOR
 					+ newTextVersion + URL_SEPARATOR + name;
-			URL newURL = new URL(oldUrl.getProtocol(), oldUrl.getHost(), oldUrl
-					.getPort(), newPath);
+			URL newURL = new URL(oldUrl.getProtocol(), oldUrl.getHost(),
+					oldUrl.getPort(), newPath);
 
 			StringBuffer info = new StringBuffer();
 			info.append(org.avm.elementary.log4j.Constants.SETCOLOR_SUCCESS);
@@ -201,22 +259,20 @@ public abstract class AbstractManager implements ManageableService,
 
 				if (now.after(data.getJexDateDeb())
 						&& now.before(data.getJexDateFin())) {
-					_log
-							.info(org.avm.elementary.log4j.Constants.SETCOLOR_SUCCESS
-									+ "Reinit url = "
-									+ newURL
-									+ " start = "
-									+ _started
-									+ org.avm.elementary.log4j.Constants.SETCOLOR_NORMAL);
+					_log.info(org.avm.elementary.log4j.Constants.SETCOLOR_SUCCESS
+							+ "Reinit url = "
+							+ newURL
+							+ " start = "
+							+ _started
+							+ org.avm.elementary.log4j.Constants.SETCOLOR_NORMAL);
 
 					updateUrlRepository(newURL, data.getVdrId());
 
 					if (!_started) {
-						_log
-								.info(org.avm.elementary.log4j.Constants.SETCOLOR_SUCCESS
-										+ "Undeploy old version from "
-										+ oldDir
-										+ org.avm.elementary.log4j.Constants.SETCOLOR_NORMAL);
+						_log.info(org.avm.elementary.log4j.Constants.SETCOLOR_SUCCESS
+								+ "Undeploy old version from "
+								+ oldDir
+								+ org.avm.elementary.log4j.Constants.SETCOLOR_NORMAL);
 						data.undeploy(oldDir);
 					}
 				}
@@ -289,15 +345,19 @@ public abstract class AbstractManager implements ManageableService,
 		public void run() {
 			deploy(_data);
 
-			// liberation du manager
-			try {
-				_lock.acquire();
-				_deployed = true;
-				_deployedCondVar.signal();
-			} catch (InterruptedException e) {
-				_log.error(e.getMessage());
-			} finally {
-				_lock.release();
+			if (acquireLock()) {
+				// liberation du manager
+				try {
+					// _lock.acquire();
+					_deployed = true;
+					_deployedCondVar.signal();
+				}
+				// catch (InterruptedException e) {
+				// _log.error(e.getMessage());
+				// }
+				finally {
+					_lock.release();
+				}
 			}
 		}
 	}

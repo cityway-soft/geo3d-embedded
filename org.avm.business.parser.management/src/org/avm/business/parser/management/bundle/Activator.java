@@ -7,12 +7,9 @@ import java.util.Enumeration;
 
 import org.apache.log4j.Logger;
 import org.avm.business.parser.management.ParserImpl;
-import org.avm.elementary.common.ConfigurableService;
-import org.avm.elementary.common.MediaListener;
 import org.avm.elementary.parser.Parser;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 
 public class Activator implements Parser {
@@ -23,33 +20,39 @@ public class Activator implements Parser {
 
 	private ComponentContext _context;
 
-
 	private ParserImpl _peer;
 
-
 	public Activator() {
-		_log = Logger.getInstance(this.getClass().getName());
+		_log = Logger.getInstance(this.getClass());
 	}
 
 	private void initializeParser() {
-		BundleContext bc = _context.getBundleContext();
-		Bundle b = bc.getBundle();
-		Enumeration it = b.findEntries("/", "management.jar", true);
-		URL url = null;
-		while (it.hasMoreElements()) {
-			url = (URL) it.nextElement();
+		try {
+			_log.info("initialize parser...");
+			BundleContext bc = _context.getBundleContext();
+			Bundle b = bc.getBundle();
+			Enumeration it = b
+					.findEntries("/", "protocol-management.jar", true);
+			URL url = null;
+			while (it.hasMoreElements()) {
+				url = (URL) it.nextElement();
+			}
+			_peer = new ParserImpl(url);
+			_log.info("parser initialized.");
+		} catch (Throwable t) {
+			_log.error(t);
 		}
-		_peer = new ParserImpl(url);
 
 	}
 
 	protected void activate(ComponentContext context) {
+		_log.debug("Components activated");
 		_context = context;
 		initializeParser();
 	}
 
 	protected void deactivate(ComponentContext context) {
-
+		_log.debug("Component deactivated");
 	}
 
 	public String getProtocolName() {

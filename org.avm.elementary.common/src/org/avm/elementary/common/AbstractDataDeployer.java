@@ -141,14 +141,12 @@ public class AbstractDataDeployer implements DataDeployer, BundleActivator,
 				"resource.properties", true); iter.hasMoreElements();) {
 			URL url = (URL) iter.nextElement();
 			_log.info("[DSU] entry: " + url);
-
+			
 			// load resources
 			try {
-
 				InputStream in = url.openStream();
 				_properties = new Properties();
 				_properties.load(in);
-
 			} catch (IOException e) {
 				_log.error(e.getMessage());
 			}
@@ -156,6 +154,7 @@ public class AbstractDataDeployer implements DataDeployer, BundleActivator,
 
 		// register data deployer
 		Properties properties = new Properties();
+		String servicePid = _properties.getProperty(SERVICE_PID);
 		properties.put(SERVICE_PID, _properties.getProperty(SERVICE_PID));
 		_registration = _context.registerService(DataDeployer.class.getName(),
 				this, properties);

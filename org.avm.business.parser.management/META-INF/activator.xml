@@ -5,5 +5,4 @@
 	<service>				
 		<provide interface="org.avm.elementary.parser.Parser"/>		
 	</service>
-	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
 </component>

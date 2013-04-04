@@ -20,7 +20,7 @@ public abstract class AbstractActivator {
 	protected abstract void stop(ComponentContext context);
 
 	public void activate(ComponentContext context) throws Exception {
-		_log.info("Components activating");
+		_log.info("Components activating :" + context);
 		_context = context;
 		try {
 			start(context);

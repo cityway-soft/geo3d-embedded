@@ -17,9 +17,10 @@ public class ParserImpl extends AbstractParser {
 	protected ClassLoader _loader;
 
 	public ParserImpl(URL url) {
-		_log = Logger.getInstance(this.getClass().getName());
+		_log = Logger.getInstance(this.getClass());
 		URLConnection conn;
 		try {
+			_log.debug("URL:" + url);
 			conn = url.openConnection();
 			initialize(conn);
 		} catch (Exception e) {
@@ -31,8 +32,10 @@ public class ParserImpl extends AbstractParser {
 		_loader = Thread.currentThread().getContextClassLoader();
 		JarInputStream zip = new JarInputStream(conn.getInputStream());
 		JarEntry entry;
+		_log.debug("while zip entry exists....");
 		while ((entry = (JarEntry) zip.getNextEntry()) != null) {
 			String name = entry.getName();
+			_log.debug("  zip entry name:" + name);
 			if (name.endsWith(".class")) {
 				String classname = name.replace('/', '.');
 				classname = classname.substring(0, classname.length() - 6);
@@ -42,13 +45,14 @@ public class ParserImpl extends AbstractParser {
 					if (_loader == null) {
 						_loader = clazz.getClassLoader();
 					}
-					System.out.println(clazz.getName() + " loaded loader : "
+					_log.debug(clazz.getName() + " loaded loader : "
 							+ clazz.getClassLoader());
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				}
 			}
 		}
+		_log.debug("end zip");
 	}
 
 	public String getProtocolName() {
@@ -88,4 +92,5 @@ public class ParserImpl extends AbstractParser {
 			throw new RuntimeException("Protocole non supporte");
 		}
 	}
+
 }
