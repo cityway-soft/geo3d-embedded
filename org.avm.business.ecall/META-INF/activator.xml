@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component name="org.avm.business.ecall.EcallService" immediate="true">
-	<implementation class="org.avm.business.ecall.bundle.Activator"/>
-	<property name="service.pid" value="org.avm.business.ecall.EcallService"/>		
-	<service>						
-		<provide interface="org.avm.business.ecall.EcallService"/>
-		<provide interface="org.avm.elementary.alarm.AlarmProvider"/>																
-	</service>	
-	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>	
-	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>		
-	<reference name="phony" interface="org.avm.device.phony.Phony"	
-		cardinality="0..1" policy="dynamic" bind="setPhony" unbind="unsetPhony" />	
+<component name="org.avm.business.ecall.EcallService"
+	immediate="true">
+	<implementation class="org.avm.business.ecall.bundle.Activator" />
+	<property name="service.pid" value="org.avm.business.ecall.EcallService" />
+	<service>
+		<provide interface="org.avm.business.ecall.EcallService" />
+		<provide interface="org.avm.elementary.alarm.AlarmProvider" />
+	</service>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin" />
+	<reference name="alarm" interface="org.avm.elementary.alarm.AlarmService" />
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin" />
+	<reference name="phony" interface="org.avm.device.phony.Phony"
+		cardinality="0..1" policy="dynamic" bind="setPhony" unbind="unsetPhony" />
 
-	<reference name="jdb" interface="org.avm.elementary.jdb.JDB"	
-		cardinality="0..1" policy="dynamic" bind="setJdb" unbind="unsetJdb" />	
+	<reference name="jdb" interface="org.avm.elementary.jdb.JDB"
+		cardinality="0..1" policy="dynamic" bind="setJdb" unbind="unsetJdb" />
 
-			
+
 </component>

@@ -6,6 +6,7 @@ import org.avm.business.ecall.EcallService;
 import org.avm.business.ecall.EcallServiceImpl;
 import org.avm.device.phony.Phony;
 import org.avm.device.phony.PhonyInjector;
+import org.avm.elementary.alarm.AlarmService;
 import org.avm.elementary.common.AbstractActivator;
 import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ConsumerService;
@@ -46,11 +47,13 @@ public class Activator extends AbstractActivator implements EcallService, PhonyI
 		initializeConsumer();
 		initializeProducer();
 		initializeCommandGroup();
+		initializeAlarmService();
 		startService();
 	}
 
 	protected void stop(ComponentContext context) {
 		stopService();
+		disposeAlarmService();
 		disposeCommandGroup();
 		disposeProducer();
 		disposeConsumer();
@@ -123,6 +126,18 @@ public class Activator extends AbstractActivator implements EcallService, PhonyI
 			_commands.stop();
 	}
 
+	
+	// alarm service
+	private void initializeAlarmService() {
+		AlarmService alarmeService = (AlarmService) _context.locateService("alarm");
+		_peer.setAlarmService(alarmeService);
+	}
+
+	private void disposeAlarmService() {
+		_peer.setAlarmService(null);
+	}
+
+	
 	// service
 	private void stopService() {
 		if (_peer instanceof ManageableService) {

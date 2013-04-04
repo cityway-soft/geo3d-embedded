@@ -9,6 +9,7 @@ import org.avm.business.protocol.phoebus.PriseEnCharge;
 import org.avm.device.phony.Phony;
 import org.avm.device.phony.PhonyInjector;
 import org.avm.elementary.alarm.Alarm;
+import org.avm.elementary.alarm.AlarmService;
 import org.avm.elementary.common.Config;
 import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ConsumerService;
@@ -24,6 +25,8 @@ public class EcallServiceImpl implements EcallService, ConfigurableService,
 		ManageableService, ProducerService, ConsumerService,
 		EcallServiceStateMachine, JDBInjector, PhonyInjector {
 
+	public static final int ALARM_INDEX=0;
+	
 	public static final String STATE_NO_ALERT = "STATE_NO_ALERT";
 
 	public static final String STATE_WAIT_ACK = "STATE_WAIT_ACK";
@@ -46,7 +49,9 @@ public class EcallServiceImpl implements EcallService, ConfigurableService,
 
 	private State _state = new State(0, STATE_NO_ALERT);
 
-	private JDB _jdb;;
+	private JDB _jdb;
+
+	private AlarmService _alarmService;;
 
 	public EcallServiceImpl() {
 		_log = Logger.getInstance(this.getClass());
@@ -54,7 +59,7 @@ public class EcallServiceImpl implements EcallService, ConfigurableService,
 		// _alarm = new Alarm(false, APPEL_URGENCE, new Date(),
 		// EcallService.class
 		// .getName(), Alarm.MAX_PRIORITY);
-		_alarm = new Alarm(new Integer(0));
+		_alarm = new Alarm(new Integer(ALARM_INDEX));
 	}
 
 	public void start() {
@@ -83,14 +88,25 @@ public class EcallServiceImpl implements EcallService, ConfigurableService,
 			PriseEnCharge pec = (PriseEnCharge) o;
 			String phone = pec.getTel();
 			ack(phone);
-		}
-		if (o instanceof ClotureAlerte) {
+		} else if (o instanceof ClotureAlerte) {
 			// _alarm.priority = Alarm.MIN_PRIORITY;
 			endEcall();
 		} else if (o instanceof DigitalVariable) {
 			DigitalVariable v = (DigitalVariable) o;
 			if (v.getValue().getValue() > 0) {
 				startEcall();
+			}
+		} else if (o instanceof State) {
+			_log.debug("RECEIVE :" + o);
+			State state = (State) o;
+			if (state.getName().equals(AlarmService.class.getName())) {
+				Alarm alarm = _alarmService.getAlarm(new Integer(ALARM_INDEX));
+				if (alarm.isStatus()){
+					startEcall();
+				}
+				else{
+					endEcall();
+				}
 			}
 		}
 
@@ -124,7 +140,7 @@ public class EcallServiceImpl implements EcallService, ConfigurableService,
 			_fsm.ack(phone);
 			res = true;
 		} catch (RuntimeException e) {
-			_log.error(e.getMessage(), e);
+			_log.debug(e.getMessage(), e);
 		}
 		journalize("ACK");
 		return res;
@@ -136,7 +152,7 @@ public class EcallServiceImpl implements EcallService, ConfigurableService,
 			_fsm.endEcall();
 			res = true;
 		} catch (RuntimeException e) {
-			_log.error(e.getMessage(), e);
+			_log.debug(e.getMessage(), e);
 		}
 		journalize("DOWN");
 		return res;
@@ -149,7 +165,7 @@ public class EcallServiceImpl implements EcallService, ConfigurableService,
 			_fsm.startEcall();
 			res = true;
 		} catch (RuntimeException e) {
-			_log.error(e.getMessage(), e);
+			_log.debug(e.getMessage(), e);
 		}
 		journalize("UP");
 		return res;
@@ -229,6 +245,15 @@ public class EcallServiceImpl implements EcallService, ConfigurableService,
 
 	public void unsetPhony(Phony phony) {
 		_phony = null;
+	}
+
+	public void setAlarmService(AlarmService service) {
+		_alarmService = service;
+
+	}
+
+	public void unsetAlarmService(AlarmService service) {
+		_alarmService = service;
 	}
 
 }
