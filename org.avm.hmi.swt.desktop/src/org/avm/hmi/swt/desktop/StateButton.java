@@ -37,8 +37,8 @@ public class StateButton extends Composite implements SelectionListener,
 
 	public StateButton(Composite parent, int style) {
 		super(parent, style);
-		DEFAULT_ACTIVE_COLOR = getDisplay().getSystemColor(SWT.COLOR_RED);
-		DEFAULT_NOTACTIVE_COLOR = getDisplay().getSystemColor(SWT.COLOR_GREEN);
+		DEFAULT_ACTIVE_COLOR = DesktopIhm.ROUGE;
+		DEFAULT_NOTACTIVE_COLOR = DesktopIhm.VERT;
 		DISABLE_COLOR = getDisplay().getSystemColor(SWT.COLOR_GRAY);
 		_activeColor = DEFAULT_ACTIVE_COLOR;
 		_notactiveColor = DEFAULT_NOTACTIVE_COLOR;
