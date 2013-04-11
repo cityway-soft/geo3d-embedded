@@ -136,11 +136,11 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 		});
 		TableColumn tableColumn0 = new TableColumn(_table, SWT.NONE);
 		tableColumn0.setWidth(115);
-		tableColumn0.setText("n°"); //$NON-NLS-1$
+		tableColumn0.setText("nï¿½"); //$NON-NLS-1$
 
 		TableColumn tableColumn1 = new TableColumn(_table, SWT.NONE);
 		tableColumn1.setWidth(53);
-		tableColumn1.setText("Reçu"); //$NON-NLS-1$
+		tableColumn1.setText("Reï¿½u"); //$NON-NLS-1$
 
 		TableColumn tableColumn2 = new TableColumn(_table, SWT.NONE);
 		tableColumn2.setWidth(0);
@@ -267,16 +267,22 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 		getDisplay().syncExec(new Runnable() {
 			public void run() {
 				try {
-					StateButton button = new StateButton(_panelSend, SWT.NONE);
+					StateButton button = new StateButton(_panelSend, SWT.BORDER);
 					button.setText(title);
 					button.setBackground(DesktopStyle.getBackgroundColor());
 					GridData gridData = new GridData();
 					gridData.heightHint = BUTTON_HEIGHT;
 					gridData.horizontalAlignment = GridData.FILL;
+					gridData.verticalAlignment = GridData.FILL;
 					gridData.grabExcessHorizontalSpace = true;
+					button.setNotActiveLabel("DÃ©sac.");
+					button.setActiveLabel("Activer");
+					button.setNotActiveColor(DesktopStyle.getBackgroundColor());
+					button.setActiveColor(DesktopImpl.VERT);
 					button.setLayoutData(gridData);
 					button.addSelectionListener(new ButtonPredefinedMessageListener(
 							message));
+					button.setState(false);
 					layout();
 				} catch (Throwable t) {
 					t.printStackTrace();
@@ -418,6 +424,7 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 				String key = (String) e.nextElement();
 				addPredefinedMessage(key, props.getProperty(key));
 			}
+			this.layout();
 		}
 	}
 
