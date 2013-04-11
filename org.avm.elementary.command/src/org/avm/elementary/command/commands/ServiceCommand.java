@@ -68,7 +68,7 @@ public class ServiceCommand implements org.apache.commons.chain.Command {
 				final AvmModel model = this._avm.getModel();
 				// message
 				final Entete entete = message.getEntete();
-				entete.setVersion(0);
+				entete.setVersion(model.getDatasourceVersion());
 				final ChampsOptionnels options = entete.getChamps();
 				// service
 				options.setService(1);
