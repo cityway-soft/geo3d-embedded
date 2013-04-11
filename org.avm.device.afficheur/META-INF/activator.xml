@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component name="org.avm.device.afficheur.AfficheurDevice" immediate="true">
-	<implementation class="org.avm.device.afficheur.bundle.Activator"/>
-	<property name="service.pid" value="org.avm.device.afficheur.AfficheurDevice"/>
-	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
-	<reference name="afficheur" interface="org.avm.device.afficheur.Afficheur" cardinality="0..1" policy="dynamic"/>
+<component name="org.avm.device.afficheur.AfficheurDevice"
+	immediate="true">
+	<implementation class="org.avm.device.afficheur.bundle.Activator" />
+	<property name="service.pid" value="org.avm.device.afficheur.AfficheurDevice" />
+		<service>
+		<provide interface="org.avm.elementary.alarm.AlarmProvider" />
+	</service>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin" />
+	<reference name="afficheur" interface="org.avm.device.afficheur.Afficheur"
+		cardinality="0..1" policy="dynamic" />
+
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin" />
+	<reference name="afficheur" interface="org.avm.device.afficheur.Afficheur"
+		cardinality="0..1" policy="dynamic" bind="setAfficheur" unbind="unsetAfficheur" />
 </component>

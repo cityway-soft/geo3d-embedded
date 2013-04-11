@@ -1,14 +1,19 @@
 package org.avm.device.afficheur.bundle;
 
+import java.util.List;
+
+import org.avm.device.afficheur.Afficheur;
 import org.avm.device.afficheur.AfficheurDevice;
+import org.avm.elementary.alarm.AlarmProvider;
 import org.avm.elementary.common.AbstractActivator;
 import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ManageableService;
+import org.avm.elementary.common.ProducerService;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 
-public class Activator extends AbstractActivator {
-
+public class Activator extends AbstractActivator implements AlarmProvider {
+	public static final String PID = Afficheur.class.getName();
 	private static Activator _plugin;
 
 	private ConfigurationAdmin _cm;
@@ -18,6 +23,8 @@ public class Activator extends AbstractActivator {
 	private CommandGroupImpl _commands;
 
 	private AfficheurDevice _peer;
+
+	private ProducerImpl _producer;
 
 	public Activator() {
 		super();
@@ -32,13 +39,31 @@ public class Activator extends AbstractActivator {
 	protected void start(ComponentContext context) {
 		initializeConfiguration();
 		initializeCommandGroup();
+		initializeProducer();
 		startService();
 	}
 
 	protected void stop(ComponentContext context) {
 		stopService();
+		disposeProducer();
 		disposeCommandGroup();
 		disposeConfiguration();
+	}
+
+	// producer
+	private void initializeProducer() {
+		if (_peer instanceof ProducerService) {
+			_producer = new ProducerImpl(_context);
+			_producer.start();
+			((ProducerService) _peer).setProducer(_producer);
+		}
+	}
+
+	private void disposeProducer() {
+		if (_peer instanceof ProducerService) {
+			((ProducerService) _peer).setProducer(null);
+			_producer.stop();
+		}
 	}
 
 	// config
@@ -89,6 +114,22 @@ public class Activator extends AbstractActivator {
 			((ManageableService) _peer).stop();
 		}
 		_peer.setContext(null);
+	}
+
+	public void setGirouette(org.avm.device.afficheur.Afficheur afficheur) {
+		_peer.setAfficheur(afficheur);
+	}
+
+	public void unsetGirouette(org.avm.device.afficheur.Afficheur afficheur) {
+		_peer.unsetAfficheur(afficheur);
+	}
+
+	public List getAlarm() {
+		return _peer.getAlarm();
+	}
+
+	public String getProducerPID() {
+		return _peer.getProducerPID();
 	}
 
 }

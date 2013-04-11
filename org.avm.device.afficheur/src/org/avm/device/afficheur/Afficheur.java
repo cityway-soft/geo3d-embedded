@@ -4,4 +4,6 @@ public interface Afficheur {
 
 	public void print(String message);
 
+	public int getStatus() throws Exception;
+
 }
