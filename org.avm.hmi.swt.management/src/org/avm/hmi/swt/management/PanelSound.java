@@ -10,6 +10,7 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 import org.avm.hmi.swt.desktop.Desktop;
+import org.avm.hmi.swt.desktop.DesktopImpl;
 import org.avm.hmi.swt.desktop.DesktopStyle;
 import org.avm.hmi.swt.desktop.MessageBox;
 import org.avm.hmi.swt.desktop.StateButton;
@@ -27,12 +28,12 @@ public class PanelSound extends AbstractPanel {
 	private static final String GROUPNAME = "sound";
 
 	private static final String TEST_FILENAME = "test-voyageur-continu.mp3"; //$NON-NLS-1$
-//	private static final String TEST_PLAY_AUDIO_VOYAGEUR_CONTINU = "/sound configure -n voyageur-interieur\n" //$NON-NLS-1$
-//			+ "/variable write -n vioaudio 1\n" + "/mp3 play {0}\n"; //$NON-NLS-1$ //$NON-NLS-2$
-//	private static final String TEST_STOP_AUDIO_VOYAGEUR_CONTINU = "/mp3 stop\n" //$NON-NLS-1$
-//			+ "/variable write -n vioaudio 0\n" + "/sound configure -n default"; //$NON-NLS-1$ //$NON-NLS-2$
-//	private static final String TEST_AUDIO_VOYAGEUR = "/vocal testvoyageur"; //$NON-NLS-1$
-//	private static final String TEST_AUDIO_CONDUCTEUR = "/vocal testconducteur"; //$NON-NLS-1$
+	//	private static final String TEST_PLAY_AUDIO_VOYAGEUR_CONTINU = "/sound configure -n voyageur-interieur\n" //$NON-NLS-1$
+	//			+ "/variable write -n vioaudio 1\n" + "/mp3 play {0}\n"; //$NON-NLS-1$ //$NON-NLS-2$
+	//	private static final String TEST_STOP_AUDIO_VOYAGEUR_CONTINU = "/mp3 stop\n" //$NON-NLS-1$
+	//			+ "/variable write -n vioaudio 0\n" + "/sound configure -n default"; //$NON-NLS-1$ //$NON-NLS-2$
+	//	private static final String TEST_AUDIO_VOYAGEUR = "/vocal testvoyageur"; //$NON-NLS-1$
+	//	private static final String TEST_AUDIO_CONDUCTEUR = "/vocal testconducteur"; //$NON-NLS-1$
 
 	private VolumeSelectionListener _volumeListener;
 
@@ -61,19 +62,19 @@ public class PanelSound extends AbstractPanel {
 		_filename = System.getProperty("org.avm.home") + "/data/sound/"; //$NON-NLS-1$ //$NON-NLS-2$
 		File dir = new File(_filename);
 		File[] list = dir.listFiles();
-		if (list == null){
-			MessageBox.setMessage("Attention", "Aucun fichier dans " + _filename, MessageBox.MESSAGE_WARNING, SWT.NONE);
-		}
-		else{
-		for (int i = 0; i < list.length; i++) {
-			File f = list[i];
-			if (f.isDirectory()) {
-				_filename += f.getName();
-				break;
+		if (list != null) {
+
+			for (int i = 0; i < list.length; i++) {
+				File f = list[i];
+				if (f.isDirectory()) {
+					_filename += f.getName();
+					break;
+				}
 			}
+			_filename += "/" + TEST_FILENAME; //$NON-NLS-1$
+		} else {
+			_filename = null;
 		}
-		}
-		_filename += "/" + TEST_FILENAME; //$NON-NLS-1$
 
 	}
 
@@ -171,6 +172,10 @@ public class PanelSound extends AbstractPanel {
 		sbutton.addSelectionListener(_volumeListener);
 		sbutton.setLayoutData(gridData);
 		sbutton.setBackground(DesktopStyle.getBackgroundColor());
+		sbutton.setNotActiveLabel("Désac.");
+		sbutton.setActiveLabel("Activer");
+		sbutton.setNotActiveColor(DesktopStyle.getBackgroundColor());
+		sbutton.setActiveColor(DesktopImpl.VERT);
 
 	}
 
@@ -193,7 +198,7 @@ public class PanelSound extends AbstractPanel {
 				while (t.hasMoreElements()) {
 					Properties p = new Properties();
 					String sprop = t.nextToken();
-					sprop=sprop.trim();
+					sprop = sprop.trim();
 					if (sprop.trim().length() != 0) {
 						sprop = sprop.replace('{', ' ');
 						sprop = sprop.replace(',', '\n');
@@ -208,8 +213,8 @@ public class PanelSound extends AbstractPanel {
 			}
 		}
 	}
-	
-	private void updateConfig(Properties p){
+
+	private void updateConfig(Properties p) {
 		StringBuffer cmd = new StringBuffer();
 		cmd.append("/sound add -n ");
 		cmd.append(p.getProperty("name"));
@@ -219,33 +224,33 @@ public class PanelSound extends AbstractPanel {
 		cmd.append(p.getProperty("priority"));
 		cmd.append(" -v ");
 		cmd.append(p.getProperty("volume", "100"));
-		String result=runConsoleCommand(cmd.toString());
-		//--Command failed; No such command group: sound
-		int nbtentative=4;
-		while (result.indexOf("failed") != -1 && nbtentative>0){
+		String result = runConsoleCommand(cmd.toString());
+		// --Command failed; No such command group: sound
+		int nbtentative = 4;
+		while (result.indexOf("failed") != -1 && nbtentative > 0) {
 			try {
 				Thread.sleep(550);
 			} catch (InterruptedException e) {
 			}
 			nbtentative--;
-			result=runConsoleCommand(cmd.toString());
-			result+=runConsoleCommand("/sound list");
+			result = runConsoleCommand(cmd.toString());
+			result += runConsoleCommand("/sound list");
 		}
 	}
 
 	private void saveSoundConfiguration() {
-		String cmd="/sound updateconfig";
-		String result=runConsoleCommand(cmd.toString());
-		//--Command failed; No such command group: sound
-		int nbtentative=4;
-		while (result.indexOf("failed") != -1 && nbtentative>0){
+		String cmd = "/sound updateconfig";
+		String result = runConsoleCommand(cmd.toString());
+		// --Command failed; No such command group: sound
+		int nbtentative = 4;
+		while (result.indexOf("failed") != -1 && nbtentative > 0) {
 			try {
 				Thread.sleep(550);
 			} catch (InterruptedException e) {
 			}
 			nbtentative--;
-			result=runConsoleCommand(cmd.toString());
-			result+=runConsoleCommand("/sound list");
+			result = runConsoleCommand(cmd.toString());
+			result += runConsoleCommand("/sound list");
 		}
 	}
 
@@ -270,8 +275,9 @@ public class PanelSound extends AbstractPanel {
 
 				if (buttonName.equalsIgnoreCase("test")) {
 					String n = conf.getProperty("name");
-					boolean changed=!conf.getProperty("volume", "100").equals(conf.getProperty("oldvolume", "100"));
-					if (changed){
+					boolean changed = !conf.getProperty("volume", "100")
+							.equals(conf.getProperty("oldvolume", "100"));
+					if (changed) {
 						updateConfig(conf);
 					}
 					String cmd = null;
@@ -292,7 +298,7 @@ public class PanelSound extends AbstractPanel {
 					vol++;
 					vol = vol > 100 ? 100 : vol;
 					conf.put("volume", Integer.toString(vol));
-					
+
 					setVolume(name, Integer.toString(vol));
 				} else if (buttonName.equalsIgnoreCase("-")) {
 					_changed = true;
@@ -315,19 +321,31 @@ public class PanelSound extends AbstractPanel {
 				}
 				name = conf.getProperty("name");
 				if (state) {
-					int vioaudio = (name.indexOf("voyageur") != -1) ? 1 : 0;
-					int cioaudio = (name.indexOf("conducteur") != -1) ? 1 : 0;
-					String result="";
-					boolean changed=!conf.getProperty("volume", "100").equals(conf.getProperty("oldvolume", "100"));
-					if (changed){
-						updateConfig(conf);
+					if (_filename == null) {
+						MessageBox.setMessage("Attention", "Aucun fichier  "
+								+ TEST_FILENAME, MessageBox.MESSAGE_WARNING,
+								SWT.NONE);
+					} else {
+						int vioaudio = (name.indexOf("voyageur") != -1) ? 1 : 0;
+						int cioaudio = (name.indexOf("conducteur") != -1) ? 1
+								: 0;
+						String result = "";
+						boolean changed = !conf.getProperty("volume", "100")
+								.equals(conf.getProperty("oldvolume", "100"));
+						if (changed) {
+							updateConfig(conf);
+						}
+						result = runConsoleCommand("/sound volume -v " + vol);
+						result = runConsoleCommand("/sound configure -n "
+								+ name);
+						result = runConsoleCommand("/variable write -n vioaudio-int "
+								+ vioaudio);
+						result = runConsoleCommand("/variable write -n vioaudio-ext "
+								+ vioaudio);
+						result = runConsoleCommand("/variable write -n cioaudio "
+								+ cioaudio);
+						result = runConsoleCommand("/mp3 play " + _filename);
 					}
-					result=runConsoleCommand("/sound volume -v " + vol);
-					result=runConsoleCommand("/sound configure -n " + name);
-					result=runConsoleCommand("/variable write -n vioaudio-int " + vioaudio);
-					result=runConsoleCommand("/variable write -n vioaudio-ext " + vioaudio);
-					result=runConsoleCommand("/variable write -n cioaudio " + cioaudio);
-					result=runConsoleCommand("/mp3 play " + _filename);
 				} else {
 					runConsoleCommand("/mp3 stop");
 				}
@@ -339,8 +357,7 @@ public class PanelSound extends AbstractPanel {
 	protected boolean checkService() {
 		return isBundleAvailable("sound");
 	}
-	
-	
+
 	public static class ItemSoundFactory extends PanelFactory {
 		protected AbstractPanel create(Composite parent, int style) {
 			return new PanelSound(parent, style);

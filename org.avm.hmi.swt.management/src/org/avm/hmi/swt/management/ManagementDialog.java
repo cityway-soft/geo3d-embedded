@@ -1,7 +1,6 @@
 package org.avm.hmi.swt.management;
 
 import org.avm.elementary.common.ManageableService;
-import org.avm.hmi.swt.desktop.Desktop;
 import org.avm.hmi.swt.desktop.DesktopImpl;
 import org.avm.hmi.swt.desktop.DesktopStyle;
 import org.avm.hmi.swt.desktop.Geometry;
@@ -34,13 +33,13 @@ public class ManagementDialog implements SelectionListener {
 	private Button _buttonClose;
 
 	public ManagementDialog(Shell shell, String label) {
-		_shell = new Shell(shell, SWT.TOP|SWT.BORDER);
+		_shell = new Shell(shell, SWT.TOP | SWT.BORDER);
 
 		_shell.setBackground(DesktopStyle.getBackgroundColor());
 		GridLayout gridLayout = new GridLayout();
 
 		_shell.setLayout(gridLayout);
-		//Rectangle rect = Display.getCurrent().getActiveShell().getBounds();
+		// Rectangle rect = Display.getCurrent().getActiveShell().getBounds();
 		Rectangle rect = Geometry.parse(Display.getCurrent().getClientArea(),
 				System.getProperty("org.avm.hmi.swt.geometry"));
 		_shell.setSize(new Point(rect.width, rect.height));
@@ -53,7 +52,7 @@ public class ManagementDialog implements SelectionListener {
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.horizontalAlignment = GridData.FILL;
 		gridData.heightHint = Management.BUTTON_HEIGHT;
-		_fontTitle = DesktopImpl.getFont( 10, SWT.NORMAL);
+		_fontTitle = DesktopImpl.getFont(10, SWT.NORMAL);
 		_label = new Label(_shell, SWT.NONE | SWT.CENTER);
 		_label.setFont(_fontTitle);
 		_label.setBackground(DesktopStyle.getBackgroundColor());
@@ -77,6 +76,8 @@ public class ManagementDialog implements SelectionListener {
 
 		_buttonClose = new Button(_shell, SWT.NONE);
 		_buttonClose.setText("Fermer");
+		Font font = DesktopImpl.getFont(10, SWT.NORMAL);
+		_buttonClose.setFont(font);
 		_buttonClose.setLayoutData(gridData);
 		_buttonClose.addSelectionListener(this);
 		_buttonClose.setBackground(DesktopStyle.getBackgroundColor());

@@ -64,7 +64,7 @@ public class PanelNetwork extends AbstractPanel {
 					if (server == null) {
 						_wifi.setServerInHost(false);
 						_wifi.setServerAdressChangeEnabled(false);
-						Socket socket = new Socket("ftpserver.avm.org", 21);
+						Socket socket = new Socket("ftpserver.avm.org", 8021);
 						client = socket.getLocalAddress().getHostAddress();
 						server = socket.getInetAddress().getHostAddress();
 					}

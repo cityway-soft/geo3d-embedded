@@ -104,7 +104,7 @@ public abstract class AbstractPanel extends Composite implements Listener,
 			Thread thread = new Thread(new Runnable() {
 				public void run() {
 					String result = _console.runCommand(command);
-					if (!result.trim().equals("")) {
+					if (!result.trim().equals("")  && !result.startsWith("OK")) {
 						MessageBox.setMessage("Resultat", result,
 								MessageBox.MESSAGE_NORMAL, SWT.NONE);
 					}
@@ -174,7 +174,7 @@ public abstract class AbstractPanel extends Composite implements Listener,
 				forkConsoleCommand(command);
 			} else {
 				String result = runConsoleCommand(command);
-				if (!result.trim().equals("")) { //$NON-NLS-1$
+				if (!result.trim().equals("") && !result.startsWith("OK")) { //$NON-NLS-1$
 					MessageBox.setMessage(
 							Messages.getString("ItemTest.resultat"), result, //$NON-NLS-1$
 							MessageBox.MESSAGE_NORMAL, SWT.NONE);

@@ -1,6 +1,7 @@
 package org.avm.hmi.swt.management;
 
 import org.apache.log4j.Logger;
+import org.avm.hmi.swt.desktop.DesktopImpl;
 import org.avm.hmi.swt.desktop.DesktopStyle;
 import org.avm.hmi.swt.desktop.Keyboard;
 import org.avm.hmi.swt.desktop.KeyboardDialog;
@@ -9,6 +10,7 @@ import org.avm.hmi.swt.desktop.StateButton;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -75,17 +77,25 @@ public class PanelIdent extends AbstractPanel implements ConsoleFacadeInjector,
 		Text text;
 		Button button;
 
+		Font font = DesktopImpl.getFont(10, SWT.NORMAL);
+
 		label = new Label(this, SWT.NONE);
 		label.setText(Messages.getString("ItemIdent.vehicule_id")); //$NON-NLS-1$
 		label.setBackground(DesktopStyle.getBackgroundColor());
+		label.setFont(font);
 		text = new Text(this, SWT.NONE);
 		text.setEditable(false);
 		text.setText("" + System.getProperty(ORG_AVM_TERMINAL_NAME)); //$NON-NLS-1$
+		text.setFont(font);
+		gridData = new GridData();
+		gridData.horizontalAlignment = GridData.FILL;
+		text.setLayoutData(gridData);
 		button = new Button(this, SWT.NONE);
 		button.setText(Messages.getString("ItemIdent.modify")); //$NON-NLS-1$
 		button.addSelectionListener(new VehiculeIdSelectionListener());
 		button.setData(ORG_AVM_TERMINAL_NAME); //$NON-NLS-1$
 		button.setBackground(DesktopStyle.getBackgroundColor());
+		button.setFont(font);
 		gridData = new GridData();
 		gridData.heightHint = BUTTON_HEIGHT;
 		button.setLayoutData(gridData);
@@ -94,8 +104,10 @@ public class PanelIdent extends AbstractPanel implements ConsoleFacadeInjector,
 		label = new Label(this, SWT.NONE);
 		label.setText(Messages.getString("ItemIdent.exploitant_id")); //$NON-NLS-1$
 		label.setBackground(DesktopStyle.getBackgroundColor());
+		label.setFont(font);
 
 		text = new Text(this, SWT.NONE);
+		text.setFont(font);
 		text.setEditable(false);
 		text.setText("" + System.getProperty(ORG_AVM_TERMINAL_OWNER)); //$NON-NLS-1$
 		gridData = new GridData();
@@ -106,22 +118,24 @@ public class PanelIdent extends AbstractPanel implements ConsoleFacadeInjector,
 		button.addSelectionListener(new ExploitationIdSelectionListener());
 		button.setData(ORG_AVM_TERMINAL_OWNER); //$NON-NLS-1$
 		button.setBackground(DesktopStyle.getBackgroundColor());
+		button.setFont(font);
 		gridData = new GridData();
 		gridData.heightHint = BUTTON_HEIGHT;
 		button.setLayoutData(gridData);
 		_textExploitantId = text;
-		
-		
+
 		label = new Label(this, SWT.NONE);
 		label.setText(Messages.getString("ItemIdent.terminal_id")); //$NON-NLS-1$
 		label.setBackground(DesktopStyle.getBackgroundColor());
+		label.setFont(font);
 		text = new Text(this, SWT.NONE);
 		text.setEditable(false);
-		text.setText(System.getProperty("org.avm.terminal.id","????")); //$NON-NLS-1$
-
+		text.setFont(font);
+		text.setText(System.getProperty("org.avm.terminal.id", "????")); //$NON-NLS-1$
 		gridData = new GridData();
-		gridData.heightHint = BUTTON_HEIGHT;
-		
+		gridData.horizontalAlignment = GridData.FILL;
+		gridData.horizontalSpan=2;
+		text.setLayoutData(gridData);
 
 		// ----------------------
 		Composite panelActivite = new Composite(this, SWT.NONE);
@@ -162,6 +176,10 @@ public class PanelIdent extends AbstractPanel implements ConsoleFacadeInjector,
 				.getSystemColor(SWT.COLOR_GREEN));
 		_buttonCheckAuthentification.addSelectionListener(this);
 		_buttonCheckAuthentification.setLayoutData(gridData);
+		_buttonCheckAuthentification.setNotActiveLabel("Désac.");
+		_buttonCheckAuthentification.setActiveLabel("Activer");
+		_buttonCheckAuthentification.setNotActiveColor(DesktopStyle.getBackgroundColor());
+		_buttonCheckAuthentification.setActiveColor(DesktopImpl.VERT);
 
 		gridData = new GridData();
 		gridData.heightHint = BUTTON_HEIGHT;
@@ -172,6 +190,10 @@ public class PanelIdent extends AbstractPanel implements ConsoleFacadeInjector,
 				SWT.COLOR_GREEN));
 		_buttonCheckValidity.addSelectionListener(this);
 		_buttonCheckValidity.setLayoutData(gridData);
+		_buttonCheckValidity.setNotActiveLabel("Désac.");
+		_buttonCheckValidity.setActiveLabel("Activer");
+		_buttonCheckValidity.setNotActiveColor(DesktopStyle.getBackgroundColor());
+		_buttonCheckValidity.setActiveColor(DesktopImpl.VERT);
 		panelButtons.layout();
 	}
 

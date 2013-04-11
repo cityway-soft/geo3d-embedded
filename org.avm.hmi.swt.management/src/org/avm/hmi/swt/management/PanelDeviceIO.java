@@ -5,6 +5,7 @@ import java.util.Hashtable;
 import java.util.StringTokenizer;
 
 import org.avm.hmi.swt.desktop.Desktop;
+import org.avm.hmi.swt.desktop.DesktopImpl;
 import org.avm.hmi.swt.desktop.DesktopStyle;
 import org.avm.hmi.swt.desktop.StateButton;
 import org.eclipse.swt.SWT;
@@ -120,8 +121,12 @@ public class PanelDeviceIO extends AbstractPanel {
 			gridData.heightHint = Management.BUTTON_HEIGHT;
 
 			StateButton button = new StateButton(this, SWT.BORDER);
-			button.setActiveColor(this.getDisplay().getSystemColor(
-					SWT.COLOR_GREEN));
+//			button.setActiveColor(this.getDisplay().getSystemColor(
+//					SWT.COLOR_GREEN));
+			button.setNotActiveLabel("Désac.");
+			button.setActiveLabel("Activer");
+			button.setNotActiveColor(DesktopStyle.getBackgroundColor());
+			button.setActiveColor(DesktopImpl.VERT);
 			_hash.put(titre, button);
 			button.setLayoutData(gridData);
 			button.setText(titre);
