@@ -380,7 +380,7 @@ public class Shell {
 		_log.debug("exec : " + name + " " + args);
 		long result = org.avm.device.plateform.System.exec(name, args)
 				.longValue();
-		_out.println("#handle:" + result);
+		_out.println("OK #handle:" + result);
 		_log.debug("exec : " + name + " " + args);
 	}
 
