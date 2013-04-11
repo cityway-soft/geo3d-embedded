@@ -10,7 +10,7 @@
 <value type="String">initial@reference:file:../../DLA/projets/EN-COURS/AVM/common/dev/workspace/avm-v1/org.avm.elementary.alarm/</value>
 </property>
 <property name="org.avm.config.version">
-<value type="Integer">16</value>
+<value type="Integer">17</value>
 </property>
 <property name="0">
 	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
@@ -181,6 +181,19 @@
 		name=Billettique
 		type=0
 		key=billettique
+	</value>
+</property>
+<property name="22">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		acknowledge=false
+		index=22
+		order=22
+		readonly=false
+		notify-up=true
+		notify-down=true
+		name=Afficheur
+		type=0
+		key=afficheur
 	</value>
 </property>
 </configuration>
