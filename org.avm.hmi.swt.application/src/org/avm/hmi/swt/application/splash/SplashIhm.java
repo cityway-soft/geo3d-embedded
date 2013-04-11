@@ -107,7 +107,7 @@ public class SplashIhm implements Splash, MouseListener {
 				_labelVehicule.setBackground(_display
 						.getSystemColor(SWT.COLOR_WHITE));
 				_labelVehicule
-						.setText(Messages.getString("SplashIhm.vehicule") + " " + System.getProperty("org.avm.vehicule.id", //$NON-NLS-1$
+						.setText(Messages.getString("SplashIhm.vehicule") + " " + System.getProperty("org.avm.terminal.name", //$NON-NLS-1$
 												"???")); //$NON-NLS-1$
 				_fontLabelVehicule = Application.getFont( 20, SWT.NORMAL);
 				_labelVehicule.setFont(_fontLabelVehicule);
@@ -127,7 +127,7 @@ public class SplashIhm implements Splash, MouseListener {
 				_labelExploitant
 						.setText(System.getProperty(
 								"org.avm.exploitation.name", //$NON-NLS-1$
-								"") + " (" + System.getProperty("org.avm.exploitation.id", //$NON-NLS-1$
+								"") + " (" + System.getProperty("org.avm.terminal.owner", //$NON-NLS-1$
 												"???") + ")"); //$NON-NLS-1$
 				_fontLabelExploitant =  Application.getFont( 5, 
 						SWT.NORMAL);
