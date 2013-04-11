@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.device.girouette.GirouetteDevice" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.device.girouette.GirouetteDevice</value>
+</property>
+<property name="DEVICE_MANUFACTURER">
+<value type="String">duhamel.com</value>
+</property>
+<property name="DEVICE_DESCRIPTION">
+<value type="String">Controleur de girouette Duhamel</value>
+</property>
+<property name="DEVICE_MODEL">
+<value type="String">org.avm.device.girouette.duhamel</value>
+</property>
+<property name="DEVICE_NAME">
+<value type="String">org.avm.device.girouette.duhamel</value>
+</property>
+<property name="DEVICE_VERSION">
+<value type="String">1.0.0</value>
+</property>
+<property name="DEVICE_SERIAL">
+<value type="String">4df3687a-9b67-46c5-b83f-b581c98feff2</value>
+</property>
+<property name="org.avm.elementary.dummy.property">
+<value type="String">Thu Apr 24 17:39:34 CEST 2008</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">ftp://avm:avm++@ftpserver.avm.org/aton/106/bundles/org.avm.device.girouette.jar</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">1</value>
+</property>
+<property name="DEVICE_CATEGORY">
+<value type="String">org.avm.device.girouette.Girouette</value>
+</property>
+<property name="parameters">
+<value type="String">#Wed May 20 16:09:35 GMT 2009
+url=comm\:1;baudrate\=1200;stopbits\=1;parity\=none;bitsperchar\=7;blocking\=off
+protocol=8</value>
+</property>
+<property name="config.date">
+<value type="String">Mon May 18 15:04:48 GMT 2009</value>
+</property>
+</configuration>
+</cm_data>

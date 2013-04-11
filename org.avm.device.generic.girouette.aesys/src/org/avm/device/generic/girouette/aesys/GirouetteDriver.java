@@ -1,3 +1,4 @@
+
 package org.avm.device.generic.girouette.aesys;
 
 import org.apache.log4j.Logger;
@@ -12,70 +13,68 @@ import org.osgi.service.device.Constants;
 import org.osgi.service.device.Driver;
 import org.osgi.util.tracker.ServiceTracker;
 
-public class GirouetteDriver extends AbstractActivator implements Driver,
-		Constants {
-
-	private final Logger _log = Logger.getInstance(this.getClass());
-
+public class GirouetteDriver extends AbstractActivator implements Driver, Constants {
+	
+	private final Logger       log     = Logger.getInstance(this.getClass());
+	
 	public static final String CATEGORY = Girouette.class.getName();
-
-	public static final String MODEL = "org.avm.device.girouette.aesys";
-
-	public static final String _spec = "(&" + " ( " + DEVICE_CATEGORY + "="
-			+ CATEGORY + ")" + " (" + DeviceConfig.DEVICE_MODEL + "=" + MODEL
-			+ ")" + ")";
-
-	private Filter _filter;
-
-	private ServiceTracker _tracker;
-
-	GirouetteService driver;
-
+	
+	public static final String MODEL    = "org.avm.device.girouette.aesys";
+	
+	public static final String spec    = "(&" + " ( " + Constants.DEVICE_CATEGORY + "=" + GirouetteDriver.CATEGORY + ")" + " (" + DeviceConfig.DEVICE_MODEL + "=" + GirouetteDriver.MODEL + ")" + ")";
+	
+	private Filter             filter;
+	
+	private ServiceTracker     tracker;
+	
+	GirouetteService           driver;
+	
 	public GirouetteDriver() {
-		_log.debug("[FLA] : constructeur");
+	
 	}
-
-	private Filter getFilter() {
-		if (_filter == null) {
-			try {
-				_filter = _context.getBundleContext().createFilter(_spec);
-			} catch (final Exception e) {
-				_log.error(e.getMessage(), e);
-			}
+	
+	public String attach(final ServiceReference device) throws Exception {
+	
+		this.driver = new GirouetteService(this._context, device);
+		return null;
+	}
+	
+	public int match(final ServiceReference device) throws Exception {
+	
+		if (this.getFilter().match(device)) {
+			return Device.MATCH_MODEL;
 		}
-		return _filter;
+		else {
+			return org.osgi.service.device.Device.MATCH_NONE;
+		}
 	}
-
+	
 	protected void start(final ComponentContext context) {
-		_log.debug("[FLA] : start");
-		_tracker = new ServiceTracker(context.getBundleContext(),
-				GirouetteService.class.getName(), null);
-		_tracker.open();
+	
+		this.tracker = new ServiceTracker(context.getBundleContext(), GirouetteService.class.getName(), null);
+		this.tracker.open();
 	}
-
+	
 	protected void stop(final ComponentContext context) {
-		_log.debug("[FLA] : stop");
-		final Object[] services = _tracker.getServices();
+	
+		final Object[] services = this.tracker.getServices();
 		for (int i = 0; i < services.length; i++) {
 			final GirouetteService driver = (GirouetteService) services[i];
 			driver.close();
 		}
-		_tracker.close();
+		this.tracker.close();
 	}
-
-	public String attach(final ServiceReference device) throws Exception {
-		_log.debug("[FLA] : avant instance girouetteService");
-		driver = new GirouetteService(_context, device);
-		_log.debug("[FLA] : après instance girouetteService");
-		return null;
-	}
-
-	public int match(final ServiceReference device) throws Exception {
-		_log.debug("[FLA] : match");
-		if (getFilter().match(device)) {
-			return Device.MATCH_MODEL;
-		} else {
-			return Device.MATCH_NONE;
+	
+	private Filter getFilter() {
+	
+		if (this.filter == null) {
+			try {
+				this.filter = this._context.getBundleContext().createFilter(GirouetteDriver.spec);
+			}
+			catch (final Exception e) {
+				this.log.error(e.getMessage(), e);
+			}
 		}
+		return this.filter;
 	}
 }

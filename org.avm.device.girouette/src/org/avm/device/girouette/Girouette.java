@@ -4,4 +4,6 @@ public interface Girouette {
 
 	public void destination(String code);
 
+	public int getStatus() throws Exception;
+
 }

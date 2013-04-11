@@ -1,6 +1,7 @@
 package org.avm.device.generic.girouette.duhamel;
 
 import org.apache.log4j.Logger;
+import org.avm.device.generic.girouette.duhamel.GirouetteService;
 import org.avm.device.girouette.Girouette;
 import org.avm.elementary.common.AbstractActivator;
 import org.avm.elementary.common.Device;

@@ -1,13 +1,19 @@
 package org.avm.device.girouette.bundle;
 
+import java.util.List;
+
+import org.avm.device.girouette.Girouette;
 import org.avm.device.girouette.GirouetteDevice;
+import org.avm.elementary.alarm.AlarmProvider;
 import org.avm.elementary.common.AbstractActivator;
 import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ManageableService;
+import org.avm.elementary.common.ProducerService;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 
-public class Activator extends AbstractActivator {
+public class Activator extends AbstractActivator implements AlarmProvider {
+	public static final String PID = Girouette.class.getName();
 
 	private ConfigurationAdmin _cm;
 
@@ -17,6 +23,8 @@ public class Activator extends AbstractActivator {
 
 	private GirouetteDevice _peer;
 
+	private ProducerImpl _producer;
+
 	public Activator() {
 		super();
 		_peer = new GirouetteDevice();
@@ -25,11 +33,13 @@ public class Activator extends AbstractActivator {
 	protected void start(ComponentContext context) {
 		initializeConfiguration();
 		initializeCommandGroup();
+		initializeProducer();
 		startService();
 	}
 
 	protected void stop(ComponentContext context) {
 		stopService();
+		disposeProducer();
 		disposeCommandGroup();
 		disposeConfiguration();
 	}
@@ -49,6 +59,22 @@ public class Activator extends AbstractActivator {
 			_log.error(e.getMessage(), e);
 		}
 
+	}
+
+	// producer
+	private void initializeProducer() {
+		if (_peer instanceof ProducerService) {
+			_producer = new ProducerImpl(_context);
+			_producer.start();
+			((ProducerService) _peer).setProducer(_producer);
+		}
+	}
+
+	private void disposeProducer() {
+		if (_peer instanceof ProducerService) {
+			((ProducerService) _peer).setProducer(null);
+			_producer.stop();
+		}
 	}
 
 	private void disposeConfiguration() {
@@ -82,6 +108,23 @@ public class Activator extends AbstractActivator {
 			((ManageableService) _peer).stop();
 		}
 		_peer.setContext(null);
+	}
+
+	
+	public void setGirouette(org.avm.device.girouette.Girouette girouette) {
+		_peer.setGirouette(girouette);
+	}
+
+	public void unsetGirouette(org.avm.device.girouette.Girouette girouette) {
+		_peer.unsetGirouette(girouette);
+	}
+	
+	public List getAlarm() {
+		return _peer.getAlarm();
+	}
+
+	public String getProducerPID() {
+		return _peer.getProducerPID();
 	}
 
 }
