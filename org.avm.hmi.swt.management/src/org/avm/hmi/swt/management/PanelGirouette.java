@@ -375,7 +375,7 @@ public class PanelGirouette extends AbstractPanel implements KeyboardListener,
 			logger.debug("Restart device.girouette : " + result);
 
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 			}
 			testGirouette();

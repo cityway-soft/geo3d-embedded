@@ -376,7 +376,7 @@ public class PanelAfficheur extends AbstractPanel implements KeyboardListener,
 			logger.debug("Restart device.afficheur : " + result);
 
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 			}
 			testAfficheur();

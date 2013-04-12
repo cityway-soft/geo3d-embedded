@@ -318,14 +318,17 @@ public class DriverSelection extends Composite {
 			_testResult.setBackground(Display.getCurrent().getSystemColor(
 					SWT.COLOR_GREEN));
 			_testResult.setText("OK");
+			_testButton.setEnabled(true);
 		} else if (success < 0) {
 			_testResult.setBackground(Display.getCurrent().getSystemColor(
 					SWT.COLOR_RED));
 			_testResult.setText("Echec");
+			_testButton.setEnabled(true);
 		} else {
 			_testResult.setBackground(Display.getCurrent().getSystemColor(
 					SWT.COLOR_GRAY));
 			_testResult.setText("- - -");
+			_testButton.setEnabled(false);
 		}
 		layout();
 	}
