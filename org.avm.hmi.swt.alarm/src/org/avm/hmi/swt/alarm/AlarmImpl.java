@@ -155,8 +155,7 @@ public class AlarmImpl implements AlarmIhm, ManageableService, ProducerService,
 				}
 				_desktop.addTabItem(EXPLOITATION_ALARM_TAB_NAME,
 						_ihmAlarmExploitation, index);
-				_desktop.activateItem(EXPLOITATION_ALARM_TAB_NAME);
-				_desktop.setFavorite(EXPLOITATION_ALARM_TAB_NAME);
+//				_desktop.activateItem(EXPLOITATION_ALARM_TAB_NAME);
 				_log.info("Added Exploitation Alarm to desktop...");
 
 			}

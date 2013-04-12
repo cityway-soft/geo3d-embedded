@@ -77,6 +77,7 @@ public class AuthentificationIhm implements Authentification, SelectionListener 
 				}
 				_desktop.addTabItem(NAME, _loginPanel, 0);
 				_desktop.activateItem(NAME);
+				_desktop.setFavorite(NAME);
 				activateMatricule();
 				_desktop.getRightPanel().layout();
 			}
