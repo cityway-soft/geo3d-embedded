@@ -10,7 +10,7 @@
 <value type="String">initial@reference:file:../../DLA/projets/EN-COURS/AVM/common/dev/workspace/avm-v1/org.avm.elementary.alarm/</value>
 </property>
 <property name="org.avm.config.version">
-<value type="Integer">17</value>
+<value type="Integer">18</value>
 </property>
 <property name="0">
 	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
@@ -34,6 +34,7 @@
 		name=Encha\u00EEnement
 		type=1
 		key=enchainement
+		visible=false
 	</value>
 </property>
 <property name="2">
@@ -58,6 +59,7 @@
 		name=Immobilisation
 		type=1
 		key=immobilisation
+		visible=false
 	</value>
 </property>
 <property name="4">
@@ -94,6 +96,7 @@
 		name=Exploitation
 		type=1
 		key=exploitation
+		visible=false
 	</value>
 </property>
 <property name="7">
@@ -165,7 +168,7 @@
 		readonly=true
 		notify-up=false
 		notify-down=false
-		name=PC TC
+		name=Liaison PCC
 		type=0
 		key=server-link
 	</value>
@@ -176,11 +179,12 @@
 		index=21
 		order=21
 		readonly=true
-		notify-up=true
-		notify-down=true
+		notify-up=false
+		notify-down=false
 		name=Billettique
 		type=0
 		key=billettique
+		visible=false
 	</value>
 </property>
 <property name="22">

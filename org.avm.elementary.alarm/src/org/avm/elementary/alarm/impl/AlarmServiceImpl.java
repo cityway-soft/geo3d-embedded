@@ -211,6 +211,14 @@ public class AlarmServiceImpl implements AlarmService, ConfigurableService,
 	public void update(final ClotureAlerte cloture) {
 
 		final Anomalie anomalie = cloture.getEntete().getAnomalie();
+		if (anomalie == null){
+			_log.warn("Champs anomalie non renseigné!");
+			Alarm alarm = this.getAlarm(new Integer(0));
+			if (alarm != null) {
+				alarm.setStatus(false);
+			}
+			return;
+		}
 		Alarm alarm;
 		if (anomalie.getAlarme_0() != 0) {
 			alarm = this.getAlarm(new Integer(0));
