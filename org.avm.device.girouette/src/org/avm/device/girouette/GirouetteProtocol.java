@@ -69,8 +69,7 @@ public abstract class GirouetteProtocol {
 	}
 
 	public synchronized final int getStatus() throws Exception {
-		int result = STATUS_ERR_NO_RESPONSE;
-
+		int result = STATUS_NOT_AVAILABLE;
 
 		byte[] request = generateStatus();
 		if (request != null) {
@@ -85,6 +84,7 @@ public abstract class GirouetteProtocol {
 					logger.debug("Response:" + toHexaAscii(response));
 					result = checkStatus(toHexaAscii(response));
 				} else {
+					result = STATUS_ERR_NO_RESPONSE;
 					logger.debug("No Response");
 				}
 
@@ -128,17 +128,17 @@ public abstract class GirouetteProtocol {
 		return data;
 	}
 
-	public boolean isStatusAvailable(){
+	public boolean isStatusAvailable() {
 		return generateStatus() != null;
 	}
-	
+
 	public byte[] generateStatus() {
-		//-- pas implémenté
+		// -- pas implémenté
 		return null;
 	}
 
 	public int checkStatus(String status) {
-		//-- pas implémenté
+		// -- pas implémenté
 		return GirouetteProtocol.STATUS_NOT_AVAILABLE;
 	}
 

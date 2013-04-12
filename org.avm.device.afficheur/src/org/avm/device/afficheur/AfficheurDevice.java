@@ -75,7 +75,7 @@ public class AfficheurDevice extends AbstractDevice implements AlarmProvider,
 	}
 
 	private int check() {
-		int result = -3;
+		int result = AfficheurProtocol.STATUS_NOT_AVAILABLE;
 		if (afficheur != null && producer != null) {
 			try {
 				result = afficheur.getStatus();

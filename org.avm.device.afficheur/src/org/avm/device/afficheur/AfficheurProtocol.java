@@ -69,7 +69,7 @@ public abstract class AfficheurProtocol {
 	}
 
 	public synchronized final int getStatus() throws Exception {
-		int result = STATUS_ERR_NO_RESPONSE;
+		int result = STATUS_NOT_AVAILABLE;
 
 		byte[] request = generateStatus();
 		if (request != null) {
@@ -84,6 +84,7 @@ public abstract class AfficheurProtocol {
 					logger.debug("Response:" + toHexaAscii(response));
 					result = checkStatus(toHexaAscii(response));
 				} else {
+					result = STATUS_ERR_NO_RESPONSE;
 					logger.debug("No Response");
 				}
 
