@@ -2,6 +2,7 @@ package org.avm.hmi.swt.management;
 
 
 import org.avm.hmi.swt.desktop.AzertyCompleteKeyboard;
+import org.avm.hmi.swt.desktop.DesktopImpl;
 import org.avm.hmi.swt.desktop.DesktopStyle;
 import org.avm.hmi.swt.desktop.Keyboard;
 import org.avm.hmi.swt.desktop.KeyboardDialog;
@@ -10,6 +11,7 @@ import org.avm.hmi.swt.desktop.MessageBox;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -60,9 +62,11 @@ public class PanelSMS extends AbstractPanel implements SelectionListener {
 	private void create() {
 		GridData gridData;
 
-
+		Font font = DesktopImpl.getFont(10, SWT.NORMAL);
+		
 		_buttonDest = new Button(this, SWT.NONE);
 		_buttonDest.setText("Edit");
+		_buttonDest.setFont(font);
 		_buttonDest.setBackground(DesktopStyle.getBackgroundColor());
 		KeyboardListener destlistener = new KeyboardListener() {
 			public void validation(String str) {
@@ -76,6 +80,7 @@ public class PanelSMS extends AbstractPanel implements SelectionListener {
 		_buttonDest.setLayoutData(gridData);
 
 		Label labelDest = new Label(this, SWT.NONE);
+		labelDest.setFont(font);
 		labelDest.setText("Destinataire");
 		labelDest.setBackground(DesktopStyle.getBackgroundColor());
 		gridData = new GridData();
@@ -85,6 +90,7 @@ public class PanelSMS extends AbstractPanel implements SelectionListener {
 		labelDest.setLayoutData(gridData);
 
 		_textDest = new Text(this, SWT.BORDER);
+		_textDest.setFont(font);
 		_textDest.setBackground(DesktopStyle.getBackgroundColor());
 		gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL;
@@ -94,6 +100,7 @@ public class PanelSMS extends AbstractPanel implements SelectionListener {
 		
 
 		_buttonMessage = new Button(this, SWT.NONE);
+		_buttonMessage.setFont(font);
 		_buttonMessage.setText("Edit");
 		_buttonMessage.setBackground(DesktopStyle.getBackgroundColor());
 		KeyboardListener messagelistener = new KeyboardListener() {
@@ -109,6 +116,7 @@ public class PanelSMS extends AbstractPanel implements SelectionListener {
 		_buttonMessage.setLayoutData(gridData);
 
 		Label labelMessage = new Label(this, SWT.NONE);
+		labelMessage.setFont(font);
 		labelMessage.setText("Message");
 		labelMessage.setBackground(DesktopStyle.getBackgroundColor());
 		gridData = new GridData();
@@ -120,6 +128,7 @@ public class PanelSMS extends AbstractPanel implements SelectionListener {
 		_textMessage = new Text(this, SWT.V_SCROLL | SWT.MULTI | SWT.WRAP | SWT.BORDER);
 		_textMessage.setBackground(DesktopStyle.getBackgroundColor());
 		_textMessage.setText("");
+		_textMessage.setFont(font);
 		gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL;
 		gridData.grabExcessHorizontalSpace = true;
@@ -133,6 +142,7 @@ public class PanelSMS extends AbstractPanel implements SelectionListener {
 		_buttonSend.setText("Envoyer");
 		_buttonSend.setBackground(DesktopStyle.getBackgroundColor());
 		_buttonSend.addSelectionListener(this);
+		_buttonSend.setFont(font);
 		gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL;
 		gridData.grabExcessHorizontalSpace = true;

@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 import org.apache.log4j.Logger;
 import org.avm.elementary.common.Config;
 import org.avm.elementary.common.ConfigurableService;
+import org.avm.hmi.swt.desktop.ABCKeyboard;
 import org.avm.hmi.swt.desktop.DesktopStyle;
 import org.avm.hmi.swt.desktop.Keyboard;
 import org.avm.hmi.swt.desktop.KeyboardListener;
@@ -87,7 +88,7 @@ public class PanelAfficheur extends AbstractPanel implements KeyboardListener,
 		gridData.grabExcessVerticalSpace = true;
 		// gridData.horizontalIndent = 10;
 		// gridData.heightHint = 40;
-		_keyb = new Keyboard(this, SWT.NONE);
+		_keyb = new ABCKeyboard(this, SWT.NONE);
 		_keyb.setData(gridData);
 		_keyb.setListener(this);
 		_keyb.setBackground(DesktopStyle.getBackgroundColor());

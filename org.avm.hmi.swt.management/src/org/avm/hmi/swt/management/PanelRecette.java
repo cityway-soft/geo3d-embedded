@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.Properties;
 
 import org.avm.hmi.swt.desktop.Desktop;
+import org.avm.hmi.swt.desktop.DesktopImpl;
+import org.avm.hmi.swt.desktop.DesktopStyle;
 import org.avm.hmi.swt.desktop.StateButton;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -22,10 +24,10 @@ public class PanelRecette extends AbstractPanel implements SelectionListener,Con
 	private static final int INDENT = Desktop.DEFAULT_FONTSIZE / 5;
 
 	private static final String[] ITEMS = { "afficheur", "ango",
-		"phonie", "audio-voyageur-int","audio-voyageur-ext", "girouette", "gps", "can", "tft", "acces-wifi", "acces-gprs", "comptage" };
+		"phonie", "audio-voyageur-int","audio-voyageur-ext", "girouette", "gps", "can", "tft", "acces-wifi", "liaison-pcc", "comptage" };
 
 	private static final String[] BUNDLES = { "afficheur", "leds",
-		"phony", "sound","sound", "girouette", "gps", "can", "tft", "wifi", "media.avm", "comptage" };
+		"phony", "sound","sound", "girouette", "gps", "can", "tft", "wifi", "media.ctw", "comptage" };
 
 	private String _filePersist;
 	private String _fileUpload;
@@ -137,6 +139,10 @@ public class PanelRecette extends AbstractPanel implements SelectionListener,Con
 		button.setEnabled(isBundleAvailable(bundle));
 		button.addSelectionListener(this);
 		button.setLayoutData(gridData);
+//		button.setNotActiveLabel("Désac.");
+//		button.setActiveLabel("Activer");
+		button.setNotActiveColor(DesktopStyle.getBackgroundColor());
+		button.setActiveColor(DesktopImpl.VERT);
 	}
 
 	public void widgetDefaultSelected(SelectionEvent e) {
