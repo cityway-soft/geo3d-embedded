@@ -12,6 +12,8 @@ import org.osgi.util.measurement.State;
 
 public class ConsumerImpl extends AbstractConsumer {
 
+	public static final String VARIABLE_ALARM_PRODUCER_PID = "alarm";
+	
 	public static final String ALARM_PRODUCER_PID = AlarmService.class
 			.getName();
 	public static final String MESSENGER_PRODUCER_PID = Messenger.class
@@ -26,6 +28,8 @@ public class ConsumerImpl extends AbstractConsumer {
 	}
 
 	protected void createWires() {
+		_wireadmin.createWire(VARIABLE_ALARM_PRODUCER_PID, getConsumerPID(),
+				null);
 		_wireadmin.createWire(ALARM_PRODUCER_PID, getConsumerPID(), null);
 		_wireadmin.createWire(MESSENGER_PRODUCER_PID, getConsumerPID(), null);
 	}
