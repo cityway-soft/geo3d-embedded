@@ -3,6 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: IHM SWT Leds
 Bundle-SymbolicName: org.angolight.hmi.swt.leds
 Bundle-Version: 1.0.0.qualifier
+Service-Component: META-INF/activator.xml
+Bundle-ClassPath: .
 Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.angolight.device.leds,
  org.apache.log4j,
@@ -15,5 +17,5 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.osgi.service.component,
  org.osgi.service.wireadmin,
  org.osgi.util.measurement
-Service-Component: META-INF/activator.xml
-Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
+Bundle-Vendor: Cityway
+XBundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
