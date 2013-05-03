@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.avm.elementary.command.CommandChain;
@@ -92,8 +91,9 @@ public class MessengerImpl implements Messenger, MediaListener, MediaService,
 				throw new Exception("No producer for message " //$NON-NLS-1$
 						+ toHexaString(data));
 			}
-			if (_log.isDebugEnabled()){
-				_log.debug("Reception du message : " + data +"; binaire= " + toHexaString(data));
+			if (_log.isDebugEnabled()) {
+				_log.debug("Reception du message : " + data + "; binaire= "
+						+ toHexaString(data));
 			}
 
 			_producer.publish(m);
@@ -110,19 +110,28 @@ public class MessengerImpl implements Messenger, MediaListener, MediaService,
 			context.setHeader(header);
 			context.setMessage(data);
 			context.setMedias(_medias);
-		
+
 			boolean result = _command.execute(context);
 			byte[] buffer = parse(header, data);
-			if (buffer != null) {				
-				if (_log.isDebugEnabled()){
-					_log.debug("Emission du message : " + data +"; binaire= " + toHexaString(buffer));
+			if (buffer != null) {
+				if (_log.isDebugEnabled()) {
+					_log.debug("Emission du message : " + data + "; binaire= "
+							+ toHexaString(buffer));
 				}
 				String name = (String) context.getHeader().get("MEDIA_ID");
-				Media media = (Media) _medias.get(name);
-				Sender.getInstance().send(media, header, buffer);
-			}else {
+				if (name == null) {
+					_log.error("Property MEDIA_ID not found in context !");
+				} else {
+					Media media = (Media) _medias.get(name);
+					if (media == null) {
+						_log.error("Media named " + name + " not found !");
+					} else {
+						Sender.getInstance().send(media, header, buffer);
+					}
+				}
+			} else {
 				_log.error("No parser for message " + data);
-			}						
+			}
 		}
 	}
 
@@ -148,13 +157,14 @@ public class MessengerImpl implements Messenger, MediaListener, MediaService,
 		if (_parsers != null) {
 			try {
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				for (Enumeration iter = _parsers.elements(); iter.hasMoreElements();) {
+				for (Enumeration iter = _parsers.elements(); iter
+						.hasMoreElements();) {
 					Parser parser = (Parser) iter.nextElement();
 					try {
 						parser.put(data, out);
 						break;
 					} catch (Exception e) {
-						if (_log.isDebugEnabled()){
+						if (_log.isDebugEnabled()) {
 							_log.debug(e);
 						}
 					}
@@ -166,7 +176,7 @@ public class MessengerImpl implements Messenger, MediaListener, MediaService,
 		}
 		return buffer;
 	}
-	
+
 	private String toHexaString(byte[] data) {
 		byte[] buffer = new byte[data.length * 2];
 
