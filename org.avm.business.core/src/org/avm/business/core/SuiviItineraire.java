@@ -308,7 +308,7 @@ public class SuiviItineraire implements ConfigurableService {
 
 			directDist = getDistBetweenTwoPoints(curPos.getLatitude()
 					.getValue(), curPos.getLatitude().getValue(),
-					nextStop.getX(), nextStop.getY());
+					nextStop.getLongitude(), nextStop.getLatitude());
 
 			// distRestante = (long) (nextStop.getDistance() -
 			// _distParcourueRecalee);

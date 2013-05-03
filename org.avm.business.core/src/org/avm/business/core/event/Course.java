@@ -285,4 +285,13 @@ public class Course implements Event {
 		}
 	}
 
+	public String getCodeLigne() {
+		return Integer.toString(this._lgn_idu);
+	}
+
+	public int getItineraireIdu() {
+		// TODO Stub de la méthode généré automatiquement
+		return 0;
+	}
+
 }

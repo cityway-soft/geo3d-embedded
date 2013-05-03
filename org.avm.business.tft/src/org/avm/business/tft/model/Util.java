@@ -25,7 +25,7 @@ public class Util {
 				Point point = points[i];
 				pnts[i] = new POINT(point.getId(), point.getIdu(), point
 						.getNom(), point.getNomReduitGroupePoint(), point
-						.getX(), point.getY(), (int) point.getDistance(), point
+						.getLongitude(), point.getLatitude(), (int) point.getDistance(), point
 						.getCodeGirouette(), point.getArriveeTempsReel(), 0,
 						point.getArriveeTheorique(), point.getAttente(), point
 								.getRang(), point.isDesservi() ? 1 : 0);

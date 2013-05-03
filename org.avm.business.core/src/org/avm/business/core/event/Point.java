@@ -21,9 +21,9 @@ public class Point implements Event {
 
 	private float _distance;
 
-	private float _x;
+	private float _longitude;
 
-	private float _y;
+	private float _latitude;
 
 //	private boolean _isEntryNotify = false;
 	
@@ -44,8 +44,8 @@ public class Point implements Event {
 		_idu = idu;
 		_nom = nom;
 		_type = type;
-		_x = x;
-		_y = y;
+		_longitude = x;
+		_latitude = y;
 		_attente=-1;
 		_nomReduitGroupePoint = "-";
 		_attributes = new HashMap();
@@ -156,12 +156,12 @@ public class Point implements Event {
 		return _type;
 	}
 
-	public float getX() {
-		return _x;
+	public float getLongitude() {
+		return _longitude;
 	}
 
-	public float getY() {
-		return _y;
+	public float getLatitude() {
+		return _latitude;
 	}
 
 	public String toString() {
@@ -255,7 +255,7 @@ public class Point implements Event {
 	public Object clone() {
 		Point p = new Point(this._id, this._idu, this._nom, this._type,
 				this._arriveeTheorique, this._attente, this._rang,
-				this._distance, this._x, this._y, this._codeGirouette);
+				this._distance, this._longitude, this._latitude, this._codeGirouette);
 		p._arriveeTheorique = this._arriveeTheorique;
 		p._arriveeTempsReel = this._arriveeTempsReel;
 		p._nomReduitGroupePoint = this._nomReduitGroupePoint;
@@ -264,7 +264,7 @@ public class Point implements Event {
 	}
 
 	public boolean isGeoref() {
-		return !((getX() == 0 && getY() == 0) || (getX() == -1 && getY() == -1));
+		return !((getLongitude() == 0 && getLatitude() == 0) || (getLongitude() == -1 && getLatitude() == -1));
 	}
 
 	public void setAttribute(Integer attId, String att_val) {
@@ -276,5 +276,7 @@ public class Point implements Event {
 	public String getAttribute(Integer id){
 		return (String)_attributes.get(id);
 	}
+
+
 
 }

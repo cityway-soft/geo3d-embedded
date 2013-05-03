@@ -168,7 +168,7 @@ public class GeorefFollowUp extends Composite implements FollowUp,
 		_text.setVisible(true);
 		_label.setVisible(true);
 		Point point = _avm.getModel().getDernierPoint();
-		if (point != null && point.getX() == 0 && point.getY() == 0
+		if (point != null && point.getLongitude() == 0 && point.getLatitude() == 0
 				&& point.isDesservi()) {
 			_label
 					.setText(Messages
@@ -176,7 +176,7 @@ public class GeorefFollowUp extends Composite implements FollowUp,
 			_text.setText(point.getNom());
 		}
 		point = _avm.getModel().getProchainPoint();
-		if (point != null && point.getX() == 0 && point.getY() == 0
+		if (point != null && point.getLongitude() == 0 && point.getLatitude() == 0
 				&& point.isDesservi() == false) {
 			_label
 					.setText(Messages
@@ -222,7 +222,7 @@ public class GeorefFollowUp extends Composite implements FollowUp,
 					Point point = _course.getPointAvecRang(_currentRang + 1);
 					if (point != null 
 							&& point.isDesservi() == false) {
-						if (point.getX() == 0 && point.getY() == 0){
+						if (point.getLongitude() == 0 && point.getLatitude() == 0){
 						_label
 								.setText(Messages
 										.getString("GeorefFollowUp.prochain-arret-non-geolocalise")); //$NON-NLS-1$

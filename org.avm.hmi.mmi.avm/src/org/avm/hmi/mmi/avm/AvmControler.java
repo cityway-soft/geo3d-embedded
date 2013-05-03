@@ -460,7 +460,7 @@ public class AvmControler extends AbstractAvmModelListener implements
 			return;
 		}
 		stopAttenteDepart();
-		_log.debug("getX() =" + point.getX() + "getY() =" + point.getY());
+		_log.debug("getX() =" + point.getLongitude() + "getY() =" + point.getLatitude());
 		if (point.isGeoref()) {
 			_avmView.activateSuiviCourse(
 					AvmModel.STRING_STATE_EN_COURSE_INTERARRET_SUR_ITINERAIRE,
