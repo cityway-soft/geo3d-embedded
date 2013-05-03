@@ -90,13 +90,14 @@
 		<!-- <module>../org.avm.elementary.rsync</module> -->
 
 		<!-- *** KERLINK / KNET *** -->
-		<module>../org.avm.device.knet</module>
+		<!-- !!! DESACTIVE !!! -->
+<!-- 		<module>../org.avm.device.knet</module>
 		<module>../org.avm.device.knet.bearer</module>
 		<module>../org.avm.device.knet.girouette</module>
 		<module>../org.avm.device.knet.gps</module>
 
 		<module>../org.avm.device.knet.media</module>
-		<module>../org.avm.device.knet.mmi</module>
+		<module>../org.avm.device.knet.mmi</module> -->
 		<!-- !!! NE COMPILE PAS !!! -->
 		<!-- 
 			<module>../org.avm.device.knet.io</module>
