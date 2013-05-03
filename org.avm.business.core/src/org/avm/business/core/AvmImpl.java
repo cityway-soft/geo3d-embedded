@@ -602,12 +602,14 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 		} else {
 			debug("#action course : OK (" + course + ")#"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (_flagSendPriseService == true) {
+				_log.debug("Prepare to send message prise-service... ");
 				_flagSendPriseService = false;
 
 				PriseService priseService = new PriseService();
 				priseService.getEntete().getChamps().setPosition(1);
 				initService(priseService.getEntete().getService());
 				sendMessage(priseService);
+				_log.debug("Message prise-service sent.");
 			}
 			DepartCourse departCourse = new DepartCourse();
 			departCourse.getEntete().getChamps().setPosition(1);
@@ -1013,11 +1015,15 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 			d.put("destination", "sam"); //$NON-NLS-1$ //$NON-NLS-2$
 			d.put("binary", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 			try {
+				_log.debug("Sending message" + msg);
 				_messenger.send(d, msg);
 			} catch (Exception e) {
 				_log.error("Error sendMessage", e); //$NON-NLS-1$
 				_log.error(e); //$NON-NLS-1$
 			}
+		}
+		else{
+			_log.warn("Messenger is null ; cannot send " + msg);
 		}
 	}
 
