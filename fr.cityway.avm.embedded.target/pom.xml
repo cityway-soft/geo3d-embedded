@@ -32,6 +32,7 @@
 		<module>../org.avm.business.parser.management</module>
 		<module>../org.avm.business.parser.phoebus</module>
 		<module>../org.avm.business.tft</module>
+		<module>../org.avm.business.tft.playzilla</module>
 		<module>../org.avm.business.tracking</module>
 		<module>../org.avm.business.vocal</module>
 
@@ -47,6 +48,7 @@
 		<module>../org.avm.device.generic.girouette.duhamel</module>
 		<module>../org.avm.device.generic.girouette.hanover</module>
 		<module>../org.avm.device.generic.girouette.matis</module>
+		<module>../org.avm.device.generic.girouette.mobitec</module>
 		<module>../org.avm.device.generic.girouette.spec</module>
 		<module>../org.avm.device.generic.girouette.aesys</module>
 		<module>../org.avm.device.generic.gps</module>
@@ -91,20 +93,12 @@
 
 		<!-- *** KERLINK / KNET *** -->
 		<!-- !!! DESACTIVE !!! -->
-<!-- 		<module>../org.avm.device.knet</module>
-		<module>../org.avm.device.knet.bearer</module>
-		<module>../org.avm.device.knet.girouette</module>
-		<module>../org.avm.device.knet.gps</module>
-
-		<module>../org.avm.device.knet.media</module>
-		<module>../org.avm.device.knet.mmi</module> -->
+		<!-- <module>../org.avm.device.knet</module> <module>../org.avm.device.knet.bearer</module> 
+			<module>../org.avm.device.knet.girouette</module> <module>../org.avm.device.knet.gps</module> 
+			<module>../org.avm.device.knet.media</module> <module>../org.avm.device.knet.mmi</module> -->
 		<!-- !!! NE COMPILE PAS !!! -->
-		<!-- 
-			<module>../org.avm.device.knet.io</module>
-			<module>../org.avm.device.knet.phony</module> 
-			<module>../org.avm.device.knet.sensor</module> 
-			<module>../org.avm.device.knet.wifi</module> 
-		-->
+		<!-- <module>../org.avm.device.knet.io</module> <module>../org.avm.device.knet.phony</module> 
+			<module>../org.avm.device.knet.sensor</module> <module>../org.avm.device.knet.wifi</module> -->
 
 
 		<!-- ne compile pas avec Maven -->
