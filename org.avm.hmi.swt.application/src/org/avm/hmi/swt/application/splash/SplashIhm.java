@@ -293,7 +293,7 @@ public class SplashIhm implements Splash, MouseListener {
 			return null;
 		if (_imageWarning == null) {
 			_imageWarning = new Image(_display, getClass().getResourceAsStream(
-					"/resources/warning-splash.jpg")); //$NON-NLS-1$
+					"/resources/warning-splash.png")); //$NON-NLS-1$
 		}
 		return _imageWarning;
 	}
@@ -305,14 +305,12 @@ public class SplashIhm implements Splash, MouseListener {
 				return null;
 			if (_imageDefault == null) {
 
-				String filename = System.getProperty("org.avm.home")
-						+ "/data/splash.jpg";
+				String filename = System.getProperty("org.avm.home")+ "/data/splash.jpg";
 				File file = new File(filename);
 				if (file.exists()) {
 					_imageDefault = new Image(_display, filename); //$NON-NLS-1$
 				} else {
-					_imageDefault = new Image(_display, getClass()
-							.getResourceAsStream("/resources/splash.jpg")); //$NON-NLS-1$
+					_imageDefault = new Image(_display, getClass().getResourceAsStream("/resources/splash.jpg")); //$NON-NLS-1$
 				}
 
 			}
