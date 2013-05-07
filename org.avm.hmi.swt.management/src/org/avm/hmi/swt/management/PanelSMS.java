@@ -17,6 +17,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 public class PanelSMS extends AbstractPanel implements SelectionListener {
@@ -153,6 +154,10 @@ public class PanelSMS extends AbstractPanel implements SelectionListener {
 		layout();
 		
 	}
+	
+	private Shell getCurrentShell() {
+		return PanelSMS.this.getShell();
+	}
 
 	private void setMessage(final String message) {
 		getDisplay().syncExec(new Runnable() {
@@ -201,7 +206,6 @@ public class PanelSMS extends AbstractPanel implements SelectionListener {
 				String cmd = "/sms sendtexto \"" + msg + "\" "
 				+ mobile;
 				String result = runConsoleCommand(cmd);
-				System.out.print("SENDING:" + cmd);
 				if (result != null && !result.trim().equals("")) {
 					MessageBox.setMessage("Erreur", result, MessageBox.MESSAGE_WARNING,
 							SWT.NONE);
@@ -250,8 +254,7 @@ public class PanelSMS extends AbstractPanel implements SelectionListener {
 		}
 
 		public void widgetSelected(SelectionEvent arg0) {
-			final KeyboardDialog dialog = new KeyboardDialog(getDisplay()
-					.getShells()[0], SWT.NONE);
+			final KeyboardDialog dialog = new KeyboardDialog(getCurrentShell(), SWT.NONE);
 			AzertyCompleteKeyboard keyboard = new AzertyCompleteKeyboard(dialog.getShell(), SWT.NONE);
 			keyboard.setDisposeParent(true);
 			GridData gridData = new GridData();
@@ -284,8 +287,7 @@ public class PanelSMS extends AbstractPanel implements SelectionListener {
 		}
 
 		public void widgetSelected(SelectionEvent arg0) {
-			final KeyboardDialog dialog = new KeyboardDialog(getDisplay()
-					.getShells()[0], SWT.NONE);
+			final KeyboardDialog dialog = new KeyboardDialog(getCurrentShell(), SWT.NONE);
 			Keyboard keyboard = new Keyboard(dialog.getShell(), SWT.NONE);
 			keyboard.setDisposeParent(true);
 			GridData gridData = new GridData();
