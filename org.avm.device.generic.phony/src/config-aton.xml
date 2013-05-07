@@ -4,13 +4,13 @@
 <!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
 <configuration pid="org.avm.elementary.phony.Phony" mode="new">
 <property name="org.avm.config.version">
-<value type="Integer">17</value>
+<value type="Integer">18</value>
 </property>
 <property name="service.pid">
 <value type="String">org.avm.device.phony.Phony</value>
 </property>
 <property name="defaultvolume">
-<value type="Integer">100</value>
+<value type="Integer">10</value>
 </property>
 <property name="service.bundleLocation">
 <value type="String">initial@reference:file:../../home/didier/projets/geolia/common/dev/workspace/avm-futur/org.avm.elementary.phony/</value>

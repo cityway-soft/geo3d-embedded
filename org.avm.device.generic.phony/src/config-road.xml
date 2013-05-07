@@ -10,7 +10,7 @@
 <value type="String">org.avm.device.phony.Phony</value>
 </property>
 <property name="defaultvolume">
-<value type="Integer">100</value>
+<value type="Integer">10</value>
 </property>
 <property name="service.bundleLocation">
 <value type="String">initial@reference:file:../../home/didier/projets/geolia/common/dev/workspace/avm-futur/org.avm.elementary.phony/</value>
