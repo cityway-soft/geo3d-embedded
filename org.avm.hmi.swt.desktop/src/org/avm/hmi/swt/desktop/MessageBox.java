@@ -16,7 +16,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -103,7 +105,8 @@ public class MessageBox implements SelectionListener {
 		if (_buttonCancel != null) {
 			_buttonCancel.setVisible(confirmation);
 		}
-		_buttonOK.setText(confirmation ? Messages.getString("MessageBox.oui") : Messages.getString("MessageBox.ok"));		 //$NON-NLS-1$ //$NON-NLS-2$
+		_buttonOK
+				.setText(confirmation ? Messages.getString("MessageBox.oui") : Messages.getString("MessageBox.ok")); //$NON-NLS-1$ //$NON-NLS-2$
 		GridLayout layout = (GridLayout) _compositeButtons.getLayout();
 		layout.numColumns = confirmation ? 2 : 1;
 		_compositeButtons.layout();
@@ -124,8 +127,8 @@ public class MessageBox implements SelectionListener {
 
 	private MessageBox(final Shell parent, final int style, boolean confirmation) {
 		_display = parent.getDisplay();
-		Rectangle window = Geometry.parse(_display.getClientArea(), System
-				.getProperty("org.avm.hmi.swt.geometry")); //$NON-NLS-1$
+		Rectangle window = Geometry.parse(_display.getClientArea(),
+				System.getProperty("org.avm.hmi.swt.geometry")); //$NON-NLS-1$
 
 		_dialog = new Shell(parent, SWT.NONE | SWT.APPLICATION_MODAL); // | SWT.
 		// TITLE
@@ -143,12 +146,18 @@ public class MessageBox implements SelectionListener {
 		layout.numColumns = 1;
 		_dialog.setLayout(layout);
 		_dialog.layout();
-		_fonts[0] = DesktopImpl.getFont( 7, SWT.BOLD);
-		_fonts[1] = DesktopImpl.getFont( 5, SWT.NORMAL);
-		_fonts[2] = DesktopImpl.getFont( 4, SWT.BOLD);
-		_fonts[3] = DesktopImpl.getFont( 2, SWT.BOLD);
+		_dialog.addListener(SWT.Hide, new Listener() {
+			public void handleEvent(Event arg0) {
+				_log.info("Window is hidden!");
+				_dialog.forceActive();
+			}
+		});
+		_fonts[0] = DesktopImpl.getFont(7, SWT.BOLD);
+		_fonts[1] = DesktopImpl.getFont(5, SWT.NORMAL);
+		_fonts[2] = DesktopImpl.getFont(4, SWT.BOLD);
+		_fonts[3] = DesktopImpl.getFont(2, SWT.BOLD);
 		createContent(style, confirmation);
-		_dialog.setVisible(false);
+		setVisible(false);
 		_dialog.open();
 
 	}
@@ -194,7 +203,8 @@ public class MessageBox implements SelectionListener {
 		layout.marginWidth = 0;
 
 		_buttonOK = new Button(_compositeButtons, SWT.NONE);
-		_buttonOK.setText(confirm ? Messages.getString("MessageBox.oui") : Messages.getString("MessageBox.ok")); //$NON-NLS-1$ //$NON-NLS-2$
+		_buttonOK
+				.setText(confirm ? Messages.getString("MessageBox.oui") : Messages.getString("MessageBox.ok")); //$NON-NLS-1$ //$NON-NLS-2$
 		_buttonOK.setData(new Boolean(true));
 		_buttonOK.setFont(_fonts[0]);
 		_buttonOK.addSelectionListener(this);
@@ -288,11 +298,18 @@ public class MessageBox implements SelectionListener {
 	}
 
 	public void open() {
-		_dialog.setVisible(true);
+		setVisible(true);
 	}
 
 	public void close() {
-		_dialog.setVisible(false);
+		setVisible(false);
+	}
+		
+	public void setVisible(boolean b) {
+		_dialog.setVisible(b);
+		if (b){
+			_dialog.forceActive();
+		}
 	}
 
 	protected void finalize() {
