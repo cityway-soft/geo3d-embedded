@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.avm.business.tft
-Bundle-SymbolicName: org.avm.business.tft
+Bundle-Name: org.avm.business.tft.playzilla
+Bundle-SymbolicName: org.avm.business.tft.playzilla
 Bundle-Version: 1.0.0.qualifier
 Bundle-Localization: plugin
 Import-Package: javax.servlet,
