@@ -112,12 +112,15 @@ public class OdometerCounterService extends ServiceTracker implements
 				return;
 			}
 
-			double speed = _current.getSpeed().getValue();
+			double speed = p.getSpeed().getValue();
 
 			if (speed > LIMIT) {
 				double haversine = computeHaversineFormula(_current, p);
 				_counter += haversine;
 				_data[0] = (int) (((int) Math.ceil(_counter)) % 0xffff);
+				if (_log.isDebugEnabled()){
+				_log.debug("counter="+_counter +", data[0]="+_data[0]);
+				}
 				_current = p;
 			}
 		}
