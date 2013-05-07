@@ -61,7 +61,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	// states
 	public final static String USAGE_INSIDE = "[<value>]";
 
-	public final static String[] HELP_INSIDE = new String[] { "Set states [0-1FF] period [0-255]", };
+	public final static String[] HELP_INSIDE = new String[] { "Set inside", };
 
 	public int cmdInside(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
