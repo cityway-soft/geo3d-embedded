@@ -99,15 +99,15 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 		int result = _peer.V(check);
 		if (result < 0) {
-			out.println("[DSU ]echec show version");
+			out.println("Echec show version");
 		} else {
 			int soft = result & 0xff;
 			int hard = (result >> 8) & 0xff;
 			out.println("Current version  : " + hard + "." + soft);
 		}
 
-		out.println("Execution en "
-				+ (new Long(System.currentTimeMillis() - now) + " ms"));
+//		out.println("Execution en "
+//				+ (new Long(System.currentTimeMillis() - now) + " ms"));
 
 		return 0;
 	}
@@ -164,8 +164,8 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 					+ b0 * 10 + " ms");
 		}
 
-		out.println("Execution en "
-				+ (new Long(System.currentTimeMillis() - now) + " ms"));
+//		out.println("Execution en "
+//				+ (new Long(System.currentTimeMillis() - now) + " ms"));
 
 		return 0;
 	}

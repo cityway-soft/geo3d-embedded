@@ -51,13 +51,12 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 		long now = System.currentTimeMillis();
 		_peer.M(states, period, false);
-		out.println("Execution en "
-				+ (new Long(System.currentTimeMillis() - now) + " ms"));
+		// out.println("Execution en "
+		// + (new Long(System.currentTimeMillis() - now) + " ms"));
 
 		return 0;
 	}
-	
-	
+
 	// states
 	public final static String USAGE_INSIDE = "[<value>]";
 
@@ -67,12 +66,15 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			Session session) {
 
 		String val = ((String) opts.get("value"));
-		if (val == null){
-			out.println("inside=" + ((ConfigImpl)_config).isInside());
-		}
-		else{
-			((ConfigImpl)_config).setInside(val.equalsIgnoreCase("true"));
-			_config.updateConfig();
+		if (val == null) {
+			out.println("inside=" + ((ConfigImpl) _config).isInside());
+		} else {
+			boolean newval = val.equalsIgnoreCase("true");
+			boolean currentval = ((ConfigImpl) _config).isInside();
+			if (newval != currentval) {
+				((ConfigImpl) _config).setInside(newval);
+				_config.updateConfig(true);
+			}
 		}
 
 		return 0;

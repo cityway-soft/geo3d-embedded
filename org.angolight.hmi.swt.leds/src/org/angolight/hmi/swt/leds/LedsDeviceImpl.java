@@ -124,6 +124,16 @@ public class LedsDeviceImpl extends Composite implements LedsDevice,
 	}
 
 	private void drawLeds(GC gc, int i, boolean state) {
+		boolean oval=false;
+		if (oval){
+			drawOvalLeds(gc, i, state);
+		}
+		else{
+			drawRectangleLeds(gc, i, state);
+		}
+	}
+	
+	private void drawOvalLeds(GC gc, int i, boolean state) {
 		int size = _ledSize;
 		// int x = (getParent().getSize().x - _ledSize) / 2;
 		int x = (getSize().x - _ledSize) / 2;
@@ -144,6 +154,30 @@ public class LedsDeviceImpl extends Composite implements LedsDevice,
 			gc.fillOval(x + size / 2, y + size / 2, size, size);
 		}
 	}
+	
+	private void drawRectangleLeds(GC gc, int i, boolean state) {
+		int size = _ledSize;
+		int x = 0;
+		int y = (LEDS.length - i) * _ledsSpacing - (size / 2);
+		gc.setBackground(_display.getSystemColor(SWT.COLOR_BLACK));
+		gc.fillRectangle(x, y-(_ledSize/2), getSize().x, _ledSize);
+		gc.setForeground(_display.getSystemColor(SWT.COLOR_BLACK));
+		gc.drawRectangle(x, y-(_ledSize/2), getSize().x, _ledSize);
+
+		if (state) {
+			gc.setBackground(_display.getSystemColor(LEDS[i]));
+			gc.fillRectangle(x, y-(_ledSize/2), getSize().x, _ledSize);
+			gc.setForeground(_display.getSystemColor(SWT.COLOR_GRAY));
+			gc.fillRectangle(x, y-(_ledSize/2), getSize().x, _ledSize);
+		} else {
+			size = _ledSize / 2;
+			gc.fillRectangle(x + size / 2, y + size / 2-(_ledSize/2), getSize().x- size/2, size);
+			//gc.fillRectangle(x + size / 2, y , getSize().x, size);
+		}
+	}
+	
+	
+	
 
 	private void draw(final short state) {
 		_display.asyncExec(new Runnable() {

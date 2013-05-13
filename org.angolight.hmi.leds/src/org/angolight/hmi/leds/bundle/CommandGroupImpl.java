@@ -341,11 +341,11 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		long now = System.currentTimeMillis();
 		int result = ((LedsImpl)_peer).X(address, cycle, period, check);
 		if (result < 0) {
-			out.println("[DSU ]echec execute sequence");
+			out.println("Echec execute sequence");
 		}
 
-		out.println("Execution en "
-				+ (new Long(System.currentTimeMillis() - now) + " ms"));
+//		out.println("Execution en "
+//				+ (new Long(System.currentTimeMillis() - now) + " ms"));
 		return 0;
 	}
 
@@ -367,8 +367,8 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			out.println("[DSU] echec stop sequence");
 		}
 
-		out.println("Execution en "
-				+ (new Long(System.currentTimeMillis() - now) + " ms"));
+//		out.println("Execution en "
+//				+ (new Long(System.currentTimeMillis() - now) + " ms"));
 
 		return 0;
 	}
@@ -390,8 +390,8 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			out.println("[DSU] echec halt sequence");
 		}
 
-		out.println("Execution en "
-				+ (new Long(System.currentTimeMillis() - now) + " ms"));
+//		out.println("Execution en "
+//				+ (new Long(System.currentTimeMillis() - now) + " ms"));
 
 		return 0;
 	}
