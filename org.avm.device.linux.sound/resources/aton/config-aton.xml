@@ -17,20 +17,9 @@ priority=0
 </value>
 </property>
 <property name="org.avm.config.version">
-<value type="Integer">7</value>
+<value type="Integer">8</value>
 </property>
-<property name="conducteur-ecoute-discrete">
-<value type="String">#Tue Feb 03 15:05:34 GMT 2009
-url=/resources/aton/conducteur-ecoute-discrete.cfg
-name=conducteur-ecoute-discrete
-priority=1</value>
-</property>
-<property name="conducteur">
-<value type="String">#Tue Feb 03 15:05:34 GMT 2009
-url=/resources/aton/conducteur.cfg
-name=conducteur
-priority=1</value>
-</property>
+
 <property name="voyageur-exterieur">
 <value type="String">#Tue Feb 03 15:06:31 GMT 2009
 url=/resources/aton/voyageur-exterieur.cfg
