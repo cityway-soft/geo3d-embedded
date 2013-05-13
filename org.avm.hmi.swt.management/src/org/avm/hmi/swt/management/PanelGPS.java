@@ -48,6 +48,9 @@ public class PanelGPS extends AbstractPanel {
 		_refresh.setText(Messages.getString("ItemGPS.raffraichir")); //$NON-NLS-1$
 		_refresh.setBackground(this.getDisplay().getSystemColor(
 				SWT.COLOR_YELLOW));
+		Font font = DesktopImpl.getFont(8, SWT.NORMAL);
+		_refresh.setFont(font);
+
 		_refresh.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 
@@ -59,7 +62,7 @@ public class PanelGPS extends AbstractPanel {
 		});
 		
 		_text = new Text(this, SWT.MULTI | SWT.WRAP);
-		_fontText = DesktopImpl.getFont(6, SWT.NORMAL); //$NON-NLS-1$
+		_fontText = DesktopImpl.getFont(8, SWT.NORMAL); //$NON-NLS-1$
 		_text.setFont(_fontText);
 		gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL;

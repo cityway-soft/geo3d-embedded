@@ -32,8 +32,6 @@ public class AuthentificationIhm implements Authentification, SelectionListener 
 
 	private Composite _loginPanel;
 
-	private Label _logoutIdent;
-
 	private Button _logoutButton;
 
 	private Composite _logoutPanel;
@@ -62,8 +60,6 @@ public class AuthentificationIhm implements Authentification, SelectionListener 
 			public void run() {
 				if (_loginPanel == null) {
 					GridData gridData = new GridData();
-					// gridData.horizontalAlignment = GridData.FILL;
-					// gridData.grabExcessHorizontalSpace = true;
 					gridData.verticalAlignment = GridData.FILL;
 					gridData.grabExcessVerticalSpace = true;
 
@@ -104,12 +100,13 @@ public class AuthentificationIhm implements Authentification, SelectionListener 
 							.getSystemColor(SWT.COLOR_YELLOW));
 
 					_logoutButton = new Button(_logoutPanel, SWT.NONE);
+					Font font = DesktopImpl.getFont(5, SWT.NORMAL);
+					_logoutButton.setFont(font);
 					_logoutButton.setText(Messages
 							.getString("AuthentificationIhm.fin-de-poste")); //$NON-NLS-1$
 					_logoutButton.setBackground(_desktop.getDisplay()
 							.getSystemColor(SWT.COLOR_YELLOW));
-					_font = DesktopImpl.getFont(0, SWT.NORMAL);
-					_logoutButton.setFont(_font);
+
 					_logoutButton.addSelectionListener(_instance);
 					gridData = new GridData();
 					gridData.heightHint = 40;
@@ -119,27 +116,17 @@ public class AuthentificationIhm implements Authentification, SelectionListener 
 					gridData.grabExcessVerticalSpace = true;
 					_logoutButton.setLayoutData(gridData);
 
-					_logoutIdent = new Label(_logoutPanel, SWT.CENTER);
-
-					_logoutIdent.setFont(_font);
-					_logoutIdent.setBackground(_desktop.getDisplay()
-							.getSystemColor(SWT.COLOR_YELLOW));
-					gridData = new GridData();
-					gridData.horizontalAlignment = GridData.FILL;
-					gridData.grabExcessHorizontalSpace = true;
-					gridData.verticalAlignment = GridData.FILL;
-					gridData.grabExcessVerticalSpace = true;
-					_logoutIdent.setLayoutData(gridData);
 					_logoutPanel.layout();
 					_desktop.getRightPanel().layout();
 				} else {
-					String text = matricule;
-					if (name != null) {
-						text += "/ " + name;
-					}
-					_logoutIdent.setText(text); //$NON-NLS-1$
+
 					_logoutPanel.setVisible(true);
 				}
+				String text = matricule;
+				if (name != null) {
+					text += "/ " + name;
+				}
+				_logoutButton.setToolTipText(text);
 			}
 		});
 
@@ -176,7 +163,6 @@ public class AuthentificationIhm implements Authentification, SelectionListener 
 
 					_matriculeSelection.setSelectionListener(_listener);
 
-					// _desktop.getMiddlePanel().layout();
 				}
 				_matriculeSelection.reset();
 				_activeIHM = _matriculeSelection;

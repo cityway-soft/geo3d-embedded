@@ -203,9 +203,13 @@ public class PanelSound extends AbstractPanel {
 						sprop = sprop.replace('{', ' ');
 						sprop = sprop.replace(',', '\n');
 						p.load(new ByteArrayInputStream(sprop.getBytes()));
-						p.put("oldvolume", p.getProperty("volume", "100"));
-						createVolumeManager(p.getProperty("name"), p);
-						_soundConfigs.add(p);
+						String name = p.getProperty("name");
+						if (!name.equals("default")) {
+							p.put("oldvolume", p.getProperty("volume", "100"));
+
+							createVolumeManager(name, p);
+							_soundConfigs.add(p);
+						}
 					}
 				}
 			} catch (IOException e) {
@@ -285,9 +289,10 @@ public class PanelSound extends AbstractPanel {
 						cmd = "/vocal testvoyageur exterieur";
 					} else if (n.indexOf("interieur") != -1) {
 						cmd = "/vocal testvoyageur interieur";
-					} else if (n.indexOf("conducteur") != -1) {
-						cmd = "/vocal testconducteur";
 					}
+					// else if (n.indexOf("conducteur") != -1) {
+					// cmd = "/vocal testconducteur";
+					// }
 					if (cmd != null) {
 						runConsoleCommand(cmd);
 					}

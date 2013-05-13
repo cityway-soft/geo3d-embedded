@@ -6,12 +6,14 @@ import org.apache.log4j.Logger;
 import org.avm.elementary.common.ManageableService;
 import org.avm.elementary.common.Scheduler;
 import org.avm.hmi.swt.desktop.Desktop;
+import org.avm.hmi.swt.desktop.DesktopImpl;
 import org.avm.hmi.swt.desktop.DesktopStyle;
 import org.avm.hmi.swt.desktop.MessageBox;
 import org.avm.hmi.swt.desktop.StateButton;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -137,6 +139,8 @@ public abstract class AbstractPanel extends Composite implements Listener,
 			button.setLayoutData(gridData);
 			button.setBackground(DesktopStyle.getBackgroundColor());
 			button.setEnabled( check(cmdgroup[0]) );
+			Font font = DesktopImpl.getFont(8, SWT.NORMAL);
+			button.setFont(font);
 		} else {
 			StateButton button = new StateButton(composite, SWT.BORDER);
 			button.setActiveColor(getDisplay().getSystemColor(SWT.COLOR_BLUE));

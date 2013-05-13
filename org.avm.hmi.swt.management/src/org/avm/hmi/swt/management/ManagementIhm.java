@@ -8,6 +8,7 @@ import org.avm.elementary.common.Config;
 import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ManageableService;
 import org.avm.elementary.common.Scheduler;
+import org.avm.hmi.swt.desktop.DesktopImpl;
 import org.avm.hmi.swt.desktop.DesktopStyle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -63,6 +64,8 @@ public class ManagementIhm extends Composite implements Management,
 		Button button = new Button(this, SWT.NONE);
 		button.setBackground(DesktopStyle.getBackgroundColor());
 		button.setText(listener.getName());
+		Font font = DesktopImpl.getFont(8, SWT.NORMAL);
+		button.setFont(font);
 
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL;

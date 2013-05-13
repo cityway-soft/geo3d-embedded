@@ -88,7 +88,7 @@ public class PanelCAN extends AbstractPanel implements ConfigurableService {
 		_compositeButtons = new Composite(this, SWT.NONE);
 		_compositeButtons.setBackground(DesktopStyle.getBackgroundColor());
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 5;
+		layout.numColumns = 3;
 		layout.makeColumnsEqualWidth = true;
 		_compositeButtons.setLayout(layout);
 		gridData = new GridData();

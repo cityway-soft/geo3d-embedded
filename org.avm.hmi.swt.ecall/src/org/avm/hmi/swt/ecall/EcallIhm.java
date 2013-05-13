@@ -75,7 +75,8 @@ public class EcallIhm extends Composite implements Ecall, SelectionListener {
 	 * 
 	 */
 	private void initialize() {
-		_fontButton = DesktopImpl.getFont(0, SWT.NORMAL);
+		_fontButton = //DesktopImpl.getFont(0, SWT.NORMAL);
+		 DesktopImpl.getFont(5, SWT.NORMAL);
 		GridLayout gridLayout2 = new GridLayout();
 		gridLayout2.horizontalSpacing = 2;
 		gridLayout2.marginWidth = 2;

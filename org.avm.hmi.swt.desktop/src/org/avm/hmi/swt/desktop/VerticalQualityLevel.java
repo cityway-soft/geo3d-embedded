@@ -5,7 +5,6 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -46,7 +45,7 @@ public class VerticalQualityLevel extends Composite implements PaintListener {
 
 	private void initialize() {
 		createCanvas();
-		draw();
+		draw(null);
 		GridLayout grid = new GridLayout();
 		grid.horizontalSpacing = 0;
 		grid.marginWidth = 0;
@@ -72,20 +71,32 @@ public class VerticalQualityLevel extends Composite implements PaintListener {
 		canvas.setLayoutData(gridData);
 	}
 
-	private void draw() {
-		Point size = canvas.getSize();
-		size.x -= 1;
-		size.y -= 2;
+	private void draw(Rectangle b) {
+		Rectangle bounds = null;
+		if (b == null) {
+			bounds = canvas.getBounds();
+		} else {
+			bounds = b;
+		}
+		bounds.width -= 1;
+		// size.y -= 2;
 		GC gc = new GC(canvas);
 		gc.setForeground(_display.getSystemColor(SWT.COLOR_BLUE));
-		int x = 0, dx = size.x, dy, y = size.y;
-		int sep = (size.y / 25);
-		dy = ((size.y - ((_numBar - 1) * sep)) / _numBar);
+		double x = 0, dx = bounds.width, dy, y = bounds.height;
+		// int sep = (size.y / 25);
+		// sep=1;
+		// dy = ((size.y - ((_numBar - 1) * sep)) / _numBar);
+		dy = 4;
 
 		Rectangle rect;
+		double hsize = 2;
+		double dxmin = 10;
+		double f = (dx - dxmin) / (double) _numBar;
 		for (int i = _numBar; i > 0; i--) {
-			y = size.y - (i * dy + (i - 1) * sep);
-			rect = new Rectangle(x, y, dx, dy);
+			// y = size.y - (i * dy + (i - 1) * hsize);
+			y = (i * dy + (i - 1) * hsize);
+			// x=(f)*(_numBar-i)+dxmin;
+			rect = new Rectangle((int) x, (int) y, (int) (dx), (int) dy);
 			if (i <= _quality) {
 				gc.setBackground(_fgcolor);
 			} else {
@@ -112,11 +123,12 @@ public class VerticalQualityLevel extends Composite implements PaintListener {
 
 	public void setQuality(int quality) {
 		_quality = quality;
-		draw();
+		draw(null);
 	}
 
 	public void paintControl(PaintEvent e) {
-		draw();
+
+		draw( ((Canvas) e.widget).getBounds());
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

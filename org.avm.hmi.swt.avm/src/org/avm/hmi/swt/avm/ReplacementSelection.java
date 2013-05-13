@@ -1,6 +1,5 @@
 package org.avm.hmi.swt.avm;
 
-
 import org.avm.hmi.swt.desktop.ChoiceListener;
 import org.avm.hmi.swt.desktop.DesktopImpl;
 import org.avm.hmi.swt.desktop.DesktopStyle;
@@ -15,6 +14,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 
 public class ReplacementSelection extends Composite implements
@@ -49,27 +49,35 @@ public class ReplacementSelection extends Composite implements
 	private void create() {
 
 		Button button;
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
+		GridLayout layout;
+		setBackground(DesktopStyle.getBackgroundColor());
 
+		_font = DesktopImpl.getFont(8, SWT.NORMAL); //$NON-NLS-1$
 
-		setLayout(layout);
-		setBackground(
-				DesktopStyle.getBackgroundColor());
-
-
-
-		_font = DesktopImpl.getFont(5, SWT.NORMAL); //$NON-NLS-1$
-		
+		Group group = new Group(this, SWT.NONE);
+		group.setText("Remplacements");
+		group.setFont(_font);
+		group.setBackground(DesktopStyle.getBackgroundColor());
 		GridData data;
+		data = new GridData();
+		data.horizontalAlignment = GridData.FILL;
+		data.grabExcessHorizontalSpace = true;
+		data.grabExcessVerticalSpace = false;
+		layout = new GridLayout();
+		layout.numColumns = 2;
+		group.setLayoutData(data);
+		group.setLayout(layout);
+
+		layout = new GridLayout();
+		layout.numColumns = 2;
+		setLayout(layout);
 		data = new GridData();
 		data.horizontalAlignment = GridData.FILL;
 		data.grabExcessHorizontalSpace = true;
 		data.grabExcessVerticalSpace = false;
 		setLayoutData(data);
 
-
-		button = new Button(this, SWT.TOP);// SWT.CHECK);
+		button = new Button(group, SWT.TOP);// SWT.CHECK);
 		_buttonMatriculeRemplacement = button;
 		button.setText(Messages
 				.getString("RemplacementSelection.remplacement-matricule"));
@@ -80,10 +88,10 @@ public class ReplacementSelection extends Composite implements
 
 		button.addSelectionListener(this);
 		button.setData(MATRICULE);
-		button.setBackground(
-				DesktopStyle.getBackgroundColor());
+		button.setBackground(DesktopStyle.getBackgroundColor());
+		button.setFont(_font);
 
-		_textMatriculeRemplacement = new Text(this, SWT.NONE | SWT.MULTI
+		_textMatriculeRemplacement = new Text(group, SWT.NONE | SWT.MULTI
 				| SWT.WRAP | SWT.READ_ONLY);
 		data = new GridData();
 		data.horizontalAlignment = GridData.FILL;
@@ -94,11 +102,10 @@ public class ReplacementSelection extends Composite implements
 		_textMatriculeRemplacement.addSelectionListener(this);
 		_textMatriculeRemplacement.setData(MATRICULE);
 		_textMatriculeRemplacement.setFont(_font);
-		_textMatriculeRemplacement.setBackground(
-				DesktopStyle.getBackgroundColor());
+		_textMatriculeRemplacement.setBackground(DesktopStyle
+				.getBackgroundColor());
 
-
-		button = new Button(this, SWT.TOP);
+		button = new Button(group, SWT.TOP);
 		_buttonVehiculeRemplacement = button;
 		button.setText(Messages
 				.getString("RemplacementSelection.remplacement-vehicule"));
@@ -107,11 +114,11 @@ public class ReplacementSelection extends Composite implements
 		data.widthHint = 200;
 		button.setLayoutData(data);
 		button.setData(PARC);
+		button.setFont(_font);
 		button.addSelectionListener(this);
-		button.setBackground(
-				DesktopStyle.getBackgroundColor());
+		button.setBackground(DesktopStyle.getBackgroundColor());
 
-		_textVehiculeRemplacement = new Text(this, SWT.NONE | SWT.MULTI
+		_textVehiculeRemplacement = new Text(group, SWT.NONE | SWT.MULTI
 				| SWT.WRAP | SWT.READ_ONLY);
 		data = new GridData();
 		data.horizontalAlignment = GridData.FILL;
@@ -119,13 +126,14 @@ public class ReplacementSelection extends Composite implements
 		data.verticalAlignment = GridData.FILL;
 		_textVehiculeRemplacement.setLayoutData(data);
 		_textVehiculeRemplacement.setFont(_font);
-		_textVehiculeRemplacement.setBackground(DesktopStyle.getBackgroundColor());
+		_textVehiculeRemplacement.setBackground(DesktopStyle
+				.getBackgroundColor());
 
 		button = new Button(this, SWT.BOTTOM);
 		data = new GridData();
 		data.horizontalAlignment = GridData.FILL;
 		data.heightHint = 58;
-		data.horizontalSpan=2;
+		data.horizontalSpan = 2;
 		button.setLayoutData(data);
 		button.setText(Messages.getString("RemplacementSelection.prise-poste")); //$NON-NLS-1$
 		button.setFont(_font);
@@ -145,15 +153,14 @@ public class ReplacementSelection extends Composite implements
 		_listener.validation(this, data);
 	}
 
-
 	public void widgetDefaultSelected(SelectionEvent arg0) {
 	}
 
 	private void updateMatriculeRemplacement() {
 		String buttonmsg;
 		String textmsg;
-		Button button=_buttonMatriculeRemplacement;
-		Text text=_textMatriculeRemplacement;
+		Button button = _buttonMatriculeRemplacement;
+		Text text = _textMatriculeRemplacement;
 		if (_matriculeRemplacement == 0) {
 
 			textmsg = Messages
@@ -166,8 +173,7 @@ public class ReplacementSelection extends Composite implements
 			textmsg = Messages
 					.getString("RemplacementSelection.matricule-remplace")
 					+ " " + _matriculeRemplacement;
-			text.setForeground(this.getDisplay()
-					.getSystemColor(SWT.COLOR_RED));
+			text.setForeground(this.getDisplay().getSystemColor(SWT.COLOR_RED));
 			buttonmsg = Messages
 					.getString("RemplacementSelection.annuler-remplacement");
 		}
@@ -178,8 +184,8 @@ public class ReplacementSelection extends Composite implements
 	private void updateVehiculeRemplacement() {
 		String buttonmsg;
 		String textmsg;
-		Button button=_buttonVehiculeRemplacement;
-		Text text=_textVehiculeRemplacement;
+		Button button = _buttonVehiculeRemplacement;
+		Text text = _textVehiculeRemplacement;
 		if (_vehiculeRemplacement == 0) {
 			textmsg = Messages
 					.getString("RemplacementSelection.aucun-remplacement-en-cours"); //$NON-NLS-1$
@@ -195,8 +201,7 @@ public class ReplacementSelection extends Composite implements
 
 			buttonmsg = Messages
 					.getString("RemplacementSelection.annuler-remplacement");
-			text.setForeground(this.getDisplay()
-					.getSystemColor(SWT.COLOR_RED));
+			text.setForeground(this.getDisplay().getSystemColor(SWT.COLOR_RED));
 		}
 		button.setText(buttonmsg);
 		text.setText(textmsg);
@@ -212,12 +217,19 @@ public class ReplacementSelection extends Composite implements
 		}
 		if (data == MATRICULE) {
 			if (_matriculeRemplacement == 0) {
-				KeyboardDialog dialog = new KeyboardDialog(getDisplay()
-						.getShells()[0], SWT.NONE);
+				KeyboardDialog dialog = new KeyboardDialog(ReplacementSelection.this.getShell(), SWT.NONE);
 				dialog.setTitle(Messages
 						.getString("RemplacementSelection.remplacement-matricule")); //$NON-NLS-1$
 				Keyboard keyboard = new Keyboard(dialog.getShell(), SWT.NONE);
 				keyboard.setDisposeParent(true);
+				GridData gridData = new GridData();
+				gridData.horizontalAlignment = GridData.FILL;
+				gridData.grabExcessHorizontalSpace = true;
+
+				gridData.verticalAlignment = GridData.FILL;
+				gridData.grabExcessVerticalSpace = true;
+
+				keyboard.setLayoutData(gridData);
 				dialog.open();
 				keyboard.setListener(new KeyboardListener() {
 					public void validation(String data) {
@@ -238,6 +250,14 @@ public class ReplacementSelection extends Composite implements
 						.getString("RemplacementSelection.remplacement-vehicule")); //$NON-NLS-1$
 				Keyboard keyboard = new Keyboard(dialog.getShell(), SWT.NONE);
 				keyboard.setDisposeParent(true);
+				GridData gridData = new GridData();
+				gridData.horizontalAlignment = GridData.FILL;
+				gridData.grabExcessHorizontalSpace = true;
+
+				gridData.verticalAlignment = GridData.FILL;
+				gridData.grabExcessVerticalSpace = true;
+
+				keyboard.setLayoutData(gridData);
 				dialog.open();
 				keyboard.setListener(new KeyboardListener() {
 					public void validation(String data) {

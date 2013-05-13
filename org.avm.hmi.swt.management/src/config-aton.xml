@@ -10,40 +10,26 @@
 <value type="String">http://localhost/org.avm.hmi.swt.management.jar</value>
 </property>
 <property name="org.avm.config.version">
-<value type="Integer">43</value>
+<value type="Integer">48</value>
 </property>
 <property name="reboot">
 	<value type="String">#Tue Nov 21 11:52:37 CET 2006
 	start=/management shell exec reboot
-	name=Reboot System
+	name=Relancer Syst\u00E8me
 	group=system
 	</value>
 </property>
 <property name="sync">
 	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
 	start=/management autoupdate
-	name=Synchronize
+	name=MAJ via reseau
 	group=system
 	</value>
 </property>
 <property name="syncdata">
 	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
 	start=/jdb sync\n/management upload -f true -r true
-	name=Upload Data
-	group=system
-	</value>
-</property>
-<property name="shutdown">
-	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
-	start=/management shutdown -t 0
-	name=Fermer l'application.
-	group=system
-	</value>
-</property>
-<property name="restart">
-	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
-	start=/management shutdown -t 0 -r fwk
-	name=Relancer l'application
+	name=D\u00E9chargement
 	group=system
 	</value>
 </property>
@@ -59,8 +45,8 @@
 	<value type="String">#Tue Nov 21 11:52:37 CET 2006
 	start=/management shell exec /usr/bin/twm;
 	stop=/management shell exec "sh -c 'killall twm'"
-	name=TWM
-	group=system
+	nameZZ=TWM
+	groupZZ=system
 	</value>
 </property>
 <property name="firefox">
@@ -74,35 +60,49 @@
 <property name="killX">
 <value type="String">#Tue Nov 21 11:52:37 CET 2006
     start=/management shell exec "sh -c 'killall X'"
-    name=Kill X
+    name=Relancer X
     group=system
 </value>
 </property>
 <property name="onescreenv2">
 <value type="String">#Tue Nov 21 11:52:37 CET 2006
     start=/management shell exec /etc/sysconfig/xconfig 1
-    name=Pupitre seul 6.5 V2
+    name=Pupitre 6.5''V2 seul
     group=system
 </value>
 </property>
 <property name="dualscreenv2">
 <value type="String">#Tue Nov 21 11:52:37 CET 2006
     start=/management shell exec /etc/sysconfig/xconfig 2
-    name=Pupitre 6.5 V2+TFT
+    name=Pupitre 6.5''V2 + TFT
     group=system
 </value>
 </property>
 <property name="onescreenv3">
 <value type="String">#Tue Nov 21 11:52:37 CET 2006
     start=/management shell exec /etc/sysconfig/xconfig 3
-    name=Pupitre seul 6.5 V3
+    name=Pupitre 6.5''V3 seul
     group=system
 </value>
 </property>
 <property name="dualscreenv3">
 <value type="String">#Tue Nov 21 11:52:37 CET 2006
     start=/management shell exec /etc/sysconfig/xconfig 4
-    name=Pupitre 6.5 V3 +TFT
+    name=Pupitre 6.5''V3 + TFT
+    group=system
+</value>
+</property> 
+<property name="dualscreen7pouces">
+<value type="String">#Tue Nov 21 11:52:37 CET 2006
+    start=/management shell exec /etc/sysconfig/xconfig 5
+    name=Pupitre 7'' seul
+    group=system
+</value>
+</property> 
+<property name="dualscreen7poucesTFT">
+<value type="String">#Tue Nov 21 11:52:37 CET 2006
+    start=/management shell exec /etc/sysconfig/xconfig 6
+    name=Pupitre 7'' + TFT
     group=system
 </value>
 </property> 
@@ -117,7 +117,7 @@
 <property name="usbupdate">
 	<value type="String">#Tue Nov 21 11:52:37 CET 2006
 	start=/management shell exec "sh -c '/mnt/sda1/avm/update.sh'" 
-	name=MAJ via cle USB
+	name=MAJ via cl\u00E9 USB
 	group=system
 	</value>
 </property>
@@ -143,8 +143,8 @@
 <property name="son-conducteur">
 	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
 	start=/vocal testconducteur
-	name=Test conducteur
-	group=sound
+	nameZZ=Test conducteur
+	groupZZ=sound
 	</value>
 </property>
 
@@ -183,8 +183,8 @@
 
 <property name="ftpserver">
 	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
-	start=/management shell nmap ftpserver.avm.org 21
-	name=Acc\u00E8s Ftp/WiFi
+	start=/management shell nmap ftpserver.avm.org 80
+	name=Acc\u00E8s MAJ
 	group=test
 	</value>
 </property>
@@ -193,15 +193,15 @@
 <value type="String">#Tue Nov 21 11:52:37 CET 2006
     start=/management shell exec "sh -c /root/avm/bin/avmvncserver"
     stop=/management shell exec "sh -c 'killall avmvncserver'"
-    name=VNC server
+    name=VNC
     group=system
 </value>
 </property>
 
 <property name="saml">
 	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
-	start=/management shell nmap saml.avm.org 8094
-	name=Acc\u00E8s Sam/Gprs
+	start=/management shell nmap saml.avm.org 8093
+	name=Acc\u00E8s Temps R\u00E9el
 	group=test
 	</value>
 </property>

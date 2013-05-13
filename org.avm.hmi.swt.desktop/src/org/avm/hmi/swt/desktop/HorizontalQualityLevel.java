@@ -3,6 +3,7 @@ package org.avm.hmi.swt.desktop;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -17,29 +18,55 @@ public class HorizontalQualityLevel extends Composite implements PaintListener {
 	private Canvas canvas = null;
 
 	private int _numBar = 5;
-
 	private int _quality;
+
+	private Display _display;
+	private Color _fgcolor;
+
+	private Color _bgcolor;
 
 	public HorizontalQualityLevel(Composite parent, int style) {
 		super(parent, style);
+		_display = parent.getDisplay();
+		_fgcolor = _display.getSystemColor(SWT.COLOR_DARK_RED);
+		_bgcolor = _display.getSystemColor(SWT.COLOR_BLACK);
 		initialize();
 	}
 
+	public void setEnabled(boolean b) {
+		super.setEnabled(b);
+		if (!b) {
+			_bgcolor = _display.getSystemColor(SWT.COLOR_GRAY);
+		} else {
+			_bgcolor = _display.getSystemColor(SWT.COLOR_BLACK);
+		}
+	}
+	
 	private void initialize() {
 		createCanvas();
-		draw();
-		setSize(new Point(118, 75));
-		setLayout(new GridLayout());
+		draw(null);
+		GridLayout grid = new GridLayout();
+		grid.horizontalSpacing = 0;
+		grid.marginWidth = 0;
+		grid.marginHeight = 0;
+		grid.verticalSpacing = 0;
+		grid.numColumns = 1;
+		setLayout(grid);
 
 	}
 
+	public void layout(){
+		super.layout();
+		canvas.redraw();
+	}
+	
 	/**
 	 * This method initializes canvas
 	 * 
 	 */
 	private void createCanvas() {
 		GridData gridData = new GridData();
-		gridData.horizontalAlignment = GridData.FILL;
+		gridData.horizontalAlignment = GridData.CENTER;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
 		gridData.verticalAlignment = GridData.FILL;
@@ -50,33 +77,49 @@ public class HorizontalQualityLevel extends Composite implements PaintListener {
 
 	}
 
-	private void draw() {
-		// <DLA
-		Point size = canvas.getSize();
+	private void draw(Rectangle b) {
+		Rectangle bounds = null;
+		if (b == null) {
+			bounds = canvas.getBounds();
+		} else {
+			bounds = b;
+		}
+		bounds.width -= 1;
 		GC gc = new GC(canvas);
-		size.x -= 1;
-		size.y -= 2;
-		gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
-		int x = 0, dx, dy = -size.y, y = size.y;
-		int sep = (size.x / 25);
-		dx = (size.x - ((_numBar - 1) * sep)) / _numBar;
-		gc.setBackground(Display.getDefault()
-				.getSystemColor(SWT.COLOR_DARK_RED));
+
+		double x = 0, dy, dx, y = bounds.height;
+		dx = 5;
+
 		Rectangle rect;
-		for (int i = 0; i < _numBar; i++) {
-			x = i * (dx + sep);
-			rect = new Rectangle(x, y, dx, dy);
-			if (i < _quality) {
-
-				gc.fillRectangle(rect);
+		double spaceSize = 3;
+		double dymin = 10;
+		double f = (bounds.height - dymin) / (double) _numBar;
+		double height;
+		double reverse=bounds.height;
+		for (int i = _numBar; i > 0; i--) {
+			x = (i * dx + (i - 1) * spaceSize);
+			height = ((f) * (double)( i))+dymin;
+			y=0+reverse;
+			dy = bounds.height-height-reverse;
+			rect = new Rectangle((int) x, (int) y, (int) dx, (int) (dy));
+			if (i <= _quality) {
+				gc.setBackground(_fgcolor);
+			} else {
+				gc.setBackground(DesktopStyle.getBackgroundColor());
 			}
-			gc.setForeground(Display.getDefault().getSystemColor(
-					SWT.COLOR_BLACK));
+			gc.fillRectangle(rect);
+			gc.setForeground(_bgcolor);
 			gc.drawRectangle(rect);
-
 		}
 		gc.dispose();
-		// DLA>
+	}
+
+	public void setForegroundColor(Color color) {
+		_fgcolor = color;
+	}
+
+	public void setBackgroundColor(Color color) {
+		_bgcolor = color;
 	}
 
 	public void setNumberOfBar(int number) {
@@ -88,7 +131,7 @@ public class HorizontalQualityLevel extends Composite implements PaintListener {
 	}
 
 	public void paintControl(PaintEvent e) {
-		draw();
+		draw( ((Canvas) e.widget).getBounds());
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"

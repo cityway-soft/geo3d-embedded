@@ -135,7 +135,7 @@ public class StateButton extends Composite implements SelectionListener,
 		_label.setBackground(DesktopStyle.getBackgroundColor());
 		_label.setLayoutData(gridData);
 		_label.addMouseListener(this);
-		Font font = DesktopImpl.getFont(10, SWT.NORMAL);
+		Font font = DesktopImpl.getFont(8, SWT.NORMAL);
 		_label.setFont(font);
 
 		gridData = new GridData();
