@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component name="org.avm.business.girouette.Girouette" immediate="true">
-	<implementation class="org.avm.business.girouette.bundle.Activator"/>
-	<property name="service.pid" value="org.avm.business.girouette.Girouette"/>
-	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
-	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin" />	
+<component name="org.avm.business.girouette.Girouette"
+	immediate="true">
+	<implementation class="org.avm.business.girouette.bundle.Activator" />
+	<service>
+		<provide interface="org.avm.business.girouette.Girouette" />
+	</service>
+	<property name="service.pid" value="org.avm.business.girouette.Girouette" />
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin" />
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin" />
 
 	<reference name="girouette" interface="org.avm.device.girouette.Girouette"
-			   cardinality="0..1" policy="dynamic" bind="setGirouette" unbind="unsetGirouette" />
+		cardinality="0..1" policy="dynamic" bind="setGirouette" unbind="unsetGirouette" />
 	<reference name="avm" interface="org.avm.business.core.Avm"
-	           cardinality="0..1" policy="dynamic" bind="setAvm" unbind="unsetAvm" />
+		cardinality="0..1" policy="dynamic" bind="setAvm" unbind="unsetAvm" />
 	<reference name="directory" interface="org.avm.elementary.directory.Directory"
-	           cardinality="0..1" policy="dynamic" bind="setDirectory" unbind="unsetDirectory" />
+		cardinality="0..1" policy="dynamic" bind="setDirectory" unbind="unsetDirectory" />
 </component>

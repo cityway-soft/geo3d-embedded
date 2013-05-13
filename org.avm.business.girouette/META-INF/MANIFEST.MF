@@ -18,5 +18,6 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.osgi.service.component;version="1.0.0",
  org.osgi.service.wireadmin;version="1.0.0",
  org.osgi.util.measurement;version="1.0.0"
+Export-Package: org.avm.business.girouette
 Service-Component: META-INF/activator.xml
 Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
