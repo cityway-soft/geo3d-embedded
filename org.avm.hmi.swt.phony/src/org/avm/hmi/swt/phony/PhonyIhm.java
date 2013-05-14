@@ -14,6 +14,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -255,7 +256,9 @@ public class PhonyIhm extends Composite implements SelectionListener,
 		_answerButton.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_GREEN));
 		_answerButton.setText(Messages.getString("PhonyIhm.answer")); //$NON-NLS-1$
-		// _answerButton.setImage(imgAnswer);
+		Image imgAnswer = new Image(_display, getClass().getResourceAsStream(
+				"/resources/answer.png")); //$NON-NLS-1$
+		 _answerButton.setImage(imgAnswer);
 		// _answerButton.setBackground(Display.getCurrent().getSystemColor(
 		// DesktopConfig.getBackgroundColor()));
 		_answerButton.setLayoutData(gridData31);
@@ -272,7 +275,9 @@ public class PhonyIhm extends Composite implements SelectionListener,
 		_hangupButton.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_RED));
 		_hangupButton.setText(Messages.getString("PhonyIhm.hangup")); //$NON-NLS-1$
-		// _hangupButton.setImage(imgHangup);
+		Image imgHangup = new Image(_display, getClass().getResourceAsStream(
+				"/resources/hangup.png")); //$NON-NLS-1$
+		 _hangupButton.setImage(imgHangup);
 		// _hangupButton.setBackground(Display.getCurrent().getSystemColor(
 		// DesktopConfig.getBackgroundColor()));
 		_hangupButton.setLayoutData(gridData21);
@@ -505,7 +510,7 @@ public class PhonyIhm extends Composite implements SelectionListener,
 		if (mode == ANSWER_MODE) {
 			_answerButton.setText(Messages.getString("PhonyIhm.answer"));
 			_answerButton.setBackground(Display.getCurrent().getSystemColor(
-					SWT.COLOR_BLUE));
+					SWT.COLOR_GREEN));
 			_answerButton.setEnabled(false);
 		} else {
 			_answerButton.setText(Messages.getString("PhonyIhm.call"));

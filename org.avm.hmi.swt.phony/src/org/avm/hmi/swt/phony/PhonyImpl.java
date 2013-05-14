@@ -17,6 +17,8 @@ import org.avm.hmi.swt.desktop.Desktop;
 import org.avm.hmi.swt.desktop.DesktopInjector;
 import org.avm.hmi.swt.desktop.MessageBox;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.osgi.util.measurement.State;
 
@@ -62,7 +64,7 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 		_instance = this;
 		_model = new ContactModel();
 		_scheduler = new Scheduler();
-		//_log.setPriority(Priority.DEBUG);
+		// _log.setPriority(Priority.DEBUG);
 	}
 
 	public void start() {
@@ -79,12 +81,11 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 		if (_phonyihm == null) {
 			_display.syncExec(new Runnable() {
 				public void run() {
-					_phonyihm = new PhonyIhm(_desktop.getMainPanel(),
-							SWT.NONE);
+					_phonyihm = new PhonyIhm(_desktop.getMainPanel(), SWT.NONE);
 					_phonyihm.setPhony(_instance);
 					_phonyihm.update(_model);
 					checkEnable();
-					setPhony(_phone); 
+					setPhony(_phone);
 					_desktop.addTabItem(NAME, _phonyihm);
 					if (System
 							.getProperty("org.avm.mode", "siv").equals("securite")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -111,13 +112,12 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 	}
 
 	private void checkPhony() {
-		if (_display != null){
-			_log.debug("model size="+_model.size());
-			
-			if (_model.size() != 0 || _session.hasRole("admin")){
+		if (_display != null) {
+			_log.debug("model size=" + _model.size());
+
+			if (_model.size() != 0 || _session.hasRole("admin")) {
 				openPhony();
-			}
-			else{
+			} else {
 				closePhony();
 			}
 		}
@@ -129,6 +129,12 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 				if (_signalLevel == null) {
 					_signalLevel = new SignalLevelIhm(_desktop.getRightPanel(),
 							SWT.BORDER);
+					GridData grid = new GridData();
+					grid.heightHint=30;
+					grid.horizontalAlignment=GridData.FILL;
+					_signalLevel.setLayoutData(grid);
+					//_desktop.getRightPanel().layout();
+					//_signalLevel.layout();
 					checkEnable();
 				}
 			}
@@ -154,8 +160,8 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 		if (o instanceof State) {
 			State state = (State) o;
 			if (state.getName().equals(UserSessionService.class.getName())) {
-					checkPhony();
-					checkLogin();
+				checkPhony();
+				checkLogin();
 			}
 		} else if (o instanceof PhoneEvent) {
 			if (_phonyihm == null || _phonyihm.isDisposed()) {
@@ -216,15 +222,14 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 				}
 			}
 		});
-		
-		if (_gsm == null){
+
+		if (_gsm == null) {
 			if (_taskId != null) {
 				_log.debug("un-schedule task !");
 				_scheduler.cancel(_taskId);
 				_taskId = null;
 			}
-		}
-		else{
+		} else {
 			if (_taskId == null) {
 				_log.debug("schedule task !");
 				_taskId = _scheduler.schedule(_task, PERIOD, true);
@@ -245,9 +250,9 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 		checkPhony();
 		openSignalLevel();
 	}
-	
+
 	public void unsetDesktop(Desktop desktop) {
-	
+
 	}
 
 	// gsm
@@ -336,11 +341,11 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 						attached = _gsm.isGprsAttached() ? ATTACHEMENT_GSM_GPRS_OK
 								: ATTACHEMENT_GSM_OK;
 					}
-					if (attached != _previousAttachment){
-						 jounalizeState(attached, quality);
+					if (attached != _previousAttachment) {
+						jounalizeState(attached, quality);
 						_previousAttachment = attached;
 					}
-					
+
 					if (_taskId == null)
 						return;
 					_signalLevel.setAttachment(attached);
@@ -357,14 +362,14 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 
 	}
 
-	public void checkLogin(){
-		boolean logged=false;
-		boolean activateKeyboad=false;
+	public void checkLogin() {
+		boolean logged = false;
+		boolean activateKeyboad = false;
 		if (_session != null) {
-			logged = (_session.getState().getValue()==UserSessionService.AUTHENTICATED);
+			logged = (_session.getState().getValue() == UserSessionService.AUTHENTICATED);
 			activateKeyboad = _session.hasRole("phone") && logged;
 		}
-		activateKeyboard(activateKeyboad);		
+		activateKeyboard(activateKeyboad);
 	}
 
 	public void call(String name) throws Exception {
@@ -434,8 +439,8 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 		_jdb = null;
 	}
 
-	public void jounalizeState(int attached, int quality){
-		StringBuffer log=new StringBuffer();
+	public void jounalizeState(int attached, int quality) {
+		StringBuffer log = new StringBuffer();
 		log.append("ATTACH;");
 		log.append(quality);
 		switch (attached) {
@@ -454,7 +459,7 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 		}
 		journalize(log.toString());
 	}
-	
+
 	public void journalize(String message) {
 		_log.debug(message);
 		if (_jdb != null) {
