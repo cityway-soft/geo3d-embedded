@@ -38,6 +38,8 @@ public class VerticalARGauge extends Composite implements Runnable {
 
 	private int FREQ = 700;
 
+	private Label _avanceRetard;
+
 	public VerticalARGauge(Composite parent, int ctrl) {
 		super(parent, ctrl);
 		_instance = this;
@@ -49,10 +51,19 @@ public class VerticalARGauge extends Composite implements Runnable {
 
 	private void create() {
 		_display = getDisplay();
-		setBackground(
-				DesktopStyle.getBackgroundColor());
+		setBackground(DesktopStyle.getBackgroundColor());
 
-		_font = DesktopImpl.getFont(0, SWT.NORMAL);
+		_font = DesktopImpl.getFont(5, SWT.NORMAL);
+		_avanceRetard = new Label(this, SWT.CENTER|SWT.BORDER);
+		_avanceRetard.setFont(DesktopImpl.getFont(5, SWT.BOLD));
+		GridData data = new GridData();
+		data.grabExcessHorizontalSpace = true;
+//		data.grabExcessVerticalSpace = true;
+		data.horizontalAlignment = GridData.FILL;
+		data.heightHint = 15;
+		_avanceRetard.setLayoutData(data);
+		_avanceRetard.setBackground(DesktopStyle.getBackgroundColor());
+
 		createGauge(this);
 
 		activate(0);
@@ -84,8 +95,8 @@ public class VerticalARGauge extends Composite implements Runnable {
 		}
 		_list[idx - 1].setBackground(_color[idx - 1]);
 		_list[idx].setBackground(_color[idx]);
-		_list[idx].setFont(_font);
-		_list[idx].setText(format(val));
+		//_list[idx].setFont(_font);
+		// _list[idx].setText(format(val));
 		_list[idx + 1].setBackground(_color[idx + 1]);
 
 		clignote(clig);
@@ -110,27 +121,25 @@ public class VerticalARGauge extends Composite implements Runnable {
 				data.horizontalAlignment = GridData.FILL;
 				data.verticalAlignment = GridData.FILL;
 				panel = new Composite(composite, SWT.NONE);
-				panel.setBackground(
-						DesktopStyle.getBackgroundColor());
+				panel.setBackground(DesktopStyle.getBackgroundColor());
 				panel.setLayoutData(data);
 				panel.setLayout(grid);
 
 				Label title = new Label(panel, SWT.NONE);
 				data = new GridData();
 				data.horizontalSpan = 3;
-				data.heightHint=15;
+				data.heightHint = 15;
 				title.setText(TITLE[i / 3]);
 				title.setFont(_font);
 				title.setLayoutData(data);
-				title.setBackground(
-						DesktopStyle.getBackgroundColor());
+				title.setBackground(DesktopStyle.getBackgroundColor());
 			}
 			GridData data = new GridData();
 			data.grabExcessHorizontalSpace = true;
-			//data.grabExcessVerticalSpace = true;
+			// data.grabExcessVerticalSpace = true;
 			data.horizontalAlignment = GridData.FILL;
-			//data.verticalAlignment = GridData.FILL;
-			data.heightHint=15;
+			// data.verticalAlignment = GridData.FILL;
+			data.heightHint = 12;
 
 			_list[i] = new Label(panel, SWT.BORDER | SWT.CENTER);
 			_list[i].setLayoutData(data);
@@ -152,6 +161,7 @@ public class VerticalARGauge extends Composite implements Runnable {
 		int curseur = ar;
 
 		activate(curseur);
+		_avanceRetard.setText(format(ar));
 		refresh(_instance);
 	}
 
@@ -165,11 +175,11 @@ public class VerticalARGauge extends Composite implements Runnable {
 
 	private void start() {
 		_display.timerExec(FREQ, this);
-		_running=true;
+		_running = true;
 	}
 
 	private void stop() {
-		_running=false;
+		_running = false;
 	}
 
 	private void on() {
@@ -210,8 +220,8 @@ public class VerticalARGauge extends Composite implements Runnable {
 		} else {
 			off();
 		}
-		if (_running){
-			_display.timerExec(FREQ , this);
+		if (_running) {
+			_display.timerExec(FREQ, this);
 		}
 		_clignot = !_clignot;
 	}
