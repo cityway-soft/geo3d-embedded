@@ -79,5 +79,29 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 		return 0;
 	}
+	
+	// states
+	public final static String USAGE_OVAL = "[<value>]";
+
+	public final static String[] HELP_OVAL = new String[] { "Set inside", };
+
+	public int cmdOval(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+
+		String val = ((String) opts.get("value"));
+		if (val == null) {
+			out.println("oval=" + ((ConfigImpl) _config).isOval());
+		} else {
+			boolean newval = val.equalsIgnoreCase("true");
+			boolean currentval = ((ConfigImpl) _config).isOval();
+			if (newval != currentval) {
+				((ConfigImpl) _config).setOval(newval);
+				_config.updateConfig(true);
+			}
+		}
+
+		return 0;
+	}
+
 
 }

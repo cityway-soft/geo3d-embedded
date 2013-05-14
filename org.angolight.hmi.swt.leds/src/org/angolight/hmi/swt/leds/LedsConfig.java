@@ -8,6 +8,8 @@ public interface LedsConfig {
 	public final static String BRIGHTNESS_TAG = "brightness";
 	public final static String SEQUENCES_TAG = "sequences";
 	public final static String INSIDE_TAG = "inside";
+	public static final Object OVAL_TAG = "oval";
+
 
 	public String getUrlConnection();
 
@@ -22,5 +24,7 @@ public interface LedsConfig {
 	public void setSequences(Properties p);
 
 	public boolean isInside();
+
+	public boolean isOval();
 
 }

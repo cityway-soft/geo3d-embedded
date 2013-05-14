@@ -36,9 +36,9 @@ public class LedsDeviceImpl extends Composite implements LedsDevice,
 
 	private boolean _visible = true;
 
-	private int _ledSize = 30;
+	private double _ledSize = 30;
 
-	private int _ledsSpacing;
+	private double _ledsSpacing;
 
 	private boolean _runningSequence = false;
 
@@ -56,6 +56,8 @@ public class LedsDeviceImpl extends Composite implements LedsDevice,
 	private Point _mouseDown;
 
 	private short _indexSequence;
+
+	private boolean _ovalForm;
 
 	private static final int[] LEDS = { SWT.COLOR_RED, SWT.COLOR_RED,
 			SWT.COLOR_RED, SWT.COLOR_GREEN, SWT.COLOR_GREEN, SWT.COLOR_GREEN,
@@ -93,7 +95,6 @@ public class LedsDeviceImpl extends Composite implements LedsDevice,
 		_canvas.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_BLACK));
 		_canvas.addPaintListener(this);
-		_canvas.addMouseListener(this);
 		_canvas.setLayoutData(gridData);
 		_mouseDown = new Point(0, 0);
 
@@ -108,6 +109,14 @@ public class LedsDeviceImpl extends Composite implements LedsDevice,
 		dispose();
 	}
 
+	public void enableMouseGesture(boolean b) {
+		if (b) {
+			_canvas.addMouseListener(this);
+		} else {
+			_canvas.removeMouseListener(this);
+		}
+	}
+
 	public void setVisible(final boolean visible) {
 		super.setVisible(visible);
 		getParent().setVisible(visible);
@@ -119,65 +128,69 @@ public class LedsDeviceImpl extends Composite implements LedsDevice,
 	}
 
 	public void paintControl(PaintEvent arg0) {
-		_ledSize = (int) ((getSize().y / 2) / LEDS.length);
+		_ledSize =  ((getSize().y / 2d) / (LEDS.length));
 		draw(_adress);
 	}
 
+	
+	
 	private void drawLeds(GC gc, int i, boolean state) {
-		boolean oval=false;
-		if (oval){
+		if (_ovalForm) {
 			drawOvalLeds(gc, i, state);
-		}
-		else{
+		} else {
 			drawRectangleLeds(gc, i, state);
 		}
 	}
-	
+
 	private void drawOvalLeds(GC gc, int i, boolean state) {
-		int size = _ledSize;
+		double size = _ledSize;
 		// int x = (getParent().getSize().x - _ledSize) / 2;
-		int x = (getSize().x - _ledSize) / 2;
-		int y = (LEDS.length - i) * _ledsSpacing - (size / 2);
+		int x = (int) ( (getSize().x - _ledSize) / 2d);
+		int y = (int)( (LEDS.length - i) * _ledsSpacing - (size / 2d));
 		gc.setBackground(_display.getSystemColor(SWT.COLOR_BLACK));
-		gc.fillOval(x, y, _ledSize, _ledSize);
+		gc.fillOval(x, y, (int)_ledSize, (int)_ledSize);
 		gc.setForeground(_display.getSystemColor(SWT.COLOR_BLACK));
-		gc.drawOval(x, y, size, size);
+		gc.drawOval(x, y, (int)size, (int)size);
 
 		if (state) {
 			gc.setBackground(_display.getSystemColor(LEDS[i]));
-			gc.fillOval(x, y, size, size);
+			gc.fillOval(x, y, (int)size, (int)size);
 			gc.setForeground(_display.getSystemColor(SWT.COLOR_GRAY));
-			gc.drawOval(x, y, size, size);
+			gc.drawOval(x, y, (int)size, (int)size);
 		} else {
-			size = _ledSize / 2;
+			size = _ledSize / 2d;
 			gc.setBackground(_display.getSystemColor(SWT.COLOR_WHITE));
-			gc.fillOval(x + size / 2, y + size / 2, size, size);
+			int xx = (int)(x + size / 2d);
+			int yy = (int) (y + size / 2d);
+			gc.fillOval(xx, yy, (int)size, (int)size);
 		}
 	}
-	
+
 	private void drawRectangleLeds(GC gc, int i, boolean state) {
-		int size = _ledSize;
-		int x = 0;
-		int y = (LEDS.length - i) * _ledsSpacing - (size / 2);
+		double size = _ledSize;
+		double x = 0;
+		double y = ( (LEDS.length - i) * _ledsSpacing - (size / 2d));
 		gc.setBackground(_display.getSystemColor(SWT.COLOR_BLACK));
-		gc.fillRectangle(x, y-(_ledSize/2), getSize().x, _ledSize);
+		int xx=(int)x;
+		int yy = (int) (y - (_ledSize / 2d));
+		gc.fillRectangle(xx, yy, getSize().x, (int)_ledSize);
 		gc.setForeground(_display.getSystemColor(SWT.COLOR_BLACK));
-		gc.drawRectangle(x, y-(_ledSize/2), getSize().x, _ledSize);
+		gc.drawRectangle(xx, yy, getSize().x, (int)_ledSize);
 
 		if (state) {
 			gc.setBackground(_display.getSystemColor(LEDS[i]));
-			gc.fillRectangle(x, y-(_ledSize/2), getSize().x, _ledSize);
+			gc.fillRectangle(xx, yy, getSize().x, (int)_ledSize);
 			gc.setForeground(_display.getSystemColor(SWT.COLOR_GRAY));
-			gc.fillRectangle(x, y-(_ledSize/2), getSize().x, _ledSize);
+			gc.fillRectangle(xx, yy, getSize().x, (int)_ledSize);
 		} else {
-			size = _ledSize / 2;
-			gc.fillRectangle(x + size / 2, y + size / 2-(_ledSize/2), getSize().x- size/2, size);
-			//gc.fillRectangle(x + size / 2, y , getSize().x, size);
+			size = _ledSize / 2d;
+			gc.setBackground(_display.getSystemColor(SWT.COLOR_GRAY));
+			xx= (int)(x + size / 2d);
+			yy = (int) (y + size / 2d - (_ledSize / 2d));
+			gc.fillRectangle(xx, yy,
+					(int)(getSize().x - size), (int) size);
 		}
 	}
-	
-	
-	
 
 	private void draw(final short state) {
 		_display.asyncExec(new Runnable() {
@@ -186,7 +199,7 @@ public class LedsDeviceImpl extends Composite implements LedsDevice,
 				if (isDisposed() == false) {
 					// Point size = getParent().getSize();
 					Point size = getSize();
-					_ledsSpacing = (size.y / (LEDS.length + 1));
+					_ledsSpacing = ((double)size.y / (double)(LEDS.length));
 
 					int ss = state;
 					GC gc = new GC(_canvas);
@@ -364,5 +377,9 @@ public class LedsDeviceImpl extends Composite implements LedsDevice,
 			_manuallyHide = true;
 			getParent().setVisible(false);
 		}
+	}
+
+	public void setFormOval(boolean oval) {
+		_ovalForm=oval;
 	}
 }

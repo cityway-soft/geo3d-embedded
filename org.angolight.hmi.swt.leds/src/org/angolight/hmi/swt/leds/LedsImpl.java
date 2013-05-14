@@ -85,6 +85,8 @@ public class LedsImpl implements Leds, ConfigurableService, ProducerService,
 					}
 
 					_peer = new LedsDeviceImpl(_instance, component, SWT.NONE);
+					((LedsDeviceImpl)_peer).enableMouseGesture(!_config.isInside());
+					((LedsDeviceImpl)_peer).setFormOval(_config.isOval());
 					
 					component.layout();
 					_peer.open();

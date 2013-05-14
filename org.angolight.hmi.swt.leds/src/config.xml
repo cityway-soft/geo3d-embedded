@@ -1,31 +1,25 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
 <cm_data version="0.1">
-<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
-<configuration pid="org.angolight.device.leds.Leds" mode="new">
-<property name="service.pid">
-<value type="String">org.angolight.device.leds.Leds</value>
-</property>
-<property name="service.bundleLocation">
-<value type="String">initial@reference:file:../../geolia/ango/org.angolight.device.leds/</value>
-</property>
-<property name="url.connection">
-<value type="String">comm:2;baudrate=19200</value>
-</property>
-<property name="org.avm.config.version">
-<value type="Integer">1</value>
-</property>
-<property name="brightness">
-<value type="Integer">0</value>
-</property>
-<property name="sequences">
-<value type="String">#Mon May 25 12:03:03 CEST 2009
-1=100,400;080,400;040,400;020,400;010,400;008,400;004,400;002,400;001,800;002,400;004,400;008,400;010,400;020,400;040,400;080,400;100,400
-2=101,400;082,400;044,400;028,400;010,400;028,400;044,400;082,400;101,400
-100=100,100;080,100;040,100;020,100;010,100;008,100;004,100;002,100;001,100;003,100;005,100;009,100;011,100;021,100;041,100;081,100;101,100;181,100;141,100;121,100;111,100;109,100;105,100;103,100;107,100;10B,100;113,100;123,100;143,100;183,100;1C3,100;1A3,100;193,100;18B,100;187,100;18F,100;19F,100;1AF,100;1CF,100;1EF,100;1DF,100;1FF,400;0FE,200;07C,200;038,200;10,400;028,200;044,200;082,200;101,100;102,100;104,100;108,100;110,100;120,100;140,100;180,100;100,100;000,000</value>
-</property>
-<property name="config.date">
-<value type="String">Wed May 20 11:05:57 CEST 2009</value>
-</property>
-</configuration>
+	<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK -->
+	<configuration pid="org.angolight.hmi.swt.Leds" mode="new">
+		<property name="service.pid">
+			<value type="String">org.angolight.device.leds.Leds</value>
+		</property>
+		<property name="service.bundleLocation">
+			<value type="String">initial@reference:file:../../geolia/ango/org.angolight.device.leds/</value>
+		</property>
+		<property name="oval">
+			<value type="String">false</value>
+		</property>
+		<property name="inside">
+			<value type="String">true</value>
+		</property>
+		<property name="org.avm.config.version">
+			<value type="Integer">1</value>
+		</property>
+		<property name="config.date">
+			<value type="String">Wed May 20 11:05:57 CEST 2009</value>
+		</property>
+	</configuration>
 </cm_data>

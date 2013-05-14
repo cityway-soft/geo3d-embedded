@@ -11,6 +11,7 @@ public class ConfigImpl extends AbstractConfig implements LedsConfig {
 
 
 
+
 	public ConfigImpl(ComponentContext context, ConfigurationAdmin cm) {
 		super(context, cm);
 	}
@@ -55,4 +56,12 @@ public class ConfigImpl extends AbstractConfig implements LedsConfig {
 		_config.put(INSIDE_TAG, String.valueOf(b));
 	}
 
+	public boolean isOval() {
+		String res = (String) _config.get(OVAL_TAG);
+		return (res!=null && res.equalsIgnoreCase("true"));
+	}
+
+	public void setOval(boolean b) {
+		_config.put(OVAL_TAG, String.valueOf(b));
+	}
 }
