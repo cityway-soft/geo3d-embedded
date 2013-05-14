@@ -4,14 +4,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.TouchEvent;
-import org.eclipse.swt.events.TouchListener;
-import org.eclipse.swt.events.TraverseEvent;
-import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
@@ -34,6 +28,8 @@ public class Keyboard extends Composite {
 			.getString("Keyboard.effacer"); //$NON-NLS-1$
 
 	protected final static String CLEAR = Messages.getString("Keyboard.vider"); //$NON-NLS-1$
+	protected final static String ESPACE = Messages
+			.getString("Keyboard.espace"); //$NON-NLS-1$
 
 	protected final static String CANCEL = Messages
 			.getString("Keyboard.annuler"); //$NON-NLS-1$
@@ -178,7 +174,7 @@ public class Keyboard extends Composite {
 		composite.setBackground(DesktopStyle.getBackgroundColor());
 		_fontTitle = DesktopImpl.getFont(10, SWT.NORMAL);
 		_fontText = DesktopImpl.getFont(10, SWT.NORMAL);
-		_fontsmallTitle = DesktopImpl.getFont(3, SWT.NORMAL);
+		_fontsmallTitle = DesktopImpl.getFont(6, SWT.NORMAL);
 
 		if (_text != null) {
 			data = new GridData();
@@ -232,14 +228,15 @@ public class Keyboard extends Composite {
 					widget = new Label(composite, SWT.NONE);
 				} else {
 
-					Button button = new Button(composite, SWT.NONE|SWT.NO_FOCUS);
+					Button button = new Button(composite, SWT.NONE
+							| SWT.NO_FOCUS);
 					button.setText(key);
 					widget = button;
 					_buttons[cpt] = button;
 					addButtonSelectionAdapter(button);
 					cpt++;
 				}
-				
+
 				data = new GridData();
 
 				data.verticalAlignment = GridData.FILL;
@@ -252,20 +249,34 @@ public class Keyboard extends Composite {
 
 				if (key != null
 						&& (key.equals(OK) || key.equals(BACKSPACE)
-								|| key.equals(CLEAR) || key.equals(CANCEL))) {
+								|| key.equals(CLEAR) || key.equals(CANCEL) || key
+									.equals(ESPACE))) {
 					widget.setFont(_fontsmallTitle);
 					if (key.equals(OK)) {
 						widget.setBackground(getDisplay().getSystemColor(
 								SWT.COLOR_GREEN));
+						widget.setForeground(getDisplay().getSystemColor(
+								SWT.COLOR_BLACK));
+					} else if (key.equals(ESPACE)) {
+						widget.setBackground(getDisplay().getSystemColor(
+								SWT.COLOR_WIDGET_BACKGROUND));
+						widget.setForeground(getDisplay().getSystemColor(
+								SWT.COLOR_BLACK));
 					} else if (key.equals(BACKSPACE)) {
 						widget.setBackground(getDisplay().getSystemColor(
 								SWT.COLOR_RED));
+						widget.setForeground(getDisplay().getSystemColor(
+								SWT.COLOR_WHITE));
 					} else if (key.equals(CANCEL)) {
 						widget.setBackground(getDisplay().getSystemColor(
 								SWT.COLOR_BLUE));
+						widget.setForeground(getDisplay().getSystemColor(
+								SWT.COLOR_WHITE));
 					} else {
 						widget.setBackground(getDisplay().getSystemColor(
 								SWT.COLOR_YELLOW));
+						widget.setForeground(getDisplay().getSystemColor(
+								SWT.COLOR_BLACK));
 					}
 				} else {
 					if (key.length() == 1) {
@@ -314,6 +325,9 @@ public class Keyboard extends Composite {
 				try {
 					Button b = (Button) e.getSource();
 					String key = b.getText();
+					if (key.equals(ESPACE)) {
+						key = " ";
+					}
 					if (key.equals(CANCEL)) {
 						validation(null);
 					} else if (key.equals(CLEAR)) {

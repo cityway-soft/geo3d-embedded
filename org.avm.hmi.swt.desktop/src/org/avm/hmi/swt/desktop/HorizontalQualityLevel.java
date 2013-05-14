@@ -43,8 +43,6 @@ public class HorizontalQualityLevel extends Composite implements PaintListener {
 	}
 	
 	private void initialize() {
-		createCanvas();
-		draw(null);
 		GridLayout grid = new GridLayout();
 		grid.horizontalSpacing = 0;
 		grid.marginWidth = 0;
@@ -52,13 +50,16 @@ public class HorizontalQualityLevel extends Composite implements PaintListener {
 		grid.verticalSpacing = 0;
 		grid.numColumns = 1;
 		setLayout(grid);
+		createCanvas();
+		draw(null);
 
 	}
 
-	public void layout(){
-		super.layout();
-		canvas.redraw();
-	}
+//	public void layout(){
+//		super.layout();
+//		canvas.layout();
+//		canvas.redraw();
+//	}
 	
 	/**
 	 * This method initializes canvas
@@ -85,22 +86,23 @@ public class HorizontalQualityLevel extends Composite implements PaintListener {
 			bounds = b;
 		}
 		bounds.width -= 1;
+		bounds.height -= 35;
 		GC gc = new GC(canvas);
 
-		double x = 0, dy, dx, y = bounds.height;
-		dx = 5;
+		double x = 0, dy, dx, y = (double)bounds.height;
+		dx = 5d;
 
 		Rectangle rect;
-		double spaceSize = 3;
-		double dymin = 10;
-		double f = (bounds.height - dymin) / (double) _numBar;
-		double height;
-		double reverse=bounds.height;
+		double spaceSize = 3d;
+		double dymin = 5d;
+		double f = ((double)bounds.height - dymin) / (double) _numBar;
+		double h;
+		double reverse=(double)bounds.height;
 		for (int i = _numBar; i > 0; i--) {
 			x = (i * dx + (i - 1) * spaceSize);
-			height = ((f) * (double)( i))+dymin;
+			h = ((f) * (double)( i))+dymin;
 			y=0+reverse;
-			dy = bounds.height-height-reverse;
+			dy = bounds.height-h-reverse;
 			rect = new Rectangle((int) x, (int) y, (int) dx, (int) (dy));
 			if (i <= _quality) {
 				gc.setBackground(_fgcolor);

@@ -9,7 +9,7 @@ public class AzertyCompleteKeyboard extends Keyboard {
 		{ "Aa", "Zz", "Ee", "Rr", "Tt", "Yy", "Uu", "Ii", "Oo", "Pp" },
 		{ "Qq", "Ss", "Dd", "Ff", "Gg", "Hh", "Jj", "Kk", "Ll", "Mm" },
 		{ "-", "Ww", "Xx", "Cc", "Vv", "Bb", "Nn", "?", ".", "/" },
-		{ CANCEL, CLEAR, " ", null, null, null, null, BACKSPACE, OK, null } };
+		{ CANCEL, CLEAR, null, ESPACE ,  null, null, BACKSPACE, null, OK, null } };
 
 
 	public AzertyCompleteKeyboard(Composite parent, int ctrl) {
