@@ -1,6 +1,5 @@
 package org.avm.device.generic.phony.bundle;
 
-import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -16,11 +15,6 @@ public class ConfigImpl extends AbstractConfig implements PhonyConfig {
 
 	public ConfigImpl(ComponentContext context, ConfigurationAdmin cm) {
 		super(context, cm);
-	}
-
-	protected Dictionary getDefault() {
-		Dictionary result = super.getDefault();
-		return result;
 	}
 
 	public int getDefaultSoundVolume() {

@@ -2,7 +2,7 @@
 <!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
 <cm_data version="0.1">
 <!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
-<configuration pid="org.avm.elementary.phony.Phony" mode="new">
+<configuration pid="org.avm.device.generic.phony.Phony" mode="new">
 <property name="org.avm.config.version">
 <value type="Integer">19</value>
 </property>
