@@ -379,8 +379,8 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 			d.put("binary", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 
 			StringBuffer msg = new StringBuffer();
-			msg.append(Messages.getString("Message.conducteur"));
-			msg.append(" - ");
+//			msg.append(Messages.getString("Message.conducteur"));
+//			msg.append(" - ");
 			msg.append(text);
 			
 			MessageText message = new MessageText();
