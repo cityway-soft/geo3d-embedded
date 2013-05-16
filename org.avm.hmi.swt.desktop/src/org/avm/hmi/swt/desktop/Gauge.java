@@ -145,6 +145,7 @@ public class Gauge extends Composite implements PaintListener, MouseListener {
 
 	public void setSelection(int i) {
 		_level = i;
+		draw();
 	}
 
 	private void fireGaugeChanged() {

@@ -278,7 +278,7 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 		if (_phone != null && _phonyihm != null) {
 			_phonyihm.update(_model);
 			_phonyihm.setVolume(_phone.getDefaultSoundVolume());
-			setVolume(_phone.getDefaultSoundVolume());
+			//setVolume(_phone.getDefaultSoundVolume());
 		}
 	}
 
