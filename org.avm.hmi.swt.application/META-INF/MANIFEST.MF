@@ -5,6 +5,11 @@ Bundle-SymbolicName: org.avm.hmi.swt.application
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .
 Import-Package: org.avm.elementary.management.core,
+ org.eclipse.swt;resolution:=optional,
+ org.eclipse.swt.custom;resolution:=optional,
+ org.eclipse.swt.events;resolution:=optional,
+ org.eclipse.swt.layout;resolution:=optional,
+ org.eclipse.swt.widgets;resolution:=optional,
  org.osgi.framework;version="1.3.0",
  org.osgi.service.startlevel;version="1.0.0",
  org.osgi.util.tracker;version="1.3.1"
