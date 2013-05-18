@@ -12,20 +12,20 @@ import org.osgi.service.component.ComponentContext;
 
 public class CommandGroupImpl extends AbstractCommandGroup {
 
-	public static final String COMMAND_GROUP = "business.tracking";
+	public static final String COMMAND_GROUP = "tracking";
 
 	private Tracking _peer;
 
 	CommandGroupImpl(ComponentContext context, Tracking peer, ConfigImpl config) {
-		super(context, config, "tracking",
+		super(context, config, COMMAND_GROUP,
 				"Configuration commands for the tracking.");
 		_peer = peer;
 	}
 
 	// set frequency
-	public final static String USAGE_SETFREQUENCY = "<freq>";
+	public final static String USAGE_SETFREQUENCY = "[<freq>]";
 
-	public final static String[] HELP_SETFREQUENCY = new String[] { "permet de definir les frequences d'emission des localisations", };
+	public final static String[] HELP_SETFREQUENCY = new String[] { "definir les frequences d'emission des localisations", };
 
 	public int cmdSetfrequency(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
@@ -33,20 +33,20 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		String sFrequency = ((String) opts.get("freq"));
 
 		if (sFrequency != null) {
-			((ConfigImpl) _config).setFrequency(Integer
-					.parseInt(sFrequency));
+			int current = ((ConfigImpl) _config).getFrequency();
+			int freq = Integer.parseInt(sFrequency);
+			if (current != freq) {
+				((ConfigImpl) _config).setFrequency(freq);
+				_peer.setFrequency(freq);
+				_config.updateConfig(false);
+			}
 		}
-
-
-		_config.updateConfig(false);
 
 		out.println(((ConfigImpl) _config).getFrequency());
 
 		return 0;
 	}
 
-
-	
 	// localize
 	public final static String USAGE_LOCALIZE = "";
 

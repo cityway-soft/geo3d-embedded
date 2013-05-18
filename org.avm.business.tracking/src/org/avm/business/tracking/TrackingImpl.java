@@ -67,7 +67,11 @@ public class TrackingImpl implements Tracking, ConsumerService,
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug("set alarm tracking frequency : " + freq);
 		}
-		this.updateState();
+		if (freq != this._frequency) {
+			_frequency = freq;
+			this.resetTimer();
+		}
+
 	}
 
 	public void setMessenger(final Messenger messenger) {
@@ -90,15 +94,6 @@ public class TrackingImpl implements Tracking, ConsumerService,
 	public void unsetMessenger(final Messenger messenger) {
 
 		this._messenger = null;
-	}
-
-	public void updateState() {
-
-		final int freq = this._frequency;
-
-		if (freq != this._frequency) {
-			this.resetTimer();
-		}
 	}
 
 	private ReponseStatut createReponseStatut(final DemandeStatut request) {

@@ -130,6 +130,9 @@ public class MediaSMSImpl implements MediaSMS, ConfigurableService,
 	public void setMessenger(MediaListener messenger) {
 		_log.debug("Initialisation du messenger " + messenger);
 		_messenger = messenger;
+		if (_messenger != null){
+			_messenger.setMedia(this);
+		}
 	}
 
 	public void setGsm(Gsm gsm) {
