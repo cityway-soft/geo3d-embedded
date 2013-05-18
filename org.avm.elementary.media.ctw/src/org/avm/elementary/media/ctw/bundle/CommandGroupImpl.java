@@ -133,11 +133,15 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	public int cmdIsconnected(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
 
+		if (_peer == null){
+			out.println("Peer MediaCTW is null !");
+			return 1;
+		}
 		int failure = ((MediaCTWImpl) _peer).getFailureCount();
-		if (failure != 0) {
+		Date date = ((MediaCTWImpl) _peer).getConnectionDate();
+		if (failure != 0 || date == null) {
 			out.println("NOT CONNECTED (#" + failure + " failures)");
 		} else {
-			Date date = ((MediaCTWImpl) _peer).getConnectionDate();
 			long delta = (System.currentTimeMillis() - date.getTime()) / 1000;
 			out.println("CONNECTED (since " + date + ", " + delta + " sec)");
 

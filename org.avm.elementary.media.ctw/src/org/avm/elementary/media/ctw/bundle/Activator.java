@@ -56,17 +56,17 @@ public class Activator extends AbstractActivator implements Media,
 		initializeConfiguration();
 		initializeMessenger();
 		initializeCommandGroup();
-		initializeConsumer();
 		initializeJDB();
 		initializeProducer();
 		startService();
+		initializeConsumer();
 	}
 
 	protected void stop(ComponentContext context) {
+		disposeConsumer();
 		stopService();
 		disposeProducer();
 		disposeJDB();
-		disposeConsumer();
 		disposeCommandGroup();
 		disposeMessenger();
 		disposeConfiguration();

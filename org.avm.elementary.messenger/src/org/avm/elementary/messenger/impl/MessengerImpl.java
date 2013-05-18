@@ -28,6 +28,8 @@ public class MessengerImpl implements Messenger, MediaListener, MediaService,
 		ParserService, ConfigurableService, ProducerService,
 		CommandChainInjector, ManageableService {
 
+	private static final String DEFAULT_MEDIA = "CTW";
+
 	private Logger _log = Activator.getDefault().getLogger();
 
 	private MessengerConfig _config;
@@ -120,15 +122,18 @@ public class MessengerImpl implements Messenger, MediaListener, MediaService,
 				}
 				String name = (String) context.getHeader().get("MEDIA_ID");
 				if (name == null) {
-					_log.error("Property MEDIA_ID not found in context !");
-				} else {
-					Media media = (Media) _medias.get(name);
-					if (media == null) {
-						_log.error("Media named " + name + " not found !");
-					} else {
-						Sender.getInstance().send(media, header, buffer);
-					}
+					name = DEFAULT_MEDIA;
+					_log.warn("Property MEDIA_ID not found in context (use default="
+							+ DEFAULT_MEDIA + ")!");
+
 				}
+				Media media = (Media) _medias.get(name);
+				if (media == null) {
+					_log.error("Media named " + name + " not found !");
+				} else {
+					Sender.getInstance().send(media, header, buffer);
+				}
+
 			} else {
 				_log.error("No parser for message " + data);
 			}

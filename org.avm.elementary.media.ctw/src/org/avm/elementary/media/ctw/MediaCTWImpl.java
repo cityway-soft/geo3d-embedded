@@ -75,6 +75,9 @@ public class MediaCTWImpl implements MediaCTW, ConfigurableService,
 
 	public void setMessenger(MediaListener messenger) {
 		_messenger = messenger;
+		if (_messenger != null){
+			_messenger.setMedia(this);
+		}
 	}
 
 	public void start() {
@@ -255,6 +258,8 @@ public class MediaCTWImpl implements MediaCTW, ConfigurableService,
 					+ " failure:" + _failureCounter);
 
 			Socket socket = new Socket(host, port);
+			socket.setSoTimeout(10000);
+			
 			// socket.setTcpNoDelay(false);
 
 			_connection = new ClientConnection(socket, period,
