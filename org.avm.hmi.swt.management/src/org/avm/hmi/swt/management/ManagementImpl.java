@@ -114,6 +114,10 @@ public class ManagementImpl implements Management, ManageableService,
 	public void bundleChanged(BundleEvent event) {
 		if (_context == null)
 			return;
+		
+		if (_managementihm == null){
+			return;
+		}
 
 		if (event == null) {
 			Bundle[] bundles = _context.getBundles();
