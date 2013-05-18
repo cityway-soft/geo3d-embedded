@@ -313,6 +313,10 @@ public class ManagementImpl implements ManageableService, ManagementService,
 						"shell", "exec", "reboot" });
 				service.setAlias("uninstall", new String[] { "/management",
 						"uninstall" });
+				service.setAlias("update", new String[] { "/management",
+						"update" });
+				service.setAlias("install", new String[] { "/management",
+						"update" });
 				service.setAlias("bundle", new String[] { "/management",
 						"bundle" });
 				service.setAlias("stop", new String[] { "/management", "stop" });
@@ -504,16 +508,17 @@ public class ManagementImpl implements ManageableService, ManagementService,
 				return (Management) service;
 			}
 		}
-		if (_log.isDebugEnabled()){
-			_log.debug("BundleContext="+_context);
+		if (_log.isDebugEnabled()) {
+			_log.debug("BundleContext=" + _context);
 		}
 
-		String managementServiceName=Management.class.getName();
+		String managementServiceName = Management.class.getName();
 		managementServiceReference = _context
 				.getServiceReference(managementServiceName);
-		
-		if (_log.isDebugEnabled()){
-			_log.debug("ManagementServiceReference("+managementServiceName+")="+managementServiceReference);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("ManagementServiceReference(" + managementServiceName
+					+ ")=" + managementServiceReference);
 		}
 
 		if (managementServiceReference == null) {
