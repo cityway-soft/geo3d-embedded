@@ -144,7 +144,7 @@ public class Course implements Event {
 		if (p == null)
 			return null;
 		for (int i = 0; i < p.length; i++) {
-			if (p[i].getRang() > rang) {
+			if (p[i].getRang() >= rang) {
 				return p[i];
 			}
 		}

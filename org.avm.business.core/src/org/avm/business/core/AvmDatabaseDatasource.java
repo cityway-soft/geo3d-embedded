@@ -231,13 +231,17 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 	}
 
 	public int getVersion() {
-//		_version = 1;
-//		System.out.println(" ****************************************************************************");
-//		System.out.println(" **************** DATABASE EN VERSION "+ _version + " POUR DEBUG !!!!! ******************");
-//		System.out.println(" **************** DATABASE EN VERSION "+ _version + " POUR DEBUG !!!!! ******************");
-//		System.out.println(" **************** DATABASE EN VERSION "+ _version + " POUR DEBUG !!!!! ******************");
-//		System.out.println(" **************** DATABASE EN VERSION "+ _version + " POUR DEBUG !!!!! ******************");
-//		System.out.println(" ****************************************************************************");
+		// _version = 1;
+		// System.out.println(" ****************************************************************************");
+		// System.out.println(" **************** DATABASE EN VERSION "+ _version
+		// + " POUR DEBUG !!!!! ******************");
+		// System.out.println(" **************** DATABASE EN VERSION "+ _version
+		// + " POUR DEBUG !!!!! ******************");
+		// System.out.println(" **************** DATABASE EN VERSION "+ _version
+		// + " POUR DEBUG !!!!! ******************");
+		// System.out.println(" **************** DATABASE EN VERSION "+ _version
+		// + " POUR DEBUG !!!!! ******************");
+		// System.out.println(" ****************************************************************************");
 
 		return _version;
 	}
@@ -360,7 +364,8 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 				}
 			}
 		}
-		_log.info("Algorithme AVEC controle de validite des courses ; temps traitement :" + (System.currentTimeMillis()-time)  + " ms.");
+		_log.info("Algorithme AVEC controle de validite des courses ; temps traitement :"
+				+ (System.currentTimeMillis() - time) + " ms.");
 		return result;
 	}
 
@@ -451,17 +456,19 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 			}
 		}
 
-		_log.info("Algorithme SANS controle de validite des courses ; temps traitement :" + (System.currentTimeMillis()-time)  + " ms.");
+		_log.info("Algorithme SANS controle de validite des courses ; temps traitement :"
+				+ (System.currentTimeMillis() - time) + " ms.");
 		return result;
 	}
 
 	public Course getCourse(ServiceAgent sa, int courseIDU) {
 		Course result = null;
-		for (int i=0; i<sa.getNbCourse();i++){
-			_log.info("course["+i+"]=" + sa.getCourses()[i]);
+		if (_log.isDebugEnabled()) {
+			for (int i = 0; i < sa.getNbCourse(); i++) {
+				_log.debug("course[" + i + "]=" + sa.getCourses()[i]);
+			}
+			_log.debug("Course " + courseIDU + " from sa " + sa + "...");
 		}
-		_log.info("Course " +courseIDU +" from sa " + sa + "...");
-
 		Course course = sa.getCourseByIdu(courseIDU);
 		_log.info("Course = " + course);
 		if (course != null) {
@@ -547,7 +554,7 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 			ResultSet rs = null;
 
 			try {
-				_log.info("Attributs : recherche de tous les attributs de points de la course");
+				_log.debug("Attributs : recherche de tous les attributs de points de la course");
 
 				Connection connexion = null;
 				try {
@@ -573,8 +580,14 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 						String att_val = rs.getString(idx++);
 						Point[] points = course.getPointAvecId(pnt_id);
 						if (points != null) {
-							points[0].setAttribute(new Integer(att_id), att_val);
-							System.out.println("point["+points[0].getNom()+"].setAttribut("+new Integer(att_id)+") => "+att_val);
+							points[0]
+									.setAttribute(new Integer(att_id), att_val);
+							if (_log.isDebugEnabled()) {
+								_log.debug("point[" + points[0].getNom()
+										+ "].setAttribut("
+										+ new Integer(att_id) + ") => "
+										+ att_val);
+							}
 						}
 					}
 					_log.info("Attributs : temps traitement  "

@@ -21,6 +21,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 import org.avm.business.core.bundle.ConfigImpl;
 import org.avm.business.core.event.Authentification;
 import org.avm.business.core.event.Course;
@@ -121,8 +122,6 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 
 	private transient boolean _flagSendPriseService = true;
 
-	private int _lastState = -1;
-
 	private AvmImpl() {
 		_model = new AvmModelManager();
 		init();
@@ -130,7 +129,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 
 	private void init() {
 		_log = Logger.getInstance(this.getClass());
-		// _log.setPriority(Priority.DEBUG);
+		_log.setPriority(Priority.DEBUG);
 		_suiviItineraire = new SuiviItineraire();
 		_suiviItineraire.setAvm(this);
 		_defautPrisePosteService = new DefaultPrisePoste();
@@ -576,13 +575,14 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 				ServiceAgent currentSa = _model.getServiceAgent();
 				_log.info("isCourseCorrect  - currentSA=" + currentSa);
 				_log.info("datasource = " + _currentDatasource);
-				Course course = _currentDatasource.getCourse(currentSa, courseIDU);
+				Course course = _currentDatasource.getCourse(currentSa,
+						courseIDU);
 				_log.info("getcourse = " + course);
-				if (course != null){
+				if (course != null) {
 					course.setTerminee(false);
 				}
-//				_model.getServiceAgent().getCourseByIdu(course.getIdu())
-//						.setTerminee(false);
+				// _model.getServiceAgent().getCourseByIdu(course.getIdu())
+				// .setTerminee(false);
 				_model.setCourse(course);
 			} catch (Throwable t) {
 				_log.error(t);
@@ -609,12 +609,17 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 				priseService.getEntete().getChamps().setPosition(1);
 				initService(priseService.getEntete().getService());
 				sendMessage(priseService);
-				_log.debug("Message prise-service sent.");
+				if (_log.isDebugEnabled()) {
+					_log.debug("Message prise-service sent : " + priseService);
+				}
 			}
 			DepartCourse departCourse = new DepartCourse();
 			departCourse.getEntete().getChamps().setPosition(1);
 			initService(departCourse.getEntete().getService());
 			sendMessage(departCourse);
+			if (_log.isDebugEnabled()) {
+				_log.debug("Message depart-course sent : " + departCourse);
+			}
 			journalize("COURSE;" + course + ";" + getModel().getCourse().getLigneIdu() + ";" + getModel().getCourse().getParcoursIdu()); //$NON-NLS-1$
 		}
 	}
@@ -996,12 +1001,12 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 	}
 
 	public void synchronize(String reason) {
-		//if (_lastState != _model.getState().getValue()) {
-			_log.debug("Synchronize IHM (" + reason + ": new state = " + _model.getState()); //$NON-NLS-1$ //$NON-NLS-2$
-			_producer.publish(_model.getState());
-			_log.info("new state published.");
-			//_lastState = _model.getState().getValue();
-		//}
+		// if (_lastState != _model.getState().getValue()) {
+		_log.debug("Synchronize IHM (" + reason + ": new state = " + _model.getState()); //$NON-NLS-1$ //$NON-NLS-2$
+		_producer.publish(_model.getState());
+		_log.info("new state published.");
+		// _lastState = _model.getState().getValue();
+		// }
 	}
 
 	public void sendMessage(Message msg) {
@@ -1021,8 +1026,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 				_log.error("Error sendMessage", e); //$NON-NLS-1$
 				_log.error(e); //$NON-NLS-1$
 			}
-		}
-		else{
+		} else {
 			_log.warn("Messenger is null ; cannot send " + msg);
 		}
 	}
