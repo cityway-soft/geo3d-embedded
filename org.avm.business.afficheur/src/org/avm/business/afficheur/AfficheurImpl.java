@@ -1,5 +1,6 @@
 package org.avm.business.afficheur;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
@@ -61,7 +62,7 @@ public class AfficheurImpl implements Afficheur, ManageableService,
 	}
 
 	public void stop() {
-		
+
 	}
 
 	private void initialize() {
@@ -149,9 +150,8 @@ public class AfficheurImpl implements Afficheur, ManageableService,
 			Point point = model.getProchainPoint();
 			if (point != null) {
 				StringBuffer buffer = new StringBuffer();
-				buffer
-						.append(Messages
-								.getString("org.avm.business.afficheur.prochain-arret"));
+				buffer.append(Messages
+						.getString("org.avm.business.afficheur.prochain-arret"));
 				buffer.append(point.getNom());
 
 				String[] messages = getMessages(model);
@@ -170,7 +170,7 @@ public class AfficheurImpl implements Afficheur, ManageableService,
 	}
 
 	private String[] getMessages(AvmModel model) {
-		String[] result = null;
+		String[] msg = null;
 		if (_messages != null) {
 			String ligneIdu = "";
 			if (model.getCourse() != null) {
@@ -179,18 +179,38 @@ public class AfficheurImpl implements Afficheur, ManageableService,
 
 			Collection messages = _messages.getMessages(
 					org.avm.business.messages.Messages.VOYAGEUR, ligneIdu);
-			result = new String[messages.size()];
+			msg = new String[messages.size()];
 			Iterator iter = messages.iterator();
 			int i = 0;
+			String from = System.getProperty("from.charset", "UTF-8");
+			String to = System.getProperty("to.charset", "iso-8859-1");
 			while (iter.hasNext()) {
 				Properties props = (Properties) iter.next();
-				result[i] = props
-						.getProperty(org.avm.business.messages.Messages.MESSAGE);
+				String temp = props.getProperty(org.avm.business.messages.Messages.MESSAGE);
+
+
+				_log.debug("from="+from+", to="+to);
+				if (from != null && to != null) {
+					_log.debug("Avant conversion " + temp);
+					try {
+						byte[] m = new String(temp.getBytes(), from)
+								.getBytes(to);
+						temp = new String(m);
+						_log.debug("Après conversion " + temp);
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
+					
+				} else {
+					_log.debug("Aucune conversion " + temp);
+				}
+
+				msg[i] = temp;
 				i++;
 			}
 
 		}
-		return result;
+		return msg;
 	}
 
 	public void setMessages(org.avm.business.messages.Messages messages) {

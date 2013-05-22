@@ -2,6 +2,7 @@ package org.avm.business.tft;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
@@ -30,7 +31,7 @@ public class TftImpl implements Tft, ConsumerService, ManageableService,
 
 	private Logger _log = Activator.getDefault().getLogger();
 	private TftConfig _config;
-	
+
 	public Config getConfig() {
 		return _config;
 	}
@@ -72,10 +73,11 @@ public class TftImpl implements Tft, ConsumerService, ManageableService,
 
 	public void notify(Object o) {
 		if (o instanceof State) {
-			State state = (State)o;
+			State state = (State) o;
 			_log.info("notify state:" + o);
-			if ( (state.getName().equals(Messages.class.getName()) && state.getValue() == Messages.VOYAGEUR) 
-					|| state.getName().equals(Avm.class.getName()) ){
+			if ((state.getName().equals(Messages.class.getName()) && state
+					.getValue() == Messages.VOYAGEUR)
+					|| state.getName().equals(Avm.class.getName())) {
 				refresh();
 			}
 		}
@@ -95,18 +97,19 @@ public class TftImpl implements Tft, ConsumerService, ManageableService,
 		sb.append(message);
 		_log.debug(sb.toString());
 	}
-	
-	public void process(HttpServletRequest request, HttpServletResponse response) throws Throwable{
+
+	public void process(HttpServletRequest request, HttpServletResponse response)
+			throws Throwable {
 		try {
 			_process(request, response);
-		}
-		catch (Throwable t) {
+		} catch (Throwable t) {
 			_log.error("Error doGet :", t);
 			throw t;
 		}
 	}
 
-	public void _process(HttpServletRequest request, HttpServletResponse response) {
+	public void _process(HttpServletRequest request,
+			HttpServletResponse response) {
 		_log.debug(request.getRemoteAddr() + " query "
 				+ request.getQueryString());
 
@@ -127,8 +130,9 @@ public class TftImpl implements Tft, ConsumerService, ManageableService,
 			if (count == _count) {
 				synchronized (_lock) {
 					try {
-						trace(request, " wait " + TIMEOUT + " thread "
-								+ Thread.currentThread());
+						trace(request,
+								" wait " + TIMEOUT + " thread "
+										+ Thread.currentThread());
 						_lock.wait(TIMEOUT);
 					} catch (InterruptedException e) {
 					}
@@ -136,7 +140,7 @@ public class TftImpl implements Tft, ConsumerService, ManageableService,
 			}
 		}
 
-		_log.debug("avm="+_avm);
+		_log.debug("avm=" + _avm);
 
 		if (_avm != null) {
 			_log.debug("building response...");
@@ -149,31 +153,56 @@ public class TftImpl implements Tft, ConsumerService, ManageableService,
 			response.setContentType("text/plain");
 			try {
 				PrintWriter writer = response.getWriter();
-				String ligneIdu="";
-				if (_avm.getModel().getCourse() != null){
-					ligneIdu=Integer.toString(_avm.getModel().getCourse().getLigneIdu());
+				String ligneIdu = "";
+				if (_avm.getModel().getCourse() != null) {
+					ligneIdu = Integer.toString(_avm.getModel().getCourse()
+							.getLigneIdu());
 				}
-				Collection messages =_messages.getMessages(Messages.VOYAGEUR, ligneIdu );	
-				String[] msg = new String[messages.size()*2];
+				Collection messages = _messages.getMessages(Messages.VOYAGEUR,
+						ligneIdu);
+				String[] msg = new String[messages.size() * 2];
 				Iterator iter = messages.iterator();
-				int i=0;
+				int i = 0;
+				String from = System.getProperty("from.charset", "UTF-8");
+				String to = System.getProperty("to.charset", "iso-8859-1");
 				while (iter.hasNext()) {
 					Properties props = (Properties) iter.next();
-					msg[i] = props.getProperty(Messages.MESSAGE);
-					msg[i+1] = props.getProperty(Messages.PRIORITE);
-					i+=2;
+
+					String temp = props.getProperty(org.avm.business.messages.Messages.MESSAGE);
+
+		
+					_log.debug("from="+from+", to="+to);
+					if (from != null && to != null) {
+						_log.debug("Avant conversion " + temp);
+						try {
+							byte[] m = new String(temp.getBytes(), from)
+									.getBytes(to);
+							temp = new String(m);
+							_log.debug("Après conversion " + temp);
+						} catch (UnsupportedEncodingException e) {
+							e.printStackTrace();
+						}
+						
+					} else {
+						_log.debug("Aucune conversion " + temp);
+					}
+
+					msg[i] = temp;
+					msg[i + 1] = props.getProperty(Messages.PRIORITE);
+
+					i += 2;
 				}
-				
-				String text = Util.toJSONString(_avm.getModel(),msg);
+
+				String text = Util.toJSONString(_avm.getModel(), msg);
 				writer.println(text);
-				 
+
 				writer.close();
 				trace(request, "thread " + Thread.currentThread() + "response "
 						+ text);
 			} catch (IOException e) {
 				_log.error(e);
-				_log.error("model:"+_avm.getModel());
-				_log.error("json:"+Util.toJSONString(_avm.getModel(),null));
+				_log.error("model:" + _avm.getModel());
+				_log.error("json:" + Util.toJSONString(_avm.getModel(), null));
 			}
 		}
 
