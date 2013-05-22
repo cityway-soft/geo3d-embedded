@@ -88,7 +88,12 @@ public class SplashImpl implements Splash, ServiceListener,
 	public void serviceChanged(ServiceEvent event) {
 		ServiceReference sr = event.getServiceReference();
 
-		Object obj = _context.getService(sr);
+		Object obj = null;
+		try {
+			obj = _context.getService(sr);
+		} catch (Throwable t) {
+			System.err.println("[SplashIhm] WARN :" + t.getMessage());
+		}
 		if (obj != null) {
 			Class[] interfaces = obj.getClass().getInterfaces();
 			_context.ungetService(sr);
