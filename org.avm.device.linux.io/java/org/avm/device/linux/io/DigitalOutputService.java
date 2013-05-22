@@ -7,10 +7,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.avm.device.io.DigitalIODevice;
 import org.avm.device.io.DigitalIODriver;
-
 import org.avm.elementary.common.PropertyChangeListener;
 import org.avm.elementary.common.PropertyChangeSupport;
 import org.osgi.framework.BundleContext;
@@ -39,7 +37,7 @@ public class DigitalOutputService extends ServiceTracker implements
 
 	public DigitalOutputService(BundleContext context, ServiceReference device) {
 		super(context, device, null);
-		_log.setPriority(Priority.DEBUG);
+		// _log.setPriority(Priority.DEBUG);
 		_listeners = new PropertyChangeSupport(this);
 	}
 
@@ -60,26 +58,26 @@ public class DigitalOutputService extends ServiceTracker implements
 			if (_in.read(buffer) != 2) {
 				return;
 			}
-			int dout = ((buffer[1] << 8) | buffer[0]) & 0xffff;			
-	
+			int dout = ((buffer[1] << 8) | buffer[0]) & 0xffff;
+
 			boolean oldValue = get(dout, index);
-			if(value){				
-				dout = set(dout, index);				
-			}else {
-				dout = clear(dout, index);				
+			if (value) {
+				dout = set(dout, index);
+			} else {
+				dout = clear(dout, index);
 			}
-			
-			buffer[0] =(byte) (dout & 0xff);
+
+			buffer[0] = (byte) (dout & 0xff);
 			buffer[1] = (byte) ((dout >> 8) & 0xff);
-					
+
 			_out.write(buffer);
 
 			if (_log.isDebugEnabled()) {
-				_log.debug("[DSU] write 0x" + Integer.toHexString(dout));
+				_log.debug("Write 0x" + Integer.toHexString(dout));
 			}
-			
+
 			_listeners.fireIndexedPropertyChange(null, index, oldValue, value);
-			
+
 		} catch (Exception e) {
 			_log.error(e);
 		}
@@ -134,12 +132,12 @@ public class DigitalOutputService extends ServiceTracker implements
 	}
 
 	private static final int set(int flag, int bit) {
-		int mask = 1 << bit;		
-		return flag |= mask; 
+		int mask = 1 << bit;
+		return flag |= mask;
 	}
 
 	private static final int clear(int flag, int bit) {
-		int mask = 1 << bit;		
+		int mask = 1 << bit;
 		return flag &= ~mask;
 	}
 

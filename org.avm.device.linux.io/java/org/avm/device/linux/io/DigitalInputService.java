@@ -5,7 +5,6 @@ import java.util.BitSet;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.avm.device.io.DigitalIODevice;
 import org.avm.device.io.DigitalIODriver;
 import org.avm.elementary.common.PropertyChangeListener;
@@ -37,8 +36,7 @@ public class DigitalInputService extends ServiceTracker implements
 	public DigitalInputService(BundleContext context, ServiceReference device) {
 		super(context, device, null);
 		_listeners = new PropertyChangeSupport(this);
-		_log.setPriority(Priority.DEBUG);
-	
+		// _log.setPriority(Priority.DEBUG);
 	}
 
 	public int getCapability() {
@@ -103,7 +101,7 @@ public class DigitalInputService extends ServiceTracker implements
 	public void run() {
 		FileInputStream in;
 		try {
-	
+
 			in = new FileInputStream(DEVICE);
 			byte[] buffer = new byte[2];
 
@@ -113,9 +111,9 @@ public class DigitalInputService extends ServiceTracker implements
 				}
 				int value = ((buffer[1] << 8) | buffer[0]) & 0xffff;
 				if (_log.isDebugEnabled()) {
-					_log.debug("[DSU] read 0x" + Integer.toHexString(value));
-				}	
-				
+					_log.debug("Read 0x" + Integer.toHexString(value));
+				}
+
 				BitSet old = (BitSet) _data.clone();
 				for (int i = 0; i < 16; i++) {
 					if (get(value, i)) {
@@ -124,8 +122,8 @@ public class DigitalInputService extends ServiceTracker implements
 						_data.set(i);
 					}
 					if (_data.get(i) != old.get(i)) {
-						_listeners.fireIndexedPropertyChange(null, i, old
-								.get(i), _data.get(i));
+						_listeners.fireIndexedPropertyChange(null, i,
+								old.get(i), _data.get(i));
 					}
 				}
 			}
@@ -134,7 +132,6 @@ public class DigitalInputService extends ServiceTracker implements
 			_log.error(e);
 		}
 	}
-	
 
 	private static final boolean get(int flag, int bit) {
 		int mask = 1 << bit;
