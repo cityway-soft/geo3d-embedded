@@ -1,6 +1,5 @@
 package org.avm.hmi.swt.desktop;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,6 +12,8 @@ import org.avm.elementary.common.Scheduler;
 import org.avm.hmi.swt.application.display.Application;
 import org.avm.hmi.swt.desktop.bundle.ConfigImpl;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -36,11 +37,14 @@ import org.eclipse.swt.widgets.TabItem;
 
 public class DesktopIhm {
 
+	public static final SimpleDateFormat DF = new java.text.SimpleDateFormat(
+			"EEEE MM MMMM");
+
 	private static final boolean ENABLE_RIGHT_PANEL = Boolean.valueOf(
 			System.getProperty("org.avm.hmi.swt.desktop.enable-right-panel",
 					"true")).booleanValue();
 
-	private final static SimpleDateFormat DF = new SimpleDateFormat("HH:mm");
+	private final static SimpleDateFormat HF = new SimpleDateFormat("HH:mm");
 
 	public final static Color VERT = new Color(Display.getCurrent(), 146, 208,
 			80);
@@ -63,15 +67,11 @@ public class DesktopIhm {
 
 	private Label _labelInformation2 = null;
 
-	private Label _labelLogo = null;
-
 	private TabFolder _tabFolder = null;
 
 	private Label _labelHeure = null;
 
 	private Label _labelVehicule = null;
-
-	private Label _labelVehiculeInfo = null;
 
 	private HashMap _hashItem = new HashMap();
 
@@ -84,50 +84,42 @@ public class DesktopIhm {
 
 	private Scheduler _scheduler = new Scheduler();
 
-	private Object _timerTaskEndDay;
-
-	private Object _timerTaskBeginDay;
+	private Object _timerTaskCheckNightMode;
 
 	public static HashMap _hashFonts = null;
 
 	private String _favorite;
 
 	private void createLogo() {
-		logger.debug("Creation logo - step 1");
-		GridData gridData11 = new GridData();
-		gridData11.horizontalAlignment = GridData.FILL;
-		gridData11.grabExcessHorizontalSpace = false;
-		gridData11.grabExcessVerticalSpace = false;
-		gridData11.verticalAlignment = GridData.FILL;
 
-		_labelLogo = new Label(_shell, SWT.NONE);
-		_labelLogo.setText("Logo");
-		_labelLogo.setLayoutData(gridData11);
+		GridData gridData = new GridData();
+		gridData.grabExcessVerticalSpace = false;
+		gridData.horizontalAlignment = GridData.FILL;
+		gridData.verticalAlignment = GridData.FILL;
+		gridData.heightHint = 30;
+		gridData.widthHint = -1;
+		gridData.grabExcessHorizontalSpace = false;
+		_labelHeure = new Label(_shell, SWT.CENTER | SWT.BOTTOM);
+		_labelHeure.setBackground(DesktopStyle.getBackgroundColor());
 
-		String version = System.getProperty("org.avm.version");
-		if (version != null) {
-			_labelLogo.setToolTipText("Version " + version);
-		}
+		_labelHeure.setFont(DesktopImpl.getFont(18, SWT.BOLD));
+		_labelHeure.setLayoutData(gridData);
+		Image imglogo = new Image(_display, getClass().getResourceAsStream(
+				"/resources/logo.jpg")); //$NON-NLS-1$
+		_labelHeure.setImage(imglogo);
+		_labelHeure.addMouseListener(new MouseListener() {
 
-		Image imglogo = null;
-		String filename = System.getProperty("org.avm.home") + "/data/logo.jpg";
-		File file = new File(filename);
+			public void mouseDoubleClick(MouseEvent arg0) {
+			}
 
-		if (file.exists()) {
-			imglogo = new Image(_display, filename); //$NON-NLS-1$
-		} else {
-			imglogo = new Image(_display, getClass().getResourceAsStream(
-					"/resources/logo.jpg")); //$NON-NLS-1$
-		}
-		logger.debug("Creation logo - step 6");
+			public void mouseDown(MouseEvent arg0) {
+				updateTime();
+			}
 
-		_labelLogo.setImage(imglogo);
+			public void mouseUp(MouseEvent arg0) {
+			}
 
-		if (ENABLE_RIGHT_PANEL == false) {
-			_labelLogo.setEnabled(false);
-			_labelLogo.setVisible(false);
-		}
-		logger.debug("Creation logo - step 7");
+		});
 
 	}
 
@@ -323,34 +315,6 @@ public class DesktopIhm {
 				_labelVehicule.setFont(_fontNormal);
 				_labelVehicule.setLayoutData(gridData);
 
-				gridData = new GridData();
-				gridData.grabExcessVerticalSpace = false;
-				gridData.horizontalAlignment = GridData.FILL;
-				gridData.verticalAlignment = GridData.FILL;
-				gridData.heightHint = 18;
-				gridData.widthHint = -1;
-				gridData.grabExcessHorizontalSpace = true;
-				_labelVehiculeInfo = new Label(_compositeButtons, SWT.CENTER);
-				_labelVehiculeInfo.setBackground(DesktopStyle
-						.getBackgroundColor());
-				_labelVehiculeInfo.setForeground(_display
-						.getSystemColor(SWT.COLOR_GRAY));
-				_labelVehiculeInfo.setFont(_fontSmall);
-				_labelVehiculeInfo.setLayoutData(gridData);
-
-				gridData = new GridData();
-				gridData.grabExcessVerticalSpace = false;
-				gridData.horizontalAlignment = GridData.FILL;
-				gridData.verticalAlignment = GridData.FILL;
-				gridData.heightHint = 30;
-				gridData.widthHint = -1;
-				gridData.grabExcessHorizontalSpace = false;
-				_labelHeure = new Label(_compositeButtons, SWT.CENTER
-						| SWT.BOTTOM);
-				_labelHeure.setBackground(DesktopStyle.getBackgroundColor());
-
-				_labelHeure.setFont(_fontNormal);
-				_labelHeure.setLayoutData(gridData);
 				startClock();
 
 				logger.debug("Creation bouton nightmode");
@@ -425,6 +389,7 @@ public class DesktopIhm {
 					cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
 			_beginDay = cal.getTime();
 		}
+		logger.info("Begin date for nigth mode=" + _beginDay);
 
 		if (_endDay == null) {
 			_endDay = getDate(19, 30, 56).getTime();
@@ -435,50 +400,61 @@ public class DesktopIhm {
 					cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
 			_endDay = cal.getTime();
 		}
+		logger.info("End date for nigth mode=" + _endDay);
+	}
 
-		if (_timerTaskBeginDay != null) {
-			_scheduler.cancel(_timerTaskBeginDay);
+	private Date getNextDate(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		if (cal.before(Calendar.getInstance())) {
+			cal.add(Calendar.HOUR_OF_DAY, 24);
 		}
 
-		if (_timerTaskEndDay != null) {
-			_scheduler.cancel(_timerTaskEndDay);
+		return cal.getTime();
+	}
+
+	public void updateNightModeTimer() {
+		if (_timerTaskCheckNightMode != null) {
+			_scheduler.cancel(_timerTaskCheckNightMode);
 		}
 
-		_timerTaskBeginDay = _scheduler.schedule(new Runnable() {
-			public void run() {
-				setNightMode(false);
-			}
-		}, _beginDay);
+		Date now = new Date();
+		Date scheduleDate = _beginDay;
+		if (now.after(_beginDay) || now.equals(_beginDay)) {
+			_beginDay = getNextDate(_beginDay);
+		} else {
+			scheduleDate = _beginDay;
+		}
 
-		_timerTaskEndDay = _scheduler.schedule(new Runnable() {
+		if (now.after(_endDay)) {
+			_endDay = getNextDate(_endDay);
+			scheduleDate = _beginDay;
+		} else {
+			scheduleDate = _endDay;
+		}
+
+		logger.info("Next schedule for night mode=" + scheduleDate
+				+ ((_beginDay == scheduleDate) ? " (begin)" : " (end)"));
+
+		_timerTaskCheckNightMode = _scheduler.schedule(new Runnable() {
 			public void run() {
-				setNightMode(true);
+				checkNightMode();
 			}
-		}, _endDay);
+		}, scheduleDate);
+
 	}
 
 	public void checkNightMode() {
-		Calendar now = Calendar.getInstance();
-		Calendar timeSunUp = Calendar.getInstance();
-		timeSunUp.setTime(_beginDay);// getDate(6, 15 , 30);
-		timeSunUp = getDate(timeSunUp.get(Calendar.HOUR_OF_DAY),
-				timeSunUp.get(Calendar.MINUTE), timeSunUp.get(Calendar.SECOND));
+		Date now = new Date();
 
-		boolean nightmode = now.before(timeSunUp);
-		if (nightmode) {
-			setNightMode(nightmode);
-			return;
+		if (_beginDay.after(_endDay)) {
+			setNightMode(now.after(_endDay));
+
+		} else {
+			setNightMode(now.before(_beginDay) || now.after(_endDay));
 		}
-		Calendar timeSunDown = Calendar.getInstance();
-		timeSunDown.setTime(_endDay);
-		;// getDate(19, 30, 56);
-		timeSunDown = getDate(timeSunDown.get(Calendar.HOUR_OF_DAY),
-				timeSunDown.get(Calendar.MINUTE),
-				timeSunDown.get(Calendar.SECOND));
 
-		nightmode = now.after(timeSunDown);
-
-		setNightMode(nightmode);
+		updateNightModeTimer();
 	}
 
 	public void setNightMode(final boolean b) {
@@ -499,6 +475,7 @@ public class DesktopIhm {
 		cal.set(Calendar.HOUR_OF_DAY, hour);
 		cal.set(Calendar.MINUTE, min);
 		cal.set(Calendar.SECOND, sec);
+
 		return cal;
 	}
 
@@ -513,26 +490,31 @@ public class DesktopIhm {
 		// _display.dispose();
 	}
 
+	private void updateTime() {
+		final boolean b = org.avm.device.plateform.System.isOnTime();
+
+		if (_shell.isDisposed())
+			return;
+		if (b) {
+			_labelHeure.setText(HF.format(new Date()));
+		} else {
+			_labelHeure.setText("--:--");
+		}
+		_labelHeure.redraw();
+	}
+
 	public void startClock() {
 		Runnable run = new Runnable() {
 			public void run() {
-				final boolean b = org.avm.device.plateform.System.isOnTime();
 				try {
-					if (_shell.isDisposed())
-						return;
-					if (b) {
-						_labelHeure.setText(DF.format(new Date()));
-					} else {
-						_labelHeure.setText("--:--");
-					}
-					_labelHeure.redraw();
+					updateTime();
 					_shell.getDisplay().timerExec(5 * 1000, this);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		};
-		_shell.getDisplay().timerExec(1 * 1000, run);
+		_shell.getDisplay().timerExec(15 * 1000, run);
 
 	}
 
@@ -546,12 +528,17 @@ public class DesktopIhm {
 	private void updateVehiculeDetails() {
 		_labelVehicule.setText(System.getProperty("org.avm.terminal.name",
 				"???"));
-		_labelVehicule.setToolTipText(System.getProperty("org.avm.terminal.id",
-				"MAC???"));
-		StringBuffer buf = new StringBuffer();
+		StringBuffer tooltip = new StringBuffer();
+		tooltip.append("ID ");
+		tooltip.append(System.getProperty("org.avm.terminal.id", "???"));
+		tooltip.append("\n");
+		tooltip.append("Exploitation ");
+		tooltip.append(System.getProperty("org.avm.terminal.owner", "???"));
+		tooltip.append("\n");
+		tooltip.append("Version ");
+		tooltip.append(System.getProperty("org.avm.version", "???"));
 
-		buf.append(System.getProperty("org.avm.terminal.owner", "???"));
-		_labelVehiculeInfo.setText(buf.toString());
+		_labelVehicule.setToolTipText(tooltip.toString());
 	}
 
 	public void setInformation(final String info) {
@@ -560,8 +547,7 @@ public class DesktopIhm {
 		_display.asyncExec(new Runnable() {
 			public void run() {
 				if (info == null || info.trim().equals("")) {
-					_labelInformation2.setText(System.getProperty(
-							"org.avm.exploitation.name", ""));
+					_labelInformation2.setText(DF.format(new Date()));
 				} else {
 					_labelInformation2.setText(info);
 				}
