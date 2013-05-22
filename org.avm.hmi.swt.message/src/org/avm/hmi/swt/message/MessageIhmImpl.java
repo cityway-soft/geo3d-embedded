@@ -117,7 +117,7 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 		panelReceive.setText(Messages.getString("Message.boite-reception")); //$NON-NLS-1$
 		panelReceive.setBackground(DesktopStyle.getBackgroundColor());
 		gridLayout = new GridLayout();
-		gridLayout.numColumns = 2;
+		gridLayout.numColumns = 1;
 		panelReceive.setLayout(gridLayout);
 		gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL;
@@ -135,7 +135,7 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 			}
 		});
 		TableColumn tableColumn0 = new TableColumn(_table, SWT.NONE);
-		tableColumn0.setWidth(115);
+		tableColumn0.setWidth(0);
 		tableColumn0.setText("n�"); //$NON-NLS-1$
 
 		TableColumn tableColumn1 = new TableColumn(_table, SWT.NONE);
@@ -143,7 +143,7 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 		tableColumn1.setText("Re�u"); //$NON-NLS-1$
 
 		TableColumn tableColumn2 = new TableColumn(_table, SWT.NONE);
-		tableColumn2.setWidth(0);
+		tableColumn2.setWidth(115);
 		tableColumn2.setText("Message"); //$NON-NLS-1$
 
 		TableColumn tableColumn3 = new TableColumn(_table, SWT.NONE);
@@ -153,6 +153,8 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 		gridData = new GridData();
 		gridData.grabExcessVerticalSpace = true;
 		gridData.verticalAlignment = GridData.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.horizontalAlignment = GridData.FILL;
 		_table.setLayoutData(gridData);
 
 		_text = new Text(panelReceive, SWT.V_SCROLL | SWT.MULTI | SWT.WRAP
@@ -163,8 +165,7 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 		gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL;
 		gridData.grabExcessHorizontalSpace = true;
-		gridData.verticalAlignment = GridData.FILL;
-		gridData.grabExcessVerticalSpace = true;
+		gridData.heightHint=70;
 		_text.setLayoutData(gridData);
 
 	}

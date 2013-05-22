@@ -10,13 +10,13 @@
 <value type="String">initial@reference:file:../../../home/didier/Projets/geolia/common/dev/workspace/avmrefactor/org.avm.hmi.swt.message/</value>
 </property>
 <property name="org.avm.config.version">
-<value type="Integer">1</value>
+<value type="Integer">2</value>
 </property>
 <property name="messages">
 <value type="String">#Thu Jun 02 11:03:26 CEST 2011
 Accident=Accident 
-FRDR=Fraudeur a bord
-Controleur=Demande Controleurs
+Encomb.=Encombrant
+Bouchon=Bouchon
 Pluie=Pluie
 Verglas=Verglas sur la route
 </value>
