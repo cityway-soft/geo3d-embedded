@@ -47,6 +47,7 @@ public class RecorderService implements Recorder, ConfigurableService,
 
 	public void setIndicator(Indicator indicator) {
 		_indicator = indicator;
+		_indicator.reset();
 	}
 
 	public void unsetIndicator(Indicator indicator) {
@@ -54,7 +55,6 @@ public class RecorderService implements Recorder, ConfigurableService,
 	}
 
 	public void start() {
-		_indicator.reset();
 		_jdb.journalize(Indicator.CATEGORY, "RECORDER;ON");
 	}
 
