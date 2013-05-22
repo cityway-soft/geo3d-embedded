@@ -7,7 +7,7 @@ import org.osgi.service.component.ComponentContext;
 
 public class CommandGroupImpl extends AbstractCommandGroup {
 
-	public static final String COMMAND_GROUP = "avm.recorder";
+	public static final String COMMAND_GROUP = "recorder";
 
 	private RecorderService _peer;
 
