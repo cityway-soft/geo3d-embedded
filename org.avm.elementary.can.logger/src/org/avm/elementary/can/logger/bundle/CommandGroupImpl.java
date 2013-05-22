@@ -1,12 +1,12 @@
-package org.avm.elementay.can.logger.bundle;
+package org.avm.elementary.can.logger.bundle;
 
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.Dictionary;
 
+import org.avm.elementary.can.logger.Logger;
+import org.avm.elementary.can.logger.LoggerConfig;
 import org.avm.elementary.common.AbstractCommandGroup;
-import org.avm.elementay.can.logger.Logger;
-import org.avm.elementay.can.logger.LoggerConfig;
 import org.knopflerfish.service.console.Session;
 import org.osgi.service.component.ComponentContext;
 

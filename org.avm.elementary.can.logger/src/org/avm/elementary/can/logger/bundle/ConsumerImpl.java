@@ -1,9 +1,9 @@
-package org.avm.elementay.can.logger.bundle;
+package org.avm.elementary.can.logger.bundle;
 
+import org.avm.elementary.can.logger.LoggerConfig;
 import org.avm.elementary.can.parser.PGN;
 import org.avm.elementary.common.AbstractConsumer;
 import org.avm.elementary.common.ConsumerService;
-import org.avm.elementay.can.logger.LoggerConfig;
 import org.osgi.service.component.ComponentContext;
 
 public class ConsumerImpl extends AbstractConsumer {

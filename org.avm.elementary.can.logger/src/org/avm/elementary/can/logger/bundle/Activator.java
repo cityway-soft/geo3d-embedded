@@ -1,14 +1,15 @@
-package org.avm.elementay.can.logger.bundle;
+package org.avm.elementary.can.logger.bundle;
 
+import org.avm.elementary.can.logger.Logger;
+import org.avm.elementary.can.logger.LoggerImpl;
 import org.avm.elementary.common.AbstractActivator;
 import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ConsumerService;
 import org.avm.elementary.common.ManageableService;
-import org.avm.elementay.can.logger.LoggerImpl;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 
-public class Activator extends AbstractActivator {
+public class Activator extends AbstractActivator implements Logger {
 
 	private static Activator _plugin;
 

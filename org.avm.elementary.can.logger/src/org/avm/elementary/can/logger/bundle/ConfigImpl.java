@@ -1,7 +1,7 @@
-package org.avm.elementay.can.logger.bundle;
+package org.avm.elementary.can.logger.bundle;
 
+import org.avm.elementary.can.logger.LoggerConfig;
 import org.avm.elementary.common.AbstractConfig;
-import org.avm.elementay.can.logger.LoggerConfig;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 

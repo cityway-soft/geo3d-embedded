@@ -1,4 +1,4 @@
-package org.avm.elementay.can.logger;
+package org.avm.elementary.can.logger;
 
 import java.io.IOException;
 import java.text.MessageFormat;

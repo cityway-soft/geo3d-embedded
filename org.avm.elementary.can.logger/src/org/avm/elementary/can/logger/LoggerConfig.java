@@ -1,4 +1,4 @@
-package org.avm.elementay.can.logger;
+package org.avm.elementary.can.logger;
 
 
 public interface LoggerConfig {

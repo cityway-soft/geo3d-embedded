@@ -1,4 +1,4 @@
-package org.avm.elementay.can.logger;
+package org.avm.elementary.can.logger;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
