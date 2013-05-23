@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Text;
 public class MessageIhmImpl extends Composite implements MessageIhm,
 		MessengerInjector, ConfigurableService {
 
-	private static final SimpleDateFormat DF = new SimpleDateFormat("HH:mm"); //$NON-NLS-1$
+	private static final SimpleDateFormat DF = new SimpleDateFormat("HH:mm:ss"); //$NON-NLS-1$
 
 	private static final int BUTTON_HEIGHT = 45;
 
@@ -139,7 +139,7 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 		tableColumn0.setText("n�"); //$NON-NLS-1$
 
 		TableColumn tableColumn1 = new TableColumn(_table, SWT.NONE);
-		tableColumn1.setWidth(53);
+		tableColumn1.setWidth(70);
 		tableColumn1.setText("Re�u"); //$NON-NLS-1$
 
 		TableColumn tableColumn2 = new TableColumn(_table, SWT.NONE);
