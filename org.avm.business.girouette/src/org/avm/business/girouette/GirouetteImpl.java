@@ -10,12 +10,15 @@ import org.avm.business.core.AvmInjector;
 import org.avm.business.core.AvmModel;
 import org.avm.business.core.event.ServiceAgent;
 import org.avm.device.girouette.GirouetteInjector;
+import org.avm.elementary.alarm.Alarm;
+import org.avm.elementary.alarm.AlarmService;
 import org.avm.elementary.common.Config;
 import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ConsumerService;
 import org.avm.elementary.common.ManageableService;
 import org.avm.elementary.directory.Directory;
 import org.avm.elementary.directory.DirectoryInjector;
+import org.osgi.util.measurement.State;
 
 public class GirouetteImpl implements ConfigurableService, AvmInjector,
 		GirouetteInjector, ManageableService, ConsumerService, Girouette,
@@ -27,17 +30,23 @@ public class GirouetteImpl implements ConfigurableService, AvmInjector,
 
 	private org.avm.device.girouette.Girouette _girouette;
 
+	private static final int ALARM_SURCHARGE = 5;
+	
+	public boolean alarmSurcharge = false;
+
 	private int _code = -1;
 
 	private ModelListener _listener;
 
 	private Avm _avm;
-	
-	private boolean _initialized=false;
+
+	private boolean _initialized = false;
 
 	private Directory _directory;
-	
+
 	private Properties _specialCodes;
+
+	private AlarmService _alarmService;
 
 	public void configure(Config config) {
 		_config = (GirouetteConfig) config;
@@ -50,20 +59,19 @@ public class GirouetteImpl implements ConfigurableService, AvmInjector,
 
 	public void unsetAvm(Avm avm) {
 		_listener = null;
-		_initialized=false;
+		_initialized = false;
 	}
 
-	
-	private void initialize(){
-		if (!_initialized){
-			if (_avm != null && _girouette != null){
+	private void initialize() {
+		if (!_initialized) {
+			if (_avm != null && _girouette != null) {
 				_listener = new ModelListener(_avm);
 				_listener.notify(_avm.getModel().getState());
-				_initialized=true;
+				_initialized = true;
 			}
 		}
 	}
-	
+
 	public void setGirouette(org.avm.device.girouette.Girouette girouette) {
 		_girouette = girouette;
 		_code = 0;
@@ -72,21 +80,36 @@ public class GirouetteImpl implements ConfigurableService, AvmInjector,
 
 	public void unsetGirouette(org.avm.device.girouette.Girouette girouette) {
 		_girouette = null;
-		_initialized=false;
+		_initialized = false;
 	}
-	// TODO Auto-generated method stub
-	
+
+	public void setAlarmService(AlarmService service) {
+		_alarmService = service;
+	}
+
+	public void unsetAlarmService(AlarmService service) {
+		_alarmService = service;
+	}
+
 	public void start() {
-		
+
 	}
 
 	public void stop() {
 		destination(getSpecialCode(CODE_HORSSERVICE));
-		_initialized=false;
+		_initialized = false;
 	}
 
 	public void notify(Object o) {
-		if (_listener != null) {
+		if (o instanceof State) {
+			State state = (State) o;
+			if (state.getName().equals(AlarmService.class.getName())) {
+				if(alarmSurcharge != isSurcharge()){
+					alarmSurcharge = isSurcharge();
+					destination(_avm.getModel().getCodeGirouette());
+				}
+			}
+		} else if (_listener != null) {
 			_listener.notify(o);
 		}
 	}
@@ -103,16 +126,26 @@ public class GirouetteImpl implements ConfigurableService, AvmInjector,
 		}
 	}
 
+	private boolean isSurcharge() {
+		boolean result = false;
+		if (_alarmService != null) {
+			Alarm alarm = _alarmService.getAlarm(new Integer(ALARM_SURCHARGE));
+			result = alarm.isStatus();
+		}
+		return result;
+	}
+
 	public void destination(int code) {
-		if (_avm.getModel().isVehiculeFull()) {
+		// if (_avm.getModel().isVehiculeFull()) {
+		if (isSurcharge()) {
 			code = getSpecialCode(CODE_COMPLET);
-		} 
-		
+		}
+
 		if (code > 0 && code != _code) {
 			_code = code;
 			send(Integer.toString(_code));
 		}
-		
+
 	}
 
 	class ModelListener extends AbstractAvmModelListener {
@@ -177,17 +210,17 @@ public class GirouetteImpl implements ConfigurableService, AvmInjector,
 
 	public void setDirectory(Directory directory) {
 		_directory = directory;
-		if (_specialCodes == null){
+		if (_specialCodes == null) {
 			_specialCodes = new Properties();
 		}
-		if (_directory != null){
+		if (_directory != null) {
 			Properties all = _directory.getProperty(null);
 			Enumeration e = all.keys();
-			while(e.hasMoreElements()){
+			while (e.hasMoreElements()) {
 				String key = (String) e.nextElement();
 				Properties props = _directory.getProperty(key);
 				String type = props.getProperty("type");
-				if (type!=null && type.equalsIgnoreCase("girouette")){
+				if (type != null && type.equalsIgnoreCase("girouette")) {
 					_specialCodes.put(key, props.get("code"));
 				}
 			}
@@ -197,16 +230,17 @@ public class GirouetteImpl implements ConfigurableService, AvmInjector,
 	public void unsetDirectory(Directory directory) {
 		_directory = null;
 	}
-	
+
 	public int getSpecialCode(String name) {
-		int code=-1;
-		try{
-			code = Integer.parseInt((String)_specialCodes.get(name));
+		int code = -1;
+		try {
+			code = Integer.parseInt((String) _specialCodes.get(name));
+			_log.info("Code Girouette " + name + " found : " + code);
+		} catch (Throwable t) {
+			_log.error("No girouette code for name : '" + name + "' (=>code="
+					+ code + ")");
 		}
-		catch(Throwable t){
-			_log.error("No girouette code for name : '" + name+ "' (=>code="+code+")");
-		}
-		
+
 		return code;
 	}
 

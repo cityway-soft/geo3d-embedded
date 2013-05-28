@@ -5,6 +5,7 @@ import org.avm.business.core.AvmInjector;
 import org.avm.business.girouette.Girouette;
 import org.avm.business.girouette.GirouetteImpl;
 import org.avm.device.girouette.GirouetteInjector;
+import org.avm.elementary.alarm.AlarmService;
 import org.avm.elementary.common.AbstractActivator;
 import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ConsumerService;
@@ -13,7 +14,8 @@ import org.avm.elementary.directory.Directory;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 
-public class Activator extends AbstractActivator implements Girouette, GirouetteInjector, AvmInjector {
+public class Activator extends AbstractActivator implements Girouette,
+		GirouetteInjector, AvmInjector {
 	private static Activator _plugin;
 	private ConfigImpl _config;
 	private ConsumerImpl _consumer;
@@ -33,11 +35,13 @@ public class Activator extends AbstractActivator implements Girouette, Girouette
 		initializeConfiguration();
 		initializeConsumer();
 		initializeCommandGroup();
+		initializeAlarmService();
 		startService();
 	}
 
 	protected void stop(ComponentContext context) {
 		stopService();
+		disposeAlarmService();
 		disposeCommandGroup();
 		disposeConsumer();
 		disposeConfiguration();
@@ -90,8 +94,17 @@ public class Activator extends AbstractActivator implements Girouette, Girouette
 			_commands.stop();
 	}
 
+	// alarm service
+	private void initializeAlarmService() {
+		AlarmService alarmeService = (AlarmService) _context
+				.locateService("alarm");
+		_peer.setAlarmService(alarmeService);
+	}
 
-	
+	private void disposeAlarmService() {
+		_peer.setAlarmService(null);
+	}
+
 	// service
 	private void stopService() {
 		if (_peer instanceof ManageableService) {
@@ -108,7 +121,7 @@ public class Activator extends AbstractActivator implements Girouette, Girouette
 	public void destination(int code) {
 		_peer.destination(code);
 	}
-	
+
 	public void setAvm(org.avm.business.core.Avm avm) {
 		_log.debug("setAvm " + avm);
 		_peer.setAvm(avm);
@@ -126,7 +139,6 @@ public class Activator extends AbstractActivator implements Girouette, Girouette
 		_peer.unsetGirouette(girouette);
 	}
 
-	
 	public void setDirectory(Directory directory) {
 		_peer.setDirectory(directory);
 	}

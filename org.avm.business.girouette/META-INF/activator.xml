@@ -15,4 +15,7 @@
 		cardinality="0..1" policy="dynamic" bind="setAvm" unbind="unsetAvm" />
 	<reference name="directory" interface="org.avm.elementary.directory.Directory"
 		cardinality="0..1" policy="dynamic" bind="setDirectory" unbind="unsetDirectory" />
+
+
+	<reference name="alarm" interface="org.avm.elementary.alarm.AlarmService" />
 </component>
