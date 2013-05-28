@@ -42,6 +42,7 @@
 		acknowledge=false
 		index=2
 		order=2
+		readonly=true
 		notify-up=true
 		notify-down=true
 		name=D\u00E9viation
@@ -198,6 +199,19 @@
 		name=Afficheur
 		type=0
 		key=afficheur
+	</value>
+</property>
+<property name="23">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		acknowledge=false
+		index=23
+		order=23
+		readonly=false
+		notify-up=true
+		notify-down=true
+		name=Comptage
+		type=0
+		key=comptage
 	</value>
 </property>
 </configuration>
