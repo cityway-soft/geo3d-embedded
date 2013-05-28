@@ -169,6 +169,7 @@ public class MessengerImpl implements Messenger, MediaListener, MediaService,
 						parser.put(data, out);
 						break;
 					} catch (Exception e) {
+						_log.error("Erreur parse '"+data+ "' (parser="+parser.getProtocolName()+"):" + e.getMessage() );
 						if (_log.isDebugEnabled()) {
 							_log.debug(e);
 						}
@@ -180,6 +181,14 @@ public class MessengerImpl implements Messenger, MediaListener, MediaService,
 			}
 		}
 		return buffer;
+	}
+	
+	public Hashtable getParsers(){
+		return _parsers;
+	}
+	
+	public Hashtable getMedias(){
+		return _medias;
 	}
 
 	private String toHexaString(byte[] data) {
