@@ -39,6 +39,8 @@ import org.avm.business.protocol.phoebus.PriseService;
 import org.avm.business.protocol.phoebus.Service;
 import org.avm.device.gps.Gps;
 import org.avm.device.gps.GpsInjector;
+import org.avm.elementary.alarm.Alarm;
+import org.avm.elementary.alarm.AlarmService;
 import org.avm.elementary.common.Config;
 import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ConsumerService;
@@ -75,6 +77,10 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 	private static final String AVM_SERIALIZATION_FILE = System
 			.getProperty("org.avm.home") //$NON-NLS-1$
 			+ "/bin/avmmodel.bin"; //$NON-NLS-1$
+
+	private static final int ALARM_DEVIATION_INDEX = 2;
+
+	private Alarm alarmDeviation;
 
 	private transient Logger _log;
 
@@ -121,6 +127,8 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 	private transient double _indexOdometer = 0;
 
 	private transient boolean _flagSendPriseService = true;
+
+	private AlarmService _alarmService;
 
 	private AvmImpl() {
 		_model = new AvmModelManager();
@@ -309,10 +317,24 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 		if (o instanceof State) {
 			if (o instanceof State) {
 				State state = (State) o;
-				if (state.getValue() == UserSessionService.AUTHENTICATED) {
-					loggedOn();
-				} else {
-					loggedOut();
+				if (state.getName().equals(AlarmService.class.getName())) {
+					Alarm alarm = _alarmService.getAlarm(new Integer(
+							ALARM_DEVIATION_INDEX));
+					if (_model.isHorsItineraire() != alarm.isStatus()) {
+						if (alarm.isStatus()) {
+							sortieItineraire();
+						} else {
+							_log.info("Impossible de desactiver une déviation !");
+						}
+					}
+
+				} else if (state.getName().equals(
+						UserSessionService.class.getName())) {
+					if (state.getValue() == UserSessionService.AUTHENTICATED) {
+						loggedOn();
+					} else {
+						loggedOut();
+					}
 				}
 			}
 		} else if (o instanceof Planification) {
@@ -732,6 +754,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 			_model.setGeorefMode(false);
 			_model.setVehiculeFull(false);
 			_model.setHorsItineraire(false);
+			notifyAlarmDeviation(false);
 			_model.setDepart(false);
 		}
 		_model.setDepart(false);
@@ -944,10 +967,12 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 
 	public void exitHorsItineraire() {
 		_model.setHorsItineraire(false);
+		notifyAlarmDeviation(false);
 	}
 
 	public void entryHorsItineraire() {
 		_model.setHorsItineraire(true);
+		notifyAlarmDeviation(true);
 	}
 
 	public void actionSortieItineraire() {
@@ -959,6 +984,21 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 		sendMessage(deviation);
 		journalize("HORSITINERAIRE"); //$NON-NLS-1$
 		syncJdb();
+	}
+
+	private void notifyAlarmDeviation(boolean state) {
+		boolean changed = false;
+		if (alarmDeviation == null) {
+			alarmDeviation = new Alarm(new Integer(ALARM_DEVIATION_INDEX));
+			changed = true;
+		} else {
+			changed = (alarmDeviation.isStatus() != state);
+		}
+
+		if (changed) {
+			alarmDeviation.setStatus(state);
+			_producer.publish(alarmDeviation);
+		}
 	}
 
 	/**
@@ -1374,6 +1414,15 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 
 	public void unsetUserSessionService(UserSessionService service) {
 		_session = service;
+	}
+
+	public void setAlarmService(AlarmService service) {
+		_alarmService = service;
+
+	}
+
+	public void unsetAlarmService(AlarmService service) {
+		_alarmService = service;
 	}
 
 	public void showMessage() {

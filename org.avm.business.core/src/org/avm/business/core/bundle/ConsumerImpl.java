@@ -1,6 +1,7 @@
 package org.avm.business.core.bundle;
 
 import org.avm.business.protocol.phoebus.Planification;
+import org.avm.elementary.alarm.AlarmService;
 import org.avm.elementary.common.AbstractConsumer;
 import org.avm.elementary.common.ConsumerService;
 import org.avm.elementary.geofencing.Balise;
@@ -20,6 +21,8 @@ public class ConsumerImpl extends AbstractConsumer {
 	public static final String MESSENGER_PRODUCER_PID = Messenger.class.getName();
 
 	public static final String USERSESSION_PRODUCER_PID = UserSessionService.class.getName();
+	
+	public static final String ALARMSERVICE_PRODUCER_PID = AlarmService.class.getName();
 
 
 	public ConsumerImpl(ComponentContext context, ConsumerService consumer) {
@@ -33,6 +36,7 @@ public class ConsumerImpl extends AbstractConsumer {
 	protected void createWires() {
 		_wireadmin.createWire(GEOFENCING_PRODUCER_PID, getConsumerPID(), null);
 		_wireadmin.createWire(MESSENGER_PRODUCER_PID, getConsumerPID(), null);
+		_wireadmin.createWire(ALARMSERVICE_PRODUCER_PID, getConsumerPID(), null);
 		Wire wire = _wireadmin.createWire(USERSESSION_PRODUCER_PID, getConsumerPID(), null);
 		Object obj = wire.poll();
 		if (obj != null){

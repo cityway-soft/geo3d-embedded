@@ -6,6 +6,7 @@ import org.avm.business.core.Avm;
 import org.avm.business.core.AvmImpl;
 import org.avm.business.core.AvmModel;
 import org.avm.device.gps.Gps;
+import org.avm.elementary.alarm.AlarmService;
 import org.avm.elementary.common.AbstractActivator;
 import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ConsumerService;
@@ -55,6 +56,7 @@ public class Activator extends AbstractActivator implements Avm {
 			initializeOdometer();
 			initializeCommandGroup();
 			initializeMessenger();
+			initializeAlarmService();
 			startService();
 			initializeConsumer();
 		} catch (Exception e) {
@@ -66,6 +68,7 @@ public class Activator extends AbstractActivator implements Avm {
 		try {
 			disposeConsumer();
 			stopService();
+			disposeAlarmService();
 			disposeMessenger();
 			disposeCommandGroup();
 			disposeOdometer();
@@ -186,6 +189,17 @@ public class Activator extends AbstractActivator implements Avm {
 	private void disposeOdometer() {
 		_peer.setOdometer(null);
 	}
+	
+	// alarm service
+	private void initializeAlarmService() {
+		AlarmService alarmeService = (AlarmService) _context.locateService("alarm");
+		_peer.setAlarmService(alarmeService);
+	}
+
+	private void disposeAlarmService() {
+		_peer.setAlarmService(null);
+	}
+
 
 
 	public void depart() {
