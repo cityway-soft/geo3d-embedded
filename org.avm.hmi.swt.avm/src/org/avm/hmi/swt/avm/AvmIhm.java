@@ -4,7 +4,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.avm.business.core.Avm;
 import org.avm.business.core.AvmModel;
 import org.avm.business.core.event.Course;
@@ -26,7 +25,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 
 public class AvmIhm extends Composite { // implements ChoiceListener {
 
@@ -36,7 +34,7 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 
 	private Button _sortieItineraireButton;
 
-	private Label _avance_retard;
+	// private Label _avance_retard;
 
 	private Desktop _desktop;
 
@@ -67,8 +65,8 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 	private SimulationTask _simulationTask;
 
 	private Timer _simulationTimer;
-	
-	private int _demoPeriode=12;
+
+	private int _demoPeriode = 12;
 
 	private static final int BUTTON_HEIGHT = 50;
 
@@ -83,13 +81,12 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 	public AvmIhm(Composite parent, int style) {
 		super(parent, style);
 		_log.info("Creation...");
-		try{
-		// _log.setPriority(Priority.DEBUG);
+		try {
+			// _log.setPriority(Priority.DEBUG);
 
-		_font = DesktopImpl.getFont(6, SWT.NORMAL);
-		initialize();
-		}
-		catch(Throwable t){
+			_font = DesktopImpl.getFont(6, SWT.NORMAL);
+			initialize();
+		} catch (Throwable t) {
 			t.printStackTrace();
 			_log.error("Erreur creation avmihm", t);
 		}
@@ -199,7 +196,7 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 				activateFinServiceButton(true);
 				activateFinCourseButton(true);
 				activateSortieItineraireButton(false);
-				activateAvanceRetardPanel(false);
+				// activateAvanceRetardPanel(false);
 				activateDemoButton(false);
 
 				removeSortieItineraireButton();
@@ -242,7 +239,7 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 					activateFinServiceButton(false);
 					activateFinCourseButton(false);
 					activateSortieItineraireButton(false);
-					activateAvanceRetardPanel(false);
+					// activateAvanceRetardPanel(false);
 					activateDemoButton(false);
 
 					if (_replacementSelection == null) {
@@ -291,7 +288,7 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 				activateFinCourseButton(false);
 				// activateAnnulerButton(false);
 				activateSortieItineraireButton(false);
-				activateAvanceRetardPanel(false);
+				// activateAvanceRetardPanel(false);
 				activateDemoButton(false);
 
 				_activeIHM = null;
@@ -314,7 +311,7 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 					activateFinServiceButton(false);
 					activateFinCourseButton(false);
 					activateSortieItineraireButton(false);
-					activateAvanceRetardPanel(false);
+					// activateAvanceRetardPanel(false);
 					activateDemoButton(false);
 
 					if (_serviceSelection == null) {
@@ -360,7 +357,7 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 					activateFinServiceButton(true);
 					activateFinCourseButton(false);
 					activateSortieItineraireButton(false);
-					activateAvanceRetardPanel(false);
+					// activateAvanceRetardPanel(false);
 					activateDemoButton(false);
 
 					if (_journeySelection == null) {
@@ -406,7 +403,7 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 				activateFinServiceButton(true);
 				activateFinCourseButton(true);
 				activateSortieItineraireButton(true);
-				activateAvanceRetardPanel(true);
+				// activateAvanceRetardPanel(true);
 				activateDemoButton(true);
 
 				if (_activeIHM != _suiviCourse || _activeIHM == null) {
@@ -483,10 +480,10 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 					_suiviCourse.dispose();
 				}
 
-				if (_avance_retard != null && !_avance_retard.isDisposed()) {
-					_avance_retard.dispose();
-					_avance_retard = null;
-				}
+				// if (_avance_retard != null && !_avance_retard.isDisposed()) {
+				// _avance_retard.dispose();
+				// _avance_retard = null;
+				// }
 				if (_sortieItineraireButton != null
 						&& !_sortieItineraireButton.isDisposed()) {
 					_sortieItineraireButton.dispose();
@@ -533,10 +530,12 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 
 				_log.debug("AvmIhm setAvanceRetard : _suivicourse= "
 						+ _suiviCourse);
-				if (_suiviCourse != null && _avance_retard != null
-						&& _avance_retard.isDisposed() == false) {
-					_avance_retard.setText(ar
-							+ Messages.getString("AvmIhm.min")); //$NON-NLS-1$
+				if (_suiviCourse != null /*
+										 * && _avance_retard != null &&
+										 * _avance_retard.isDisposed() == false
+										 */) {
+					// _avance_retard.setText(ar
+					//							+ Messages.getString("AvmIhm.min")); //$NON-NLS-1$
 					_suiviCourse.setAvanceRetard(ar);
 					refresh(_suiviCourse);
 				}
@@ -894,8 +893,6 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 				_simulationButton.setLayoutData(gridData11);
 				_simulationButton.addSelectionListener(new SelectionListener() {
 
-					
-
 					public void widgetSelected(SelectionEvent event) {
 						StateButton b = (StateButton) event.getSource();
 						boolean state = b.getSelection();
@@ -919,7 +916,7 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 				});
 
 				_desktop.getRightPanel().layout();
-				
+
 				refresh(_compositePanels);
 				refresh(_compositeButtons);
 				if (isDisposed() == false) {
@@ -949,33 +946,33 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 	/**
 	 * Zone Avance-Retard
 	 */
-	private void activateAvanceRetardPanel(boolean b) {
-		if (b == false) {
-			removeAvanceRetardPanel();
-			return;
-		}
+	// private void activateAvanceRetardPanel(boolean b) {
+	// if (b == false) {
+	// removeAvanceRetardPanel();
+	// return;
+	// }
+	//
+	// if (_avance_retard != null)
+	// return;
+	// GridData gridData11 = new GridData();
+	// gridData11.horizontalAlignment = GridData.FILL;
+	// gridData11.grabExcessVerticalSpace = false;
+	// gridData11.grabExcessHorizontalSpace = true;
+	// gridData11.widthHint = -1;
+	// gridData11.heightHint = BUTTON_HEIGHT;
+	// _avance_retard = new Label(_compositeButtons, SWT.CENTER);
+	//		_avance_retard.setText("--"); //$NON-NLS-1$
+	// _avance_retard.setFont(_font);
+	// _avance_retard.setLayoutData(gridData11);
+	// _avance_retard.setBackground(DesktopStyle.getBackgroundColor());
+	// }
 
-		if (_avance_retard != null)
-			return;
-		GridData gridData11 = new GridData();
-		gridData11.horizontalAlignment = GridData.FILL;
-		gridData11.grabExcessVerticalSpace = false;
-		gridData11.grabExcessHorizontalSpace = true;
-		gridData11.widthHint = -1;
-		gridData11.heightHint = BUTTON_HEIGHT;
-		_avance_retard = new Label(_compositeButtons, SWT.CENTER);
-		_avance_retard.setText("--"); //$NON-NLS-1$
-		_avance_retard.setFont(_font);
-		_avance_retard.setLayoutData(gridData11);
-		_avance_retard.setBackground(DesktopStyle.getBackgroundColor());
-	}
-
-	private void removeAvanceRetardPanel() {
-		if (_avance_retard != null && !_avance_retard.isDisposed()) {
-			_avance_retard.dispose();
-			_avance_retard = null;
-		}
-	}
+	// private void removeAvanceRetardPanel() {
+	// if (_avance_retard != null && !_avance_retard.isDisposed()) {
+	// _avance_retard.dispose();
+	// _avance_retard = null;
+	// }
+	// }
 
 	public void setDemoMode(boolean b) {
 		_demoMode = b;
@@ -991,8 +988,6 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 			_suiviCourse.setGeorefRole(b);
 		}
 	}
-
-
 
 	class SimulationTask extends TimerTask {
 
