@@ -25,7 +25,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	CommandGroupImpl(ComponentContext context, AlarmService peer,
 			ConfigImpl config) {
 		super(context, config, COMMAND_GROUP,
-				"Configuration commands for alarm service.");
+				"Gestion des alarmes");
 		_peer = peer;
 
 	}
