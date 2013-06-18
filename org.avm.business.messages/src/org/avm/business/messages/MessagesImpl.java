@@ -1,5 +1,6 @@
 package org.avm.business.messages;
 
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -228,13 +229,30 @@ public class MessagesImpl implements Messages, ConfigurableService,
 		}
 
 		String msg = message.getMessage();
+		try {
+			
+			String fromCharset = System.getProperty("message.from-charset",
+					System.getProperty("file.encoding"));
+			String toCharset = System
+					.getProperty("message.to-charset", "utf-8");
+			if (!fromCharset.equalsIgnoreCase(toCharset)) {
+				msg = new String(msg.getBytes(fromCharset), toCharset);
+			}
+			_log.debug("from=" + fromCharset + ", to=" + toCharset + ", msg="
+					+ msg);
+		} catch (UnsupportedEncodingException e) {
+			_log.error("Error unsupportedEncodingException : " + e.getMessage());
+		}
 		_log.debug(msg + " : " + debut + "-> " + fin);
 
 		if (msg.trim().length() == 0) {
 			_config.removeAllMessages();
 		} else {
 			_log.debug("adding message...");
-			addMessage(id, DF.format(debut), (fin != null) ? DF.format(fin)
+			Date reception = new Date();
+			String formatted = DF.format(reception);
+			_log.debug("Date object=" + reception + ", formatted=" + formatted);
+			addMessage(id, formatted, DF.format(debut), (fin != null) ? DF.format(fin)
 					: null, jours, destinataire, sAffectation, msg, priorite,
 					acquittement);
 		}
@@ -242,13 +260,15 @@ public class MessagesImpl implements Messages, ConfigurableService,
 		return destinataire;
 	}
 
-	private void addMessage(String id, String debut, String fin, String jours,
+	private void addMessage(String id, String reception, String debut, String fin, String jours,
 			int destinataire, String sAffectation, String msg, int priorite,
 			boolean acquittement) {
 		if (_log.isDebugEnabled()) {
 			StringBuffer buf = new StringBuffer();
 			buf.append("id=");
 			buf.append(id);
+			buf.append(";reception=");
+			buf.append(reception);
 			buf.append(";debut=");
 			buf.append(debut);
 			buf.append(";fin=");
@@ -267,7 +287,7 @@ public class MessagesImpl implements Messages, ConfigurableService,
 			_log.debug(buf);
 			_log.debug("config=" + _config);
 		}
-		_config.addMessage(id, debut, fin, jours, destinataire, sAffectation,
+		_config.addMessage(id, reception, debut, fin, jours, destinataire, sAffectation,
 				msg, priorite, acquittement);
 		if (_config instanceof AbstractConfig) {
 			((ConfigImpl) _config).updateConfig(false);
@@ -491,12 +511,12 @@ public class MessagesImpl implements Messages, ConfigurableService,
 			message.getEntete().setReference(reference);
 			message.getEntete().getReference().setAcquittement(1);
 			message.getEntete().getReference().setId(Long.parseLong(msgId));
-			message.setMessage("LU '" + msg.getProperty(Messages.MESSAGE)+"'");
+			message.setMessage("LU '" + msg.getProperty(Messages.MESSAGE) + "'");
 			_log.info("Emission du message d'acquittement : " + message);
 			send(message);
 		}
 		String fin = DF.format(new Date());
-		addMessage(msg.getProperty(Messages.ID),
+		addMessage(msg.getProperty(Messages.ID),msg.getProperty(Messages.RECEPTION),
 				msg.getProperty(Messages.DEBUT), fin,
 				msg.getProperty(Messages.JOURSEMAINE), destinataire,
 				msg.getProperty(Messages.AFFECTATION),

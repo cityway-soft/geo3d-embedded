@@ -9,7 +9,7 @@ public interface MessagesConfig extends Config{
 	
 
 	
-	public void addMessage(String key, String debut, String fin, String jours, int destinataire,
+	public void addMessage(String key, String reception, String debut, String fin, String jours, int destinataire,
 			String affectation, String message, int priority, boolean acq);
 
 	public Properties getMessage(String key);

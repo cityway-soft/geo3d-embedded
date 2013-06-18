@@ -17,13 +17,14 @@ public class ConfigImpl extends AbstractConfig implements MessagesConfig {
 		super(context, cm);
 	}
 
-	public void addMessage(String key, String debut, String fin, String jours,
+	public void addMessage(String key, String reception, String debut, String fin, String jours,
 			int destinataire, String affectation, String message, int priority,
 			boolean acq) {
 		Properties p = new Properties();
 		if (message != null && key != null) {
 			p.put(Messages.ID, key);
 			p.put(Messages.MESSAGE, message);
+			p.put(Messages.RECEPTION, reception);
 			p.put(Messages.DEBUT, debut == null ? "" : debut);
 			p.put(Messages.FIN, fin == null ? "" : fin);
 			p.put(Messages.JOURSEMAINE, formatJours(jours));

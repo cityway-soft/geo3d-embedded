@@ -13,6 +13,7 @@ public interface Messages {
 	public static final String AFFECTATION_ALL= "*";
 	
 	public static final String ID = "id";
+	public static final String RECEPTION = "reception";
 	public static final String DEBUT = "debut";
 	public static final String FIN = "fin";
 	public static final String TYPE = "type";

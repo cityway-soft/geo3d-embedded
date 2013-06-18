@@ -127,7 +127,12 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			int type, String affectation, String message, int priorite,
 			boolean acquittement) {
 
-		((MessagesConfig) _config).addMessage(id, debut, fin, jours, type,
+		Date dateReception = new Date();
+		String reception = Messages.DF.format(dateReception);
+		_log.debug("Date object=" + dateReception + ", formatted=" + reception);
+
+		
+		((MessagesConfig) _config).addMessage(id, reception, debut, fin, jours, type,
 				affectation, message, priorite, acquittement);
 		_config.updateConfig(false);
 		_peer.configure(_config);

@@ -1,5 +1,6 @@
 package org.avm.hmi.swt.message;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
@@ -41,7 +42,7 @@ import org.eclipse.swt.widgets.Text;
 public class MessageIhmImpl extends Composite implements MessageIhm,
 		MessengerInjector, ConfigurableService {
 
-	private static final SimpleDateFormat DF = new SimpleDateFormat("HH:mm:ss"); //$NON-NLS-1$
+	private static final SimpleDateFormat HF = new SimpleDateFormat("HH:mm:ss"); //$NON-NLS-1$
 
 	private static final int BUTTON_HEIGHT = 45;
 
@@ -240,11 +241,20 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 //					String id = Integer.toString(++_receiveMessageCounter);
 					String message = (String) msgprops
 							.get(org.avm.business.messages.Messages.MESSAGE);
+					String reception = (String) msgprops
+							.get(org.avm.business.messages.Messages.RECEPTION);
+					Date dateReception;
+					if (reception != null){
+						dateReception = org.avm.business.messages.Messages.DF.parse(reception);
+					}else{
+						dateReception = new Date();
+					}
+
 					String priority = (String) msgprops
 							.get(org.avm.business.messages.Messages.PRIORITE);
 					_log.debug("##Adding message :" + id +", msg:" + message ); //$NON-NLS-1$ //$NON-NLS-2$
 
-					String date = DF.format(new Date());
+					String date = HF.format(dateReception);
 					String val[] = new String[] { id, date, message, priority };
 					TableItem item = new TableItem(_table, SWT.NONE);
 					item.setText(val);
@@ -379,13 +389,23 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 			d.put("destination", "sam"); //$NON-NLS-1$ //$NON-NLS-2$
 			d.put("binary", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 
-			StringBuffer msg = new StringBuffer();
-//			msg.append(Messages.getString("Message.conducteur"));
-//			msg.append(" - ");
-			msg.append(text);
+			
+			String msg=text;
+			String fromCharset = System.getProperty("message.from-charset",
+					System.getProperty("file.encoding"));
+			String toCharset = System
+					.getProperty("message.to-charset", "utf-8");
+			if (!fromCharset.equalsIgnoreCase(toCharset)) {
+				try {
+					msg = new String(msg.getBytes(fromCharset), toCharset);
+				} catch (UnsupportedEncodingException e) {
+					msg=text;
+					e.printStackTrace();
+				}
+			}
 			
 			MessageText message = new MessageText();
-			message.setMessage(msg.toString());
+			message.setMessage(msg);
 			Entete entete = message.getEntete();
 			entete.getChamps().setPosition(1);
 			entete.getChamps().setService(1);
