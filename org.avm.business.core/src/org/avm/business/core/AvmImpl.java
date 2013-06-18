@@ -80,7 +80,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 
 	private static final int ALARM_DEVIATION_INDEX = 2;
 
-	private Alarm alarmDeviation;
+	private transient Alarm alarmDeviation;
 
 	private transient Logger _log;
 
@@ -128,7 +128,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 
 	private transient boolean _flagSendPriseService = true;
 
-	private AlarmService _alarmService;
+	private transient AlarmService _alarmService;
 
 	private AvmImpl() {
 		_model = new AvmModelManager();
@@ -972,7 +972,10 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 
 	public void entryHorsItineraire() {
 		_model.setHorsItineraire(true);
-		notifyAlarmDeviation(true);
+		if (_model.getDernierPoint() != null) {
+			//-- notification seulement si on a quitté le premier arrêt
+			notifyAlarmDeviation(true);
+		}
 	}
 
 	public void actionSortieItineraire() {
@@ -1241,7 +1244,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 			long t0 = System.currentTimeMillis();
 			FileOutputStream out = new FileOutputStream(AVM_SERIALIZATION_FILE);
 			ostream = new ObjectOutputStream(new BufferedOutputStream(out));
-			ostream.writeObject(this);
+			ostream.writeObject(AvmImpl.this);
 			_log.debug("avm serialisation begin flush (" + (System.currentTimeMillis() - t0) / 1000 + "s)"); //$NON-NLS-1$ //$NON-NLS-2$
 			ostream.flush();
 			_log.debug("avm serialisation end flush (" + (System.currentTimeMillis() - t0) / 1000 + "s)"); //$NON-NLS-1$ //$NON-NLS-2$
