@@ -97,7 +97,7 @@ public class Course implements Event {
 	}
 
 	public boolean isTerminee() {
-		return _terminee || (_points != null && _points.length > 1 && _points[_points.length - 1].getAttente()==0);
+		return _terminee || (_points != null && _points.length > 1 && _points[_points.length - 1].isDesservi());
 	}
 
 	public void setTerminee(boolean b) {
