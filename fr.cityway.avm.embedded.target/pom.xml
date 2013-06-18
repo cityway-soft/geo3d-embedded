@@ -115,10 +115,11 @@
 
 
 		<!-- HMI -->
+		<!-- <module>../org.avm.hmi.swt.application</module> <module>../org.avm.hmi.swt.authentification</module> -->
 		<!-- <module>../org.angolight.hmi.swt.leds</module> <module>../org.avm.hmi.mmi.application</module> 
 			<module>../org.avm.hmi.mmi.authentification</module> <module>../org.avm.hmi.mmi.avm</module> 
 			<module>../org.avm.hmi.mmi.phony</module> <module>../org.avm.hmi.swt.alarm</module> 
-			<module>../org.avm.hmi.swt.application</module> <module>../org.avm.hmi.swt.authentification</module> 
+			 
 			<module>../org.avm.hmi.swt.avm</module> <module>../org.avm.hmi.swt.browser</module> 
 			<module>../org.avm.hmi.swt.desktop</module> <module>../org.avm.hmi.swt.ecall</module> 
 			<module>../org.avm.hmi.swt.management</module> <module>../org.avm.hmi.swt.message</module> 

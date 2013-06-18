@@ -14,7 +14,8 @@ import org.avm.elementary.jdb.JDBInjector;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 
-public class Activator extends AbstractActivator implements Comptage, ComptageInjector,AvmInjector, JDBInjector {
+public class Activator extends AbstractActivator implements Comptage,
+		ComptageInjector, AvmInjector, JDBInjector {
 
 	private static Activator _plugin;
 	private ConfigurationAdmin _cm;
@@ -38,7 +39,7 @@ public class Activator extends AbstractActivator implements Comptage, ComptageIn
 			initializeConsumer();
 			initializeCommandGroup();
 			initializeComptage();
-			//initializeAvm();
+			// initializeAvm();
 			startService();
 		} catch (RuntimeException re) {
 			_log.error("error starting", re);
@@ -49,7 +50,7 @@ public class Activator extends AbstractActivator implements Comptage, ComptageIn
 		stopService();
 		disposeComptage();
 		disposeCommandGroup();
-		//disposeAvm();
+		// disposeAvm();
 		disposeConsumer();
 		disposeConfiguration();
 	}
@@ -99,12 +100,12 @@ public class Activator extends AbstractActivator implements Comptage, ComptageIn
 		if (_commands != null)
 			_commands.stop();
 	}
-	
+
 	// afficheur
 	private void initializeComptage() {
 		org.avm.device.comptage.Comptage comptage = (org.avm.device.comptage.Comptage) _context
 				.locateService("comptage");
-		_log.info("initializeComptage: "+comptage);
+		_log.info("initializeComptage: " + comptage);
 		if (_peer instanceof ComptageInjector) {
 			((ComptageInjector) _peer).setComptage(comptage);
 		}
@@ -128,7 +129,7 @@ public class Activator extends AbstractActivator implements Comptage, ComptageIn
 			((ManageableService) _peer).start();
 		}
 	}
-	
+
 	public void setAvm(org.avm.business.core.Avm avm) {
 		_log.debug("setAvm " + avm);
 		_peer.setAvm(avm);
@@ -139,7 +140,7 @@ public class Activator extends AbstractActivator implements Comptage, ComptageIn
 		_peer.unsetAvm(null);
 	}
 
-		public void setComptage(org.avm.device.comptage.Comptage comptePassagers) {
+	public void setComptage(org.avm.device.comptage.Comptage comptePassagers) {
 		_peer.setComptage(comptePassagers);
 	}
 
