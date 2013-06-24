@@ -20,6 +20,10 @@ public class ConfigImpl extends AbstractConfig implements AvmConfig {
 	public static final String TAG_SUIVICRSPERIOD = "org.avm.business.core.suivicrsperiod";
 
 	public static final String TAG_CHECKVALIDITE = "org.avm.business.core.checkvalidite";
+	
+	public static final String TAG_AUTOMATICSALABEL = "org.avm.business.core.sa.automatic.label";
+	
+	public static final String TAG_AUTOMATICCOURSEMODE = "org.avm.business.core.sa.automatic.course";
 
 	public ConfigImpl(ComponentContext context, ConfigurationAdmin cm) {
 		super(context, cm);
@@ -81,5 +85,23 @@ public class ConfigImpl extends AbstractConfig implements AvmConfig {
 
 	public void setCheckValidite(boolean check) {
 		_config.put(TAG_CHECKVALIDITE, check?"true":"false");
+	}
+
+	public String getAutomaticSALabel() {
+		return (String) _config.get(TAG_AUTOMATICSALABEL);
+	}
+
+	public void setAutomaticSALabel(String label) {
+		_config.put(TAG_AUTOMATICSALABEL, label);
+		
+	}
+
+	public boolean isAutomaticCourseMode() {
+		String val = (String)_config.get(TAG_AUTOMATICCOURSEMODE);
+		return (val != null && val.equals("true"));
+	}
+
+	public void setAutomaticCourseMode(boolean valid) {
+		_config.put(TAG_AUTOMATICCOURSEMODE, valid?"true":"false");
 	}
 }

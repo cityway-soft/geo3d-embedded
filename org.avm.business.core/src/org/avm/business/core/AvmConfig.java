@@ -25,5 +25,13 @@ public interface AvmConfig {
 	public void setCheckValidite(boolean equals);
 
 	public boolean isCheckValidite();
+
+	public String getAutomaticSALabel();
+
+	public void setAutomaticSALabel(String label);
+	
+	public boolean isAutomaticCourseMode();
+
+	public void setAutomaticCourseMode(boolean valid);
 	
 }

@@ -316,4 +316,41 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		return 0;
 	}
 
+	// Set sa auto
+	public final static String USAGE_SETAUTOMATICSA = "[<automatic>]";
+
+	public final static String[] HELP_SETAUTOMATICSA = new String[] { "Active le mode service agent automatique" };
+
+	public int cmdSetautomaticsa(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+		String auto = ((String) opts.get("automatic"));
+		boolean current = ((AvmConfig) _config).isAutomaticCourseMode();
+		if (auto != null) {
+			boolean newVal = auto.trim().toLowerCase().equals("true");
+			if (current != newVal) {
+				((AvmConfig) _config).setAutomaticCourseMode(newVal);
+				_config.updateConfig(true);
+			}
+		}
+		out.println("Mode SA auto = "
+				+ ((AvmConfig) _config).isAutomaticCourseMode());
+		return 0;
+	}
+
+	// Set automatic sa label
+	public final static String USAGE_SETAUTOMATICSALABEL = "[<label>]";
+
+	public final static String[] HELP_SETAUTOMATICSALABEL = new String[] { "Definit le libellé pour SA automatic" };
+
+	public int cmdSetautomaticsalabel(Dictionary opts, Reader in,
+			PrintWriter out, Session session) {
+		String label = ((String) opts.get("label"));
+		if (label != null) {
+			((AvmConfig) _config).setAutomaticSALabel(label.trim());
+			_config.updateConfig();
+		}
+		out.println("Label SA automatic = "
+				+ ((AvmConfig) _config).getAutomaticSALabel());
+		return 0;
+	}
 }

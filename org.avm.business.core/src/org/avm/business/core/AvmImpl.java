@@ -129,6 +129,8 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 	private transient boolean _flagSendPriseService = true;
 
 	private transient AlarmService _alarmService;
+	
+	private int _lastState = -1;
 
 	private AvmImpl() {
 		_model = new AvmModelManager();
@@ -756,6 +758,10 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 			_model.setHorsItineraire(false);
 			notifyAlarmDeviation(false);
 			_model.setDepart(false);
+
+			// FLA ajout de la sauvegarde dernier idu de course
+			_model.setLastCourseIdu(_model.getCourse().getIdu());
+
 		}
 		_model.setDepart(false);
 		_model.setCourse(null);
@@ -838,6 +844,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 			ServiceAgent sa;
 			try {
 				sa = _currentDatasource.getServiceAgent(sag_idu);
+				sa.setAutomaticLabel(_config.getAutomaticSALabel());
 				debug("service planifie " + sag_idu + " termine ? => "
 						+ sa.isTermine());
 				if (sa.isTermine() == false) {
@@ -1441,6 +1448,27 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 	private void debug(Object debug) {
 		if (_log.isDebugEnabled() && debug != null) {
 			_log.debug(debug.toString());
+		}
+	}
+
+	public void checkAutomaticCourse() {
+		System.out.println("auto: "+_config.isAutomaticCourseMode());
+		System.out.println("sa: "+_model.getServiceAgent());
+		
+		if (_config.isAutomaticCourseMode() && _model.getServiceAgent() != null) {
+			ServiceAgent sa = _model.getServiceAgent();
+			System.out.println("sa auto " + sa.isAutomaticCourse());
+			System.out.println("sa lib " + sa.getLibelle());
+			System.out.println("sa lab " + sa.getAutomaticLabel());
+			if (sa != null && sa.isAutomaticCourse()) {
+				int idu = _model.getLastCourseIdu();
+				System.out.println("idu " + idu);
+				if (idu != -1) {
+					Course nextCourse = sa.getNextCourse(idu);
+					resetCourse();
+					priseCourse(nextCourse.getIdu());
+				}
+			}
 		}
 	}
 

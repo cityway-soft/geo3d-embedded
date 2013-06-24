@@ -18,8 +18,39 @@ public class ServiceAgent implements Event, Serializable {
 	boolean _correct;
 
 	boolean _planifie = false;
-	
+
 	boolean _termine = false;
+
+	private final static String AUTOMATIC = "automatic";
+	
+	private String automaticLabel = AUTOMATIC;
+
+	public String getAutomaticLabel() {
+		return automaticLabel;
+	}
+
+	public void setAutomaticLabel(String automaticLabel) {
+		this.automaticLabel = automaticLabel;
+	}
+
+	// FLA ajout de la notion de libelle
+	private String libelle = null;
+
+	public String getLibelle() {
+		return libelle;
+	}
+
+	public void setLibelle(String libelle) {
+		System.out.println("libelle:"+libelle);
+		this.libelle = libelle;
+	}
+
+	public boolean isAutomaticCourse() {
+		if (this.libelle == null){
+			return false;
+		}
+		return this.libelle.equals(automaticLabel);
+	}
 
 	public ServiceAgent(boolean correct, int idu, Course[] courses) {
 		_correct = correct;
