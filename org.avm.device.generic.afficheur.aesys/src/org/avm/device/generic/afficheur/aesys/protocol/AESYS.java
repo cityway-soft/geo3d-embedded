@@ -105,7 +105,7 @@ public class AESYS extends AfficheurProtocol {
 		if (_noChecksum) {
 			buffer.append("ZZZZZ");
 		} else {
-			buffer.append(chck);
+			buffer.append(chck.toString());
 		}
 		//
 		return buffer.toString().getBytes();
