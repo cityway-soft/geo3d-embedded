@@ -1,7 +1,5 @@
 package org.avm.device.generic.girouette.aesys.protocol;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.MessageFormat;
 
 import org.avm.device.girouette.GirouetteProtocol;

@@ -1,11 +1,10 @@
 
 package org.avm.device.generic.girouette.aesys;
 
-import org.avm.device.generic.girouette.aesys.protocol.GirouetteProtocolFactory;
-import org.avm.device.generic.girouette.aesys.protocol.KC2S_2;
-import org.avm.device.girouette.GirouetteProtocol;
-
 import junit.framework.TestCase;
+
+import org.avm.device.generic.girouette.aesys.protocol.GirouetteProtocolFactory;
+import org.avm.device.girouette.GirouetteProtocol;
 
 public class TestKC2S_2 extends TestCase {
 	
