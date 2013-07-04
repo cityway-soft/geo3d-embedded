@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.TabItem;
 public class DesktopIhm {
 
 	public static final SimpleDateFormat DF = new java.text.SimpleDateFormat(
-			"EEEE MM MMMM");
+			"EEEE dd MMMM");
 
 	private static final boolean ENABLE_RIGHT_PANEL = Boolean.valueOf(
 			System.getProperty("org.avm.hmi.swt.desktop.enable-right-panel",
