@@ -1,35 +1,42 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
 <cm_data version="0.1">
-<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
-<configuration pid="org.avm.business.core.Avm" mode="new">
-<property name="org.avm.business.core.amplitude">
-<value type="Integer">600</value>
-</property>
-<property name="service.pid">
-<value type="String">org.avm.business.core.Avm</value>
-</property>
-<property name="service.bundleLocation">
-<value type="String">ftp://ftp:ftp++@avm/default/org.avm.business.core.jar</value>
-</property>
-<property name="org.avm.business.core.suivicrsperiod">
-<value type="Integer">5</value>
-</property>
-<property name="org.avm.business.core.chevauchement">
-<value type="Integer">240</value>
-</property>
-<property name="org.avm.business.core.tolerancedeviation">
-<value type="Integer">30</value>
-</property>
-<property name="org.avm.business.core.maxtranche">
-<value type="Integer">127</value>
-</property>
-<property name="org.avm.business.core.checkvalidite">
-<value type="String">true</value>
-</property>
-<property name="org.avm.config.version">
-<value type="Integer">2</value>
-</property>
-</configuration>
+	<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK -->
+	<configuration pid="org.avm.business.core.Avm" mode="new">
+		<property name="org.avm.business.core.amplitude">
+			<value type="Integer">600</value>
+		</property>
+		<property name="service.pid">
+			<value type="String">org.avm.business.core.Avm</value>
+		</property>
+		<property name="service.bundleLocation">
+			<value type="String">ftp://ftp:ftp++@avm/default/org.avm.business.core.jar</value>
+		</property>
+		<property name="org.avm.business.core.suivicrsperiod">
+			<value type="Integer">5</value>
+		</property>
+		<property name="org.avm.business.core.chevauchement">
+			<value type="Integer">240</value>
+		</property>
+		<property name="org.avm.business.core.tolerancedeviation">
+			<value type="Integer">30</value>
+		</property>
+		<property name="org.avm.business.core.maxtranche">
+			<value type="Integer">127</value>
+		</property>
+		<property name="org.avm.business.core.checkvalidite">
+			<value type="String">true</value>
+		</property>
+		<property name="org.avm.config.version">
+			<value type="Integer">3</value>
+		</property>
+		<property name="org.avm.business.core.sa.automatic.label">
+			<value type="String">automatic</value>
+		</property>
+		<property name="org.avm.business.core.sa.automatic.course">
+			<value type="String">false</value>
+		</property>
+
+	</configuration>
 </cm_data>
 

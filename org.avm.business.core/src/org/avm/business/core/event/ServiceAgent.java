@@ -18,19 +18,50 @@ public class ServiceAgent implements Event, Serializable {
 	boolean _correct;
 
 	boolean _planifie = false;
-	
+
 	boolean _termine = false;
+
+	private final static String AUTOMATIC = "automatic";
+	
+	private String automaticLabel = AUTOMATIC;
+
+	public String getAutomaticLabel() {
+		return automaticLabel;
+	}
+
+	public void setAutomaticLabel(String automaticLabel) {
+		this.automaticLabel = automaticLabel;
+	}
+
+	// FLA ajout de la notion de libelle
+	private String libelle = null;
+
+	public String getLibelle() {
+		return libelle;
+	}
+
+	public void setLibelle(String libelle) {
+		System.out.println("libelle:"+libelle);
+		this.libelle = libelle;
+	}
+
+	public boolean isAutomaticCourse() {
+		if (this.libelle == null){
+			return false;
+		}
+		return this.libelle.equals(automaticLabel);
+	}
 
 	public ServiceAgent(boolean correct, int idu, Course[] courses) {
 		_correct = correct;
 		_courses = courses;
-		if (_hash ==null && _courses != null) {
+		if (_hash == null && _courses != null) {
 			init();
 		}
 		_idu = idu;
 	}
-	
-	private void init(){
+
+	private void init() {
 		_hash = new Hashtable();
 
 		for (int i = 0; i < _courses.length; i++) {
@@ -74,7 +105,7 @@ public class ServiceAgent implements Event, Serializable {
 	}
 
 	public Course getCourseByIdu(int idu) {
-		if (_hash ==null && _courses != null) {
+		if (_hash == null && _courses != null) {
 			init();
 		}
 		return (Course) _hash.get(new Integer(idu));
@@ -93,13 +124,13 @@ public class ServiceAgent implements Event, Serializable {
 	public Course[] getCourses() {
 		return _courses;
 	}
-	
-	public void setTermine(boolean end){
+
+	public void setTermine(boolean end) {
 		_termine = end;
 	}
 
 	public boolean isTermine() {
-		return _termine || _courses[_courses.length-1].isTerminee();
+		return _termine || _courses[_courses.length - 1].isTerminee();
 	}
 
 }

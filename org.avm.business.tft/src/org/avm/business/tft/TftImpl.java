@@ -159,7 +159,9 @@ public class TftImpl implements Tft, ConsumerService, ManageableService,
 				int i=0;
 				while (iter.hasNext()) {
 					Properties props = (Properties) iter.next();
-					msg[i] = props.getProperty(Messages.MESSAGE);
+					//msg[i] = props.getProperty(Messages.MESSAGE);
+					byte[] m=  new String(props.getProperty(Messages.MESSAGE).getBytes(), "iso8859-1").getBytes("utf-8");
+                    msg[i] = new String(m);
 					msg[i+1] = props.getProperty(Messages.PRIORITE);
 					i+=2;
 				}

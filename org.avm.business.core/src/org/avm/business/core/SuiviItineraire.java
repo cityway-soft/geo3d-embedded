@@ -94,7 +94,7 @@ public class SuiviItineraire implements ConfigurableService {
 
 	public SuiviItineraire() {
 		_log = Logger.getInstance(SuiviItineraire.class);
-		//_log.setPriority(Priority.DEBUG);
+		// _log.setPriority(Priority.DEBUG);
 	}
 
 	public void setProducer(ProducerManager producer) {
@@ -396,7 +396,7 @@ public class SuiviItineraire implements ConfigurableService {
 	public void sendPassageArret() {
 		_log.debug("Emission passage arret");
 		Point dernier = _avm.getModel().getDernierPoint();
-		if (dernier != null){
+		if (dernier != null) {
 			_passageArret.setAttente(dernier.getAttente());
 		}
 		((AvmImpl) _avm).sendMessage(_passageArret);
@@ -634,7 +634,8 @@ public class SuiviItineraire implements ConfigurableService {
 					_avanceRetard.getEntete().getProgression().getRetard());
 			getModel().setInsidePoint(true);
 			if (_log.isDebugEnabled()) {
-				_log.debug("Entree Arret " + getDernierArret() + " at " + _entryTime);
+				_log.debug("Entree Arret " + getDernierArret() + " at "
+						+ _entryTime);
 			}
 
 			if (_avm.getModel().isGeorefMode()) {
@@ -694,11 +695,12 @@ public class SuiviItineraire implements ConfigurableService {
 		if (getDernierArret() != null
 				&& (getDernierArret().getId() == balise || getDernierArret()
 						.getRang() == 1)) {
+
 			getModel().setInsidePoint(false);
 			updateAttente(getDernierArret(), false);
 			if (_log.isDebugEnabled()) {
 				_log.debug("sortie balise (" + balise + "): "
-						+ getDernierArret() + " at " + _entryTime );
+						+ getDernierArret() + " at " + _entryTime);
 			}
 			StringBuffer buf = new StringBuffer();
 			buf.append("ARRET;OUT;");
@@ -722,25 +724,25 @@ public class SuiviItineraire implements ConfigurableService {
 				_entryTime = 0;
 				_log.debug("sortie arret : Message 'passage arret' envoye");
 			}
+		
 
 		} else {
 			_log.debug("sortie(balise) / Balise " + balise
 					+ " n'est pas le dernier point desservi (!?)");
 		}
 	}
-	
-	private Horodate getHorodate(long time){
+
+	private Horodate getHorodate(long time) {
 		java.util.Calendar cal = java.util.Calendar.getInstance();
 		cal.setTime(new Date(time));
 		int annee = cal.get(java.util.Calendar.YEAR) - 1990;
-		int mois = cal.get(java.util.Calendar.MONTH) +1 ;
+		int mois = cal.get(java.util.Calendar.MONTH) + 1;
 		int jour = cal.get(java.util.Calendar.DAY_OF_MONTH);
 		int heure = cal.get(java.util.Calendar.HOUR_OF_DAY);
 		int minute = cal.get(java.util.Calendar.MINUTE);
 		int seconde = cal.get(java.util.Calendar.SECOND);
-		
-		return new Horodate(annee, mois, jour, heure, minute,
-				seconde);
+
+		return new Horodate(annee, mois, jour, heure, minute, seconde);
 	}
 
 	private void updateAttente(Point p, boolean entry) {
@@ -751,11 +753,10 @@ public class SuiviItineraire implements ConfigurableService {
 			if (_entryTime > 0 && _entryTime < now) {
 				attente = (int) ((now - _entryTime) / 1000);
 			}
-			if (attente<=0){
-				attente=1;
+			if (attente <= 0) {
+				attente = 1;
 			}
-		}
-		else{
+		} else {
 			_entryTime = System.currentTimeMillis();
 		}
 		p.setAttente(attente);

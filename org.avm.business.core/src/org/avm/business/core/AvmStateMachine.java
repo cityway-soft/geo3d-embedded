@@ -90,6 +90,8 @@ public interface AvmStateMachine extends Avm {
 
 	void showMessage();
 
+	void checkAutomaticCourse();
+
 	
 
 }

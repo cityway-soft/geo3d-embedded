@@ -704,6 +704,7 @@ public class AvmStateMachineContext
             ctxt.checkCourse();
             ctxt.resetCourse();
             ctxt.serialize();
+            ctxt.checkAutomaticCourse();
             return;
         }
 
@@ -889,7 +890,23 @@ public class AvmStateMachineContext
         {
             AvmStateMachine ctxt = context.getOwner();
 
-            if (ctxt.isTerminusDepart(balise) == true)
+            if (ctxt.isTerminusDepart(balise) && ctxt.isArretCourant(balise))
+            {
+
+                (context.getState()).Exit(context);
+                context.clearState();
+                try
+                {
+                    ctxt.actionDepart();
+                    ctxt.actionSortieArret(balise);
+                }
+                finally
+                {
+                    context.setState(EnCourseMap.InterArretSurItineraire);
+                    (context.getState()).Entry(context);
+                }
+            }
+            else if (ctxt.isTerminusDepart(balise) && ! ctxt.isArretCourant(balise))
             {
 
                 (context.getState()).Exit(context);
@@ -905,8 +922,7 @@ public class AvmStateMachineContext
                     context.setState(EnCourseMap.InterArretSurItineraire);
                     (context.getState()).Entry(context);
                 }
-            }
-            else
+            }            else
             {
                 super.sortie(context, balise);
             }
