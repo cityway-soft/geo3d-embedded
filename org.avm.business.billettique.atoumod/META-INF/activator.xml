@@ -11,6 +11,4 @@
 
 	<reference name="avm" interface="org.avm.business.core.Avm"
 		cardinality="0..1" policy="dynamic" bind="setAvm" unbind="unsetAvm" />
-
-	<reference name="alarm" interface="org.avm.elementary.alarm.AlarmService" />
 </component>

@@ -1,9 +1,6 @@
 package org.avm.business.billettique.atoumod.bundle;
 
 import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Properties;
 
 import org.avm.business.billettique.atoumod.BillettiqueConfig;
 import org.avm.elementary.common.AbstractConfig;
@@ -12,44 +9,54 @@ import org.osgi.service.component.ComponentContext;
 
 public class ConfigImpl extends AbstractConfig implements BillettiqueConfig {
 
+	private static final String PORT = "port";
+	private static final String TSURV = "tsurv";
+	private static final String NSURV = "nsurv";
+	private static final String HOST = "host";
+
 	public ConfigImpl(ComponentContext context, ConfigurationAdmin cm) {
 		super(context, cm);
 	}
 
-	public void addProperty(String key, Properties p) {
-		String text = save(p);
-		_config.put(key, text);
+	protected Dictionary getDefault() {
+		Dictionary result = super.getDefault();
+		return result;
 	}
 
-	public Properties getProperty(String key) {
-		String text = (String) _config.get(key);
-		if (text == null)
-			return null;
-		return load(text);
+	protected String getPid() {
+		return Activator.getDefault().getPid();
 	}
 
-	public void removeProperty(String key) {
-		_config.remove(key);
+	public int getPort() {
+		return ((Integer) _config.get(PORT)).intValue();
 	}
 
-	public Dictionary getProperties() {
-		Hashtable d = new Hashtable();
-		for (Enumeration it = _config.keys(); it.hasMoreElements();) {
-			String key = (String) it.nextElement();
-			if ("service.pid".equals(key) || "config.date".equals(key)
-					|| "service.bundleLocation".equals(key)
-					|| "org.avm.elementary.dummy.property".equals(key)
-					|| "org.avm.config.version".equals(key))
-				continue;
-			Properties p = getProperty(key);
-			if (p != null) {
-				d.put(key, p);
-			}
-		}
-		return d;
+	public void setPort(int port) {
+		_config.put(PORT, Integer.toString(port));
 	}
 
+	public int getTSurv() {
+		return ((Integer) _config.get(TSURV)).intValue();
+	}
 
+	public void setTSurv(int tsuv) {
+		_config.put(TSURV, new Integer(tsuv));
+	}
+	
+	public void setNSurv(int tsuv) {
+		_config.put(NSURV, new Integer(tsuv));
+	}
+	
+	public int getNSurv() {
+		return ((Integer) _config.get(NSURV)).intValue();
+	}
 
+	public String getHost() {
+		return (String)_config.get(HOST);
+	}
+
+	public void setHost(String host) {
+		_config.put(HOST, host);
+	}
 
 }

@@ -125,4 +125,8 @@ public class Activator extends AbstractActivator implements Billettique,
 		_peer.unsetAvm(null);
 	}
 
+	public void setEnable(boolean b) {
+		_peer.setEnable(b);
+	}
+
 }

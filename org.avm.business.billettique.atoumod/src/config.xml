@@ -4,25 +4,25 @@
 <!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
 <configuration pid="org.avm.business.girouette.ClientGirouette" mode="new">
 <property name="service.pid">
-<value type="String">org.avm.business.girouette.ClientGirouette</value>
+<value type="String">org.avm.business.billettique.atoumod.Billettique</value>
+</property>
+<property name="host">
+<value type="String">192.168.3.1</value>
+</property>
+<property name="port">
+<value type="Integer">33333</value>
+</property>
+<property name="tsurv">
+<value type="Integer">10</value>
+</property>
+<property name="nsurv">
+<value type="Integer">5</value>
 </property>
 <property name="service.bundleLocation">
-<value type="String">initial@reference:file:../../home/didier/projets/geolia/common/dev/workspace/avm-v1-ENCOURS/org.avm.business
-.girouette/</value>
+<value type="String">ftp://ftp:ftp++@avm/default/org.avm.business.billettique.atoumod.jar</value>
 </property>
 <property name="org.avm.config.version">
 <value type="Integer">2</value>
-</property>
-<property name="codes">
-<value type="String">#Tue Nov 27 14:07:22 CET 2007
-en-panne=5000
-hors-service=5000
-hlp=5002
-hors-course=5000
-complet=2000</value>
-</property>
-<property name="org.avm.elementary.dummy.property">
-<value type="String">Thu Nov 22 14:36:41 CET 2007</value>
 </property>
 </configuration>
 </cm_data>

@@ -1,6 +1,10 @@
 package org.avm.business.billettique.atoumod;
 
-import java.util.Properties;
+import java.io.IOException;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.text.ParseException;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.avm.business.core.AbstractAvmModelListener;
@@ -12,11 +16,12 @@ import org.avm.elementary.common.Config;
 import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ConsumerService;
 import org.avm.elementary.common.ManageableService;
-import org.avm.elementary.directory.Directory;
 import org.osgi.util.measurement.State;
 
+import fr.cityway.avm.billettique.atoumod.model.TicketingSystemState;
+
 public class BillettiqueImpl implements ConfigurableService, AvmInjector,
-		ManageableService, ConsumerService, Billettique, Constants {
+		ManageableService, ConsumerService, Billettique, Constants, PCE415Listener {
 
 	private Logger _log = Logger.getInstance(this.getClass());
 
@@ -28,12 +33,38 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 
 	private boolean _initialized = false;
 
-	private Properties _specialCodes;
-
 	private AlarmService _alarmService;
+
+	private PCE415 client;
+
+	private int etatPrecedent = -1;
+
+	private int arretPrecedent;
+
+	private int coursePrecedente;
+
+	private Date connectionDate;
 
 	public void configure(Config config) {
 		_config = (BillettiqueConfig) config;
+
+		if (client != null) {
+			client.shutdown();
+			client = null;
+		}
+		try {
+			client = new PCE415(_config.getHost(), _config.getPort(), _config.getTSurv(), _config.getNSurv());
+			client.setListener(this);
+		} catch (SocketException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		}
 	}
 
 	public void setAvm(Avm avm) {
@@ -65,11 +96,17 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 	}
 
 	public void start() {
-
+		if (client != null) {
+			client.launch();
+		}
 	}
 
 	public void stop() {
+		if (client != null) {
+			client.shutdown();
+		}
 		_initialized = false;
+
 	}
 
 	public void notify(Object o) {
@@ -77,9 +114,9 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 			State state = (State) o;
 			if (state.getName().equals(AlarmService.class.getName())) {
 
+			} else if (_listener != null) {
+				_listener.notify(o);
 			}
-		} else if (_listener != null) {
-			_listener.notify(o);
 		}
 	}
 
@@ -91,44 +128,131 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 		}
 
 		public void onStateAttenteDepart(AvmModel model) {
-
+			publishToBillettique(model);
 		}
 
 		public void onStateAttenteSaisieCourse(AvmModel model) {
-
+			publishToBillettique(model);
 		}
 
 		public void onStateAttenteSaisieService(AvmModel model) {
-
+			publishToBillettique(model);
 		}
 
 		public void onStateEnCourseArretSurItineraire(AvmModel model) {
+			publishToBillettique(model);
 		}
 
 		public void onStateEnCourseHorsItineraire(AvmModel model) {
-
+			publishToBillettique(model);
 		}
 
 		public void onStateEnCourseInterarretSurItineraire(AvmModel model) {
-
+			publishToBillettique(model);
 		}
 
 		public void onStateEnCourseServiceSpecial(AvmModel model) {
-
+			publishToBillettique(model);
 		}
 
 		public void onStateEnPanne(AvmModel model) {
-
+			publishToBillettique(model);
 		}
 
 		public void onStateInitial(AvmModel model) {
-
+			publishToBillettique(model);
 		}
 
 		public void onStatePause(AvmModel model) {
-
+			publishToBillettique(model);
 		}
 	}
 
+	private void publishToBillettique(AvmModel model) {
+		_log.info("Prepare to publish...");
+		int course = 0;
+		int matricule = 0;
+		int ligne = 0;
+		int point = 0;
+		int etat = 0;
+
+		if (model.getCourse() != null) {
+			course = model.getCourse().getIdu();
+		}
+		if (model.getAuthentification() != null) {
+			matricule = model.getAuthentification().getMatricule();
+		}
+		if (model.getDernierPoint() != null) {
+			point = model.getDernierPoint().getIdu();
+		}
+		if (model.getCourse() != null) {
+			ligne = model.getCourse().getLigneIdu();
+		}
+		switch (model.getState().getValue()) {
+		case AvmModel.STATE_INITIAL:
+		case AvmModel.STATE_ATTENTE_SAISIE_SERVICE: {
+			etat = TicketingSystemState.SERVICE_FERME;
+		}
+			break;
+		case AvmModel.STATE_ATTENTE_SAISIE_COURSE: {
+			etat = TicketingSystemState.SERVICE_OUVERT_COURSE_FERMEE;
+		}
+			break;
+		case AvmModel.STATE_ATTENTE_DEPART:
+		case AvmModel.STATE_EN_COURSE_HORS_ITINERAIRE:
+		case AvmModel.STATE_EN_COURSE_ARRET_SUR_ITINERAIRE:
+		case AvmModel.STATE_EN_COURSE_INTERARRET_SUR_ITINERAIRE: {
+			etat = TicketingSystemState.SERVICE_OUVERT_COURSE_OUVERTE;
+		}
+			break;
+
+		}
+		if (client != null) {
+			client.setDate(new Date());
+			client.setLigne(ligne);
+			client.setCourse(course);
+			client.setPoint(point);
+			client.setMatricule(matricule);
+			client.setEtatExploitation(etat);
+			try {
+				if (etatPrecedent != etat || coursePrecedente != course
+						|| arretPrecedent != point) {
+					etatPrecedent = etat;
+					coursePrecedente = course;
+					arretPrecedent = point;
+					client.sendMessageInterrogation();
+				}
+			} catch (IOException e) {
+				// TODO Bloc catch généré automatiquement
+				e.printStackTrace();
+			}
+
+		} else {
+			_log.error("PCE415 not initialized (null!)");
+		}
+	}
+
+	public void setEnable(boolean b) {
+		if (b) {
+			client.launch();
+		} else {
+			client.shutdown();
+		}
+	}
+
+	public Date getConnectionDate() {
+		return connectionDate;
+	}
+
+	public void connected(boolean state) {
+		if (state){
+			connectionDate = new Date();
+		}
+		else{
+			connectionDate = null;
+		}
+		//TODO publish(new State(Billettique.class.getName(), state ? 0 : 1);
+		
+	}
 
 }
