@@ -16,12 +16,15 @@ import org.avm.elementary.common.Config;
 import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ConsumerService;
 import org.avm.elementary.common.ManageableService;
+import org.avm.elementary.common.ProducerManager;
+import org.avm.elementary.common.ProducerService;
 import org.osgi.util.measurement.State;
 
 import fr.cityway.avm.billettique.atoumod.model.TicketingSystemState;
 
 public class BillettiqueImpl implements ConfigurableService, AvmInjector,
-		ManageableService, ConsumerService, Billettique, Constants, PCE415Listener {
+		ManageableService, ConsumerService, Billettique, Constants,
+		PCE415Listener, ProducerService {
 
 	private Logger _log = Logger.getInstance(this.getClass());
 
@@ -45,6 +48,12 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 
 	private Date connectionDate;
 
+	private ProducerManager _producer;
+
+	private State _state = new State(0, Billettique.class.getName());
+
+	private boolean _previousState;
+
 	public void configure(Config config) {
 		_config = (BillettiqueConfig) config;
 
@@ -53,7 +62,8 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 			client = null;
 		}
 		try {
-			client = new PCE415(_config.getHost(), _config.getPort(), _config.getTSurv(), _config.getNSurv());
+			client = new PCE415(_config.getHost(), _config.getPort(),
+					_config.getTSurv(), _config.getNSurv());
 			client.setListener(this);
 		} catch (SocketException e) {
 			// TODO Bloc catch généré automatiquement
@@ -124,7 +134,6 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 
 		public ModelListener(Avm avm) {
 			super(avm);
-
 		}
 
 		public void onStateAttenteDepart(AvmModel model) {
@@ -223,7 +232,6 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 					client.sendMessageInterrogation();
 				}
 			} catch (IOException e) {
-				// TODO Bloc catch généré automatiquement
 				e.printStackTrace();
 			}
 
@@ -235,8 +243,11 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 	public void setEnable(boolean b) {
 		if (b) {
 			client.launch();
+			_log.info("Ticketing interface enabled");
 		} else {
 			client.shutdown();
+			connected(false);
+			_log.info("Ticketing interface disabled");
 		}
 	}
 
@@ -245,14 +256,22 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 	}
 
 	public void connected(boolean state) {
-		if (state){
-			connectionDate = new Date();
+		if (_previousState != state) {
+			_previousState = state;
+			if (state) {
+				connectionDate = new Date();
+				_state = new State(1, Billettique.class.getName());
+			} else {
+				connectionDate = null;
+				_state = new State(0, Billettique.class.getName());
+			}
+			_producer.publish(_state);
 		}
-		else{
-			connectionDate = null;
-		}
-		//TODO publish(new State(Billettique.class.getName(), state ? 0 : 1);
-		
+
+	}
+
+	public void setProducer(ProducerManager producer) {
+		_producer = producer;
 	}
 
 }

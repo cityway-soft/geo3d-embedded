@@ -1,8 +1,5 @@
 package org.avm.hmi.swt.application.display;
 
-import java.util.HashMap;
-
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Display;
 
 public class AVMDisplayImpl implements AVMDisplay, Runnable {
@@ -52,7 +49,6 @@ public class AVMDisplayImpl implements AVMDisplay, Runnable {
 			}
 		});
 
-		
 		debug("[AVMDisplay] avmdisplay closed.");
 
 	}
@@ -82,7 +78,7 @@ public class AVMDisplayImpl implements AVMDisplay, Runnable {
 			}
 		}
 		_display = null;
-		
+
 		debug("Display = null");
 	}
 
@@ -110,7 +106,6 @@ public class AVMDisplayImpl implements AVMDisplay, Runnable {
 
 		return _display;
 	}
-	
 
 	public void run() {
 		try {

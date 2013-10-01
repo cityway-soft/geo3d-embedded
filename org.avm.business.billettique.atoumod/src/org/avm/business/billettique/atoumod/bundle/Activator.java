@@ -9,6 +9,7 @@ import org.avm.elementary.common.AbstractActivator;
 import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ConsumerService;
 import org.avm.elementary.common.ManageableService;
+import org.avm.elementary.common.ProducerService;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 
@@ -19,6 +20,7 @@ public class Activator extends AbstractActivator implements Billettique,
 	private ConsumerImpl _consumer;
 	private CommandGroupImpl _commands;
 	private BillettiqueImpl _peer;
+	private org.avm.business.billettique.atoumod.bundle.ProducerImpl _producer;
 
 	public Activator() {
 		_plugin = this;
@@ -32,6 +34,7 @@ public class Activator extends AbstractActivator implements Billettique,
 	protected void start(ComponentContext context) {
 		initializeConfiguration();
 		initializeConsumer();
+		initializeProducer();
 		initializeCommandGroup();
 		initializeAlarmService();
 		startService();
@@ -42,6 +45,7 @@ public class Activator extends AbstractActivator implements Billettique,
 		disposeAlarmService();
 		disposeCommandGroup();
 		disposeConsumer();
+		disposeProducer();
 		disposeConfiguration();
 	}
 
@@ -78,6 +82,22 @@ public class Activator extends AbstractActivator implements Billettique,
 	private void disposeConsumer() {
 		if (_peer instanceof ConsumerService) {
 			_consumer.stop();
+		}
+	}
+	
+	// producer
+	private void initializeProducer() {
+		if (_peer instanceof ProducerService) {
+			_producer = new ProducerImpl(_context);
+			_producer.start();
+			((ProducerService) _peer).setProducer(_producer);
+		}
+	}
+
+	private void disposeProducer() {
+		if (_peer instanceof ProducerService) {
+			((ProducerService) _peer).setProducer(null);
+			_producer.stop();
 		}
 	}
 

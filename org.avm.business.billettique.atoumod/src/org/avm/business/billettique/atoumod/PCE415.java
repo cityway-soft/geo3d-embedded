@@ -115,8 +115,8 @@ public class PCE415 implements Runnable {
 					errCount = 0;
 				} else {
 					errCount++;
-					System.err.println("No response from Billettique ATOUMOD!");
-					if (errCount > n_surv) {
+					System.err.println("No response from Billettique ATOUMOD ! (#"+errCount+")");
+					if (errCount >= n_surv) {
 						fireStateChanged(false);
 					}
 				}
