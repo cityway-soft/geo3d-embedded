@@ -25,6 +25,7 @@ class UpdateCommand extends AbstractCommand {
 		String list = p.getProperty("bundle");
 		Hashtable hashBundleState = new Hashtable();
 		Hashtable hashBundleURL = new Hashtable();
+
 		if (list != null) {
 			// - construction de la liste des bundles � installer ou 'updater'
 			// - memorisation de leur �tat
@@ -32,11 +33,12 @@ class UpdateCommand extends AbstractCommand {
 			// - 'install' ou 'update' de chacun des bundles
 			// - redemarrage des bundles s'ils �taient d�marr�s
 			StringTokenizer t = new StringTokenizer(list, " ");
+
 			while (t.hasMoreElements()) {
 				String bundleName = (String) t.nextElement();
 
 				String bundleURL = null;
-				if (bundleName.startsWith("http://") || bundleName.startsWith("ftp://")){
+				if (bundleName.startsWith("http://") || bundleName.startsWith("ftp://")|| bundleName.startsWith("file://")){
 					int idx=bundleName.indexOf(".jar");
 					if (idx != -1){
 						String temp=bundleName.substring(0, idx);
@@ -53,7 +55,7 @@ class UpdateCommand extends AbstractCommand {
 					bundleURL = management.getDownloadURL().toString();
 				}
 				hashBundleURL.put(bundleName, bundleURL);
-				
+
 				Bundle[] bundles = getBundles(context, bundleName);
 				Bundle bundle = null;
 				if (bundles != null && bundles.length != 0) {
@@ -79,6 +81,7 @@ class UpdateCommand extends AbstractCommand {
 					out.flush();
 					continue;
 				}
+
 				if (bundle != null && bundle.getState() == Bundle.ACTIVE) {
 					hashBundleState.put(bundleName, new Boolean(true));
 					try {
@@ -120,7 +123,6 @@ class UpdateCommand extends AbstractCommand {
 			} catch (Throwable th) {
 				out.println("[Error] on refresh bundles " + th.getMessage());
 			}
-
 			e = hashBundleState.keys();
 			while (e.hasMoreElements()) {
 				String bundleName = (String) e.nextElement();
