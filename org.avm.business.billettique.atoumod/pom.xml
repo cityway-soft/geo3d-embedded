@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <relativePath>../fr.cityway.avm.embedded.target/pom.xml</relativePath>
-    <groupId>fr.cityway.avm.embedded.phaeton</groupId>
+    <groupId>fr.cityway.avm.embedded.tab</groupId>
     <artifactId>fr.cityway.avm.embedded.target</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-  <artifactId>org.avm.business.girouette</artifactId>
+  <artifactId>org.avm.business.billettique.atoumod</artifactId>
   <packaging>eclipse-plugin</packaging>
   <name>${project.artifactId}</name>
 </project>
