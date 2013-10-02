@@ -27,6 +27,7 @@
 		<module>../org.avm.business.core</module>
 		<module>../org.avm.business.ecall</module>
 		<module>../org.avm.business.girouette</module>
+		<module>../org.avm.business.billettique.atoumod</module>
 		<module>../org.avm.business.messages</module>
 		<module>../org.avm.business.parser.hmi</module>
 		<module>../org.avm.business.parser.management</module>
