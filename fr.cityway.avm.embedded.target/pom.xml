@@ -81,7 +81,7 @@
 		<module>../org.avm.elementary.log4j</module>
 		<module>../org.avm.elementary.management.addons</module>
 		<module>../org.avm.elementary.management.core</module>
-		<module>../org.avm.elementary.media.avm</module>
+		<module>../org.avm.elementary.media.ctw</module>
 		<module>../org.avm.elementary.media.sms</module>
 		<module>../org.avm.elementary.messenger</module>
 		<module>../org.avm.elementary.time</module>
