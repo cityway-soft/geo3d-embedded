@@ -39,14 +39,15 @@ public abstract class Message {
 	public String toString() {
 		StringBuffer buf = new StringBuffer();
 
-		// -- champ 0 : type
-		buf.append(toHex(type));
-
-		// -- champ 1 : longueur
+		// -- champ 0 : longueur
 		String data = getData();
 		int length = (data.length()/2) + 2;
 		String l = toHex(length);
 		buf.append(l);
+
+
+		// -- champ 1 : type
+		buf.append(toHex(type));
 
 		// -- champ 2 : message
 		buf.append(data);

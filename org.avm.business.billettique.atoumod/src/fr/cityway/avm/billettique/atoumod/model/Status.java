@@ -9,7 +9,7 @@ class Status {
 	}
 
 	protected boolean getBit(int idx) {
-		return ((status >> idx) & 0x1) == 1;
+		return ((status >> idx) & 0x1) == 0;
 	}
 	
 	protected void setBit(int idx, boolean b) {

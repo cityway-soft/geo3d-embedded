@@ -13,12 +13,12 @@ public class ValidatorState extends Status {
 
 	public boolean isMemoryFull2() {
 		// b1 = 1 : Mémoire épuisée
-		return getBit(2);
+		return getBit(1);
 	}
 
 	public boolean isLinkOK() {
 		// b2 = 1 : Communication HS
-		return getBit(3) == false;
+		return getBit(2);
 	}
 
 	public boolean isCoupleurOK() {

@@ -40,7 +40,7 @@ public class TicketingSystemState extends Status {
 
 	public boolean isAllValidatorsOK() {
 		// b5 = 1 : Au moins un valideur en défaut
-		return getBit(5) == false;
+		return getBit(5);
 	}
 
 	// b6 et b7 : non utilisés et à 0
@@ -84,6 +84,7 @@ public class TicketingSystemState extends Status {
 		buf.append(",isMemoryFull2=" + isMemoryFull2());
 		buf.append(",isValidatorsBlocked=" + isValidatorsBlocked());
 		buf.append(",isDownloadedTableOK=" + isDownloadedTableOK());
+		buf.append(",isAllValidatorsOK=" + isAllValidatorsOK());
 		return buf.toString();
 
 	}

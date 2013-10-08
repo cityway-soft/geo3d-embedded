@@ -80,9 +80,9 @@ public class MessageReponseSurveillance extends Message {
 
 		MessageReponseSurveillance msg = new MessageReponseSurveillance();
 
+		msg.setLongueur(Integer.parseInt(reader.getNextField(), 16));
 		String id = reader.getNextField();
 		msg.setType(Integer.parseInt(id,16));
-		msg.setLongueur(Integer.parseInt(reader.getNextField(), 16));
 		msg.setBillettiqueState(new TicketingSystemState(Integer.parseInt(reader
 				.getNextField(), 16)));
 		int number = Integer.parseInt(reader.getNextField(),16);

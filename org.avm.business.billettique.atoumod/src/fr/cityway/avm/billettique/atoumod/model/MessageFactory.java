@@ -12,7 +12,7 @@ public abstract class MessageFactory {
 	protected abstract Message create() throws ParseException;
 
 	public static final Message parse(String frame) throws Exception {
-		String stype = frame.substring(0, 2);
+		String stype = frame.substring(2, 4);
 		int type = Integer.parseInt(stype, 16);
 		if (!factories.containsKey(new Integer(type))) {
 			throw new ParseException("Unknown message " + type , 0);

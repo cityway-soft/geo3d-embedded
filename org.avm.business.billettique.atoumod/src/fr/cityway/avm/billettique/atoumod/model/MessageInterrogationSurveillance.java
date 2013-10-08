@@ -55,12 +55,15 @@ public class MessageInterrogationSurveillance extends Message {
 
 		MessageInterrogationSurveillance msg = new MessageInterrogationSurveillance();
 
-		String id = reader.getNextField();
-		msg.setType(Integer.parseInt(id,16));
+
 		// -- longueur
 		String result=reader.getNextField();
 		int value = Integer.parseInt(result,16);
 		msg.setLongueur(value);
+		
+		// -- type
+		String id = reader.getNextField();
+		msg.setType(Integer.parseInt(id,16));
 
 		// -- annee,mois,jour,heure,minute,seconde
 		String sAnnee = reader.getNextField();
