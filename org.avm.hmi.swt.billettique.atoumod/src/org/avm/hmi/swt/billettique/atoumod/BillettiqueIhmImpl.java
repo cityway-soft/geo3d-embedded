@@ -62,6 +62,8 @@ public class BillettiqueIhmImpl extends Composite implements BillettiqueIhm {
 				.getString("BillettiqueIhmImpl.activation")); //$NON-NLS-1$
 		_enableButton.setActiveColor(Display.getCurrent().getSystemColor(
 				SWT.COLOR_DARK_GREEN));
+//		_enableButton.setForeground(Display.getCurrent().getSystemColor(
+//				SWT.COLOR_WHITE));
 		_enableButton.setState(true);
 		_enableButton.addSelectionListener(new SelectionListener() {
 
@@ -81,7 +83,9 @@ public class BillettiqueIhmImpl extends Composite implements BillettiqueIhm {
 		});
 		
 		
-		_stateLabel = new Label(this, SWT.FILL);
+		_stateLabel = new Label(this, SWT.FILL|SWT.CENTER);
+//		_stateLabel.setForeground(Display.getCurrent().getSystemColor(
+//				SWT.COLOR_WHITE));
 		data = new GridData();
 		data.heightHint = 58;
 		data.widthHint = 200;
@@ -100,7 +104,7 @@ public class BillettiqueIhmImpl extends Composite implements BillettiqueIhm {
 			color = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
 			text = "Billettique déconnectée";
 		}
-		_stateLabel.setText(text);
+		_stateLabel.setText("\n"+text);
 		_stateLabel.setBackground(color);
 	}
 
