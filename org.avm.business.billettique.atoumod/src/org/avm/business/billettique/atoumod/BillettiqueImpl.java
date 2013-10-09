@@ -52,7 +52,7 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 
 	private State _state = new State(0, Billettique.class.getName());
 
-	private boolean _previousState;
+	private Boolean _previousState=null;
 
 	public void configure(Config config) {
 		_config = (BillettiqueConfig) config;
@@ -256,8 +256,8 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 	}
 
 	public void connected(boolean state) {
-		if (_previousState != state) {
-			_previousState = state;
+		if (_previousState == null || _previousState.booleanValue() != state) {
+			_previousState = new Boolean(state);
 			if (state) {
 				connectionDate = new Date();
 				_state = new State(1, Billettique.class.getName());
