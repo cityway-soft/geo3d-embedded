@@ -41,7 +41,7 @@ public class MessageInterrogationSurveillance extends Message {
 	int line;
 	int journey;
 	int stopPoint;
-	boolean way; // aller/ retour
+	boolean wayGo; // aller/ retour
 
 	public MessageInterrogationSurveillance() {
 		type = ID;
@@ -75,7 +75,7 @@ public class MessageInterrogationSurveillance extends Message {
 		Calendar cal = Calendar.getInstance();
 		
 		int annee = Integer.parseInt(sAnnee,16)+1900;
-		int mois = Integer.parseInt(sMois,16);
+		int mois = Integer.parseInt(sMois,16)-1;
 		int jour =  Integer.parseInt(sJour,16);
 		int heure =  Integer.parseInt(sHeure,16);
 		int minute = Integer.parseInt(sMinute,16);
@@ -107,7 +107,7 @@ public class MessageInterrogationSurveillance extends Message {
 		msg.setStopPoint(Integer.parseInt(reader.getNextField(), 16));
 
 		// -- sens
-		msg.setWay(Integer.parseInt(reader.getNextField(), 16) == 1);
+		msg.setWayGo(Integer.parseInt(reader.getNextField(), 16) == 1);
 
 		return msg;
 	}
@@ -119,7 +119,7 @@ public class MessageInterrogationSurveillance extends Message {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(getDate());
 		int annee = cal.get(Calendar.YEAR) - 1900;
-		int mois = cal.get(Calendar.MONTH);
+		int mois = cal.get(Calendar.MONTH)+1;
 		int jour = cal.get(Calendar.DAY_OF_MONTH);
 		int heure = cal.get(Calendar.HOUR_OF_DAY);
 		int minute = cal.get(Calendar.MINUTE);
@@ -162,7 +162,7 @@ public class MessageInterrogationSurveillance extends Message {
 		msg.append(toHex(getStopPoint(),2));
 
 		// -- sens
-		msg.append(toHex(isWay() ? 1 : 2));
+		msg.append(toHex(isWayGo() ? 1 : 2));
 
 		return msg.toString();
 	}
@@ -228,12 +228,12 @@ public class MessageInterrogationSurveillance extends Message {
 		this.stopPoint = stopPoint;
 	}
 
-	public boolean isWay() {
-		return way;
+	public boolean isWayGo() {
+		return wayGo;
 	}
 
-	public void setWay(boolean way) {
-		this.way = way;
+	public void setWayGo(boolean way) {
+		this.wayGo = way;
 	}
 
 	public static class DefaultMessageFactory extends MessageFactory {
@@ -261,7 +261,7 @@ public class MessageInterrogationSurveillance extends Message {
 		buf.append(", line="+ line);
 		buf.append(", journey="+ journey);
 		buf.append(", stopPoint="+ stopPoint);
-		buf.append(", way="+ way);
+		buf.append(", way="+ wayGo);
 		return buf.toString();
 	}
 

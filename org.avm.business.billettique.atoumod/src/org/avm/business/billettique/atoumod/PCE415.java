@@ -101,7 +101,8 @@ public class PCE415 implements Runnable {
 						receiveData.length);
 				System.out.println("Waiting for answer...");
 				clientSocket.receive(receivePacket);
-				sResponse = new String(receivePacket.getData());
+				//sResponse = new String(receivePacket.getData());
+				sResponse = toHexaString(receivePacket.getData());
 
 			} catch (IOException e) {
 				System.err.println("Warn:" + e.getMessage());
@@ -139,9 +140,38 @@ public class PCE415 implements Runnable {
 			}
 		}
 	}
+	
+	
+	private static byte[] toBinary(final String frame) {
+		final byte[] buffer = new byte[frame.length() / 2];
+		int j=0;
+		for (int i = 0; i < frame.length(); i+=2) {
+			String octet = frame.substring(i, i+2);
+			
+			buffer[j] = (byte) Integer.parseInt(octet, 16);
+			j++;
+
+		}
+		return buffer;
+	}
+	
+	private static String toHexaString(final byte[] data) {
+		final byte[] buffer = new byte[data.length * 2];
+
+		for (int i = 0; i < data.length; i++) {
+			final int rValue = data[i] & 0x0000000F;
+			final int lValue = (data[i] >> 4) & 0x0000000F;
+			buffer[i * 2] = (byte) ((lValue > 9) ? lValue + 0x37
+					: lValue + 0x30);
+			buffer[i * 2 + 1] = (byte) ((rValue > 9) ? rValue + 0x37
+					: rValue + 0x30);
+		}
+		return new String(buffer);
+	}
 
 	public void sendMessageInterrogation() throws IOException {
-		byte[] sendData = interrogation.toString().getBytes();
+		//byte[] sendData = interrogation.toString().getBytes();
+		byte[] sendData = toBinary(interrogation.toString());
 		DatagramPacket sendPacket = new DatagramPacket(sendData,
 				sendData.length, serverAdress, port);
 		clientSocket.send(sendPacket);
