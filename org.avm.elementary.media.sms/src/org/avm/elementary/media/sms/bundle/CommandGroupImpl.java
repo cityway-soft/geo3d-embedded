@@ -13,7 +13,7 @@ import org.osgi.service.component.ComponentContext;
 
 public class CommandGroupImpl extends AbstractCommandGroup {
 
-	public static final String COMMAND_GROUP = "sms";
+	public static final String COMMAND_GROUP = "media.sms";
 
 	private MediaSMS _peer;
 
