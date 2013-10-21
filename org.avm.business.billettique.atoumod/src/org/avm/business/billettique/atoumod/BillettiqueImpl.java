@@ -52,7 +52,7 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 
 	private State _state = new State(0, Billettique.class.getName());
 
-	private Boolean _previousState=null;
+	private Boolean _previousState = null;
 
 	public void configure(Config config) {
 		_config = (BillettiqueConfig) config;
@@ -211,7 +211,12 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 		case AvmModel.STATE_EN_COURSE_HORS_ITINERAIRE:
 		case AvmModel.STATE_EN_COURSE_ARRET_SUR_ITINERAIRE:
 		case AvmModel.STATE_EN_COURSE_INTERARRET_SUR_ITINERAIRE: {
-			etat = TicketingSystemState.SERVICE_OUVERT_COURSE_OUVERTE;
+			//-- correction : demande ACS état "course ouverte" si et seulement si point détecté.
+			if (model.getDernierPoint() != null) {
+				etat = TicketingSystemState.SERVICE_OUVERT_COURSE_OUVERTE;
+			} else {
+				etat = TicketingSystemState.SERVICE_OUVERT_COURSE_FERMEE;
+			}
 		}
 			break;
 
