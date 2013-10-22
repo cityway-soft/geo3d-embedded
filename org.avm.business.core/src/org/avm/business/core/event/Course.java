@@ -220,8 +220,9 @@ public class Course implements Event {
 		buf.append(") ");
 		buf.append(getHeureDepart(_depart));
 		buf.append(": ");
+		String allerRetour = (iti_sens==1)?"A":"R";
 		buf.append(getDestination() + " - lig " + getLigneNom() + "("
-				+ getLigneIdu() + ")" + " - pcr " + getParcoursNom() + "("
+				+ getLigneIdu() + ") " +allerRetour+ " - pcr " + getParcoursNom() + "("
 				+ getParcoursIdu() + ")");
 
 		return buf.toString();
