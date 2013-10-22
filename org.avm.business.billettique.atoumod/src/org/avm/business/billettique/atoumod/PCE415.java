@@ -49,6 +49,11 @@ public class PCE415 implements Runnable {
 	public void setCourse(int course) {
 		interrogation.setJourney(course);
 	}
+	
+	public void setSens(int sens) {
+		interrogation.setWayGo(sens == 1);
+	}
+
 
 	public void setLigne(int ligne) {
 		interrogation.setLine(ligne);

@@ -248,7 +248,7 @@ public class AvmPlanificationDatasource implements AvmDatasource,
 			lgn_nom = getLigneNomFromDatabase(lgn_idu);
 		}
 		Course c = new Course(idu, idu, nom, depart, destination, lgn_nom,
-				lgn_idu, "", 0, amplitude, chevauchement);
+				lgn_idu, "", 0, amplitude, chevauchement, 1);
 
 		return c;
 	}
@@ -409,7 +409,7 @@ public class AvmPlanificationDatasource implements AvmDatasource,
 					.getInt(CRS_IDU, 0), "Course " + i,
 					node.getInt(CRS_DEP, 0), null,
 					"" + node.getInt(CRS_LIG, 0), node.getInt(CRS_LIG, 0), "",
-					0, node.getInt(CRS_AMP, 0), node.getInt(CRS_CHE, 0));
+					0, node.getInt(CRS_AMP, 0), node.getInt(CRS_CHE, 0), 1);
 			int npts = node.getInt(CRS_NPT, 0);
 
 			Point points[] = null;
@@ -470,7 +470,7 @@ public class AvmPlanificationDatasource implements AvmDatasource,
 				CRS_IDU, 0), "Course " + rang, node.getInt(CRS_DEP, 0),
 				destination, node.getInt(CRS_LIG, 0) + "", node.getInt(CRS_LIG,
 						0), "", 0, node.getInt(CRS_AMP, 0), node.getInt(
-						CRS_CHE, 0));
+						CRS_CHE, 0),1);
 		return course;
 	}
 

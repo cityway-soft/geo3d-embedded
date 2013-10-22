@@ -184,9 +184,11 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 		int ligne = 0;
 		int point = 0;
 		int etat = 0;
+		int sens = 1;
 
 		if (model.getCourse() != null) {
 			course = model.getCourse().getIdu();
+			sens = model.getCourse().getSens();
 		}
 		if (model.getAuthentification() != null) {
 			matricule = model.getAuthentification().getMatricule();
@@ -226,6 +228,7 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 			client.setLigne(ligne);
 			client.setCourse(course);
 			client.setPoint(point);
+			client.setSens(sens);
 			client.setMatricule(matricule);
 			client.setEtatExploitation(etat);
 			try {
