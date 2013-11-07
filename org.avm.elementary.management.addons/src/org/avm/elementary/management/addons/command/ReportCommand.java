@@ -63,6 +63,7 @@ class ReportCommand extends AbstractCommand implements BundleAction {
 			}else if (destination.startsWith(CTW_PROTOCOL_TAG)) {
 				String response = URLEncoder.encode(result);
 				_management.send(response);
+				out.println(result);
 			}
 		}
 

@@ -22,10 +22,11 @@ class SimpleLocalClient implements IRemoteClient {
 		this.url = url;
 	}
 
-	public String put(StringBuffer buffer,String remoteFilename) throws IOException {
+	public String put(StringBuffer buffer, String remoteFilename)
+			throws IOException {
 		OutputStream os = null;
 
-		URL urlRemotefile = new URL(url.toExternalForm()+"/"+remoteFilename);
+		URL urlRemotefile = new URL(url.toExternalForm() + "/" + remoteFilename);
 		String filename = urlRemotefile.getFile();
 		File file = new File(filename);
 		file = file.getParentFile();
@@ -39,18 +40,18 @@ class SimpleLocalClient implements IRemoteClient {
 		writer.write(buffer.toString());
 		writer.flush();
 		writer.close();
-		
+
 		return "put buffer to " + remoteFilename;
 
 	}
 
-	public String  put(File file,String remoteFilename) throws IOException {
+	public String put(File file, String remoteFilename) throws IOException {
 		String filepath = file.getAbsolutePath();
 		InputStream in = new BufferedInputStream(new FileInputStream(filepath));
 
 		OutputStream os;
 
-		URL urlRemotefile = new URL(url.toExternalForm()+"/"+remoteFilename);
+		URL urlRemotefile = new URL(url.toExternalForm() + "/" + remoteFilename);
 		String filename = urlRemotefile.getFile();
 
 		File localfile = new File(filename);
@@ -69,16 +70,24 @@ class SimpleLocalClient implements IRemoteClient {
 
 		out.flush();
 		out.close();
-		
-		return "put "+filepath+" to " + remoteFilename;
+
+		return "put " + filepath + " to " + remoteFilename;
 	}
 
 	public void setMime(String mime) {
-		
+
 	}
 
 	public void setEncoding(String encoding) {
-		
+
+	}
+
+	public InputStream get() throws IOException {
+		URL urlRemotefile = new URL(url.toExternalForm());
+		String filename = urlRemotefile.getFile();
+
+		return new FileInputStream(filename);
+
 	}
 
 }

@@ -21,7 +21,6 @@ public class Activator implements BundleActivator, Management {
 
 	private ManagementImpl _peer;
 
-	private ServiceRegistration _sr;
 
 	private boolean DEBUG;
 
@@ -39,16 +38,12 @@ public class Activator implements BundleActivator, Management {
 		_peer = new ManagementImpl();
 		debug("activating.......");
 		_peer.setBundleContext(context);
-		_sr = context.registerService(Management.class.getName(), _peer, null);
-//		debug(_sr + " registered.");
-//		debug("starting...");
+
 		_peer.start();
 		debug("activated.");
 	}
 
 	public void stop(BundleContext context) throws Exception {
-		debug("deactivating...");
-		_sr.unregister();
 		_peer.stop();
 		_peer.setBundleContext(context);
 		debug("deactivated.");

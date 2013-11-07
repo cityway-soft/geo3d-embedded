@@ -2,6 +2,7 @@ package org.avm.elementary.management.core.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -59,9 +60,8 @@ public class DataUploadClient implements IRemoteClient {
 //					"/tmp/38_1907_01002477032C5390_update.log.gz"), "1_1109_updateauto.log");			
 //			client.put(new File(
 //					"/home/avm/exploitants/1/upload/1_5209_M2011-02-08-210232R2011-11-29_recette.txt"), "1_5209_M2011-02-08-210232R2011-11-29_recette.txt");
-			client.put(new File(
-					"/home/avm/exploitants/1/upload/1_1109_M2011-11-29-231141R2011-11-30_jdb.gz.mar"), "1_1109_M2011-11-29-231141R2011-11-30_jdb.gz.mar");
-			
+//			client.put(new File(
+//					"/home/avm/exploitants/1/upload/1_1109_M2011-11-29-231141R2011-11-30_jdb.gz.mar"), "1_1109_M2011-11-29-231141R2011-11-30_jdb.gz.mar");
 			
 			
 		} catch (MalformedURLException e) {
@@ -71,6 +71,13 @@ public class DataUploadClient implements IRemoteClient {
 		}
 
 
+	}
+
+	public InputStream get() throws IOException {
+		if (client != null) {
+			return client.get();
+		}
+		return null;
 	}
 
 }

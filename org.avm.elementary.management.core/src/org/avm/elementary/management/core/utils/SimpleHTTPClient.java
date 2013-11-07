@@ -3,15 +3,17 @@ package org.avm.elementary.management.core.utils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.MultipartPostMethod;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
 
@@ -21,13 +23,13 @@ class SimpleHTTPClient implements IRemoteClient {
 
 	private URL url;
 	private HttpClient client;
-	private String mime="text/plain";
-	private String encoding="ISO-8859-1";
-
+	private String mime = "text/plain";
+	private String encoding = "ISO-8859-1";
 
 	public void setMime(String mime) {
 		this.mime = mime;
 	}
+
 	public void setEncoding(String encoding) {
 		this.encoding = encoding;
 	}
@@ -51,7 +53,8 @@ class SimpleHTTPClient implements IRemoteClient {
 		}
 	}
 
-	public String put(StringBuffer buffer,String remoteFilename) throws IOException {
+	public String put(StringBuffer buffer, String remoteFilename)
+			throws IOException {
 		OutputStream os;
 
 		File file = File.createTempFile("tmp", remoteFilename);
@@ -64,28 +67,31 @@ class SimpleHTTPClient implements IRemoteClient {
 		writer.flush();
 		writer.close();
 
-		String result= put(file, remoteFilename);
+		String result = put(file, remoteFilename);
 
 		file.delete();
-		
+
 		return result;
 
 	}
 
-	public String put(File file,String remoteFilename) throws IOException {
+	public String put(File file, String remoteFilename) throws IOException {
 		MultipartPostMethod method = new MultipartPostMethod(
 				url.toExternalForm());
-		method.addParameter(remoteFilename, file );
-		method.addPart(new FilePart(REMOTE_FILE_PARAM, file, mime,
-				encoding));
+		method.addParameter(remoteFilename, file);
+		method.addPart(new FilePart(REMOTE_FILE_PARAM, file, mime, encoding));
 		// Execute and print response
 		client.executeMethod(method);
 		String response = method.getResponseBodyAsString();
 		System.out.println(response);
 		method.releaseConnection();
-		
+
 		return response;
 	}
 
-
+	public InputStream get() throws IOException {
+		HttpMethod method = new GetMethod(url.toExternalForm());
+		client.executeMethod(method);
+		return method.getResponseBodyAsStream();
+	}
 }

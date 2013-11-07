@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.avm.business.core.Avm;
 import org.avm.business.core.AvmInjector;
 import org.avm.business.messages.Messages;
@@ -32,7 +31,6 @@ public class Activator extends AbstractActivator implements Tft {
 		_plugin = this;
 		_peer = new TftImpl();
 		_log = Logger.getInstance(this.getClass());
-		_log.setPriority(Priority.DEBUG);
 	}
 
 	public static Activator getDefault() {
@@ -131,7 +129,7 @@ public class Activator extends AbstractActivator implements Tft {
 			((AvmInjector) _peer).unsetAvm(avm);
 		}
 	}
-	
+
 	// messages
 	private void initializeMessages() {
 		if (_peer instanceof MessagesInjector) {
@@ -147,7 +145,8 @@ public class Activator extends AbstractActivator implements Tft {
 		}
 	}
 
-	public void process(HttpServletRequest request, HttpServletResponse response) throws Throwable {
+	public void process(HttpServletRequest request, HttpServletResponse response)
+			throws Throwable {
 		_peer.process(request, response);
 	}
 

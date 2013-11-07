@@ -19,9 +19,8 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.zip.GZIPOutputStream;
 
-import org.apache.commons.codec.binary.Base64;
+import org.avm.elementary.management.core.utils.DataUploadClient;
 import org.avm.elementary.management.core.utils.MultiMemberGZIPInputStream;
-import org.avm.elementary.management.core.utils.Utils;
 
 /*
  * Created on 1 sept. 2005
@@ -67,18 +66,6 @@ public class BundleList {
 			System.err.println(bundlesDir + " is not a directory");
 		}
 
-	}
-	
-	private void createCheckSum(File file){
-		
-		 String md5 = Utils.genMD5(file);
-		 if(md5 != null){
-			 try {
-				Utils.writeMD5(md5, file);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		 }
 	}
 
 	public static void compress(String bundlesListDir) throws IOException {
@@ -169,13 +156,23 @@ public class BundleList {
 			}
 			bp.setStartlevel(startLevel);
 
-			// -- disabled ?
+			// // -- disabled ?
+			// if (t.hasMoreTokens()) {
+			// String disabled = t.nextToken();
+			// if (disabled != null && disabled.equalsIgnoreCase("disabled")) {
+			// System.out.println("[INFO] bundle <"
+			// + name + ">  will be DISABLED !");
+			// bp.setEnable(false);
+			// }
+			// }
+
+			// // -- pack ?
 			if (t.hasMoreTokens()) {
-				String disabled = t.nextToken();
-				if (disabled != null && disabled.equalsIgnoreCase("disabled")) {
-					System.out.println("[INFO] bundle <" + name
-							+ ">  will be DISABLED !");
-					bp.setEnable(false);
+				String pack = t.nextToken();
+				if (pack != null && pack.trim().length() != 0) {
+					bp.setPack(pack);
+				} else {
+					bp.setPack(null);
 				}
 			}
 
@@ -197,34 +194,28 @@ public class BundleList {
 	public static BundleList load(URL url) throws IOException, ConnectException {
 
 		BundleList bundleList = new BundleList();
-
-		URLConnection connection = url.openConnection();
-		String userinfo = url.getUserInfo();
-		if (userinfo != null && url.getProtocol().equals("http")) {
-			int idx = userinfo.indexOf(":");
-			String password = userinfo.substring(idx + 1);
-			String user = userinfo.substring(0, idx);
-			String encoded = new String(
-					Base64.encodeBase64((user + ":" + password).getBytes()));
-			connection.setRequestProperty("Authorization", "Basic " + encoded);
-		}
+		//URLConnection connection = url.openConnection();
+		InputStream primaryInputStream;
+		
+		DataUploadClient client = new DataUploadClient(url);
+		primaryInputStream = client.get();
 
 		InputStream in = null;
 
 		if (url.getFile().endsWith(COMPRESSED_EXT)) {
 			try {
-				in = new MultiMemberGZIPInputStream(connection.getInputStream());
+				in = new MultiMemberGZIPInputStream(primaryInputStream);
 			} catch (IOException e) {
 				// e.printStackTrace();
 				return null;
 			}
 		} else {
-			try {
-				in = connection.getInputStream();
-			} catch (IOException e) {
-				// e.printStackTrace();
-				return null;
-			}
+//			try {
+				in = primaryInputStream;
+//			} catch (IOException e) {
+//				// e.printStackTrace();
+//				return null;
+//			}
 		}
 		if (in != null) {
 			bundleList.load(in);
@@ -264,7 +255,8 @@ public class BundleList {
 				}
 				bp.setStartlevel(existingBp.getStartlevel());
 			}
-			bp.setEnable(existingBp.isEnable());
+			// bp.setEnable(existingBp.isEnable());
+			bp.setPack(existingBp.getPack());
 		} else {
 			if (bp.getStartlevel() == BundleProperties.NOT_SET) {
 				System.out
@@ -281,26 +273,17 @@ public class BundleList {
 
 		File[] children = dir.listFiles(filter);
 		for (int i = 0; i < children.length; i++) {
-			if (children[i].getAbsolutePath().indexOf(
-					"org.avm.elementary.management.bootstrap") != -1) {
-				//--ignore bootstrap
-
-			} else {
-				BundleProperties bp = new BundleProperties();
-				try {
-					bp.loadProperties(children[i].getAbsolutePath());
-					if (bp.getName() == null) {
-						System.out.println("[Warning] Bundle-Name null for "
-								+ children[i].getAbsolutePath());
-						continue;
-					}
-					updateBundleProperties(bp, true);
-					if (bp.getStartlevel() == 1){
-						createCheckSum(children[i]);
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
+			BundleProperties bp = new BundleProperties();
+			try {
+				bp.loadProperties(children[i].getAbsolutePath());
+				if (bp.getName() == null) {
+					System.out.println("[Warning] Bundle-Name null for "
+							+ children[i].getAbsolutePath());
+					continue;
 				}
+				updateBundleProperties(bp, true);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -341,13 +324,17 @@ public class BundleList {
 	}
 
 	public static void main(String[] args) throws IOException {
-		if (args.length != 2) {
-			System.out
-					.println("Usage <bundles repository dir> <bundles list file>");
-		} else {
-			BundleList.create(args[0], args[1]);
-			BundleList.compress(args[1]);
-		}
+//		if (args.length != 2) {
+//			System.out
+//					.println("Usage <bundles repository dir> <bundles list file>");
+//		} else {
+//			BundleList.create(args[0], args[1]);
+//			BundleList.compress(args[1]);
+//		}
+		
+		//BundleList b = BundleList.load(new URL("http://avm:avm++@10.10.1.199:8080/frontal.terminal-manager/rest/terminal/0200001002FF67FD/aton/999/100/download/bundles.list"));
+		BundleList b = BundleList.load(new URL("http://avm:avm++@10.10.1.199:8080/frontal.terminal-manager/rest/terminal/0200001002FF67FD/aton/999/100/download/bundles.list.gz"));
+		System.out.println("BundleList="+b);
 	}
 
 	public class JarFileFilter implements FilenameFilter {
@@ -388,5 +375,7 @@ public class BundleList {
 	public boolean exist(String bundleName) {
 		return (_hashBundle.get(bundleName) != null);
 	}
+	
+
 
 }

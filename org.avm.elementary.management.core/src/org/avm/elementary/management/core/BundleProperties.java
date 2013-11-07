@@ -17,8 +17,8 @@ public class BundleProperties {
 	private String _nameOptions = null;
 
 	private int _startlevel;
-	
-	private boolean _enable=true;
+
+	private String _pack = null;
 
 	public static final int NOT_SET = 0;
 
@@ -38,11 +38,9 @@ public class BundleProperties {
 		_version = reader.getProperty("Bundle-Version");
 
 		_startlevel = NOT_SET;
-		
-		_enable = true;
+
+		_pack = reader.getProperty("TAB-Pack");
 	}
-
-
 
 	public String getName() {
 		return _name;
@@ -63,10 +61,6 @@ public class BundleProperties {
 	public String getVersion() {
 		return _version;
 	}
-	
-	public boolean isEnable() {
-		return _enable;
-	}
 
 	public void setName(String name) {
 		_name = name;
@@ -83,16 +77,21 @@ public class BundleProperties {
 	public void setVersion(String version) {
 		_version = version;
 	}
-	
-	public void setEnable(boolean b) {
-		_enable = b;
-	}
 
 	public String toString() {
 		String tag = "";
 		if (_nameOptions != null) {
 			tag = "#" + _nameOptions;
 		}
-		return (_startlevel + ";" + _name + tag + ";" + _version + (_enable?"":";disabled"));
+		return (_startlevel + ";" + _name + tag + ";" + _version + (_pack == null ? ""
+				: (";" + _pack)));
+	}
+
+	public String getPack() {
+		return _pack;
+	}
+
+	public void setPack(String _pack) {
+		this._pack = _pack;
 	}
 }

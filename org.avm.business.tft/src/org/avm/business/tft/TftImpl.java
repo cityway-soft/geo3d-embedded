@@ -168,10 +168,10 @@ public class TftImpl implements Tft, ConsumerService, ManageableService,
 				while (iter.hasNext()) {
 					Properties props = (Properties) iter.next();
 
-					String temp = props.getProperty(org.avm.business.messages.Messages.MESSAGE);
+					String temp = props
+							.getProperty(org.avm.business.messages.Messages.MESSAGE);
 
-		
-					_log.debug("from="+from+", to="+to);
+					_log.debug("from=" + from + ", to=" + to);
 					if (from != null && to != null) {
 						_log.debug("Avant conversion " + temp);
 						try {
@@ -182,7 +182,7 @@ public class TftImpl implements Tft, ConsumerService, ManageableService,
 						} catch (UnsupportedEncodingException e) {
 							e.printStackTrace();
 						}
-						
+
 					} else {
 						_log.debug("Aucune conversion " + temp);
 					}

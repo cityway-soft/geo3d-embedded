@@ -165,8 +165,7 @@ class SynchronizeBundlesCommand implements BundleListener {
 				} else {
 					println("Error: jar or md5 file empty");
 				}
-			}
-			else{
+			} else {
 				println("Error: md5 file does't match");
 			}
 		} catch (Throwable t) {
@@ -614,9 +613,9 @@ class SynchronizeBundlesCommand implements BundleListener {
 
 				int newStartLevel = bundleProperties.getStartlevel();
 
-				if (bundleProperties.isEnable() == false) {
-					newStartLevel = 999; // disabled
-				}
+				// if (bundleProperties.isEnable() == false) {
+				// newStartLevel = 999; // disabled
+				// }
 
 				int currentStartLevel = getBundleStartLevel(bundles[i]);
 				boolean startLevelChanged = (currentStartLevel == -1) ? false

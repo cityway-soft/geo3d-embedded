@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,11 +22,12 @@ class SimpleFTPClient implements IRemoteClient {
 		this.url = url;
 	}
 
-	public String put(StringBuffer buffer, String remoteFilename) throws IOException {
+	public String put(StringBuffer buffer, String remoteFilename)
+			throws IOException {
 		OutputStream os = null;
 
 		URLConnection connection;
-		URL urlRemotefile = new URL(url.toExternalForm()+"/"+remoteFilename);
+		URL urlRemotefile = new URL(url.toExternalForm() + "/" + remoteFilename);
 		connection = urlRemotefile.openConnection();
 		try {
 			Thread.sleep(500);
@@ -46,12 +46,12 @@ class SimpleFTPClient implements IRemoteClient {
 
 	}
 
-	public String put(File file,String remoteFilename) throws IOException {
+	public String put(File file, String remoteFilename) throws IOException {
 		String filepath = file.getAbsolutePath();
 		InputStream in = new BufferedInputStream(new FileInputStream(filepath));
 
 		OutputStream os;
-		URL urlRemotefile = new URL(url.toExternalForm()+"/"+remoteFilename);
+		URL urlRemotefile = new URL(url.toExternalForm() + "/" + remoteFilename);
 
 		URLConnection connection = urlRemotefile.openConnection();
 		try {
@@ -73,16 +73,24 @@ class SimpleFTPClient implements IRemoteClient {
 
 		out.flush();
 		out.close();
-		
-		return "put "+filepath+" to " + remoteFilename;
+
+		return "put " + filepath + " to " + remoteFilename;
 	}
 
 	public void setMime(String mime) {
-		
+
 	}
 
 	public void setEncoding(String encoding) {
-		
+
+	}
+
+	public InputStream get() throws IOException {
+		URLConnection connection;
+		URL urlRemotefile = new URL(url.toExternalForm());
+		connection = urlRemotefile.openConnection();
+
+		return connection.getInputStream();
 	}
 
 }

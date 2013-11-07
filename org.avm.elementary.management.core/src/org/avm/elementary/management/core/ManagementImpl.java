@@ -22,6 +22,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
 import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.service.startlevel.StartLevel;
 
@@ -58,6 +59,8 @@ public class ManagementImpl implements Management {
 
 	private Timer _shutdownTimer;
 
+	private ServiceRegistration _sr;
+
 	/**
 	 * @param context
 	 * 
@@ -71,24 +74,35 @@ public class ManagementImpl implements Management {
 			System.out.println("[ManagementCore] " + trace);
 		}
 	}
-	
+
 	public void error(String trace) {
 		System.err.println("[ManagementCore] " + trace);
 	}
-	
+
 	public void start() {
 		boolean update = System.getProperty(AUTOUPDATE_TAG, "true").equals(
 				"true");
 		init();
+		debug("registering management core service...");
+		_sr = _context.registerService(Management.class.getName(), this, null);
+		debug("management core service " +_sr + " registered.");
+		debug("starting synchronize...");
 		try {
 			synchronize(update, new PrintWriter(System.out));
+			debug("synchronize done.");
 		} catch (Exception e) {
+			error("synchronize failed!");
 			e.printStackTrace();
 		}
 	}
 
 	public void stop() {
 		unsynchronize();
+		debug("deactivating...");
+		if (_sr != null) {
+			_sr.unregister();
+			_sr = null;
+		}
 	}
 
 	public void setBundleContext(BundleContext context) {
@@ -202,6 +216,7 @@ public class ManagementImpl implements Management {
 			out.println("!!!!!!!!!!!!!!!!!!!!    WARNING    !!!!!!!!!!!!!!!!!!!!!!!!");
 			out.println("!              Packages failure detected                  !");
 			out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			debug("Packages failure detected!");
 			Bundle[] bundles = new Bundle[_context.getBundles().length - 1];
 			int j = 0;
 			for (int i = 0; i < _context.getBundles().length; i++) {
@@ -320,8 +335,8 @@ public class ManagementImpl implements Management {
 		private Thread _thread = null;
 
 		private PrintWriter _out = null;
-		
-		private boolean interrupted=false;
+
+		private boolean interrupted = false;
 
 		public SynchronizeBundleThread(PrintWriter out) {
 			_out = out;
@@ -331,7 +346,7 @@ public class ManagementImpl implements Management {
 			if (_thread == null) {
 				_thread = new Thread(this);
 				_thread.setName("[AVM] management core");
-				interrupted=false;
+				interrupted = false;
 				_thread.start();
 			}
 		}
@@ -339,7 +354,7 @@ public class ManagementImpl implements Management {
 		public void stop() {
 			if (_thread != null) {
 				_thread.interrupt();
-				interrupted=true;
+				interrupted = true;
 				_thread = null;
 			}
 		}
@@ -536,8 +551,9 @@ public class ManagementImpl implements Management {
 							active++;
 						}
 					}
-					ManagementImpl.this.debug("[ManagementCore] Active bundles : "
-							+ active);
+					ManagementImpl.this
+							.debug("[ManagementCore] Active bundles : "
+									+ active);
 					if (active == 2) { // Bundle SystemOsgi + Bundle Management
 						_out.println("bye bye...");
 						System.exit(exitCode);
