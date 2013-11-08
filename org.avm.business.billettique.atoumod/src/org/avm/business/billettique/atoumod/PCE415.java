@@ -30,7 +30,7 @@ public class PCE415 implements Runnable {
 		this.port = port;
 		this.t_surv = t_surv;
 		this.n_surv = n_surv;
-		clientSocket = new DatagramSocket();
+		clientSocket = new DatagramSocket(port, InetAddress.getByName("192.168.2.1"));
 		clientSocket.setSoTimeout(t_surv * 1000);
 		serverAdress = InetAddress.getByName(host);
 		interrogation = (MessageInterrogationSurveillance) MessageFactory

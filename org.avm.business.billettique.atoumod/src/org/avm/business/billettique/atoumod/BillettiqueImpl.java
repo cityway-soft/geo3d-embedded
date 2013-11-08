@@ -62,6 +62,9 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 			client = null;
 		}
 		try {
+			_log.info("create client on " + _config.getHost() + ":"
+					+ _config.getPort() + " with tsurv=" + _config.getTSurv()
+					+ ", nsurv=" + _config.getNSurv());
 			client = new PCE415(_config.getHost(), _config.getPort(),
 					_config.getTSurv(), _config.getNSurv());
 			client.setListener(this);
@@ -213,7 +216,8 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 		case AvmModel.STATE_EN_COURSE_HORS_ITINERAIRE:
 		case AvmModel.STATE_EN_COURSE_ARRET_SUR_ITINERAIRE:
 		case AvmModel.STATE_EN_COURSE_INTERARRET_SUR_ITINERAIRE: {
-			//-- correction : demande ACS état "course ouverte" si et seulement si point détecté.
+			// -- correction : demande ACS état "course ouverte" si et seulement
+			// si point détecté.
 			if (model.getDernierPoint() != null) {
 				etat = TicketingSystemState.SERVICE_OUVERT_COURSE_OUVERTE;
 			} else {
