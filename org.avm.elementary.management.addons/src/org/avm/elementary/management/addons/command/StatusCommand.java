@@ -105,26 +105,22 @@ class StatusCommand extends AbstractCommand implements BundleAction {
 		buffer.append("] ");
 		buffer.append(SEP);
 		buffer.append(b.getHeaders().get("Bundle-SymbolicName"));
+		Object packName = b.getHeaders().get("TAB-Pack");
+		
 		if (isComplete) {
 			buffer.append(" (");
 			buffer.append(b.getHeaders().get("Bundle-Name"));
-			System.err.println("Management StatusCommand : STEP 1");
-			Object packName = b.getHeaders().get("TAB-Pack");		
-			System.err.println("Management StatusCommand : STEP 2  packname="+packName);
 
 			Object packComment = b.getHeaders().get("TAB-Comment");
-			System.err.println("Management StatusCommand : STEP 3  packcmt="+packComment);
 
 
 			Object builtby = b.getHeaders().get("Built-By");
-			System.err.println("Management StatusCommand : STEP 4  builtby="+builtby);
 
 			String commitId = null;
 
 			Object commitIdTemp = b.getHeaders()
 					.get("Eclipse-SourceReferences");
 
-			System.err.println("Management StatusCommand : STEP 5  commitIdTemp="+commitIdTemp);
 			if (commitIdTemp != null) {
 				StringTokenizer t = new StringTokenizer((String)commitIdTemp, ";");
 				int idx;
@@ -135,7 +131,6 @@ class StatusCommand extends AbstractCommand implements BundleAction {
 						commitId = token.substring(idx + 1, Math.min(idx+1+7, token.length()-1));
 					}
 				}
-				System.err.println("Management StatusCommand : STEP 6  commitId="+commitId);
 			}
 			
 			if (commitId != null){
@@ -162,6 +157,13 @@ class StatusCommand extends AbstractCommand implements BundleAction {
 			}
 
 			buffer.append(")");
+		}
+		else{
+			if (packName != null){
+				buffer.append(" (");
+				buffer.append(packName);
+				buffer.append(")");
+			}
 		}
 		buffer.append(System.getProperty("line.separator"));
 		if (isColored) {

@@ -566,17 +566,33 @@ class SynchronizeBundlesCommand implements BundleListener {
 					continue;
 				}
 
-				String ver = bundleProperties.getVersion();
-				double bundleVersion = getVersion(ver);
-				ver = (String) bundles[i].getHeaders().get("Bundle-Version");
-				double currentVersion = getVersion(ver);
+					
+				boolean check ;
+				
+				
+				String packtoInstall = bundleProperties.getPack();
+				String packInstalled = (String) bundles[i].getHeaders().get("TAB-Pack");
+				// -- on retire les bundles dont les jeux sont identiques
+				check = (packtoInstall != null && packInstalled == null );
+				check = check || ( packtoInstall == null && packInstalled == null ) ;
+				check = check || (packtoInstall != null && packInstalled != null && packInstalled.equals(packtoInstall)) ;
+				//System.out.println("packInstalled="+packInstalled + " ; packToInstall="+ packtoInstall );
+				if (check){
+					//System.out.println(packInstalled + " == " + packtoInstall + " ==> pack ok, now check version");
 
-				// -- on retire les bundles dont la version est plus recente que
-				// celle du bundles.list
-				if (bundleVersion <= currentVersion
-						&& bundleProperties.getStartlevel() >= 0) {
-					bundleList.remove(bundleName);
+					String ver = bundleProperties.getVersion();
+					double bundleVersion = getVersion(ver);
+					ver = (String) bundles[i].getHeaders().get("Bundle-Version");
+					double currentVersion = getVersion(ver);
+					// -- on retire les bundles dont la version est plus recente que
+					// celle du bundles.list
+					check = ( bundleVersion <= currentVersion	&& bundleProperties.getStartlevel() >= 0);
+					
+					if (check) {
+						bundleList.remove(bundleName);
+					}
 				}
+				
 			}
 			flush();
 
@@ -585,6 +601,7 @@ class SynchronizeBundlesCommand implements BundleListener {
 				BundleProperties bl = (BundleProperties) e.nextElement();
 				String bundlename = bl.getCompleteName();
 				Bundle bundle = getBundle(bundlename);
+				System.out.println("bundleName="+bundlename );
 				// -- on retire les bundles dont le startlevel est negatif
 				if (bundle == null && bl.getStartlevel() <= 0) {
 					bundleList.remove(bundlename);
