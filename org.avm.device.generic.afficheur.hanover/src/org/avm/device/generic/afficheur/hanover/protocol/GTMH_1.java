@@ -30,7 +30,7 @@ public class GTMH_1 extends AfficheurProtocol {
 
 	public void clear() {
 
-		_log.info("[DSU] clear");
+		_log.info("Clear");
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		buffer.write(STX);
 		buffer.write(CLEAR);
@@ -42,7 +42,7 @@ public class GTMH_1 extends AfficheurProtocol {
 		buffer.write((byte) ((lValue > 9) ? lValue + 0x37 : lValue + 0x30));
 		buffer.write((byte) ((rValue > 9) ? rValue + 0x37 : rValue + 0x30));
 
-		_log.info("[DSU] send " + "[" + this + "] " + buffer);
+		_log.info("Send " + "[" + this + "] " + buffer);
 
 		try {
 			send(buffer.toByteArray());
