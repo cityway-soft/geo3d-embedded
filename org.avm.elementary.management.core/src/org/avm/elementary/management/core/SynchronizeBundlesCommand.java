@@ -573,11 +573,10 @@ class SynchronizeBundlesCommand implements BundleListener {
 				String packtoInstall = bundleProperties.getPack();
 				String packInstalled = (String) bundles[i].getHeaders().get("TAB-Pack");
 				// -- on retire les bundles dont les jeux sont identiques
-				check = (packtoInstall != null && packInstalled == null );
-				check = check || ( packtoInstall == null && packInstalled == null ) ;
+				check = ( packtoInstall == null && packInstalled == null ) ;
 				check = check || (packtoInstall != null && packInstalled != null && packInstalled.equals(packtoInstall)) ;
-				//System.out.println("packInstalled="+packInstalled + " ; packToInstall="+ packtoInstall );
 				if (check){
+					//-- si les pack ne sont pas renseignés ou si ils sont égaux on controle la version
 					//System.out.println(packInstalled + " == " + packtoInstall + " ==> pack ok, now check version");
 
 					String ver = bundleProperties.getVersion();
