@@ -69,7 +69,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			Session session) {
 		String port = ((String) opts.get("port"));
 		if (port != null){
-			((BillettiqueConfig) _config).setLocalPort(Integer.getInteger(port));
+			((BillettiqueConfig) _config).setLocalPort(new Integer(Integer.parseInt(port)));
 			_config.updateConfig();
 		}
 		else{

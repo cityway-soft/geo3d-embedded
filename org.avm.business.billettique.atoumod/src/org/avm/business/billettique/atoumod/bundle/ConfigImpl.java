@@ -42,7 +42,7 @@ public class ConfigImpl extends AbstractConfig implements BillettiqueConfig {
 	}
 
 	public void setLocalPort(Integer port) {
-		_config.put(LOCALPORT, port.toString());
+		_config.put(LOCALPORT, port);
 	}
 
 

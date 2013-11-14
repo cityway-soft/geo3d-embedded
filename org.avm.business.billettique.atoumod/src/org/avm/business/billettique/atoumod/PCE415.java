@@ -9,6 +9,8 @@ import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
 import fr.cityway.avm.billettique.atoumod.model.Message;
 import fr.cityway.avm.billettique.atoumod.model.MessageFactory;
 import fr.cityway.avm.billettique.atoumod.model.MessageInterrogationSurveillance;
@@ -24,6 +26,7 @@ public class PCE415 implements Runnable {
 	private Thread thread;
 	private boolean running;
 	private PCE415Listener listener;
+	private Logger logger = Logger.getInstance(PCE415.class);
 
 	public PCE415(String host, int serverPort, int t_surv, int n_surv,
 			Integer clientPort) throws SocketException, UnknownHostException,
@@ -109,41 +112,39 @@ public class PCE415 implements Runnable {
 				t0 = System.currentTimeMillis();
 				DatagramPacket receivePacket = new DatagramPacket(receiveData,
 						receiveData.length);
-				System.out.println("Waiting for answer...");
+				logger.debug("Waiting for answer...");
 				clientSocket.receive(receivePacket);
 				// sResponse = new String(receivePacket.getData());
 				sResponse = toHexaString(receivePacket.getData());
 
 			} catch (IOException e) {
-				System.err.println("Warn:" + e.getMessage());
+				logger.warn("Warn:" + e.getMessage());
 			}
 
 			try {
 				if (sResponse != null && (sResponse.trim().length() != 0)) {
 					Message response = MessageFactory.parse(sResponse);
-					System.out.println("Response:" + response);
+					logger.debug("Response:" + response);
 					fireStateChanged(true);
 					errCount = 0;
 				} else {
 					errCount++;
-					System.err
-							.println("No response from Billettique ATOUMOD ! (#"
-									+ errCount + ")");
+					logger.error("No response from Billettique ATOUMOD ! (#"
+							+ errCount + ")");
 					if (errCount >= n_surv) {
 						fireStateChanged(false);
 					}
 				}
 			} catch (Exception e) {
-				System.err
-						.println("Error on process response from Billettique : "
-								+ e.getMessage());
+				logger.error("Error on process response from Billettique : "
+						+ e.getMessage());
 				e.printStackTrace();
 			}
 
 			long delta = (t_surv * 1000) - (System.currentTimeMillis() - t0);
 			if (delta > 0) {
 				try {
-					System.out.println("Wait " + delta
+					logger.debug("Wait " + delta
 							+ " ms before next request");
 
 					Thread.sleep(delta);
@@ -182,11 +183,19 @@ public class PCE415 implements Runnable {
 
 	public void sendMessageInterrogation() throws IOException {
 		// byte[] sendData = interrogation.toString().getBytes();
-		byte[] sendData = toBinary(interrogation.toString());
-		DatagramPacket sendPacket = new DatagramPacket(sendData,
-				sendData.length, serverAdress, port);
-		clientSocket.send(sendPacket);
-		System.out.println("Sent request to Billettique : " + interrogation);
+		if (running) {
+			if (logger.isDebugEnabled()){
+				logger.debug(interrogation.toDebug());
+			}
+			byte[] sendData = toBinary(interrogation.toString());
+			DatagramPacket sendPacket = new DatagramPacket(sendData,
+					sendData.length, serverAdress, port);
+			clientSocket.send(sendPacket);
+			logger.debug("Sent request to Billettique : " + interrogation);
+		} else {
+			logger.debug("Interface disabled.");
+		}
+
 	}
 
 	public void setPoint(int point) {

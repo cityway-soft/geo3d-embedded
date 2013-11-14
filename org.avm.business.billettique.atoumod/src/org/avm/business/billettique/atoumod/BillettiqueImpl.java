@@ -54,6 +54,8 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 
 	private Boolean _previousState = null;
 
+	private boolean _enabled;
+
 	public void configure(Config config) {
 		_config = (BillettiqueConfig) config;
 
@@ -253,6 +255,7 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 	}
 
 	public void setEnable(boolean b) {
+		
 		if (b) {
 			client.launch();
 			_log.info("Ticketing interface enabled");

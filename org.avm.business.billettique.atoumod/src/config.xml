@@ -25,7 +25,7 @@
 <value type="String">ftp://ftp:ftp++@avm/default/org.avm.business.billettique.atoumod.jar</value>
 </property>
 <property name="org.avm.config.version">
-<value type="Integer">2</value>
+<value type="Integer">3</value>
 </property>
 </configuration>
 </cm_data>
