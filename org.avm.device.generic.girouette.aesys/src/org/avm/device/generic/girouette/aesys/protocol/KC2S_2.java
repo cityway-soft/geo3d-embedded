@@ -57,7 +57,8 @@ public class KC2S_2 extends GirouetteProtocol {
 
 		return trame.getBytes();
 	}
-
+	
+	
 	public byte[] checksum(byte[] data) {
 		int i = 0;
 		int checksum = 0;
