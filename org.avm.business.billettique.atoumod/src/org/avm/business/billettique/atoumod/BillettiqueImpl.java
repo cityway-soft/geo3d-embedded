@@ -66,7 +66,7 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 					+ _config.getPort() + " with tsurv=" + _config.getTSurv()
 					+ ", nsurv=" + _config.getNSurv());
 			client = new PCE415(_config.getHost(), _config.getPort(),
-					_config.getTSurv(), _config.getNSurv());
+					_config.getTSurv(), _config.getNSurv(), _config.getLocalPort());
 			client.setListener(this);
 		} catch (SocketException e) {
 			// TODO Bloc catch généré automatiquement

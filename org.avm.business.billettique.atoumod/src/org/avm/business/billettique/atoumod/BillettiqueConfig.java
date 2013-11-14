@@ -19,4 +19,8 @@ public interface BillettiqueConfig {
 	
 	public void setNSurv(int nsurv);
 
+	public Integer getLocalPort();
+	
+	public void setLocalPort(Integer port);
+
 }

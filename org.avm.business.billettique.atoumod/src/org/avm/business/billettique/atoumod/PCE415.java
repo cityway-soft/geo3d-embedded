@@ -25,12 +25,17 @@ public class PCE415 implements Runnable {
 	private boolean running;
 	private PCE415Listener listener;
 
-	public PCE415(String host, int port, int t_surv, int n_surv) throws SocketException,
-			UnknownHostException, ParseException {
-		this.port = port;
+	public PCE415(String host, int serverPort, int t_surv, int n_surv,
+			Integer clientPort) throws SocketException, UnknownHostException,
+			ParseException {
+		this.port = serverPort;
 		this.t_surv = t_surv;
 		this.n_surv = n_surv;
-		clientSocket = new DatagramSocket(port, InetAddress.getByName("192.168.2.1"));
+		if (clientPort != null) {
+			clientSocket = new DatagramSocket(clientPort.intValue());
+		} else {
+			clientSocket = new DatagramSocket();
+		}
 		clientSocket.setSoTimeout(t_surv * 1000);
 		serverAdress = InetAddress.getByName(host);
 		interrogation = (MessageInterrogationSurveillance) MessageFactory
@@ -49,11 +54,10 @@ public class PCE415 implements Runnable {
 	public void setCourse(int course) {
 		interrogation.setJourney(course);
 	}
-	
+
 	public void setSens(int sens) {
 		interrogation.setWayGo(sens == 1);
 	}
-
 
 	public void setLigne(int ligne) {
 		interrogation.setLine(ligne);
@@ -61,7 +65,8 @@ public class PCE415 implements Runnable {
 
 	public static void main(String[] args) throws IOException, ParseException {
 
-		PCE415 client = new PCE415("localhost", 33333, 20, 5);
+		PCE415 client = new PCE415("localhost", 33333, 20, 5,
+				new Integer(33334));
 		client.launch();
 	}
 
@@ -106,7 +111,7 @@ public class PCE415 implements Runnable {
 						receiveData.length);
 				System.out.println("Waiting for answer...");
 				clientSocket.receive(receivePacket);
-				//sResponse = new String(receivePacket.getData());
+				// sResponse = new String(receivePacket.getData());
 				sResponse = toHexaString(receivePacket.getData());
 
 			} catch (IOException e) {
@@ -121,7 +126,9 @@ public class PCE415 implements Runnable {
 					errCount = 0;
 				} else {
 					errCount++;
-					System.err.println("No response from Billettique ATOUMOD ! (#"+errCount+")");
+					System.err
+							.println("No response from Billettique ATOUMOD ! (#"
+									+ errCount + ")");
 					if (errCount >= n_surv) {
 						fireStateChanged(false);
 					}
@@ -145,21 +152,20 @@ public class PCE415 implements Runnable {
 			}
 		}
 	}
-	
-	
+
 	private static byte[] toBinary(final String frame) {
 		final byte[] buffer = new byte[frame.length() / 2];
-		int j=0;
-		for (int i = 0; i < frame.length(); i+=2) {
-			String octet = frame.substring(i, i+2);
-			
+		int j = 0;
+		for (int i = 0; i < frame.length(); i += 2) {
+			String octet = frame.substring(i, i + 2);
+
 			buffer[j] = (byte) Integer.parseInt(octet, 16);
 			j++;
 
 		}
 		return buffer;
 	}
-	
+
 	private static String toHexaString(final byte[] data) {
 		final byte[] buffer = new byte[data.length * 2];
 
@@ -175,7 +181,7 @@ public class PCE415 implements Runnable {
 	}
 
 	public void sendMessageInterrogation() throws IOException {
-		//byte[] sendData = interrogation.toString().getBytes();
+		// byte[] sendData = interrogation.toString().getBytes();
 		byte[] sendData = toBinary(interrogation.toString());
 		DatagramPacket sendPacket = new DatagramPacket(sendData,
 				sendData.length, serverAdress, port);

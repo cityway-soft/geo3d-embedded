@@ -12,6 +12,9 @@
 <property name="port">
 <value type="Integer">33333</value>
 </property>
+<property name="local-port">
+<value type="Integer">33333</value>
+</property>
 <property name="tsurv">
 <value type="Integer">10</value>
 </property>

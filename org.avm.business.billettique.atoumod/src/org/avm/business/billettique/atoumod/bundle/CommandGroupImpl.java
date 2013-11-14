@@ -60,6 +60,27 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	}
 	
 	
+	// set port
+	public final static String USAGE_SETLOCALPORT = "[<port>]";
+
+	public final static String[] HELP_SETLOCALPORT = new String[] { "Set server port", };
+
+	public int cmdSetlocalport(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+		String port = ((String) opts.get("port"));
+		if (port != null){
+			((BillettiqueConfig) _config).setLocalPort(Integer.getInteger(port));
+			_config.updateConfig();
+		}
+		else{
+			out.println(((BillettiqueConfig) _config).getLocalPort());
+		}
+		
+
+		return 0;
+	}
+	
+	
 	// set host
 	public final static String USAGE_SETHOST = "[<host>]";
 

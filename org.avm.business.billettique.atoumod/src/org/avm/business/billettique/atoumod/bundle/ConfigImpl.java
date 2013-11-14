@@ -10,6 +10,7 @@ import org.osgi.service.component.ComponentContext;
 public class ConfigImpl extends AbstractConfig implements BillettiqueConfig {
 
 	private static final String PORT = "port";
+	private static final String LOCALPORT = "local-port";
 	private static final String TSURV = "tsurv";
 	private static final String NSURV = "nsurv";
 	private static final String HOST = "host";
@@ -34,6 +35,16 @@ public class ConfigImpl extends AbstractConfig implements BillettiqueConfig {
 	public void setPort(int port) {
 		_config.put(PORT, Integer.toString(port));
 	}
+	
+	
+	public Integer getLocalPort() {
+		return ((Integer) _config.get(LOCALPORT));
+	}
+
+	public void setLocalPort(Integer port) {
+		_config.put(LOCALPORT, port.toString());
+	}
+
 
 	public int getTSurv() {
 		return ((Integer) _config.get(TSURV)).intValue();

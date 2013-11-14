@@ -34,6 +34,8 @@ public class BillettiqueImpl implements BillettiqueIhm, ManageableService,
 
 	private boolean authenticated;
 
+	private boolean _connected = true;
+
 	public BillettiqueImpl() {
 		_log = Logger.getInstance(this.getClass());
 		_log.info("Create Billettique IHM");
@@ -86,6 +88,7 @@ public class BillettiqueImpl implements BillettiqueIhm, ManageableService,
 	}
 
 	private void setConnected(final boolean b) {
+		_connected  = b;
 		_display.asyncExec(new Runnable() {
 			public void run() {
 				if (_billettiqueIhm != null && ! _billettiqueIhm.isDisposed()) {
@@ -101,13 +104,13 @@ public class BillettiqueImpl implements BillettiqueIhm, ManageableService,
 			_display.asyncExec(new Runnable() {
 				public void run() {
 					if (_billettiqueIhm == null || _billettiqueIhm.isDisposed()) {
-
 						_billettiqueIhm = new BillettiqueIhmImpl(_desktop
 								.getMiddlePanel(), SWT.NONE, TAB_NAME);
 						_billettiqueIhm.setProducer(_producer);
 						_billettiqueIhm.setContext(_context);
 						_billettiqueIhm.setDesktop(_desktop);
 						_billettiqueIhm.setBillettique(_billettique);
+						_billettiqueIhm.setConnected(_connected);
 
 						_log.debug("Adding Billettique  to desktop...");
 						if (_desktop != null) {
