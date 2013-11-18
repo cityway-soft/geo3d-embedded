@@ -46,7 +46,7 @@ public class KC2S_3 extends GirouetteProtocol {
 		// terminal A, commande VIS, taille fixe à 15 = F, message external = E,
 		// XXXX caractères non utilisés
 		buf.append("AVIS000FEXXXX");
-		buf.append(code);
+		buf.append(code.toString());
 		buf.append((char) ETX);
 		buf.append(checksum(buf.toString().getBytes()));
 		return buf.toString().getBytes();
