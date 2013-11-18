@@ -39,8 +39,6 @@ public class ComptageService extends AbstractDriver implements Comptage,
 	private int _realOutCount = 0;
 	private int _rollInCount = 0;
 	private int _rollOutCount = 0;
-	
-	
 
 	private final Object _waitData = new Object();
 	private boolean _waitTimeout = false;
@@ -86,7 +84,7 @@ public class ComptageService extends AbstractDriver implements Comptage,
 		_port.start();
 		_port.addListener(this);
 		_started = true;
-		
+
 	}
 
 	protected void stop() {
@@ -100,23 +98,19 @@ public class ComptageService extends AbstractDriver implements Comptage,
 			_log.error("Driver not started");
 			throw new ComptageException("Driver not started");
 		}
-		if (! askNumberPassenger()){
+		if (!askNumberPassenger()) {
 			throw new ComptageException("Device not connected");
 		}
 
-		if (type.equals(Comptage.NOMBRE_MONTEES)){
+		if (type.equals(Comptage.NOMBRE_MONTEES)) {
 			return _realInCount;
-			}
-		else if (type.equals(Comptage.NOMBRE_DESCENTES)){
+		} else if (type.equals(Comptage.NOMBRE_DESCENTES)) {
 			return _realOutCount;
-		}
-		else if (type.equals(Comptage.STATUS)){
-			return _status%16;
-		}
-		else if (type.equals(Comptage.CHARGE)){
-			return _status/16;
-		}
-		else
+		} else if (type.equals(Comptage.STATUS)) {
+			return _status % 16;
+		} else if (type.equals(Comptage.CHARGE)) {
+			return _status / 16;
+		} else
 			throw new ComptageException("Unknown type");
 	}
 
@@ -145,8 +139,8 @@ public class ComptageService extends AbstractDriver implements Comptage,
 			_lastOutCount = 0;
 			_realInCount = 0;
 			_realOutCount = 0;
-			_rollInCount=0;
-			_rollOutCount=0;
+			_rollInCount = 0;
+			_rollOutCount = 0;
 		} catch (IOException e) {
 			_log.error(e);
 		}
@@ -155,7 +149,7 @@ public class ComptageService extends AbstractDriver implements Comptage,
 
 	/**
 	 * 
-	 * @return true sur un déblocage, false sur un timeout
+	 * @return true sur un dï¿½blocage, false sur un timeout
 	 */
 	private boolean waitResponse() {
 		try {
@@ -179,7 +173,7 @@ public class ComptageService extends AbstractDriver implements Comptage,
 	}
 
 	/**
-	 * Callback du listener caractère de synchro : 0x7E deux commandes : - 0x73,
+	 * Callback du listener caractï¿½re de synchro : 0x7E deux commandes : - 0x73,
 	 * 0x05 > nombre de passagers - 0x74, 0x02 > reset des compteurs
 	 * 
 	 */
@@ -215,8 +209,7 @@ public class ComptageService extends AbstractDriver implements Comptage,
 				_inCount = b;
 			} else if (_countData == 2) {
 				_outCount = b;
-			}
-			else if (_countData ==1){
+			} else if (_countData == 1) {
 				_status = b;
 			}
 			if (--_countData == 0) {
@@ -228,30 +221,28 @@ public class ComptageService extends AbstractDriver implements Comptage,
 			break;
 		case WAIT_CRC2:
 			_state = WAIT_SYNC;
-			checkRollOver ();
+			checkRollOver();
 			notifyResponse();
 			break;
 		}
 	}
-	
-	protected void checkRollOver (){
-		
-		if (_lastInCount > _inCount){
+
+	protected void checkRollOver() {
+
+		if (_lastInCount > _inCount) {
 			_rollInCount += ROLL_OVER;
-			_lastInCount=0;
-		}
-		else{
+			_lastInCount = 0;
+		} else {
 			_lastInCount = _inCount;
 		}
-		_realInCount = _rollInCount +_inCount;
-		if (_lastOutCount > _outCount){
-			_rollOutCount+=ROLL_OVER;
-			_lastOutCount=0;
+		_realInCount = _rollInCount + _inCount;
+		if (_lastOutCount > _outCount) {
+			_rollOutCount += ROLL_OVER;
+			_lastOutCount = 0;
+		} else {
+			_lastOutCount = _outCount;
 		}
-		else{
-		_lastOutCount = _outCount;
-		}
-		_realOutCount =_rollOutCount +_outCount;
+		_realOutCount = _rollOutCount + _outCount;
 	}
 
 	public Properties status() {
@@ -260,9 +251,9 @@ public class ComptageService extends AbstractDriver implements Comptage,
 			ret = new Properties();
 			ret.put(Comptage.NOMBRE_MONTEES, Integer.toString(_realInCount));
 			ret.put(Comptage.NOMBRE_DESCENTES, Integer.toString(_realOutCount));
-			ret.put(Comptage.STATUS, Integer.toString(_status%16));
-			ret.put(Comptage.CHARGE, Integer.toString(10*_status/16));
-			
+			ret.put(Comptage.STATUS, Integer.toString(_status % 16));
+			ret.put(Comptage.CHARGE, Integer.toString(10 * _status / 16));
+
 		}
 		return ret;
 	}
