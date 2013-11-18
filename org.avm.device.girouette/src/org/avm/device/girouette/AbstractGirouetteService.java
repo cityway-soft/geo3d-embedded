@@ -50,8 +50,12 @@ public abstract class AbstractGirouetteService extends AbstractDriver implements
 		final String protocolName = config.getParamerter("protocol");
 		this.protocol = getGirouetteProtocol(protocolName);
 
-		_log.info("protocol class="
-				+ ((protocol == null) ? "null!" : protocol.getClass().getName()));
+		if (protocol == null) {
+			_log.error("Protocol Girouette '" + protocolName + "' not found");
+		} else {
+
+			_log.info("protocol class=" + protocol.getClass().getName());
+		}
 		this.started = true;
 	}
 
@@ -91,7 +95,8 @@ public abstract class AbstractGirouetteService extends AbstractDriver implements
 					result = protocol.getStatus();
 					_log.debug("Request Status Frame sent.");
 				} else {
-					_log.debug("Status not available/implemented for protocol " + protocol.getClass().getName());
+					_log.debug("Status not available/implemented for protocol "
+							+ protocol.getClass().getName());
 					return GirouetteProtocol.STATUS_NOT_AVAILABLE;
 				}
 			}

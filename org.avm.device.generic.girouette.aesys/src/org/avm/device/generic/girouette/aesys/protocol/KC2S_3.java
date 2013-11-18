@@ -14,6 +14,12 @@ import org.avm.device.girouette.GirouetteProtocol;
 
 
 public class KC2S_3 extends GirouetteProtocol {
+	
+	static {
+		GirouetteProtocolFactory.factory.put(KC2S_3.class, new KC2S_3());
+	}
+	
+	
 	/*
 	 * STX <Address> <Command> <Data Length> <Data> ETX <Checksum> STX : 0x02
 	 * Adress : A - Z, toujours à A Command : commande VIS utilisée Data Length
