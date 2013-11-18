@@ -10,7 +10,7 @@
 <value type="String">http://localhost/org.avm.hmi.swt.management.jar</value>
 </property>
 <property name="org.avm.config.version">
-<value type="Integer">49</value>
+<value type="Integer">50</value>
 </property>
 <property name="reboot">
 	<value type="String">#Tue Nov 21 11:52:37 CET 2006
@@ -216,7 +216,7 @@
 	DUHAMEL-PF5005-PCE311=duhamel|comm:1|9600|7|1|none|PCE3xx
 	MOBITEC=mobitec|rs485:2|1200|7|2|even|ICU400
 	HANOVER-(D)ERIC+=hanover|comm:1|9600|8|1|none|GTMH_1,SOCRIE_B
-	AESYS=aesys|comm:1|9600|8|1|none|KC640_32G,KC2S_1,KC2S_2
+	AESYS=aesys|comm:1|9600|8|1|none|KC640_32G,KC2S_1,KC2S_2,KC2S_3
 	</value>
 </property>
 
