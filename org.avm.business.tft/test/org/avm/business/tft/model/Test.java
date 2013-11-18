@@ -41,7 +41,7 @@ public class Test extends TestCase {
 
 		AvmModelManager model = new AvmModelManager();
 		
-		Course course = new Course(123, 456,  "crsblip",0, "dest",  "lig 9", 111, "pcr 0", 0, 222, 333);
+		Course course = new Course(123, 456,  "crsblip",0, "dest",  "lig 9", 111, "pcr 0", 0, 222, 333, 0);
 		Point pts[] = new Point[3];
 		pts[0] = new Point(0, 10, "HOTEL", 1, 2, 3, 4, 5, 6, 7, 8);pts[0].setNomReduitGroupePoint("bilout");
 		pts[1] = new Point(1, 20, "CHATELET", 11, 12, 13, 14, 15, 16, 17, 18);

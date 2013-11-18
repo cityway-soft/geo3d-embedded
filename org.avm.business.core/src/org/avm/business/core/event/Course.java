@@ -303,4 +303,12 @@ public class Course implements Event {
 		iti_sens = sens;
 	}
 
+	/*
+	 * necessaire à playzilla
+	 */
+	public int getItineraireIdu() {
+		// TODO : à implementer
+		return 0;
+	}
+
 }
