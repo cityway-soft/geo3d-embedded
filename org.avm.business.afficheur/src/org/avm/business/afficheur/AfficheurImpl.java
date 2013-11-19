@@ -100,6 +100,29 @@ public class AfficheurImpl implements Afficheur, ManageableService,
 	private void clear() {
 		print(""); //$NON-NLS-1$
 	}
+	
+	private String convertEncoding(String message){
+		String temp = message;
+		String from = System.getProperty("from.charset", "UTF-8");
+		String to = System.getProperty("to.charset", "iso-8859-1");
+		_log.debug("from="+from+", to="+to);
+		if (from != null && to != null) {
+			_log.debug("Avant conversion " + temp);
+			try {
+				byte[] m = new String(temp.getBytes(), from)
+						.getBytes(to);
+				temp = new String(m);
+				_log.debug("Après conversion " + temp);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			
+		} else {
+			_log.debug("Aucune conversion " + temp);
+		}
+		
+		return temp;
+	}
 
 	class ModelListener extends AbstractAvmModelListener {
 
@@ -182,28 +205,29 @@ public class AfficheurImpl implements Afficheur, ManageableService,
 			msg = new String[messages.size()];
 			Iterator iter = messages.iterator();
 			int i = 0;
-			String from = System.getProperty("from.charset", "UTF-8");
-			String to = System.getProperty("to.charset", "iso-8859-1");
+
 			while (iter.hasNext()) {
 				Properties props = (Properties) iter.next();
 				String temp = props.getProperty(org.avm.business.messages.Messages.MESSAGE);
 
-
-				_log.debug("from="+from+", to="+to);
-				if (from != null && to != null) {
-					_log.debug("Avant conversion " + temp);
-					try {
-						byte[] m = new String(temp.getBytes(), from)
-								.getBytes(to);
-						temp = new String(m);
-						_log.debug("Après conversion " + temp);
-					} catch (UnsupportedEncodingException e) {
-						e.printStackTrace();
-					}
-					
-				} else {
-					_log.debug("Aucune conversion " + temp);
-				}
+				
+				temp = convertEncoding(temp);
+				
+//				_log.debug("from="+from+", to="+to);
+//				if (from != null && to != null) {
+//					_log.debug("Avant conversion " + temp);
+//					try {
+//						byte[] m = new String(temp.getBytes(), from)
+//								.getBytes(to);
+//						temp = new String(m);
+//						_log.debug("Après conversion " + temp);
+//					} catch (UnsupportedEncodingException e) {
+//						e.printStackTrace();
+//					}
+//					
+//				} else {
+//					_log.debug("Aucune conversion " + temp);
+//				}
 
 				msg[i] = temp;
 				i++;
