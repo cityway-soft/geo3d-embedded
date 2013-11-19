@@ -49,18 +49,11 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 			+ "join Jour_Proprietes JOP on PDJ.PDJ_ID = JOP.PDJ_ID "
 			+ "where PDJ_TYPE=? and JEX_DATE=?";
 
-	private static final String REQ_COURSES_SANS_VALIDITE = "select crs_depart, crs.crs_id, crs_idu, crs_nom, pnt_nom, lgn.lgn_idu, "
+	private static final String REQ_COURSES_SANS_VALIDITE = "select crs_depart, crs.crs_id, crs_idu, crs_nom, lgn.lgn_idu, "
 			+ "        lgn.lgn_nom, lgn.lgn_amplitude, lgn.lgn_chevauchement, pcr.pcr_nom, pcr.pcr_idu, iti.iti_sens "
 			+ " from course crs "
-			// OLD +
-			// " join horaire hor on (crs.crs_id=hor.crs_id and hor.hor_attente = -1 and hor.hor_rang <> 1)"
-			+ " join (select crs_id,max(hor_rang) as last from horaire group by crs_id) temp on temp.crs_id=crs.crs_id"
-			+ " join horaire hor on (crs.crs_id=hor.crs_id and hor.hor_rang=temp.last)"
-			+ " join point_sur_parcours psp on psp.psp_id=hor.psp_id"
-			+ " join point_sur_itineraire psi on psi.psi_id=psp.psi_id"
-			+ " join point pnt on psi.pnt_id=pnt.pnt_id"
-			+ " join itineraire iti on iti.iti_id=psi.iti_id"
-			+ " join parcours pcr on pcr.iti_id=iti.iti_id"
+			+ " join parcours pcr on pcr.pcr_id=crs.pcr_id"
+			+ " join itineraire iti on iti.iti_id=pcr.iti_id"
 			+ " join ligne lgn on iti.lgn_id=lgn.lgn_id"
 			+ " where crs.sag_id=? order by crs_depart";
 
@@ -104,15 +97,10 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 	}
 
 	private static final String getCoursesValides(String listeCourses) {
-		return "select crs_depart, crs.crs_id, crs_idu, crs_nom, pnt_nom, pcr.pcr_idu,pcr.pcr_nom,lgn.lgn_idu, "
+		return "select crs_depart, crs.crs_id, crs_idu, crs_nom, pcr.pcr_idu,pcr.pcr_nom,lgn.lgn_idu, "
 				+ "        lgn.lgn_nom, lgn.lgn_amplitude, lgn.lgn_chevauchement, iti.iti_sens from course crs "
-				+ "  join (select crs_id,max(hor_rang) as last from horaire group by crs_id) temp on temp.crs_id=crs.crs_id"
-				+ "  join horaire hor on (crs.crs_id=hor.crs_id and hor.hor_rang=temp.last )"
-				+ "  join point_sur_parcours psp on psp.psp_id=hor.psp_id"
-				+ "  join parcours pcr on psp.pcr_id=pcr.pcr_id"
-				+ "  join point_sur_itineraire psi on psi.psi_id=psp.psi_id"
-				+ "  join point pnt on psi.pnt_id=pnt.pnt_id"
-				+ "  join itineraire iti on iti.iti_id=psi.iti_id"
+				+ "  join parcours pcr on crs.pcr_id=pcr.pcr_id"
+				+ "  join itineraire iti on iti.iti_id=pcr.iti_id"
 				+ "  join ligne lgn on iti.lgn_id=lgn.lgn_id"
 				+ "  where crs_id in ("
 				+ listeCourses
@@ -322,7 +310,7 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 							listCourses = new ArrayList();
 						}
 
-						String destination = rsCourses.getString("PNT_NOM");
+						String destination = rsCourses.getString("PCR_NOM");
 						int crs_idu = rsCourses.getInt("CRS_IDU");
 						int crs_id = rsCourses.getInt("CRS_ID");
 						int crs_depart = rsCourses.getInt("CRS_DEPART");
@@ -417,7 +405,7 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 						listCourses = new ArrayList();
 					}
 
-					String destination = rs.getString("PNT_NOM");
+					String destination = rs.getString("PCR_NOM");
 					int crs_idu = rs.getInt("CRS_IDU");
 					String key = Integer.toString(crs_idu);
 					if (hashCourses.get(key) != null) {
