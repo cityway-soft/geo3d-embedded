@@ -5,8 +5,6 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.avm.device.afficheur.AfficheurProtocol;
-import org.avm.device.generic.afficheur.hanover.Port;
-import org.avm.elementary.common.DeviceConfig;
 
 public class GTMH_1 extends AfficheurProtocol {
 
@@ -16,17 +14,14 @@ public class GTMH_1 extends AfficheurProtocol {
 	public static byte STX = 0x02;
 	public static byte ETX = 0x03;
 
-
 	private Logger _log = Logger.getInstance(this.getClass());
 	static {
-		AfficheurProtocolFactory.factory.put(GTMH_1.class,
-				new GTMH_1());
+		AfficheurProtocolFactory.factory.put(GTMH_1.class, new GTMH_1());
 	}
 
 	public GTMH_1() {
 
 	}
-
 
 	public void clear() {
 
@@ -53,9 +48,9 @@ public class GTMH_1 extends AfficheurProtocol {
 
 	public void print(String message) {
 		clear();
-		_log.info("[DSU] print " + "[" + this + "] " + message);
+		_log.info("Print " + "[" + this + "] " + message);
 		byte[] buffer = generateMessage(message);
-		_log.info("[DSU] send " + "[" + this + "] " + new String(buffer));
+		_log.info("Send " + "[" + this + "] " + new String(buffer));
 
 		try {
 			send(buffer);
@@ -68,18 +63,6 @@ public class GTMH_1 extends AfficheurProtocol {
 			}
 		}
 	}
-
-	// private void send(byte[] buffer) throws IOException {
-	//
-	// try {
-	// OutputStream out = _port.getOutputStream();
-	// out.write(buffer);
-	// out.flush();
-	// } catch (IOException e) {
-	// _port.close();
-	// throw e;
-	// }
-	// }
 
 	public byte[] generateMessage(String message) {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -110,18 +93,18 @@ public class GTMH_1 extends AfficheurProtocol {
 		return (byte) ((-result) % 256);
 	}
 
-	private static String toHexaString(byte[] data) {
-		byte[] buffer = new byte[data.length * 2];
-
-		for (int i = 0; i < data.length; i++) {
-			int rValue = data[i] & 0x0000000F;
-			int lValue = (data[i] >> 4) & 0x0000000F;
-			buffer[i * 2] = (byte) ((lValue > 9) ? lValue + 0x37
-					: lValue + 0x30);
-			buffer[i * 2 + 1] = (byte) ((rValue > 9) ? rValue + 0x37
-					: rValue + 0x30);
-		}
-		return new String(buffer);
-	}
+//	private static String toHexaString(byte[] data) {
+//		byte[] buffer = new byte[data.length * 2];
+//
+//		for (int i = 0; i < data.length; i++) {
+//			int rValue = data[i] & 0x0000000F;
+//			int lValue = (data[i] >> 4) & 0x0000000F;
+//			buffer[i * 2] = (byte) ((lValue > 9) ? lValue + 0x37
+//					: lValue + 0x30);
+//			buffer[i * 2 + 1] = (byte) ((rValue > 9) ? rValue + 0x37
+//					: rValue + 0x30);
+//		}
+//		return new String(buffer);
+//	}
 
 }

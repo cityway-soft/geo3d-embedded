@@ -127,12 +127,8 @@ public class MessengerImpl implements Messenger, MediaListener, MediaService,
 							+ DEFAULT_MEDIA + ")!");
 
 				}
-				Media media = (Media) _medias.get(name);
-				if (media == null) {
-					_log.error("Media named " + name + " not found !");
-				} else {
-					Sender.getInstance().send(media, header, buffer);
-				}
+
+				Sender.getInstance().send(_medias, name, header, buffer);
 
 			} else {
 				_log.error("No parser for message " + data);
@@ -162,18 +158,25 @@ public class MessengerImpl implements Messenger, MediaListener, MediaService,
 		if (_parsers != null) {
 			try {
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				StringBuffer errorBuf = new StringBuffer();
 				for (Enumeration iter = _parsers.elements(); iter
 						.hasMoreElements();) {
 					Parser parser = (Parser) iter.nextElement();
 					try {
 						parser.put(data, out);
+						errorBuf=null;
 						break;
 					} catch (Exception e) {
-						_log.error("Erreur parse '"+data+ "' (parser="+parser.getProtocolName()+"):" + e.getMessage() );
+						errorBuf.append("Erreur parse '" + data + "' (parser="
+								+ parser.getProtocolName() + "):"
+								+ e.getMessage());
 						if (_log.isDebugEnabled()) {
 							_log.debug(e);
 						}
 					}
+				}
+				if (errorBuf != null){
+					_log.error(errorBuf.toString());
 				}
 				buffer = out.toByteArray();
 				out.close();
@@ -182,12 +185,12 @@ public class MessengerImpl implements Messenger, MediaListener, MediaService,
 		}
 		return buffer;
 	}
-	
-	public Hashtable getParsers(){
+
+	public Hashtable getParsers() {
 		return _parsers;
 	}
-	
-	public Hashtable getMedias(){
+
+	public Hashtable getMedias() {
 		return _medias;
 	}
 

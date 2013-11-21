@@ -237,6 +237,7 @@ public class AvmPlanificationDatasource implements AvmDatasource,
 		int lgn_idu = course.getLigne();
 		int amplitude = course.getAmplitude();
 		int chevauchement = course.getChevauchement();
+		int sens = 1; //TODO : ajouter au protocole le sens de la ligne
 
 		String destination = null;
 		String lgn_nom = null;
@@ -248,7 +249,7 @@ public class AvmPlanificationDatasource implements AvmDatasource,
 			lgn_nom = getLigneNomFromDatabase(lgn_idu);
 		}
 		Course c = new Course(idu, idu, nom, depart, destination, lgn_nom,
-				lgn_idu, "", 0, amplitude, chevauchement);
+				lgn_idu, "", 0, amplitude, chevauchement, sens);
 
 		return c;
 	}
@@ -405,11 +406,12 @@ public class AvmPlanificationDatasource implements AvmDatasource,
 		}
 
 		if (found && node != null) {
+			int sens=1; //TODO : ajouter le sens la ligne
 			course = new Course(node.getInt(CRS_IDU, 0), node
 					.getInt(CRS_IDU, 0), "Course " + i,
 					node.getInt(CRS_DEP, 0), null,
 					"" + node.getInt(CRS_LIG, 0), node.getInt(CRS_LIG, 0), "",
-					0, node.getInt(CRS_AMP, 0), node.getInt(CRS_CHE, 0));
+					0, node.getInt(CRS_AMP, 0), node.getInt(CRS_CHE, 0), sens);
 			int npts = node.getInt(CRS_NPT, 0);
 
 			Point points[] = null;
@@ -465,12 +467,12 @@ public class AvmPlanificationDatasource implements AvmDatasource,
 			Point terminus = getPointFromDatabase(iduTerminus);
 			destination = terminus.getNom();
 		}
-
+		int sens=1; //TODO : ajouter le sens la ligne
 		Course course = new Course(node.getInt(CRS_IDU, 0), node.getInt(
 				CRS_IDU, 0), "Course " + rang, node.getInt(CRS_DEP, 0),
 				destination, node.getInt(CRS_LIG, 0) + "", node.getInt(CRS_LIG,
 						0), "", 0, node.getInt(CRS_AMP, 0), node.getInt(
-						CRS_CHE, 0));
+						CRS_CHE, 0), sens);
 		return course;
 	}
 

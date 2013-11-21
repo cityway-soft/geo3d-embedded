@@ -1,5 +1,6 @@
 package org.avm.business.vocal;
 
+import java.io.File;
 import java.text.MessageFormat;
 import java.util.Properties;
 
@@ -261,13 +262,33 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 			_log.error("Destinataire :" + destinataire + " inconnu.");
 		}
 	}
+	
+	
+	private void play(String[] messages){
+		boolean check=true;
+		for (int i = 0; i < messages.length; i++) {
+			File fd = new File(messages[i]);
+			if (fd.exists() == false){
+				_log.error("File " + messages[i] + " not found!");
+				check=false;
+				break;
+			}
+		}
+		
+		if (check){
+			for (int i = 0; i < messages.length; i++) {
+				play(messages[i]);
+			}
+		}
+		
+		
+
+	}
 
 	private void annonceConducteur(String[] messages) throws Exception {
 		_log.debug("Annonce Conducteur...");
 		modeConducteur();
-		for (int i = 0; i < messages.length; i++) {
-			play(messages[i]);
-		}
+		play(messages);
 		modeDefaut();
 		_log.debug("Annonce Conducteur ok");
 
@@ -276,9 +297,7 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 	private void annonceVoyageurInterieur(String[] messages) throws Exception {
 		_log.debug("Annonce Voyageur interieur...");
 		modeVoyageurInterieur();
-		for (int i = 0; i < messages.length; i++) {
-			play(messages[i]);
-		}
+		play(messages);
 		modeDefaut();
 		_log.debug("Annonce Voyageur ok");
 
@@ -288,9 +307,7 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 
 		_log.debug("Annonce Voyageur exterieur...");
 		modeVoyageurExterieur();
-		for (int i = 0; i < messages.length; i++) {
-			play(messages[i]);
-		}
+		play(messages);
 		modeDefaut();
 		_log.debug("Annonce Voyageur ok");
 

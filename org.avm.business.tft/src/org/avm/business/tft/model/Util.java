@@ -8,12 +8,12 @@ import org.avm.business.core.event.Point;
 import org.stringtree.json.JSONWriter;
 
 public class Util {
-	public static String toJSONString(AvmModel model, String[] messages) {
+	public static String toJSONString(AvmModel model, String[] messages, int tft) {
 		int state = AvmModel.STATE_INITIAL;
 		if (model.getAuthentification() != null && model.getAuthentification().isPrisePoste()){
 			state = model.getState().getValue();
 		}
-		SERVICE sed = new SERVICE(new Date(), state);
+		SERVICE sed = new SERVICE(new Date(), state, tft);
 
 		Course course = model.getCourse();
 		if (course != null) {

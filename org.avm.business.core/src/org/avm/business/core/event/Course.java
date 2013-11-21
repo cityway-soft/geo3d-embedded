@@ -3,6 +3,9 @@ package org.avm.business.core.event;
 import java.util.Hashtable;
 
 public class Course implements Event {
+
+	private static final long serialVersionUID = 7345142374333983901L;
+
 	private static final int DEFAULT_AMPLITUDE = 25;
 
 	private static final int DEFAULT_CHEVAUCHEMENT = 10;
@@ -34,11 +37,13 @@ public class Course implements Event {
 	private String _pcr_nom;
 
 	private int _pcr_idu;
+	
+	private int iti_sens;
 
 	public Course(int idu, int id, String crs_nom, int depart,
 			String destination, String ligneNom, int ligneIdu,
 			String parcoursNom, int parcoursIdu, int amplitude,
-			int chevauchement) {
+			int chevauchement, int sens) {
 		_crs_idu = idu;
 		_crs_id = id;
 		_crs_nom = crs_nom;
@@ -52,6 +57,7 @@ public class Course implements Event {
 		_pcr_nom = parcoursNom;
 		_pcr_idu = parcoursIdu;
 		_destination = destination;
+		iti_sens = sens;
 	}
 
 //	public Course(Course course, Point[] points) {
@@ -217,10 +223,10 @@ public class Course implements Event {
 		buf.append(") ");
 		buf.append(getHeureDepart(_depart));
 		buf.append(": ");
+		String allerRetour = (iti_sens==1)?"A":"R";
 		buf.append(getDestination() + " - lig " + getLigneNom() + "("
-				+ getLigneIdu() + ")" + " - pcr " + getParcoursNom() + "("
+				+ getLigneIdu() + ") " +allerRetour+ " - pcr " + getParcoursNom() + "("
 				+ getParcoursIdu() + ")");
-
 		return buf.toString();
 	}
 
@@ -256,7 +262,7 @@ public class Course implements Event {
 		Course clone = new Course(this._crs_idu, this._crs_id, this._crs_nom, this._depart,
 				this._destination, this._lgn_nom, this._lgn_idu,
 				this._pcr_nom, this._pcr_idu, this._lgn_amplitude,
-				this._lgn_chevauchement);
+				this._lgn_chevauchement, this.iti_sens);
 		clone.setPoints(this.getPoints());
 		return clone;
 	}
@@ -289,8 +295,19 @@ public class Course implements Event {
 		return Integer.toString(this._lgn_idu);
 	}
 
+	public int getSens() {
+		return iti_sens;
+	}
+	
+	public void setSens(int sens) {
+		iti_sens = sens;
+	}
+
+	/*
+	 * necessaire à playzilla
+	 */
 	public int getItineraireIdu() {
-		// TODO Stub de la méthode généré automatiquement
+		// TODO : à implementer
 		return 0;
 	}
 
