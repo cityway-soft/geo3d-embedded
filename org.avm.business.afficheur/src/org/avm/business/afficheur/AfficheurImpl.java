@@ -166,7 +166,9 @@ public class AfficheurImpl implements Afficheur, ManageableService,
 
 		protected void onStateEnCourseArretSurItineraire(AvmModel model) {
 			Point point = model.getDernierPoint();
-			print(Messages.getString("org.avm.business.afficheur.arret") + point.getNom()); //$NON-NLS-1$
+			String arret = point.getNom();
+			//arret = convertEncoding(arret);
+			print(Messages.getString("org.avm.business.afficheur.arret") + arret + "                   "); //$NON-NLS-1$
 		}
 
 		protected void onStateEnCourseInterarretSurItineraire(AvmModel model) {
@@ -175,7 +177,10 @@ public class AfficheurImpl implements Afficheur, ManageableService,
 				StringBuffer buffer = new StringBuffer();
 				buffer.append(Messages
 						.getString("org.avm.business.afficheur.prochain-arret"));
-				buffer.append(point.getNom());
+				String arret = point.getNom();
+				//arret = convertEncoding(arret);
+				buffer.append(arret);
+				buffer.append("                   ");
 
 				String[] messages = getMessages(model);
 
@@ -211,7 +216,7 @@ public class AfficheurImpl implements Afficheur, ManageableService,
 				String temp = props.getProperty(org.avm.business.messages.Messages.MESSAGE);
 
 				
-				temp = convertEncoding(temp);
+//				temp = convertEncoding(temp);
 				
 //				_log.debug("from="+from+", to="+to);
 //				if (from != null && to != null) {
