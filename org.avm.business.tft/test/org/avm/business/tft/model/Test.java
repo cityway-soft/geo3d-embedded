@@ -14,7 +14,7 @@ public class Test extends TestCase {
 
 	private void process(AvmModel model) {
 
-		SERVICE sed = new SERVICE(new Date(),model.getState().getValue());
+		SERVICE sed = new SERVICE(new Date(),model.getState().getValue(), 0);
 		Course course = model.getCourse();
 		COURSE crs = new COURSE(course.getId(), course.getIdu(), course
 				.getNom(), course.getDepart(), course.getLigneIdu(), course.getLigneNom(), course

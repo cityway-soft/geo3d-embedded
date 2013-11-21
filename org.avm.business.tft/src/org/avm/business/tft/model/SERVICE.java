@@ -8,15 +8,17 @@ public class SERVICE {
 	private int STATUT;
 	private COURSE COURSE;
 	private String[] MESSAGES;
+	private int TFT;
 
 	public SERVICE() {
-		this(new Date(), 0);
+		this(new Date(), 0,0);
 	}
 
-	public SERVICE(Date jex_date, int statut) {
+	public SERVICE(Date jex_date, int statut, int tft) {
 		super();
 		JEX_DATE = jex_date;
 		STATUT = statut;
+		setTFT(tft);
 	}
 
 	public Date getJEX_DATE() {
@@ -49,5 +51,13 @@ public class SERVICE {
 
 	public void setMESSAGES(String[] messages) {
 		MESSAGES = messages;
+	}
+
+	public int getTFT() {
+		return TFT;
+	}
+
+	public void setTFT(int tft) {
+		TFT = tft;
 	}
 }

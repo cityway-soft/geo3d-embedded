@@ -31,6 +31,7 @@ public class TftImpl implements Tft, ConsumerService, ManageableService,
 
 	private Logger _log = Activator.getDefault().getLogger();
 	private TftConfig _config;
+	private int tftModification=0;
 
 	public Config getConfig() {
 		return _config;
@@ -50,6 +51,7 @@ public class TftImpl implements Tft, ConsumerService, ManageableService,
 	}
 
 	public void setAvm(Avm avm) {
+		
 		_avm = avm;
 	}
 
@@ -84,6 +86,8 @@ public class TftImpl implements Tft, ConsumerService, ManageableService,
 	}
 
 	public void refresh() {
+		tftModification++;
+		_log.info("TFT.Www modification id="+tftModification);
 		synchronized (_lock) {
 			_count++;
 			_lock.notifyAll();
@@ -163,29 +167,29 @@ public class TftImpl implements Tft, ConsumerService, ManageableService,
 				String[] msg = new String[messages.size() * 2];
 				Iterator iter = messages.iterator();
 				int i = 0;
-				String from = System.getProperty("from.charset", "UTF-8");
-				String to = System.getProperty("to.charset", "iso-8859-1");
+//				String from = System.getProperty("from.charset", "UTF-8");
+//				String to = System.getProperty("to.charset", "iso-8859-1");
 				while (iter.hasNext()) {
 					Properties props = (Properties) iter.next();
 
 					String temp = props
 							.getProperty(org.avm.business.messages.Messages.MESSAGE);
 
-					_log.debug("from=" + from + ", to=" + to);
-					if (from != null && to != null) {
-						_log.debug("Avant conversion " + temp);
-						try {
-							byte[] m = new String(temp.getBytes(), from)
-									.getBytes(to);
-							temp = new String(m);
-							_log.debug("Après conversion " + temp);
-						} catch (UnsupportedEncodingException e) {
-							e.printStackTrace();
-						}
-
-					} else {
-						_log.debug("Aucune conversion " + temp);
-					}
+//					_log.debug("from=" + from + ", to=" + to);
+//					if (from != null && to != null) {
+//						_log.debug("Avant conversion " + temp);
+//						try {
+//							byte[] m = new String(temp.getBytes(), from)
+//									.getBytes(to);
+//							temp = new String(m);
+//							_log.debug("Après conversion " + temp);
+//						} catch (UnsupportedEncodingException e) {
+//							e.printStackTrace();
+//						}
+//
+//					} else {
+//						_log.debug("Aucune conversion " + temp);
+//					}
 
 					msg[i] = temp;
 					msg[i + 1] = props.getProperty(Messages.PRIORITE);
@@ -193,7 +197,7 @@ public class TftImpl implements Tft, ConsumerService, ManageableService,
 					i += 2;
 				}
 
-				String text = Util.toJSONString(_avm.getModel(), msg);
+				String text = Util.toJSONString(_avm.getModel(), msg, tftModification);
 				writer.println(text);
 
 				writer.close();
@@ -202,7 +206,7 @@ public class TftImpl implements Tft, ConsumerService, ManageableService,
 			} catch (IOException e) {
 				_log.error(e);
 				_log.error("model:" + _avm.getModel());
-				_log.error("json:" + Util.toJSONString(_avm.getModel(), null));
+				_log.error("json:" + Util.toJSONString(_avm.getModel(), null, tftModification));
 			}
 		}
 
