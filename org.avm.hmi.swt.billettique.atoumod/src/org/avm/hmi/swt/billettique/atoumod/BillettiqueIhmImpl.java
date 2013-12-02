@@ -4,6 +4,7 @@ import org.avm.business.billettique.atoumod.Billettique;
 import org.avm.elementary.common.ProducerManager;
 import org.avm.hmi.swt.desktop.Desktop;
 import org.avm.hmi.swt.desktop.DesktopStyle;
+import org.avm.hmi.swt.desktop.MessageBox;
 import org.avm.hmi.swt.desktop.StateButton;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -103,6 +104,7 @@ public class BillettiqueIhmImpl extends Composite implements BillettiqueIhm {
 		} else {
 			color = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
 			text = "Billettique déconnectée";
+			MessageBox.setMessage("Attention", "\n\n\nSystème Billettique non connecté", MessageBox.MESSAGE_WARNING, SWT.CENTER);
 		}
 		_stateLabel.setText("\n"+text);
 		_stateLabel.setBackground(color);

@@ -212,10 +212,12 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 			break;
 		case AvmModel.STATE_ATTENTE_SAISIE_COURSE: {
 			etat = TicketingSystemState.SERVICE_OUVERT_COURSE_FERMEE;
+		}break;
+		case AvmModel.STATE_EN_COURSE_HORS_ITINERAIRE:{
+			etat = TicketingSystemState.NON_LOCALISE;
 		}
 			break;
 		case AvmModel.STATE_ATTENTE_DEPART:
-		case AvmModel.STATE_EN_COURSE_HORS_ITINERAIRE:
 		case AvmModel.STATE_EN_COURSE_ARRET_SUR_ITINERAIRE:
 		case AvmModel.STATE_EN_COURSE_INTERARRET_SUR_ITINERAIRE: {
 			// -- correction : demande ACS état "course ouverte" si et seulement
@@ -258,9 +260,11 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 		
 		if (b) {
 			client.launch();
+		
 			_log.info("Ticketing interface enabled");
 		} else {
 			client.shutdown();
+			_previousState=null;
 			connected(false);
 			_log.info("Ticketing interface disabled");
 		}

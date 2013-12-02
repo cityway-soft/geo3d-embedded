@@ -9,6 +9,8 @@ public class TicketingSystemState extends Status {
 	
 	public static final String[] STATE={"Service Fermé", "Service ouvert, course fermée", "Service ouvert, course ouverte"};
 
+	public static final int NON_LOCALISE = 4;
+
 	public TicketingSystemState(int s) {
 		super(s);
 	}
