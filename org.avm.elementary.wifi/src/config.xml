@@ -12,8 +12,11 @@
 <property name="balise-list">
 <value type="String">100000;100001;100002;100003;100004;100005</value>
 </property>
+<property name="balise-attr-id">
+<value type="String">50</value>
+</property>
 <property name="org.avm.config.version">
-<value type="Integer">2</value>
+<value type="Integer">3</value>
 </property>
 <property name="config.date">
 <value type="String">Tue Sep 29 23:19:23 CEST 2009</value>
