@@ -49,7 +49,8 @@ public class BillettiqueImpl implements BillettiqueIhm, ManageableService,
 	}
 
 	public void start() {
-
+		 authenticated = true;
+		open();
 	}
 
 	public void stop() {
@@ -74,13 +75,15 @@ public class BillettiqueImpl implements BillettiqueIhm, ManageableService,
 		if (o instanceof State) {
 			State state = (State) o;
 			if (state.getName().equals(UserSessionService.class.getName())) {
-				if (state.getValue() == UserSessionService.AUTHENTICATED) {
-					authenticated = true;
-					open();
-				} else {
-					authenticated = false;
-					close();
-				}
+				// --2013-12-03 : suite à la recette, STUD demande que l'onglet
+				// billettique soit affiché au démarrage
+				// if (state.getValue() == UserSessionService.AUTHENTICATED) {
+				// authenticated = true;
+				// open();
+				// } else {
+				// authenticated = false;
+				// close();
+				// }
 			} else if (state.getName().equals(Billettique.class.getName())) {
 				setConnected(state.getValue() == 1);
 			}
@@ -88,10 +91,10 @@ public class BillettiqueImpl implements BillettiqueIhm, ManageableService,
 	}
 
 	private void setConnected(final boolean b) {
-		_connected  = b;
+		_connected = b;
 		_display.asyncExec(new Runnable() {
 			public void run() {
-				if (_billettiqueIhm != null && ! _billettiqueIhm.isDisposed()) {
+				if (_billettiqueIhm != null && !_billettiqueIhm.isDisposed()) {
 
 					_billettiqueIhm.setConnected(b);
 				}

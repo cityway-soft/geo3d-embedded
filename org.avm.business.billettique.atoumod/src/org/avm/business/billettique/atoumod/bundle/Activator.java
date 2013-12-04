@@ -10,6 +10,7 @@ import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ConsumerService;
 import org.avm.elementary.common.ManageableService;
 import org.avm.elementary.common.ProducerService;
+import org.avm.elementary.jdb.JDB;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 
@@ -147,6 +148,16 @@ public class Activator extends AbstractActivator implements Billettique,
 
 	public void setEnable(boolean b) {
 		_peer.setEnable(b);
+	}
+	
+	public void setJdb(JDB jdb) {
+		_log.debug("setJdb = " + jdb);
+		_peer.setJdb(jdb);
+	}
+
+	public void unsetJdb(JDB jdb) {
+		_log.debug("unsetJdb");
+		_peer.unsetJdb(null);
 	}
 
 }

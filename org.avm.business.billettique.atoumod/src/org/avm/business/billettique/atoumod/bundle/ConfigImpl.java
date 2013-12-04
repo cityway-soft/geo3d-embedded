@@ -33,7 +33,7 @@ public class ConfigImpl extends AbstractConfig implements BillettiqueConfig {
 	}
 
 	public void setPort(int port) {
-		_config.put(PORT, Integer.toString(port));
+		_config.put(PORT, new Integer(port));
 	}
 	
 	

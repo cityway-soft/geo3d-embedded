@@ -5,10 +5,14 @@
 	<service>
 		<provide interface="org.avm.business.billettique.atoumod.Billettique" />
 	</service>
-	<property name="service.pid" value="org.avm.business.billettique.atoumod.Billettique" />
+	<property name="service.pid"
+		value="org.avm.business.billettique.atoumod.Billettique" />
 	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin" />
 	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin" />
 
 	<reference name="avm" interface="org.avm.business.core.Avm"
 		cardinality="0..1" policy="dynamic" bind="setAvm" unbind="unsetAvm" />
+
+	<reference name="jdb" interface="org.avm.elementary.jdb.JDB"
+		cardinality="0..1" policy="dynamic" bind="setJdb" unbind="unsetJdb" />
 </component>

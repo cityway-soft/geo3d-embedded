@@ -101,6 +101,7 @@ public class PCE415 implements Runnable {
 
 	public void run() {
 		int errCount = 0;
+		long tError=0;
 		while (running) {
 
 			long t0 = System.currentTimeMillis();
@@ -110,11 +111,10 @@ public class PCE415 implements Runnable {
 
 				byte[] receiveData = new byte[1024];
 				t0 = System.currentTimeMillis();
-				DatagramPacket receivePacket = new DatagramPacket(receiveData,
-						receiveData.length);
-				logger.debug("Waiting for answer...");
+				DatagramPacket receivePacket = new DatagramPacket(receiveData,	receiveData.length);
+				logger.debug("Waiting for answer...(SoTimeout="+clientSocket.getSoTimeout()+")");
 				clientSocket.receive(receivePacket);
-				// sResponse = new String(receivePacket.getData());
+				
 				sResponse = toHexaString(receivePacket.getData());
 
 			} catch (IOException e) {
@@ -128,10 +128,15 @@ public class PCE415 implements Runnable {
 					fireStateChanged(true);
 					errCount = 0;
 				} else {
+					if (errCount==0){
+						tError = t0;
+					}
 					errCount++;
 					logger.error("No response from Billettique ATOUMOD ! (#"
-							+ errCount + ")");
+							+ errCount + ") ; SoTimeout="+clientSocket.getSoTimeout());
+
 					if (errCount >= n_surv) {
+						logger.error("Set state to FALSE (Billettique is not connected) during :" + (System.currentTimeMillis()-tError) +"ms.");;
 						fireStateChanged(false);
 					}
 				}

@@ -18,13 +18,15 @@ import org.avm.elementary.common.ConsumerService;
 import org.avm.elementary.common.ManageableService;
 import org.avm.elementary.common.ProducerManager;
 import org.avm.elementary.common.ProducerService;
+import org.avm.elementary.jdb.JDB;
+import org.avm.elementary.jdb.JDBInjector;
 import org.osgi.util.measurement.State;
 
 import fr.cityway.avm.billettique.atoumod.model.TicketingSystemState;
 
 public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 		ManageableService, ConsumerService, Billettique, Constants,
-		PCE415Listener, ProducerService {
+		PCE415Listener, ProducerService, JDBInjector {
 
 	private Logger _log = Logger.getInstance(this.getClass());
 
@@ -56,6 +58,11 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 
 	private boolean _enabled;
 
+	private JDB _jdb;
+
+	public static final String JDB_TAG = "billettique";
+
+	
 	public void configure(Config config) {
 		_config = (BillettiqueConfig) config;
 
@@ -280,9 +287,11 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 			if (state) {
 				connectionDate = new Date();
 				_state = new State(1, Billettique.class.getName());
+				journalize("CONNECTED");
 			} else {
 				connectionDate = null;
 				_state = new State(0, Billettique.class.getName());
+				journalize("NOT-CONNECTED");
 			}
 			_producer.publish(_state);
 		}
@@ -291,6 +300,26 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 
 	public void setProducer(ProducerManager producer) {
 		_producer = producer;
+	}
+
+	public void setJdb(JDB jdb) {
+		_jdb = jdb;
+	}
+
+	public void unsetJdb(JDB jdb) {
+		_jdb = null;
+	}
+	
+	public void journalize(String message) {
+		_log.info(message);
+
+		if (_jdb != null) {
+			try {
+				_jdb.journalize(JDB_TAG, message);
+			} catch (Throwable t) {
+				t.printStackTrace();
+			}
+		}
 	}
 
 }
