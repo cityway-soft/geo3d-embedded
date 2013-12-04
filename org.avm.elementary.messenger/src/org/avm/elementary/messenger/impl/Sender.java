@@ -1,13 +1,14 @@
 package org.avm.elementary.messenger.impl;
 
 import java.util.Dictionary;
+import java.util.Hashtable;
 
 import org.avm.elementary.common.Media;
 
 import EDU.oswego.cs.dl.util.concurrent.BoundedLinkedQueue;
 import EDU.oswego.cs.dl.util.concurrent.Channel;
 
-public class Sender  implements Runnable {
+public class Sender implements Runnable {
 
 	private static Sender _instance;
 
@@ -45,9 +46,9 @@ public class Sender  implements Runnable {
 		_thread = null;
 	}
 
-	public void send(Media media, Dictionary header, byte[] data) {
+	public void send(Hashtable medias, String mediaName, Dictionary header, byte[] data) {
 		try {
-			execute(new SendTask(media, header, data));
+			execute(new SendTask(medias, mediaName, header, data));
 		} catch (InterruptedException e) {
 
 		}
@@ -72,7 +73,7 @@ public class Sender  implements Runnable {
 					} else if (task != null) {
 						task.run();
 						task = (Runnable) (_queue.take());
-					}else{
+					} else {
 						sleep(100);
 					}
 				} catch (RuntimeException e) {
@@ -96,7 +97,7 @@ public class Sender  implements Runnable {
 
 	public void execute(Runnable command) throws InterruptedException {
 		restart();
-		if(!_queue.offer(command, 100)){
+		if (!_queue.offer(command, 100)) {
 			throw new IndexOutOfBoundsException();
 		}
 	}
@@ -104,7 +105,7 @@ public class Sender  implements Runnable {
 	public synchronized void shutdownAfterProcessingCurrentlyQueuedTasks() {
 		if (!shutdown_) {
 			try {
-				_queue.offer(ENDTASK,100);
+				_queue.offer(ENDTASK, 100);
 			} catch (InterruptedException ex) {
 				Thread.currentThread().interrupt();
 			}
@@ -114,7 +115,8 @@ public class Sender  implements Runnable {
 	public synchronized void shutdownAfterProcessingCurrentTask() {
 		shutdown_ = true;
 		try {
-			while (_queue.poll(0) != null);
+			while (_queue.poll(0) != null)
+				;
 			_queue.put(ENDTASK);
 		} catch (InterruptedException ex) {
 			Thread.currentThread().interrupt();
@@ -131,19 +133,22 @@ public class Sender  implements Runnable {
 
 	class SendTask implements Runnable {
 
-		private Media _media;
+		private Hashtable _medias;
+		private String _mediaName;
 		private Dictionary _header;
 		private byte[] _data;
 
-		public SendTask(Media media, Dictionary header, byte[] data) {
-			_media = media;
+		public SendTask(Hashtable medias, String mediaName, Dictionary header, byte[] data) {
+			_medias = medias;
+			_mediaName = mediaName;
 			_header = header;
 			_data = data;
 		}
 
 		public void run() {
 			try {
-				_media.send(_header, _data);
+				Media media = (Media) _medias.get(_mediaName);
+				media.send(_header, _data);
 			} catch (Exception e) {
 				throw new RuntimeException(e.getMessage());
 			}

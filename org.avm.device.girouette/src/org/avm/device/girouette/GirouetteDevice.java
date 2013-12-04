@@ -40,7 +40,7 @@ public class GirouetteDevice extends AbstractDevice implements AlarmProvider,
 
 	public void setProducer(ProducerManager producer) {
 		this.producer = producer;
-		checkStatus();
+//		checkStatus();
 	}
 
 	public void setGirouette(Girouette girouette) {
@@ -53,7 +53,7 @@ public class GirouetteDevice extends AbstractDevice implements AlarmProvider,
 		int cpt = 0;
 		int max = 2;
 
-		boolean previous = alarm.isStatus();
+//		boolean previous = alarm.isStatus();
 		while (result < 0 && cpt <= max) {
 			if (logger.isDebugEnabled()) {
 				if (cpt > 0) {
@@ -63,13 +63,15 @@ public class GirouetteDevice extends AbstractDevice implements AlarmProvider,
 			result = check();
 			cpt++;
 		}
-		
-		alarm.setStatus(result < 0);
-		logger.debug("Alarm :" + alarm);
-		//if (previous != alarm.isStatus()){
+
+		if (producer != null) {
+			alarm.setStatus(result < 0);
+			logger.debug("Alarm :" + alarm);
+			// if (previous != alarm.isStatus()){
 			logger.debug("State changed => Publish");
 			producer.publish(alarm);
-		 //}
+			// }
+		}
 
 		return result;
 	}

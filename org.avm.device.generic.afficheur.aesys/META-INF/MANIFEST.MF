@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.device.generic.afficheur.aesys
 Bundle-SymbolicName: org.avm.device.generic.afficheur.aesys
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: cityway.fr
+Bundle-Vendor: Cityway
 Import-Package: junit.framework;resolution:=optional,
  org.apache.log4j,
  org.avm.device.afficheur,

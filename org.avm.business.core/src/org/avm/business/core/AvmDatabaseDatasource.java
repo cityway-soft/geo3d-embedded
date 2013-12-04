@@ -50,7 +50,7 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 			+ "where PDJ_TYPE=? and JEX_DATE=?";
 
 	private static final String REQ_COURSES_SANS_VALIDITE = "select crs_depart, crs.crs_id, crs_idu, crs_nom, pnt_nom, lgn.lgn_idu, "
-			+ "        lgn.lgn_nom, lgn.lgn_amplitude, lgn.lgn_chevauchement, pcr.pcr_nom, pcr.pcr_idu "
+			+ "        lgn.lgn_nom, lgn.lgn_amplitude, lgn.lgn_chevauchement, pcr.pcr_nom, pcr.pcr_idu, iti.iti_sens  "
 			+ " from course crs "
 			// OLD +
 			// " join horaire hor on (crs.crs_id=hor.crs_id and hor.hor_attente = -1 and hor.hor_rang <> 1)"
@@ -105,7 +105,7 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 
 	private static final String getCoursesValides(String listeCourses) {
 		return "select crs_depart, crs.crs_id, crs_idu, crs_nom, pnt_nom, pcr.pcr_idu,pcr.pcr_nom,lgn.lgn_idu, "
-				+ "        lgn.lgn_nom, lgn.lgn_amplitude, lgn.lgn_chevauchement from course crs "
+				+ "        lgn.lgn_nom, lgn.lgn_amplitude, lgn.lgn_chevauchement, iti.iti_sens  from course crs "
 				+ "  join (select crs_id,max(hor_rang) as last from horaire group by crs_id) temp on temp.crs_id=crs.crs_id"
 				+ "  join horaire hor on (crs.crs_id=hor.crs_id and hor.hor_rang=temp.last )"
 				+ "  join point_sur_parcours psp on psp.psp_id=hor.psp_id"
@@ -329,6 +329,7 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 						String lgn_nom = rsCourses.getString("LGN_NOM");
 						int lgn_idu = rsCourses.getInt("LGN_IDU");
 						int amplitude = rsCourses.getInt("LGN_AMPLITUDE");
+						int sens = rsCourses.getInt("ITI_SENS");
 						int chevauchement = rsCourses
 								.getInt("LGN_CHEVAUCHEMENT");
 						String pcr_nom = rsCourses.getString("PCR_NOM");
@@ -336,7 +337,7 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 
 						Course crs = new Course(crs_idu, crs_id, crs_nom,
 								crs_depart, destination, lgn_nom, lgn_idu,
-								pcr_nom, pcr_idu, amplitude, chevauchement);
+								pcr_nom, pcr_idu, amplitude, chevauchement, sens);
 
 						listCourses.add(crs);
 					}
@@ -430,11 +431,12 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 					int amplitude = rs.getInt("LGN_AMPLITUDE");
 					int chevauchement = rs.getInt("LGN_CHEVAUCHEMENT");
 					String pcr_nom = rs.getString("PCR_NOM");
+					int sens = rs.getInt("ITI_SENS");
 					int pcr_idu = rs.getInt("PCR_IDU");
 
 					Course crs = new Course(crs_idu, crs_id, crs_nom,
 							crs_depart, destination, lgn_nom, lgn_idu, pcr_nom,
-							pcr_idu, amplitude, chevauchement);
+							pcr_idu, amplitude, chevauchement, sens);
 
 					listCourses.add(crs);
 				}

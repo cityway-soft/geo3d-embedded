@@ -36,7 +36,7 @@ public class SPEC extends GirouetteProtocol {
 		buf.append("08");
 		// -- ajout data [...data...]
 		buf.append('z');
-		buf.append(dest);
+		buf.append(dest.toString());
 		// -- calcul [CS] (LG=12 => CS1=31 et CS2=32)
 		final String cs = checksum(buf.toString().substring(1).getBytes());
 		// -- ajout [CS1][CS2]

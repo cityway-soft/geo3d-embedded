@@ -114,9 +114,11 @@ public class JSONWriter {
 			}
 			Field[] ff = object.getClass().getDeclaredFields();
 			for (int i = 0; i < ff.length; ++i) {
-				add(',');
 				Field field = ff[i];
-				add(field.getName(), field.get(object));
+				String name = field.getName();
+				Object obj = field.get(object);
+				add(',');
+				add(name, obj);
 			}
 		} catch (Exception e) {/**/
 		}
