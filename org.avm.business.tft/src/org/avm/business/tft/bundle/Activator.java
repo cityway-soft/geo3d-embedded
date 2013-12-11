@@ -158,4 +158,7 @@ public class Activator extends AbstractActivator implements Tft {
 		return _config;
 	}
 
+	public void reloadPage() {
+		_peer.reloadPage();
+	}
 }

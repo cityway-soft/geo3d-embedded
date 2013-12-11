@@ -49,7 +49,8 @@ public class GTMH_1 extends AfficheurProtocol {
 	public void print(String message) {
 		clear();
 		_log.info("Print " + "[" + this + "] " + message);
-		byte[] buffer = generateMessage(message);
+		//--DLA : ajout d'espace pour que la police soit correcte (avec les accents)
+		byte[] buffer = generateMessage(message+ "                 ");
 		_log.info("Send " + "[" + this + "] " + new String(buffer));
 
 		try {

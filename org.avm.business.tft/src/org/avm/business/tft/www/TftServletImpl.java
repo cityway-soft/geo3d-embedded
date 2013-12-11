@@ -92,7 +92,7 @@ public class TftServletImpl extends HttpServlet implements TftServlet,
 	public void setTft(Tft tft) {
 		_log.debug("setTft");
 		_tft = tft;
-		_tft.refresh();
+		_tft.reloadPage();
 	}
 
 	public void unsetTft(Tft tft) {
