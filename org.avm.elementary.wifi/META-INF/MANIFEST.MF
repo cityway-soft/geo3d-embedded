@@ -7,6 +7,7 @@ Bundle-Vendor: Cityway
 Import-Package: org.apache.log4j,
  org.avm.device.wifi,
  org.avm.elementary.common,
+ org.avm.elementary.database,
  org.avm.elementary.geofencing,
  org.knopflerfish.service.console,
  org.osgi.framework,

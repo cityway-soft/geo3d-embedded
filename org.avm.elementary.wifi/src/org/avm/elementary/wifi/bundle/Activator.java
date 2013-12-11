@@ -8,6 +8,8 @@ import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ConsumerService;
 import org.avm.elementary.common.ManageableService;
 import org.avm.elementary.common.ProducerService;
+import org.avm.elementary.database.Database;
+import org.avm.elementary.database.DatabaseInjector;
 import org.avm.elementary.wifi.WifiManager;
 import org.avm.elementary.wifi.WifiManagerImpl;
 import org.osgi.service.cm.ConfigurationAdmin;
@@ -41,6 +43,7 @@ public class Activator extends AbstractActivator implements WifiManager {
 	}
 
 	protected void start(ComponentContext context) {
+		initializeDatabase();
 		initializeConfiguration();
 		initializeProducer();
 		initializeCommandGroup();
@@ -56,6 +59,7 @@ public class Activator extends AbstractActivator implements WifiManager {
 		disposeCommandGroup();
 		disposeProducer();
 		disposeConfiguration();
+		disposeDatabase();
 	}
 
 	// config
@@ -146,6 +150,20 @@ public class Activator extends AbstractActivator implements WifiManager {
 	private void disposeWifi() {
 		if (_peer instanceof WifiInjector) {
 			((WifiInjector) _peer).setWifi(null);
+		}
+	}
+	
+	private void initializeDatabase() {
+		if (_peer instanceof DatabaseInjector) {
+			Database db = (Database) _context.locateService("database");
+			((DatabaseInjector) _peer).setDatabase(db);
+		}
+	}
+	
+	private void disposeDatabase() {
+		if (_peer instanceof DatabaseInjector) {
+			Database db = (Database) _context.locateService("database");
+			((DatabaseInjector) _peer).unsetDatabase(db);
 		}
 	}
 

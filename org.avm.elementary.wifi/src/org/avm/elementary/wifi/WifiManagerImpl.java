@@ -1,5 +1,7 @@
 package org.avm.elementary.wifi;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 
@@ -10,6 +12,7 @@ import org.avm.elementary.common.Config;
 import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ConsumerService;
 import org.avm.elementary.common.ManageableService;
+import org.avm.elementary.database.Database;
 import org.avm.elementary.geofencing.Balise;
 
 public class WifiManagerImpl implements WifiManager, ConfigurableService,
@@ -24,6 +27,8 @@ public class WifiManagerImpl implements WifiManager, ConfigurableService,
 	private Wifi _wifi;
 
 	private WifiManagerConfig _config;
+	
+	private Database database;
 
 	public WifiManagerImpl() {
 		_log = Logger.getInstance(this.getClass());
@@ -62,19 +67,25 @@ public class WifiManagerImpl implements WifiManager, ConfigurableService,
 
 	public void configure(Config config) {
 		_config = ((WifiManagerConfig) config);
-		if (config != null) {
-			_map = new Hashtable();
-			String list = _config.getBaliseList();
-
-			if (list == null)
-				return;
-
-			StringTokenizer t = new StringTokenizer(list, ";");
-			while (t.hasMoreElements()) {
-				String id = t.nextToken();
-				_map.put(id, id);
+		if (config != null && database != null) {
+			try {
+				int timeout = Integer.parseInt(((WifiManagerConfig) config)
+						.getDisconnectTimeout());
+				_sm.setTimeout(timeout);
+			} catch (Exception e) {
+				_log.debug(e);
 			}
+			
+			_map = new Hashtable();
+			
+			
+			String attr = ((WifiManagerConfig) config).getBaliseAttr();
+			if (attr != null){
+				fillMapBaliseWithAttr(attr);
+			}
+				
 		} else {
+			_log.error ("No Config or No Database");
 			_map = null;
 		}
 	}
@@ -85,6 +96,15 @@ public class WifiManagerImpl implements WifiManager, ConfigurableService,
 
 	public void unsetWifi(org.avm.device.wifi.Wifi wifi) {
 		_wifi = null;
+	}
+	
+
+	public void setDatabase(Database database) {
+		database = database;
+	}
+
+	public void unsetDatabase(Database database) {
+		database = null;
 	}
 
 	public void start() {
@@ -101,6 +121,26 @@ public class WifiManagerImpl implements WifiManager, ConfigurableService,
 
 	public void stop() {
 		_sm = null;
+	}
+	
+	private void fillMapBaliseWithAttr(String attr) {
+		if (database != null) {
+			ResultSet rs = database.sql("select * from attribut_point where ATT_ID='" + attr
+					+ "'");
+			try {
+				if (rs.next()) {
+					int ret = rs.getInt("PNT_ID");
+					_log.debug(ret + "is a WiFi point");
+					_map.put(Integer.toString(ret), Integer.toString(ret));
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+			}
+		} else {
+			_log.error("no db");
+		}
 	}
 
 }

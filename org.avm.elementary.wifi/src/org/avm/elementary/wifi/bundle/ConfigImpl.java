@@ -26,5 +26,13 @@ public class ConfigImpl extends AbstractConfig implements WifiManagerConfig {
 	public void setDisconnectTimeout(String timeout) {
 		_config.put(TAG_DISCONNECT_TIMEOUT, timeout);
 	}
+	
+	public String getBaliseAttr() {
+		return (String) _config.get(TAG_BALISE_ATTR);
+	}
+
+	public void setBaliseAttr(String list) {
+		_config.put(TAG_BALISE_ATTR, list);
+	}
 
 }

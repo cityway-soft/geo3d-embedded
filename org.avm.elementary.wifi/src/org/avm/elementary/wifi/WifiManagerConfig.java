@@ -6,7 +6,11 @@ public interface WifiManagerConfig extends Config {
 
 	public static String TAG_BALISE_LIST = "balise-list";
 
+	public static String TAG_BALISE_ATTR = "balise-attr-id";
+
 	public static String DEFAULT_BALISE_LIST = "";
+
+	public static String DEFAULT_BALISE_ATTR = "50";
 
 	public static String TAG_DISCONNECT_TIMEOUT = "disconnect.timeout";
 
@@ -14,7 +18,11 @@ public interface WifiManagerConfig extends Config {
 
 	public abstract String getBaliseList();
 
+	public abstract String getBaliseAttr();
+
 	public abstract void setBaliseList(String list);
+
+	public abstract void setBaliseAttr(String list);
 
 	public abstract String getDisconnectTimeout();
 
