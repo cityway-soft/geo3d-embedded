@@ -18,6 +18,8 @@ public interface Tft {
 	final static String NAME = "/www";
 
 	void refresh();
+	
+	void reloadPage();
 
 	void process(HttpServletRequest request, HttpServletResponse response)
 			throws Throwable;

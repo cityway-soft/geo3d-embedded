@@ -86,8 +86,7 @@ public class TftImpl implements Tft, ConsumerService, ManageableService,
 	}
 
 	public void refresh() {
-		tftModification++;
-		_log.info("TFT.Www modification id="+tftModification);
+		
 		synchronized (_lock) {
 			_count++;
 			_lock.notifyAll();
@@ -210,6 +209,13 @@ public class TftImpl implements Tft, ConsumerService, ManageableService,
 			}
 		}
 
+	}
+
+	public void reloadPage() {
+		tftModification++;
+		_log.info("TFT.Www modification id="+tftModification);
+		refresh();
+		
 	}
 
 }
