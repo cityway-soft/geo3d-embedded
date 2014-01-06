@@ -37,7 +37,6 @@ Exit {  }
 {
 // 		Trans 					Next State 					Actions
 		endEcall				NoAlert						{}
-		ack	(phone: String)		ListenMode					{call(phone);}
 }
 
 %%

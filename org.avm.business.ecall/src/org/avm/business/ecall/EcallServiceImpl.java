@@ -101,10 +101,10 @@ public class EcallServiceImpl implements EcallService, ConfigurableService,
 			State state = (State) o;
 			if (state.getName().equals(AlarmService.class.getName())) {
 				Alarm alarm = _alarmService.getAlarm(new Integer(ALARM_INDEX));
-				if (alarm.isStatus()){
+				if (alarm.isStatus() && _state.getValue() == 0 /* no alert */){
 					startEcall();
 				}
-				else{
+				else if (alarm.isStatus()==false && _state.getValue() != 0 /* no alert */){
 					endEcall();
 				}
 			}
