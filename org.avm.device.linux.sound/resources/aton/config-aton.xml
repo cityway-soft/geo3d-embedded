@@ -17,7 +17,7 @@ priority=0
 </value>
 </property>
 <property name="org.avm.config.version">
-<value type="Integer">8</value>
+<value type="Integer">9</value>
 </property>
 
 <property name="voyageur-exterieur">
@@ -27,6 +27,16 @@ name=voyageur-exterieur
 priority=2
 volume=20</value>
 </property>
+
+<property name="conducteur-ecoute-discrete">
+<value type="String">#Tue Feb 03 15:06:31 GMT 2009
+url=/resources/aton/silence.cfg
+name=conducteur-ecoute-discrete
+priority=0
+</value>
+</property>
+
+
 <property name="voyageur-interieur">
 <value type="String">#Tue Feb 03 15:06:31 GMT 2009
 url=/resources/aton/voyageur-interieur.cfg
