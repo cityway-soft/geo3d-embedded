@@ -292,25 +292,6 @@ public class EcallServiceStateMachineContext
             return;
         }
 
-        protected void ack(EcallServiceStateMachineContext context, String phone)
-        {
-            EcallServiceStateMachine ctxt = context.getOwner();
-
-
-            (context.getState()).Exit(context);
-            context.clearState();
-            try
-            {
-                ctxt.call(phone);
-            }
-            finally
-            {
-                context.setState(EcallMap.ListenMode);
-                (context.getState()).Entry(context);
-            }
-            return;
-        }
-
         protected void endEcall(EcallServiceStateMachineContext context)
         {
 
