@@ -39,7 +39,6 @@ public class SoundImpl implements Sound, ConfigurableService {
 				throw new Exception("Sound already configured");
 			}
 			_priority = priority;
-
 			String tmp = System.getProperty("java.io.tmpdir");
 			String url = p.getProperty(Sound.URL);
 			String path = tmp
