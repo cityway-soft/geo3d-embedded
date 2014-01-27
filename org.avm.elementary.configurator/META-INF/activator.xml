@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.elementary.configurator" immediate="true">
+	<implementation class="org.avm.elementary.configurator.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.elementary.configurator.ConfiguratorService"/>
+	
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>		
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
+	<reference name="messenger" interface="org.avm.elementary.messenger.Messenger"/>
+</component>
