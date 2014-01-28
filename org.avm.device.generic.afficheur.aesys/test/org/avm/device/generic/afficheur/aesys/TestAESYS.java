@@ -27,10 +27,21 @@ public class TestAESYS extends TestCase {
 		String trame = generate(code);
 
 		// TODO
-		String expected = "???";
+		String expected = "0544175830173033043030323835";
 		debug("code=" + code + "   =>" + trame);
 		assertEquals(trame.length(), expected.length());
 		assertEquals(expected, trame);
 	}
 
+	
+	public void testCodeMessage() {
+		String code = "Mon test";
+		String trame = generate(code);
+
+		// TODO
+		String expected = "054417583017304D6F6E2074657374043031303132";
+		debug("code=" + code + "   =>" + trame);
+		assertEquals(trame.length(), expected.length());
+		assertEquals(expected, trame);
+	}
 }
