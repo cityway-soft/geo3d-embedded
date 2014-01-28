@@ -61,10 +61,10 @@ public class ListContactView extends ContactView  {
 						String phone = _model.getPhoneNumber(contact);
 						if (phone.equals(phonenumber)){
 							found=true;
+							_contactList.setSelection(idx);
 						}
 						idx++;
 					}
-					_contactList.setSelection(idx);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

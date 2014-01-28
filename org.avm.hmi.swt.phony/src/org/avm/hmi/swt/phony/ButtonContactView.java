@@ -26,9 +26,10 @@ public class ButtonContactView extends ContactView {
 	private Font _font;
 
 	private static int COLOR_CALLBUTTON = SWT.COLOR_DARK_BLUE;
-	
+
 	private Logger _log = Logger.getInstance(this.getClass());
 
+	private boolean calling = false;
 
 	public ButtonContactView(Composite arg0, int arg1) {
 		super(arg0, arg1);
@@ -39,7 +40,6 @@ public class ButtonContactView extends ContactView {
 		super.setFont(arg0);
 		_font = arg0;
 	}
-	
 
 	public void hangup() {
 		Display.getCurrent().asyncExec(new Runnable() {
@@ -48,9 +48,10 @@ public class ButtonContactView extends ContactView {
 
 					_currentCallButton = null;
 					Enumeration e = _buttons.elements();
+					calling = false;
 					while (e.hasMoreElements()) {
 						Button bt = (Button) e.nextElement();
-						bt.setEnabled(true);
+						//bt.setEnabled(true);
 						bt.setForeground(Display.getCurrent().getSystemColor(
 								SWT.COLOR_WHITE));
 						bt.setBackground(Display.getCurrent().getSystemColor(
@@ -67,6 +68,7 @@ public class ButtonContactView extends ContactView {
 
 	public void ringing(String phonenumber) {
 		if (_model != null) {
+			calling = true;
 			Enumeration e = _model.elements();
 			if (e != null) {
 				String name = null;
@@ -81,16 +83,16 @@ public class ButtonContactView extends ContactView {
 					}
 					// addCallButton(name);
 				}
-			
+
 				if (!found)
 					return;
-				
-				_log.info("Found "+phonenumber+": " + name);
+
+				_log.info("Found " + phonenumber + ": " + name);
 
 				e = _buttons.elements();
 				while (e.hasMoreElements()) {
 					Button bt = (Button) e.nextElement();
-					bt.setEnabled(false);
+					// bt.setEnabled(false);
 					if (bt.getText().equals(name)) {
 						bt.setBackground(Display.getCurrent().getSystemColor(
 								SWT.COLOR_BLACK));
@@ -98,7 +100,7 @@ public class ButtonContactView extends ContactView {
 								SWT.COLOR_WHITE));
 					} else {
 						bt.setForeground(Display.getCurrent().getSystemColor(
-								COLOR_CALLBUTTON));
+								SWT.COLOR_WHITE));
 						bt.setBackground(Display.getCurrent().getSystemColor(
 								COLOR_CALLBUTTON));
 					}
@@ -110,7 +112,7 @@ public class ButtonContactView extends ContactView {
 
 	public void update(ContactModel contacts) {
 		_model = contacts;
-		
+
 		Display.getCurrent().syncExec(new Runnable() {
 			public void run() {
 				if (_model != null) {
@@ -135,12 +137,11 @@ public class ButtonContactView extends ContactView {
 		});
 	}
 
-
 	private void addCallButton(final String contactName) {
 		Button callButton = new Button(this, SWT.PUSH);
 		_buttons.add(callButton);
 		callButton.setText(contactName);
-		if (_font != null){
+		if (_font != null) {
 			callButton.setFont(_font);
 		}
 		callButton.setBackground(Display.getCurrent().getSystemColor(
@@ -158,12 +159,14 @@ public class ButtonContactView extends ContactView {
 			public void widgetSelected(SelectionEvent arg0) {
 				if (_phony != null) {
 					try {
-						_phony.call(contactName);
-						_currentCallButton = (Button) arg0.getSource();
+						if (!calling) {
+							_phony.call(contactName);
+							_currentCallButton = (Button) arg0.getSource();
+						}
 					} catch (Throwable e) {
 						e.printStackTrace();
 					}
-				} 
+				}
 			}
 		});
 
@@ -186,8 +189,6 @@ public class ButtonContactView extends ContactView {
 			}
 		});
 	}
-
-	
 
 	public void setPhony(Phony phony) {
 		_phony = phony;
