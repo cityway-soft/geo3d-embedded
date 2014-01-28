@@ -71,7 +71,8 @@
 		<module>../org.avm.elementary.alarm</module>
 		<module>../org.avm.elementary.can.logger</module>
 		<module>../org.avm.elementary.command</module>
-		<module>../org.avm.elementary.common</module>
+		<module>../org.avm.elementary.common</module>		
+		<module>../org.avm.elementary.configurator</module>
 		<module>../org.avm.elementary.database</module>
 		<module>../org.avm.elementary.directory</module>
 		<module>../org.avm.elementary.geofencing</module>
