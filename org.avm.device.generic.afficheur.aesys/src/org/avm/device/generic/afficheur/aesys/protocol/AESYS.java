@@ -25,7 +25,7 @@ public class AESYS extends AfficheurProtocol {
 
 	private boolean _started;
 	private static String _speed;
-	private static String _brightness;
+	private static String _brightness="0";
 	private static int _nbCharBeforeTrunc = 16;
 	private static boolean _noChecksum = false;
 	private static int _testMode = 0;
