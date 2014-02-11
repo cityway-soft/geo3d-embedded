@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +13,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Dictionary;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
@@ -59,7 +61,20 @@ public class Boot implements BundleActivator {
 			if (bundle == null) {
 				bundle = install(bundlename, url);
 			} else {
-				update(bundle, url);
+				Dictionary headers = bundle.getHeaders();
+
+				debug("Version : " + headers.get("Bundle-Version"));
+				File versionFile = new File(filename + ".version");
+				String candidateVersion = (String) headers
+						.get("Bundle-Version");
+				if (!checkVersion(versionFile, candidateVersion)) {
+					debug ("update Management ...");
+					update(bundle, url);
+					debug ("save new version of Management ...");
+					saveVersion(candidateVersion, versionFile);
+				}{
+					debug("no update of Management");
+				}
 			}
 		}
 
@@ -152,7 +167,7 @@ public class Boot implements BundleActivator {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		while(output.length() < 32){
+		while (output.length() < 32) {
 			output.insert(0, "0");
 		}
 		return output.toString();
@@ -175,6 +190,7 @@ public class Boot implements BundleActivator {
 			result = (genmd5 != null && md5.equals(genmd5));
 			System.out.println("genmd5=" + genmd5 + ", md5=" + md5 + "(check="
 					+ result + ")");
+			br.close();
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -183,6 +199,41 @@ public class Boot implements BundleActivator {
 		}
 
 		return result;
+	}
+
+	public static boolean checkVersion(File versionFile, String candidateVersion) {
+		boolean result = false;
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(
+					versionFile.getAbsolutePath()));
+			if (br.readLine().equals(candidateVersion)) {
+				result = true;
+			}
+			br.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public static void saveVersion(String version, File versionFile) {
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream(versionFile);
+			fos.write(version.getBytes());
+			fos.write('\n');
+			fos.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
