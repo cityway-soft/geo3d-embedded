@@ -68,6 +68,7 @@
 		<module>../org.avm.device.usbmass</module>
 
 		<!-- *** ELEMENTARY *** -->
+		<module>../org.avm.elementary.management.bootstrap</module>
 		<module>../org.avm.elementary.alarm</module>
 		<module>../org.avm.elementary.can.logger</module>
 		<module>../org.avm.elementary.command</module>
