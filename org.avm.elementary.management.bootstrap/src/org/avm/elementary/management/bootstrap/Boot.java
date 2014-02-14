@@ -14,6 +14,8 @@ import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Dictionary;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
@@ -61,18 +63,23 @@ public class Boot implements BundleActivator {
 			if (bundle == null) {
 				bundle = install(bundlename, url);
 			} else {
-				Dictionary headers = bundle.getHeaders();
 
-				debug("Version : " + headers.get("Bundle-Version"));
-				File versionFile = new File(filename + ".version");
-				String candidateVersion = (String) headers
+				JarFile jar = new JarFile(file);
+				String candidate = jar.getManifest().getMainAttributes().getValue("Bundle-Version");
+				
+				jar.close();
+				Dictionary headers = bundle.getHeaders();
+				String currentVersion = (String) headers
 						.get("Bundle-Version");
-				if (!checkVersion(versionFile, candidateVersion)) {
-					debug ("update Management ...");
+				debug("Current version : " + currentVersion);
+				debug("Candidate version : " + candidate);
+				
+				if (! currentVersion.equals(candidate)) {
+					debug("update Management ...");
 					update(bundle, url);
-					debug ("save new version of Management ...");
-					saveVersion(candidateVersion, versionFile);
-				}{
+				}
+				else
+				{
 					debug("no update of Management");
 				}
 			}
