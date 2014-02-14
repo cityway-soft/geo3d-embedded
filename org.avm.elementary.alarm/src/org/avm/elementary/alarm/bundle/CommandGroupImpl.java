@@ -65,7 +65,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	}
 
 	// Add
-	public final static String USAGE_SET = "-i #index# [-n #name#] [-s #source#]  [-u #notify-up#] [-d #notify-down#] [-a #acknowledge#] [-t #type#] [-r #readonly#]";
+	public final static String USAGE_SET = "-i #index# [-n #name#] [-s #source#]  [-u #notify-up#] [-d #notify-down#] [-a #acknowledge#] [-t #type#] [-r #readonly#] [-v #visibility#]";
 
 	public final static String[] HELP_SET = new String[] { "Set values to alarm index", };
 
@@ -90,6 +90,9 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 		temp = (String) opts.get("-t");
 		Integer type = (temp != null) ? Integer.valueOf(temp) : null;
+		
+		temp = (String) opts.get("-v");
+		Boolean visibility = (temp != null) ? Boolean.valueOf(temp) : null;
 
 		Properties p = ((AlarmServiceConfig) _config).get(index.toString());
 		if (p == null) {
@@ -115,6 +118,10 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			}
 			if (readonly != null) {
 				p.put(Alarm.READONLY, readonly.toString());
+			}			
+			
+			if (visibility != null) {
+				p.put(Alarm.VISIBLE, visibility.toString());
 			}
 
 			((AlarmServiceConfig) _config).add(p);
