@@ -17,7 +17,8 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.osgi.service.cm;version="1.2.0",
  org.osgi.service.component;version="1.0.0",
  org.osgi.service.wireadmin;version="1.0.0",
- org.osgi.util.measurement;version="1.0.0"
+ org.osgi.util.measurement;version="1.0.0",
+ junit.framework;version="3.8.2";resolution:=optional
 Export-Package: org.avm.business.billettique.atoumod
 Service-Component: META-INF/activator.xml
 Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
