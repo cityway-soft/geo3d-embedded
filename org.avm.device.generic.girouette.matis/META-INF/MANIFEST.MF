@@ -11,7 +11,8 @@ Import-Package: org.apache.log4j,
  org.osgi.service.component,
  org.osgi.service.device,
  org.osgi.service.wireadmin,
- org.osgi.util.tracker
+ org.osgi.util.tracker,
+ junit.framework;version="3.8.2";resolution:=optional
 Bundle-ClassPath: .
 Service-Component: META-INF/activator.xml
 Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

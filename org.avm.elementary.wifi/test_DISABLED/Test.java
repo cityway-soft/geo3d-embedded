@@ -52,7 +52,7 @@ public class Test extends MockObjectTestCase {
 		balise = new Balise(10000, false);
 		service.notify(balise);
 
-		// attente du declenchement du timeout de la machine à état
+		// attente du declenchement du timeout de la machine ï¿½ ï¿½tat
 		Thread t = new Thread() {
 			public void run() {
 				try {
@@ -124,6 +124,16 @@ public class Test extends MockObjectTestCase {
 		public void setDisconnectTimeout(String timeout) {
 			this.timeout = timeout;
 
+		}
+
+		public String getBaliseAttr() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public void setBaliseAttr(String list) {
+			// TODO Auto-generated method stub
+			
 		}
 
 	}

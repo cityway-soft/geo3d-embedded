@@ -4,6 +4,8 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.Priority;
+import org.avm.business.messages.MessagesConfig;
+import org.avm.business.messages.MessagesImpl;
 import org.avm.business.protocol.phoebus.Date;
 import org.avm.business.protocol.phoebus.Heure;
 import org.avm.business.protocol.phoebus.IntArray;
@@ -15,7 +17,7 @@ import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
 import org.jmock.core.Constraint;
 
-public class Test extends MockObjectTestCase {
+public class TestMessage extends MockObjectTestCase {
 
 	private Mock mockMessageConfig;
 	private Mock mockProducerManager;
@@ -27,7 +29,7 @@ public class Test extends MockObjectTestCase {
 
 		root.addAppender(new ConsoleAppender(new PatternLayout()));
 		root.setPriority(Priority.DEBUG);
-		
+
 		mockMessageConfig = mock(MessagesConfig.class);
 		mockProducerManager = mock(ProducerManager.class);
 
@@ -52,7 +54,8 @@ public class Test extends MockObjectTestCase {
 
 	public void testVoyageurAffecteADeuxLignes() {
 
-		mockMessageConfig.expects(once()).method("getMessages").withNoArguments();
+		mockMessageConfig.expects(once()).method("getMessages")
+				.withNoArguments();
 
 		msgService.configure((Config) mockMessageConfig.proxy());
 		msgService.setProducer((ProducerManager) mockProducerManager.proxy());
@@ -65,16 +68,19 @@ public class Test extends MockObjectTestCase {
 
 		mockMessageConfig.expects(once()).method("addMessage").with(parameters);
 
-		MessageText message = createMessage(1, new Date(22, 4, 2), new Date(22, 4, 2), new Heure(0, 0, 0), new Heure(23, 59, 0), new int[] { 1, 2 });
+		MessageText message = createMessage(1, new Date(22, 4, 2), new Date(22,
+				4, 2), new Heure(0, 0, 0), new Heure(23, 59, 0), new int[] { 1,
+				2 });
 
 		message.setMessage("msgtest");
 		System.out.println("Message:" + message);
 		msgService.notify(message);
 	}
-	
+
 	public void testVoyageurAffecteAToutesLesLignes() {
 
-		mockMessageConfig.expects(once()).method("getMessages").withNoArguments();
+		mockMessageConfig.expects(once()).method("getMessages")
+				.withNoArguments();
 
 		msgService.configure((Config) mockMessageConfig.proxy());
 		msgService.setProducer((ProducerManager) mockProducerManager.proxy());
@@ -87,7 +93,8 @@ public class Test extends MockObjectTestCase {
 
 		mockMessageConfig.expects(once()).method("addMessage").with(parameters);
 
-		MessageText message = createMessage(1, new Date(22, 4, 2), new Date(22, 4, 2), new Heure(0, 0, 0), new Heure(23, 59, 0), new int[] {  });
+		MessageText message = createMessage(1, new Date(22, 4, 2), new Date(22,
+				4, 2), new Heure(0, 0, 0), new Heure(23, 59, 0), new int[] {});
 
 		message.setMessage("msgtest");
 		System.out.println("Message:" + message);

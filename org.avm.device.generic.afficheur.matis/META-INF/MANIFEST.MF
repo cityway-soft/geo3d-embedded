@@ -4,14 +4,14 @@ Bundle-Name: org.avm.device.generic.afficheur.matis
 Bundle-SymbolicName: org.avm.device.generic.afficheur.matis
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Cityway
-Import-Package: junit.framework;resolution:=optional,
- org.apache.log4j,
+Import-Package: org.apache.log4j,
  org.avm.device.afficheur,
  org.avm.elementary.common,
  org.osgi.framework,
  org.osgi.service.cm,
  org.osgi.service.component,
  org.osgi.service.device,
- org.osgi.util.tracker
+ org.osgi.util.tracker,
+ junit.framework;version="3.8.2";resolution:=optional
 Service-Component: META-INF/activator.xml
 Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

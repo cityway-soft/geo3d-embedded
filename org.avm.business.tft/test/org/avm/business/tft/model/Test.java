@@ -1,5 +1,6 @@
 package org.avm.business.tft.model;
 
+
 import java.util.Date;
 
 import junit.framework.TestCase;
@@ -16,6 +17,17 @@ public class Test extends TestCase {
 
 		SERVICE sed = new SERVICE(new Date(),model.getState().getValue(), 0);
 		Course course = model.getCourse();
+		int rang=0;
+		Point[] pts = new Point[3];
+		pts[rang] = new Point(rang+1,rang+1, "Point "+ rang+1, 0, 1,0, rang+1, 0,0,0,0);
+		rang++;
+		pts[rang] = new Point(rang+1,rang+1, "Point "+ rang+1, 0, 1,0, rang+1, 0,0,0,0);
+		rang++;
+		pts[rang] = new Point(rang+1,rang+1, "Point "+ rang+1, 0, 1,0, rang+1, 0,0,0,0);
+		rang++;
+		course.setPoints(pts);
+		
+		
 		COURSE crs = new COURSE(course.getId(), course.getIdu(), course
 				.getNom(), course.getDepart(), course.getLigneIdu(), course.getLigneNom(), course
 				.getAmplitude(), course.getChevauchement(), model.isHorsItineraire()?1:0);

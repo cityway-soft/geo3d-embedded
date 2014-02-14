@@ -22,7 +22,8 @@ Import-Package: javax.servlet,
  org.osgi.service.wireadmin;version="1.0.0",
  org.osgi.util.measurement,
  org.osgi.util.tracker,
- org.stringtree.json
+ org.stringtree.json,
+ junit.framework;version="3.8.2";resolution:=optional
 Service-Component: META-INF/activator.xml
 Export-Package: org.avm.business.tft,
  org.avm.business.tft.bundle,

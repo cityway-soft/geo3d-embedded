@@ -72,7 +72,7 @@
 		<module>../org.avm.elementary.alarm</module>
 		<module>../org.avm.elementary.can.logger</module>
 		<module>../org.avm.elementary.command</module>
-		<module>../org.avm.elementary.common</module>		
+		<module>../org.avm.elementary.common</module>
 		<module>../org.avm.elementary.configurator</module>
 		<module>../org.avm.elementary.database</module>
 		<module>../org.avm.elementary.directory</module>
@@ -121,12 +121,10 @@
 		<!-- <module>../org.angolight.hmi.swt.leds</module> <module>../org.avm.hmi.mmi.application</module> 
 			<module>../org.avm.hmi.mmi.authentification</module> <module>../org.avm.hmi.mmi.avm</module> 
 			<module>../org.avm.hmi.mmi.phony</module> <module>../org.avm.hmi.swt.alarm</module> 
-			 
 			<module>../org.avm.hmi.swt.avm</module> <module>../org.avm.hmi.swt.browser</module> 
 			<module>../org.avm.hmi.swt.desktop</module> <module>../org.avm.hmi.swt.ecall</module> 
 			<module>../org.avm.hmi.swt.management</module> <module>../org.avm.hmi.swt.message</module> 
-			<module>../org.avm.hmi.swt.phony</module> 
-			<module>../org.avm.hmi.swt.girouette</module> -->
+			<module>../org.avm.hmi.swt.phony</module> <module>../org.avm.hmi.swt.girouette</module> -->
 
 		<!-- *** Not an OSGi project ;( -->
 		<!-- <module>../org.cg38.business.protocol.itinisere</module> -->
@@ -150,7 +148,47 @@
 	</properties>
 	<build>
 		<defaultGoal>compile</defaultGoal>
+		<testSourceDirectory>test</testSourceDirectory>
+		
+
 		<plugins>
+
+			<!-- Unit Testing -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.12.4</version>
+				<executions>
+					<execution>
+						<id>test</id>
+						<phase>test</phase>
+						<configuration>
+							<includes>
+								<include>**/*Test.java</include>
+							</includes>
+						</configuration>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<executions>
+					<execution>
+						<id>compiletests</id>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>testCompile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-maven-plugin</artifactId>
@@ -162,7 +200,7 @@
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-compiler-plugin</artifactId>
-				<version>0.16.0</version>
+				<version>${tycho-version}</version>
 				<configuration>
 					<compilerVersion>1.3</compilerVersion>
 					<!-- <compilerArguments> <extraBootclasspath>/opt/j9/lib/jclFoundation10/ext/swt.jar</extraBootclasspath> 
