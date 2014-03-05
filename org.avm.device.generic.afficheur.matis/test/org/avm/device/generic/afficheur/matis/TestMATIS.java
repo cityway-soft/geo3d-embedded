@@ -25,7 +25,7 @@ public class TestMATIS extends TestCase {
 		String code = "3";
 		String trame = generate(code);
 
-		String expected = "??";
+		String expected = "02052331310D43330D020355";
 		debug("code=" + code + "   =>" + trame);
 		assertEquals(trame.length(), expected.length());
 		assertEquals(expected, trame);
