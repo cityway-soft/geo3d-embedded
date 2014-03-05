@@ -16,7 +16,7 @@
 			<value type="String">true</value>
 		</property>
 		<property name="org.avm.config.version">
-			<value type="Integer">1</value>
+			<value type="Integer">4</value>
 		</property>
 		<property name="config.date">
 			<value type="String">Wed May 20 11:05:57 CEST 2009</value>
