@@ -100,7 +100,7 @@ public class WifiManagerImpl implements WifiManager, ConfigurableService,
 	
 
 	public void setDatabase(Database database) {
-		database = database;
+		this.database = database;
 	}
 
 	public void unsetDatabase(Database database) {
