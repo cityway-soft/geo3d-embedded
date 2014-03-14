@@ -116,7 +116,7 @@ public class WifiManagerImpl implements WifiManager, ConfigurableService,
 			} catch (Exception e) {
 				_log.debug(e);
 			}
-		}
+		} 
 	}
 
 	public void stop() {
