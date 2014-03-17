@@ -5,4 +5,5 @@
 	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin"/>		
 	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>
 	<reference name="wifi" interface="org.avm.device.wifi.Wifi"/>
+	<reference name="database" interface="org.avm.elementary.database.Database"/>
 </component>

@@ -13,10 +13,11 @@ import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ConsumerService;
 import org.avm.elementary.common.ManageableService;
 import org.avm.elementary.database.Database;
+import org.avm.elementary.database.DatabaseInjector;
 import org.avm.elementary.geofencing.Balise;
 
 public class WifiManagerImpl implements WifiManager, ConfigurableService,
-		ConsumerService, ManageableService, WifiInjector {
+		ConsumerService, ManageableService, WifiInjector, DatabaseInjector {
 
 	private WifiManagerStateMachine _sm;
 
@@ -135,7 +136,6 @@ public class WifiManagerImpl implements WifiManager, ConfigurableService,
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
-				System.out.println(e.getMessage());
 				e.printStackTrace();
 			}
 		} else {
