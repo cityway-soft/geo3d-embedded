@@ -129,7 +129,7 @@ public class WifiManagerImpl implements WifiManager, ConfigurableService,
 			ResultSet rs = database.sql("select * from attribut_point where ATT_ID='" + attr
 					+ "'");
 			try {
-				if (rs.next()) {
+				while (rs.next()) {
 					int ret = rs.getInt("PNT_ID");
 					_log.debug(ret + "is a WiFi point");
 					_map.put(Integer.toString(ret), Integer.toString(ret));
