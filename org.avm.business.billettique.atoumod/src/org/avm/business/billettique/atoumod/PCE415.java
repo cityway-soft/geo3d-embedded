@@ -189,6 +189,7 @@ public class PCE415 implements Runnable {
 	public void sendMessageInterrogation() throws IOException {
 		// byte[] sendData = interrogation.toString().getBytes();
 		if (running) {
+			setDate(new Date());
 			if (logger.isDebugEnabled()){
 				logger.debug(interrogation.toDebug());
 			}
