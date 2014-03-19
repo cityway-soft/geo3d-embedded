@@ -252,7 +252,6 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 
 		}
 		if (client != null) {
-			client.setDate(new Date());
 			client.setLigne(ligne);
 			client.setCourse(course);
 			client.setPoint(point);
@@ -265,6 +264,7 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 					etatPrecedent = etat;
 					coursePrecedente = course;
 					arretPrecedent = point;
+					_log.info("state changed: course=" + course + ", arret="+point + ", etat=" + etat);
 					client.sendMessageInterrogation();
 				}
 			} catch (IOException e) {
