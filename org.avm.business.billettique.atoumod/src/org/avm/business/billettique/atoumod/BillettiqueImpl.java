@@ -62,7 +62,6 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 
 	public static final String JDB_TAG = "billettique";
 
-	
 	public void configure(Config config) {
 		_config = (BillettiqueConfig) config;
 
@@ -70,22 +69,25 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 			client.shutdown();
 			client = null;
 		}
-		try {
-			_log.info("create client on " + _config.getHost() + ":"
-					+ _config.getPort() + " with tsurv=" + _config.getTSurv()
-					+ ", nsurv=" + _config.getNSurv());
-			client = new PCE415(_config.getHost(), _config.getPort(),
-					_config.getTSurv(), _config.getNSurv(), _config.getLocalPort());
-			client.setListener(this);
-		} catch (SocketException e) {
-			// TODO Bloc catch généré automatiquement
-			e.printStackTrace();
-		} catch (UnknownHostException e) {
-			// TODO Bloc catch généré automatiquement
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Bloc catch généré automatiquement
-			e.printStackTrace();
+		if (_config != null) {
+			try {
+				_log.info("create client on " + _config.getHost() + ":"
+						+ _config.getPort() + " with tsurv="
+						+ _config.getTSurv() + ", nsurv=" + _config.getNSurv());
+				client = new PCE415(_config.getHost(), _config.getPort(),
+						_config.getTSurv(), _config.getNSurv(),
+						_config.getLocalPort());
+				client.setListener(this);
+			} catch (SocketException e) {
+				// TODO Bloc catch généré automatiquement
+				e.printStackTrace();
+			} catch (UnknownHostException e) {
+				// TODO Bloc catch généré automatiquement
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Bloc catch généré automatiquement
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -219,8 +221,9 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 			break;
 		case AvmModel.STATE_ATTENTE_SAISIE_COURSE: {
 			etat = TicketingSystemState.SERVICE_OUVERT_COURSE_FERMEE;
-		}break;
-		case AvmModel.STATE_EN_COURSE_HORS_ITINERAIRE:{
+		}
+			break;
+		case AvmModel.STATE_EN_COURSE_HORS_ITINERAIRE: {
 			etat = TicketingSystemState.NON_LOCALISE;
 		}
 			break;
@@ -251,7 +254,8 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 					etatPrecedent = etat;
 					coursePrecedente = course;
 					arretPrecedent = point;
-					_log.info("state changed: course=" + course + ", arret="+point + ", etat=" + etat);
+					_log.info("state changed: course=" + course + ", arret="
+							+ point + ", etat=" + etat);
 					client.sendMessageInterrogation();
 				}
 			} catch (IOException e) {
@@ -264,14 +268,14 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 	}
 
 	public void setEnable(boolean b) {
-		
+
 		if (b) {
 			client.launch();
-		
+
 			_log.info("Ticketing interface enabled");
 		} else {
 			client.shutdown();
-			_previousState=null;
+			_previousState = null;
 			connected(false);
 			_log.info("Ticketing interface disabled");
 		}
@@ -309,7 +313,7 @@ public class BillettiqueImpl implements ConfigurableService, AvmInjector,
 	public void unsetJdb(JDB jdb) {
 		_jdb = null;
 	}
-	
+
 	public void journalize(String message) {
 		_log.info(message);
 
