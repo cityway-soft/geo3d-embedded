@@ -22,6 +22,7 @@ public class PCE415 implements Runnable {
 	private InetAddress serverAdress;
 	private int t_surv;
 	private int n_surv;
+	private Integer clientPort;
 	private MessageInterrogationSurveillance interrogation;
 	private Thread thread;
 	private boolean running;
@@ -34,12 +35,8 @@ public class PCE415 implements Runnable {
 		this.port = serverPort;
 		this.t_surv = t_surv;
 		this.n_surv = n_surv;
-		if (clientPort != null) {
-			clientSocket = new DatagramSocket(clientPort.intValue());
-		} else {
-			clientSocket = new DatagramSocket();
-		}
-		clientSocket.setSoTimeout(t_surv * 1000);
+		this.clientPort = clientPort;
+
 		serverAdress = InetAddress.getByName(host);
 		interrogation = (MessageInterrogationSurveillance) MessageFactory
 				.create(MessageInterrogationSurveillance.ID);
@@ -73,7 +70,18 @@ public class PCE415 implements Runnable {
 		client.launch();
 	}
 
-	public void launch() {
+	public void launch()  {
+		try {
+			if (clientPort != null) {
+					clientSocket = new DatagramSocket(clientPort.intValue());
+			} else {
+				clientSocket = new DatagramSocket();
+			}
+			clientSocket.setSoTimeout(t_surv * 1000);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		running = true;
 		if (thread == null) {
 			thread = new Thread(this);
@@ -82,6 +90,7 @@ public class PCE415 implements Runnable {
 	}
 
 	public void shutdown() {
+		clientSocket.close();
 		running = false;
 		if (thread != null) {
 			thread.interrupt();
