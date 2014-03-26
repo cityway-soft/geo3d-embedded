@@ -109,11 +109,10 @@ public class GirouetteImpl implements ConfigurableService, AvmInjector,
 					destination(_avm.getModel().getCodeGirouette());
 				}
 			}
+			else if (_listener != null) {
+				_listener.notify(o);
+			}
 		}
-		// TODO voir avec Didier (fla)
-//		} else if (_listener != null) {
-			_listener.notify(o);
-//		}
 	}
 
 	private void send(String code) {
