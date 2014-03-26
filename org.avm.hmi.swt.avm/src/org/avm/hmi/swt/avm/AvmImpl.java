@@ -140,7 +140,7 @@ public class AvmImpl implements ConsumerService, ManageableService,
 			State state = (State) o;
 			if (state.getName().equals(UserSessionService.class.getName())) {
 				notifyUserSessionService(state);
-			} else if (_session.getState().getValue() == UserSessionService.AUTHENTICATED) {
+			} else if (_session != null && _session.getState().getValue() == UserSessionService.AUTHENTICATED) {
 				notifyAvm(state);
 			}
 		} else if (o instanceof AvanceRetard) {
@@ -160,7 +160,7 @@ public class AvmImpl implements ConsumerService, ManageableService,
 	}
 
 	private synchronized void notifyUserSessionService(State s) {
-		//_log.debug("State : " + s); //$NON-NLS-1$
+		_log.debug("State : " + s); //$NON-NLS-1$
 		if (s.getValue() == UserSessionService.AUTHENTICATED) {
 			login();
 		} else {
