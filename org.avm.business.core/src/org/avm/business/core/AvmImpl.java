@@ -129,7 +129,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 	private transient boolean _flagSendPriseService = true;
 
 	private transient AlarmService _alarmService;
-	
+
 	private int _lastState = -1;
 
 	private AvmImpl() {
@@ -429,7 +429,9 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 		_login = false;
 		startGestionDefautPrisePoste();
 		finPoste();
-		_session.logout();
+		if (_session != null) {
+			_session.logout();
+		}
 	}
 
 	/**
@@ -980,7 +982,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 	public void entryHorsItineraire() {
 		_model.setHorsItineraire(true);
 		if (_model.getDernierPoint() != null) {
-			//-- notification seulement si on a quitté le premier arrêt
+			// -- notification seulement si on a quitté le premier arrêt
 			notifyAlarmDeviation(true);
 		}
 	}
@@ -1452,9 +1454,9 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 	}
 
 	public void checkAutomaticCourse() {
-		System.out.println("auto: "+_config.isAutomaticCourseMode());
-		System.out.println("sa: "+_model.getServiceAgent());
-		
+		System.out.println("auto: " + _config.isAutomaticCourseMode());
+		System.out.println("sa: " + _model.getServiceAgent());
+
 		if (_config.isAutomaticCourseMode() && _model.getServiceAgent() != null) {
 			ServiceAgent sa = _model.getServiceAgent();
 			System.out.println("sa auto " + sa.isAutomaticCourse());
