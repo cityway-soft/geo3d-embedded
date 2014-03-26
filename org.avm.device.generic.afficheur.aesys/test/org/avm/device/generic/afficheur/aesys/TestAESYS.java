@@ -39,7 +39,8 @@ public class TestAESYS extends TestCase {
 		String trame = generate(code);
 
 		// TODO
-		String expected = "054417583017304D6F6E2074657374043031303132";
+		String expected = "054417583017304D6F6E207465737404303130313";
+		//String expected = "054417583017304D6F6E2074657374043031303132";
 		debug("code=" + code + "   =>" + trame);
 		assertEquals(trame.length(), expected.length());
 		assertEquals(expected, trame);
