@@ -70,6 +70,7 @@ public class Activator extends AbstractActivator implements
 	}
 
 	protected void stop(ComponentContext context) {
+		logout();
 		stopService();
 		disposeProducer();
 		disposeManager();
