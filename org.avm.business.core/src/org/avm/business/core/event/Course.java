@@ -90,13 +90,23 @@ public class Course implements Event {
 			_destination = points[points.length - 1].getNom();
 		}
 		if (points.length > 0) {
-			String val = points[points.length - 1].getAttribute(Point.ATTRIBUT_NOTIFY_POINT);
+			String val;
+			//-- forcage notification entree premier arrêt
+			val = points[0].getAttribute(Point.ATTRIBUT_NOTIFY_POINT);
+			if (val == null || val.toUpperCase().indexOf("E") == -1){
+				val += "E";
+			}
+			points[0].setAttribute(Point.ATTRIBUT_NOTIFY_POINT, val);
+
+			//-- forcage notification entree dernier arrêt
+			val = points[points.length - 1].getAttribute(Point.ATTRIBUT_NOTIFY_POINT);
 			if (val == null || val.toUpperCase().indexOf("E") == -1){
 				val += "E";
 			}
 			points[points.length - 1].setAttribute(Point.ATTRIBUT_NOTIFY_POINT, val);
 		}
 	}
+	
 
 	public String getNom() {
 		return _crs_nom;
