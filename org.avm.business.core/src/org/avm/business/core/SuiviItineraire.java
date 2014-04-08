@@ -656,9 +656,9 @@ public class SuiviItineraire implements ConfigurableService {
 				// -- emission du passage a l'entree si le point horaire est
 				// configure pour l'emission a l'entree
 				if (p.isEntryNotify()) {
-//					if (!getModel().isDepart()) {
-//						_log.warn("Message 'passage arret' non envoye : pas de depart");
-//					} else {
+					if (!getModel().isDepart()) {
+						_log.warn("Message 'passage arret' non envoye : pas de depart");
+					} else {
 						_log.debug("ENTREE ARRET : Message 'passage arret' envoye");
 						setEnteteMessage(_passageArret);
 						setEnteteMessage(_avanceRetard);
@@ -671,7 +671,7 @@ public class SuiviItineraire implements ConfigurableService {
 						getModel().setGeorefMode(
 								prochain != null
 										&& prochain.isGeoref() == false);
-					//}
+					}
 				}
 			}
 
