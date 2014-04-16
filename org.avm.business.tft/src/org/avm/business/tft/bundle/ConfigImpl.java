@@ -7,7 +7,7 @@ import org.osgi.service.component.ComponentContext;
 
 public class ConfigImpl extends AbstractConfig implements TftConfig {
 
-	private String _defaultFontSize = "8.5cm";
+	private String _defaultFontSize = "140px";
 
 	private String _defaultFont = "Context Ultra Condensed SSi";
 
