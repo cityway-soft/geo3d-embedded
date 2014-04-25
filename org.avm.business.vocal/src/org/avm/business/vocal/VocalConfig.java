@@ -7,6 +7,8 @@ public interface VocalConfig {
 	String getFileName();
 
 	public void setFileName(String path);
+	
+	public String[] getLanguages();
 
 	public long getSleepBeforePlay();
 

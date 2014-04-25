@@ -40,6 +40,7 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 	private State _currentState;
 	private boolean _needToTellDirection;
 	private Variable _ioAudioVoyageurExterieur;
+	private String[] languages;
 
 	public VocalImpl() {
 		_log = Logger.getInstance(this.getClass());
@@ -47,6 +48,7 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 
 	public void configure(Config config) {
 		_config = (VocalConfig) config;
+		languages = _config.getLanguages();
 	}
 
 	public void setAvm(Avm avm) {
@@ -169,10 +171,13 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 		Course course = _avm.getModel().getCourse();
 		if (course != null) {
 			int nbArret = course.getNombrePoint();
-			String direction = getMP3Filename(EN_DIRECTION_DE);
+			// String direction = getMP3Filename(EN_DIRECTION_DE);
 			Point dernierArret = course.getPointAvecRang(nbArret);
-			String name = getMP3Filename(dernierArret.getNomReduitGroupePoint());
-			String[] messages = { direction, name };
+			// String name =
+			// getMP3Filename(dernierArret.getNomReduitGroupePoint());
+			// String[] messages = { direction, name };
+			String[] messages = getPlaylist(EN_DIRECTION_DE, languages,
+					dernierArret.getNomReduitGroupePoint());
 			annonce(messages, destinataire);
 		}
 	}
@@ -186,12 +191,55 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 		}
 	}
 
+	private String[] getPlaylist(String template, String[] languages,
+			String name) {
+		String[] messages = new String[languages.length + 1];
+
+		int c = 0;
+		for (int i = 0; i < languages.length; i++) {
+			StringBuffer lang = new StringBuffer();
+			if (!languages[i].equals("fr")) {
+				lang.append(languages[i]);
+				lang.append("_");
+				
+			}
+			
+			lang.append(template);
+			String ligne = getMP3Filename(lang.toString());
+			File file = new File(ligne);
+			if (file.exists() || i==0) {
+				messages[c] = ligne;
+			}
+			if (!file.exists()){
+				_log.warn("File " + file.getAbsolutePath() + " does not exists");
+			}
+	
+			c++;
+		}
+		messages[c] = getMP3Filename(name);
+		if (_log.isDebugEnabled()) {
+			StringBuffer debug = new StringBuffer();
+			debug.append("playlist " + template + " :");
+			for (int i = 0; i < messages.length; i++) {
+				if (i > 0) {
+					debug.append(", ");
+				}
+				debug.append(messages[i]);
+			}
+
+			_log.debug(debug);
+		}
+		return messages;
+
+	}
+
 	protected void annonceLigne(int destinataire) throws Exception {
 		if (_avm.getModel().getCourse() != null) {
 			int lgnIdu = _avm.getModel().getCourse().getLigneIdu();
-			String ligne = getMP3Filename(LIGNE);
-			String name = getMP3Filename("ligne" + lgnIdu);
-			String[] messages = { ligne, name };
+			// String ligne = getMP3Filename(LIGNE);
+			// String name = getMP3Filename("ligne" + lgnIdu);
+			// String[] messages = { ligne, name };
+			String[] messages = getPlaylist(LIGNE, languages, "ligne" + lgnIdu);
 			annonce(messages, destinataire);
 		}
 	}
@@ -199,10 +247,13 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 	protected void annonceProchainArret(int destinataire) throws Exception {
 		Point prochainArret = _avm.getModel().getProchainPoint();
 		if (prochainArret != null) {
-			String prochain = getMP3Filename(PROCHAIN);
-			String name = getMP3Filename(prochainArret
-					.getNomReduitGroupePoint());
-			String[] messages = { prochain, name };
+			// String prochain = getMP3Filename(PROCHAIN);
+			// String name = getMP3Filename(prochainArret
+			// .getNomReduitGroupePoint());
+			// String[] messages = { prochain, name };
+
+			String[] messages = getPlaylist(PROCHAIN, languages,
+					prochainArret.getNomReduitGroupePoint());
 			annonce(messages, destinataire);
 		}
 	}
@@ -218,7 +269,7 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 
 	protected void onMessageAlerte(Alarm alarm) {
 		_log.info(alarm);
-		if (alarm.getKey() == null){
+		if (alarm.getKey() == null) {
 			return;
 		}
 		if (alarm.getKey().equals("defmat")) {
@@ -262,26 +313,27 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 			_log.error("Destinataire :" + destinataire + " inconnu.");
 		}
 	}
-	
-	
-	private void play(String[] messages){
-		boolean check=true;
+
+	private void play(String[] messages) {
+		boolean check = true;
 		for (int i = 0; i < messages.length; i++) {
-			File fd = new File(messages[i]);
-			if (fd.exists() == false){
-				_log.error("File " + messages[i] + " not found!");
-				check=false;
-				break;
+			if (messages[i] != null) {
+				File fd = new File(messages[i]);
+				if (fd.exists() == false) {
+					_log.error("File " + messages[i] + " not found!");
+					check = false;
+					break;
+				}
 			}
 		}
-		
-		if (check){
+
+		if (check) {
 			for (int i = 0; i < messages.length; i++) {
-				play(messages[i]);
+				if (messages[i] != null) {
+					play(messages[i]);
+				}
 			}
 		}
-		
-		
 
 	}
 
@@ -327,7 +379,8 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 				setIOVariableValue(_ioAudioVoyageurInterieur, props
 						.getProperty("do0").equals("1"));
 			} else {
-				throw new Exception ("Variable : ioAudioVoyageurInterieur not set");
+				throw new Exception(
+						"Variable : ioAudioVoyageurInterieur not set");
 			}
 
 			if (_audioConducteur != null) {
@@ -341,7 +394,8 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 				setIOVariableValue(_ioAudioVoyageurExterieur, props
 						.getProperty("do2").equals("1"));
 			} else {
-				throw new Exception("Variable : ioAudioVoyageurExterieur not set");
+				throw new Exception(
+						"Variable : ioAudioVoyageurExterieur not set");
 			}
 		} else {
 			_log.error("Erreur : mode " + mode + " inconnu.");
