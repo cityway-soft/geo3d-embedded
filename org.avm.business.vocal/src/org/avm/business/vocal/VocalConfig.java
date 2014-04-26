@@ -19,4 +19,6 @@ public interface VocalConfig {
 	void removeProperty(String name);
 
 	Properties getProperty(String key);
+
+	void setLanguages(String langs);
 }

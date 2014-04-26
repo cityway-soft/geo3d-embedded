@@ -125,4 +125,8 @@ public class ConfigImpl extends AbstractConfig implements VocalConfig {
 		return result;
 	}
 
+	public void setLanguages(String langs) {
+		_config.put(LANGUAGES_TAG, langs);
+	}
+
 }

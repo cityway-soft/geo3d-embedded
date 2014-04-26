@@ -197,12 +197,20 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	}
 	
 	// Languages
-	public final static String USAGE_GETLANG = "";
+	public final static String USAGE_SETLANG = "[<langs>]";
 
-	public final static String[] HELP_GETLANG = new String[] { "Get languages", };
+	public final static String[] HELP_SETLANG = new String[] { "Set/Get languages", };
 
-	public int cmdGetlang(Dictionary opts, Reader in, PrintWriter out,
+	public int cmdSetlang(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
+		
+		String langs = ((String) opts.get("langs"));
+		
+		if (langs != null){
+			((VocalConfig) _config).setLanguages(langs);
+			_config.updateConfig(false);
+		}
+		
 		String[] languages = ((VocalConfig) _config).getLanguages();
 		
 		StringBuffer list = new StringBuffer();
