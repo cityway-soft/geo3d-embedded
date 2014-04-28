@@ -139,6 +139,12 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 						break;
 					case AvmModel.STATE_EN_COURSE_ARRET_SUR_ITINERAIRE:
 						annonceArret(VOYAGEUR_INTERIEUR);
+						int itl = _avm.getModel().getRang() % 3;// TODO : POUR
+																// TEST
+																// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+						if (itl == 2) {// --montée interdite
+							annonceMonteeInterdite(VOYAGEUR_EXTERIEUR);
+						}
 						break;
 
 					case AvmModel.STATE_EN_COURSE_INTERARRET_SUR_ITINERAIRE:
@@ -167,6 +173,15 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 		}
 	}
 
+	private void annonceMonteeInterdite(int canal) throws Exception {
+		Point arret = _avm.getModel().getDernierPoint();
+		if (arret != null) {
+			String[] messages = getPlaylist(MONTEE_INTERDITE, languages,
+					arret.getNomReduitGroupePoint(), true);
+			annonce(messages, canal);
+		}
+	}
+
 	protected void annonceDestination(int destinataire) throws Exception {
 		Course course = _avm.getModel().getCourse();
 		if (course != null) {
@@ -177,7 +192,7 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 			// getMP3Filename(dernierArret.getNomReduitGroupePoint());
 			// String[] messages = { direction, name };
 			String[] messages = getPlaylist(EN_DIRECTION_DE, languages,
-					dernierArret.getNomReduitGroupePoint());
+					dernierArret.getNomReduitGroupePoint(), false);
 			annonce(messages, destinataire);
 		}
 	}
@@ -191,32 +206,51 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 		}
 	}
 
-	private String[] getPlaylist(String template, String[] languages,
-			String name) {
-		String[] messages = new String[languages.length + 1];
-
-		int c = 0;
+	private int updatePlayList(String template, String[] messages,
+			String[] languages, int idx) {
+		int c = idx;
 		for (int i = 0; i < languages.length; i++) {
 			StringBuffer lang = new StringBuffer();
 			if (!languages[i].equals("fr")) {
 				lang.append(languages[i]);
 				lang.append("_");
-				
+
 			}
-			
+
 			lang.append(template);
-			String ligne = getMP3Filename(lang.toString());
-			File file = new File(ligne);
-			if (file.exists() || i==0) {
-				messages[c] = ligne;
+			String mp3 = getMP3Filename(lang.toString());
+			File file = new File(mp3);
+			if (file.exists() || i == 0) {
+				messages[c] = mp3;
 			}
-			if (!file.exists()){
+			if (!file.exists()) {
 				_log.warn("File " + file.getAbsolutePath() + " does not exists");
 			}
-	
+
 			c++;
 		}
+		return c;
+	}
+
+	private int updatePlayList(String name, String[] messages, int idx) {
+		int c = idx;
 		messages[c] = getMP3Filename(name);
+		return c;
+	}
+
+	private String[] getPlaylist(String template, String[] languages,
+			String name, boolean reverse) {
+		String[] messages = new String[languages.length + 1];
+
+		int c = 0;
+		if (!reverse) {
+			c = updatePlayList(template, messages, languages, c);
+			c = updatePlayList(name, messages, c + 1);
+		} else {
+			c = updatePlayList(name, messages, c);
+			c = updatePlayList(template, messages, languages, c + 1);
+		}
+
 		if (_log.isDebugEnabled()) {
 			StringBuffer debug = new StringBuffer();
 			debug.append("playlist " + template + " :");
@@ -239,7 +273,8 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 			// String ligne = getMP3Filename(LIGNE);
 			// String name = getMP3Filename("ligne" + lgnIdu);
 			// String[] messages = { ligne, name };
-			String[] messages = getPlaylist(LIGNE, languages, "ligne" + lgnIdu);
+			String[] messages = getPlaylist(LIGNE, languages, "ligne" + lgnIdu,
+					false);
 			annonce(messages, destinataire);
 		}
 	}
@@ -252,8 +287,22 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 			// .getNomReduitGroupePoint());
 			// String[] messages = { prochain, name };
 
-			String[] messages = getPlaylist(PROCHAIN, languages,
-					prochainArret.getNomReduitGroupePoint());
+			String[] messages;
+
+			int itl = _avm.getModel().getRang() % 3;// TODO : POUR TEST
+													// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			if (itl == 0 || itl == 2) {
+				// -- cas normal ( pas d'interdiction) ou interdiction en montée
+				_log.info("ITL : non => cas normal");
+				messages = getPlaylist(PROCHAIN, languages,
+						prochainArret.getNomReduitGroupePoint(), false);
+
+			} else {
+				_log.info("ITL : descente interdite");
+				messages = getPlaylist(DESCENTE_INTERDITE, languages,
+						prochainArret.getNomReduitGroupePoint(), true);
+
+			}
 			annonce(messages, destinataire);
 		}
 	}
@@ -297,8 +346,8 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 		}
 	}
 
-	public void annonce(String[] messages, int destinataire) throws Exception {
-		switch (destinataire) {
+	public void annonce(String[] messages, int canal) throws Exception {
+		switch (canal) {
 		case CONDUCTEUR:
 			annonceConducteur(messages);
 			break;
@@ -310,7 +359,7 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 			break;
 
 		default:
-			_log.error("Destinataire :" + destinataire + " inconnu.");
+			_log.error("Canal :" + canal + " inconnu.");
 		}
 	}
 
@@ -348,9 +397,9 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 
 	private void annonceVoyageurInterieur(String[] messages) throws Exception {
 		_log.debug("Annonce Voyageur interieur...");
-		modeVoyageurInterieur();
+		// modeVoyageurInterieur();
 		play(messages);
-		modeDefaut();
+		// modeDefaut();
 		_log.debug("Annonce Voyageur ok");
 
 	}
