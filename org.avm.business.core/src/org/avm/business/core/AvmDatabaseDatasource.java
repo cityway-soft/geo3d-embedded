@@ -32,6 +32,8 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 
 	private int _version = 0;
 
+	private boolean usingITL = false;
+
 	private final List listeJours = Arrays.asList(new Object[] {
 			new Integer(Calendar.MONDAY), new Integer(Calendar.TUESDAY),
 			new Integer(Calendar.WEDNESDAY), new Integer(Calendar.THURSDAY),
@@ -74,6 +76,18 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 			+ " JOIN POINT_GROUPE_POINT PGP ON PGP.PNT_ID=PNT.PNT_ID "
 			+ " JOIN GROUPE_POINT GRP ON GRP.GRP_ID=PGP.GRP_ID "
 			+ " WHERE HOR.CRS_ID = ? " + " ORDER BY HOR_RANG  ";
+	// exactement la même qu'au dessus, on garde les deux pour compatibilitée si
+	// la base n'est pas à jour
+	private static final String REQ_POINTS_COURSE_ITL = "SELECT  PNT_ID,PNT_IDU,PNT_NOM,PNT_X,PNT_Y,GRP_IDU,PSI_DISTANCE,HOR_ARRIVEE,HOR_ATTENTE,PSP_GIR, PSP_ITL "
+			+ " FROM HORAIRE HOR  "
+			+ " join point_sur_parcours psp on psp.psp_id=hor.psp_id  "
+			+ " join point_sur_itineraire psi on psi.psi_id=psp.psi_id "
+			+ " join point pnt on psi.pnt_id=pnt.pnt_id "
+			+ " JOIN POINT_GROUPE_POINT PGP ON PGP.PNT_ID=PNT.PNT_ID "
+			+ " JOIN GROUPE_POINT GRP ON GRP.GRP_ID=PGP.GRP_ID "
+			+ " WHERE HOR.CRS_ID = ? " + " ORDER BY HOR_RANG  ";
+
+	private static final String TEST_ITL = "SELECT * FROM POINT_SUR_PARCOURS";
 
 	private static final String REQ_ATTRIBUTS_POINTS = "SELECT ADP_ID,ATT_ID,PNT_ID,ATT_NOM,ADP_VAL from attribut, attribut_point where attribut.att_id = attribut_point.att_id";
 
@@ -128,6 +142,25 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 			_currentDate = date;
 			init();
 		}
+	}
+
+	private boolean checkAreITLInDatabase() throws AvmDatabaseException {
+		boolean ret = true;
+		try {
+			// FLA ajout sag_lib, pour détection mode automatic
+
+			ResultSet rs = getDatabase().sql(TEST_ITL);
+			if (rs == null) {
+				throw new AvmDatabaseException(
+						AvmDatabaseException.ERR_BASE_INTROUVABLE);
+			}
+			rs.next();
+			rs.getInt("PSP_ITL");
+		} catch (SQLException sqle) {
+			ret = false;
+		}
+		System.out.println("Using ITL : " + ret);
+		return ret;
 	}
 
 	private void init() throws AvmDatabaseException {
@@ -226,6 +259,7 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 						+ getDatabase().getVersion() + ") ", t);
 			}
 			checkCurrentDay();
+			usingITL = checkAreITLInDatabase();
 		}
 
 	}
@@ -337,7 +371,8 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 
 						Course crs = new Course(crs_idu, crs_id, crs_nom,
 								crs_depart, destination, lgn_nom, lgn_idu,
-								pcr_nom, pcr_idu, amplitude, chevauchement, sens);
+								pcr_nom, pcr_idu, amplitude, chevauchement,
+								sens);
 
 						listCourses.add(crs);
 					}
@@ -498,7 +533,9 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 					return null;
 				}
 				PreparedStatement requete;
-				requete = connexion.prepareStatement(REQ_POINTS_COURSE);
+				String req = (usingITL) ? REQ_POINTS_COURSE_ITL
+						: REQ_POINTS_COURSE;
+				requete = connexion.prepareStatement(req);
 				requete.setInt(1, crs_id);
 				rs = requete.executeQuery();
 
@@ -519,10 +556,14 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 						int hor_attente = rs.getInt(idx++);
 						hor_rang++;
 						int codeGirouette = rs.getInt(idx++);
+						int itl = 0;
+						if (usingITL) {
+							itl = rs.getInt(idx++);
+						}
 
 						Point point = new Point(pnt_id, pnt_idu, pnt_nom, 0,
 								hor_arrivee, hor_attente, hor_rang,
-								psp_distance, pnt_x, pnt_y, codeGirouette);
+								psp_distance, pnt_x, pnt_y, codeGirouette, itl);
 						point.setNomReduitGroupePoint(reduit);
 						listPoints.add(point);
 					}
