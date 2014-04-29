@@ -235,6 +235,7 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 	private int updatePlayList(String name, String[] messages, int idx) {
 		int c = idx;
 		messages[c] = getMP3Filename(name);
+		c++;
 		return c;
 	}
 
@@ -244,11 +245,15 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 
 		int c = 0;
 		if (!reverse) {
+			_log.info("update playlist for template");
 			c = updatePlayList(template, messages, languages, c);
-			c = updatePlayList(name, messages, c + 1);
-		} else {
+			_log.info("update playlist for name " + name);
 			c = updatePlayList(name, messages, c);
-			c = updatePlayList(template, messages, languages, c + 1);
+		} else {
+			_log.info("(reverse) update playlist for name " + name);
+			c = updatePlayList(name, messages, c);
+			_log.info("(reverse) update playlist for template");
+			c = updatePlayList(template, messages, languages, c);
 		}
 
 		if (_log.isDebugEnabled()) {
@@ -287,6 +292,7 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 			// .getNomReduitGroupePoint());
 			// String[] messages = { prochain, name };
 
+
 			String[] messages;
 
 			int itl = _avm.getModel().getRang() % 3;// TODO : POUR TEST
@@ -301,6 +307,7 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 				_log.info("ITL : descente interdite");
 				messages = getPlaylist(DESCENTE_INTERDITE, languages,
 						prochainArret.getNomReduitGroupePoint(), true);
+
 
 			}
 			annonce(messages, destinataire);
@@ -397,9 +404,9 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 
 	private void annonceVoyageurInterieur(String[] messages) throws Exception {
 		_log.debug("Annonce Voyageur interieur...");
-		// modeVoyageurInterieur();
+		modeVoyageurInterieur();
 		play(messages);
-		// modeDefaut();
+		modeDefaut();
 		_log.debug("Annonce Voyageur ok");
 
 	}
