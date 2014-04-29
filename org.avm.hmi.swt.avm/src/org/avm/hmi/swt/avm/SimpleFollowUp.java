@@ -76,15 +76,11 @@ public class SimpleFollowUp extends Composite implements FollowUp {
 		_labelArret.setVisible(true);
 		_labelArret.setText(Messages.getString("FollowJourney.prochain_arret")); //$NON-NLS-1$
 		_textArret.setVisible(true);
-		String itl = "";
-		if (prochain.getItl() == Point.ITL_NO_DOWN) {
-			itl = "\n" + Messages.getString("FollowJourney.itl.nodown");
-		} else if (prochain.getItl() == Point.ITL_NO_UP) {
-			itl = "\n" + Messages.getString("FollowJourney.itl.noup");
-		}
+		
+
 		_textArret
 				.setText(prochain.getNom()
-						+ "\n" + Messages.getString("FollowJourney.arrivee_a") + prochain.getHeureArriveeTheorique()+itl); //$NON-NLS-1$
+						+ "\n" + Messages.getString("FollowJourney.arrivee_a") + prochain.getHeureArriveeTheorique()); //$NON-NLS-1$
 	}
 
 	public void updatePoint() {
@@ -97,6 +93,9 @@ public class SimpleFollowUp extends Composite implements FollowUp {
 		Point dernierPoint = _avm.getModel().getDernierPoint();
 		Point prochainPoint = _avm.getModel().getProchainPoint();
 		boolean inside = _avm.getModel().isInsidePoint();
+		
+
+		
 		if (inside && dernierPoint != null) {
 			_textArret.setVisible(true);
 			_labelArret.setVisible(true);
@@ -111,12 +110,18 @@ public class SimpleFollowUp extends Composite implements FollowUp {
 				_labelArret.setVisible(true);
 
 				if (prochainPoint != null) {
+					String itlText = "";
+					if (prochainPoint.getItl() == Point.ITL_NO_DOWN) {
+						itlText = "\n\n" + Messages.getString("FollowJourney.itl.nodown");
+					} else if (prochainPoint.getItl() == Point.ITL_NO_UP) {
+						itlText = "\n\n" + Messages.getString("FollowJourney.itl.noup");
+					}
 					_labelArret.setText(Messages
 							.getString("FollowJourney.prochain_arret")); //$NON-NLS-1$
 					_textArret.setVisible(true);
 					_textArret
 							.setText(prochainPoint.getNom()
-									+ "\n" + Messages.getString("FollowJourney.arrivee_a") + prochainPoint.getHeureArriveeTheorique()); //$NON-NLS-1$
+									+ "\n" + Messages.getString("FollowJourney.arrivee_a") + prochainPoint.getHeureArriveeTheorique() + itlText); //$NON-NLS-1$
 				} else {
 					_labelArret.setText(Messages
 							.getString("FollowJourney.terminus")); //$NON-NLS-1$

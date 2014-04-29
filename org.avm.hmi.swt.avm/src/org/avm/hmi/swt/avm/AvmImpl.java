@@ -80,11 +80,10 @@ public class AvmImpl implements ConsumerService, ManageableService,
 		_display.asyncExec(new Runnable() {
 
 			public void run() {
-				System.out.println("open : begin");
 
 				if (_avmihm == null) {
 					try {
-						_log.info("instantiation AvmIHM...");
+						_log.info("Open AvmIHM...!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 						_avmihm = new AvmIhm(_desktop.getMainPanel(),
 								SWT.NONE);
 						_avmihm.setAvm(_avm);

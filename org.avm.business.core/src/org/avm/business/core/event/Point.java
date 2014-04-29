@@ -46,7 +46,7 @@ public class Point implements Event {
 
 	private int _attenteTheorique;
 
-	private int itl = 0;
+	private int itl = ITL_NONE;
 
 	public Point(int id, int idu, String nom, int type, float x, float y) {
 		_id = id;
@@ -70,6 +70,9 @@ public class Point implements Event {
 		_rang = rang;
 		_distance = distance;
 		this.itl = itl;
+		if (itl == 0) {
+			itl = ITL_NONE;
+		}
 		setCodeGirouette(codeGirouette);
 	}
 
@@ -212,12 +215,28 @@ public class Point implements Event {
 		buf.append(" flagEnt(");
 		buf.append(isEntryNotify());
 		buf.append(") ");
+		buf.append(" ITL(");
+		buf.append(getItlLabel());
+		buf.append(") ");
 		if (_codeGirouette != 0) {
 			buf.append(" GIR(");
 			buf.append(_codeGirouette);
 			buf.append(") ");
 		}
 		return buf.toString();
+	}
+	
+	private String getItlLabel(){
+		switch (itl) {
+		case ITL_NO_DOWN:
+			return "D";		
+		case ITL_NO_UP:
+				return "M";
+
+
+		default:
+			return "-";
+		}
 	}
 
 	public void setNomReduitGroupePoint(String reduit) {
@@ -289,6 +308,9 @@ public class Point implements Event {
 	}
 
 	public void setItl(int itl) {
+		if (itl == 0){
+			itl = ITL_NONE;
+		}
 		this.itl = itl;
 	}
 }

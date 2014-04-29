@@ -5,6 +5,7 @@ import java.text.MessageFormat;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 import org.avm.business.core.Avm;
 import org.avm.business.core.AvmInjector;
 import org.avm.business.core.AvmModel;
@@ -44,6 +45,7 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 
 	public VocalImpl() {
 		_log = Logger.getInstance(this.getClass());
+		_log.setPriority(Priority.DEBUG);
 	}
 
 	public void configure(Config config) {
@@ -139,11 +141,12 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 						break;
 					case AvmModel.STATE_EN_COURSE_ARRET_SUR_ITINERAIRE:
 						annonceArret(VOYAGEUR_INTERIEUR);
-						int itl = _avm.getModel().getRang() % 3;// TODO : POUR
-																// TEST
-																// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-						if (itl == 2) {// --montée interdite
-							annonceMonteeInterdite(VOYAGEUR_EXTERIEUR);
+						Point dernier = _avm.getModel().getDernierPoint();
+						if (dernier != null) {
+							if (dernier.getItl() == Point.ITL_NO_UP) {// --montée
+																		// interdite
+								annonceMonteeInterdite(VOYAGEUR_EXTERIEUR);
+							}
 						}
 						break;
 
@@ -292,12 +295,11 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 			// .getNomReduitGroupePoint());
 			// String[] messages = { prochain, name };
 
-
 			String[] messages;
 
-			int itl = _avm.getModel().getRang() % 3;// TODO : POUR TEST
-													// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			if (itl == 0 || itl == 2) {
+			int itl = prochainArret.getItl();
+
+			if (itl == Point.ITL_NONE || itl == Point.ITL_NO_UP) {
 				// -- cas normal ( pas d'interdiction) ou interdiction en montée
 				_log.info("ITL : non => cas normal");
 				messages = getPlaylist(PROCHAIN, languages,
@@ -307,7 +309,6 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 				_log.info("ITL : descente interdite");
 				messages = getPlaylist(DESCENTE_INTERDITE, languages,
 						prochainArret.getNomReduitGroupePoint(), true);
-
 
 			}
 			annonce(messages, destinataire);
