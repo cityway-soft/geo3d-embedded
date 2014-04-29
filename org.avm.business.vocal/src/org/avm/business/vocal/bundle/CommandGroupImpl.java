@@ -209,6 +209,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		if (langs != null){
 			((VocalConfig) _config).setLanguages(langs);
 			_config.updateConfig(false);
+			((VocalImpl)_peer).configure(_config);
 		}
 		
 		String[] languages = ((VocalConfig) _config).getLanguages();
