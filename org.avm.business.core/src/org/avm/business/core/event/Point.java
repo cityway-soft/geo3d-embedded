@@ -69,10 +69,10 @@ public class Point implements Event {
 		_attenteTheorique = attenteTheorique;
 		_rang = rang;
 		_distance = distance;
-		this.itl = itl;
 		if (itl == 0) {
 			itl = ITL_NONE;
 		}
+		this.itl = itl;
 		setCodeGirouette(codeGirouette);
 	}
 
