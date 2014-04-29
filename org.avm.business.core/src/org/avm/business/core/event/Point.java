@@ -3,6 +3,13 @@ package org.avm.business.core.event;
 import java.util.HashMap;
 
 public class Point implements Event {
+
+	public final static int ITL_NONE = 1;
+
+	public final static int ITL_NO_DOWN = 2;
+
+	public final static int ITL_NO_UP = 3;
+
 	private int _idu;
 
 	private int _id;
@@ -277,4 +284,11 @@ public class Point implements Event {
 		return (String) _attributes.get(id);
 	}
 
+	public int getItl() {
+		return itl;
+	}
+
+	public void setItl(int itl) {
+		this.itl = itl;
+	}
 }
