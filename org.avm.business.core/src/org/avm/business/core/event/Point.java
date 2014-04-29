@@ -6,9 +6,9 @@ public class Point implements Event {
 
 	public final static int ITL_NONE = 1;
 
-	public final static int ITL_NO_DOWN = 2;
+	public final static int ITL_NO_DOWN = 3;
 
-	public final static int ITL_NO_UP = 3;
+	public final static int ITL_NO_UP = 2;
 
 	private int _idu;
 
