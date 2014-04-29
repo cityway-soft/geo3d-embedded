@@ -28,7 +28,6 @@ public class SimpleFollowUp extends Composite implements FollowUp {
 	public SimpleFollowUp(Composite arg0, int arg1) {
 		super(arg0, arg1);
 
-		
 		_fontTitle = DesktopImpl.getFont(10, SWT.NORMAL); //$NON-NLS-1$
 		create();
 	}
@@ -48,8 +47,7 @@ public class SimpleFollowUp extends Composite implements FollowUp {
 		_labelArret.setLayoutData(gridData);
 		_labelArret.setVisible(false);
 		_labelArret.setFont(_fontTitle);
-		_labelArret.setBackground(
-				DesktopStyle.getBackgroundColor());
+		_labelArret.setBackground(DesktopStyle.getBackgroundColor());
 
 		gridData = new GridData();
 		gridData.grabExcessVerticalSpace = true;
@@ -58,8 +56,7 @@ public class SimpleFollowUp extends Composite implements FollowUp {
 		gridData.grabExcessHorizontalSpace = true;
 		_textArret = new Text(this, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI
 				| SWT.WRAP);
-		_textArret.setBackground(
-				DesktopStyle.getBackgroundColor());
+		_textArret.setBackground(DesktopStyle.getBackgroundColor());
 		_textArret.setLayoutData(gridData);
 		_textArret.setVisible(false);
 		_textArret.setFont(_fontTitle);
@@ -76,7 +73,6 @@ public class SimpleFollowUp extends Composite implements FollowUp {
 		_labelArret.setVisible(true);
 		_labelArret.setText(Messages.getString("FollowJourney.prochain_arret")); //$NON-NLS-1$
 		_textArret.setVisible(true);
-		
 
 		_textArret
 				.setText(prochain.getNom()
@@ -93,16 +89,22 @@ public class SimpleFollowUp extends Composite implements FollowUp {
 		Point dernierPoint = _avm.getModel().getDernierPoint();
 		Point prochainPoint = _avm.getModel().getProchainPoint();
 		boolean inside = _avm.getModel().isInsidePoint();
-		
 
-		
 		if (inside && dernierPoint != null) {
 			_textArret.setVisible(true);
 			_labelArret.setVisible(true);
 			_labelArret.setText(Messages
 					.getString("FollowJourney.nous_somme_a")); //$NON-NLS-1$
-			_textArret.setText(dernierPoint.getNom()
-					+ "\n" + Messages.getString("FollowJourney.depart_a") + dernierPoint.getHeureDepartTheorique());
+			String itlText = "";
+			if (dernierPoint.getItl() == Point.ITL_NO_DOWN) {
+				itlText = "\n\n"
+						+ Messages.getString("FollowJourney.itl.nodown");
+			} else if (dernierPoint.getItl() == Point.ITL_NO_UP) {
+				itlText = "\n\n" + Messages.getString("FollowJourney.itl.noup");
+			}
+			_textArret.setText(dernierPoint.getNom() + "\n"
+					+ Messages.getString("FollowJourney.depart_a")
+					+ dernierPoint.getHeureDepartTheorique() + itlText);
 			layout();
 		} else {
 			if (_course != null) {
@@ -112,9 +114,12 @@ public class SimpleFollowUp extends Composite implements FollowUp {
 				if (prochainPoint != null) {
 					String itlText = "";
 					if (prochainPoint.getItl() == Point.ITL_NO_DOWN) {
-						itlText = "\n\n" + Messages.getString("FollowJourney.itl.nodown");
+						itlText = "\n\n"
+								+ Messages
+										.getString("FollowJourney.itl.nodown");
 					} else if (prochainPoint.getItl() == Point.ITL_NO_UP) {
-						itlText = "\n\n" + Messages.getString("FollowJourney.itl.noup");
+						itlText = "\n\n"
+								+ Messages.getString("FollowJourney.itl.noup");
 					}
 					_labelArret.setText(Messages
 							.getString("FollowJourney.prochain_arret")); //$NON-NLS-1$
@@ -146,6 +151,5 @@ public class SimpleFollowUp extends Composite implements FollowUp {
 					.getString("FollowJourney.attente_detection_arret"));
 		}
 	}
-	
 
 }
