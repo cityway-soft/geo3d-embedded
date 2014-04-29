@@ -43,14 +43,12 @@ public class GeorefFollowUp extends Composite implements FollowUp,
 		super(arg0, arg1);
 		_display = arg0.getDisplay();
 
-
 		_fontTitle = DesktopImpl.getFont(5, SWT.NORMAL); //$NON-NLS-1$
 		create();
 	}
 
 	private void create() {
-		setBackground(
-				DesktopStyle.getBackgroundColor());
+		setBackground(DesktopStyle.getBackgroundColor());
 
 		GridLayout gridLayout = new GridLayout();
 		setLayout(gridLayout);
@@ -65,8 +63,7 @@ public class GeorefFollowUp extends Composite implements FollowUp,
 		_label.setLayoutData(gridData);
 		_label.setVisible(false);
 		_label.setFont(_fontTitle);
-		_label.setBackground(
-				DesktopStyle.getBackgroundColor());
+		_label.setBackground(DesktopStyle.getBackgroundColor());
 
 		gridData = new GridData();
 		gridData.grabExcessVerticalSpace = true;
@@ -78,7 +75,7 @@ public class GeorefFollowUp extends Composite implements FollowUp,
 		_text.setLayoutData(gridData);
 		_text.setVisible(false);
 		_text.setFont(_fontTitle);
-		
+
 		createButtons();
 
 		layout();
@@ -92,8 +89,7 @@ public class GeorefFollowUp extends Composite implements FollowUp,
 		gridData.grabExcessHorizontalSpace = true;
 		Composite composite = new Composite(this, SWT.NONE);
 		composite.setLayoutData(gridData);
-		composite.setBackground(
-				DesktopStyle.getBackgroundColor());
+		composite.setBackground(DesktopStyle.getBackgroundColor());
 
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.makeColumnsEqualWidth = true;
@@ -124,8 +120,7 @@ public class GeorefFollowUp extends Composite implements FollowUp,
 		button.addSelectionListener(this);
 		_buttonGeoref = button;
 		_buttonGeoref.setText(Messages.getString("GeorefFollowUp.georef")); //$NON-NLS-1$
-		_buttonGeoref.setBackground(getDisplay().getSystemColor(
-				SWT.COLOR_RED));
+		_buttonGeoref.setBackground(getDisplay().getSystemColor(SWT.COLOR_RED));
 
 		gridData = new GridData();
 		gridData.grabExcessVerticalSpace = true;
@@ -152,9 +147,8 @@ public class GeorefFollowUp extends Composite implements FollowUp,
 		_label.setText(Messages.getString("FollowJourney.prochain_arret")); //$NON-NLS-1$
 		_text.setVisible(true);
 		if (prochain != null) {
-			_text
-					.setText(prochain.getNom()
-							+ "\n" + Messages.getString("FollowJourney.arrivee_a") + prochain.getHeureArriveeTheorique()); //$NON-NLS-1$ //$NON-NLS-2$
+			_text.setText(prochain.getNom()
+					+ "\n" + Messages.getString("FollowJourney.arrivee_a") + prochain.getHeureArriveeTheorique()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -168,19 +162,17 @@ public class GeorefFollowUp extends Composite implements FollowUp,
 		_text.setVisible(true);
 		_label.setVisible(true);
 		Point point = _avm.getModel().getDernierPoint();
-		if (point != null && point.getLongitude() == 0 && point.getLatitude() == 0
-				&& point.isDesservi()) {
-			_label
-					.setText(Messages
-							.getString("GeorefFollowUp.cet-arret-est-maintenant-geolocalise")); //$NON-NLS-1$
+		if (point != null && point.getLongitude() == 0
+				&& point.getLatitude() == 0 && point.isDesservi()) {
+			_label.setText(Messages
+					.getString("GeorefFollowUp.cet-arret-est-maintenant-geolocalise")); //$NON-NLS-1$
 			_text.setText(point.getNom());
 		}
 		point = _avm.getModel().getProchainPoint();
-		if (point != null && point.getLongitude() == 0 && point.getLatitude() == 0
-				&& point.isDesservi() == false) {
-			_label
-					.setText(Messages
-							.getString("GeorefFollowUp.prochain-arret-non-geolocalise")); //$NON-NLS-1$
+		if (point != null && point.getLongitude() == 0
+				&& point.getLatitude() == 0 && point.isDesservi() == false) {
+			_label.setText(Messages
+					.getString("GeorefFollowUp.prochain-arret-non-geolocalise")); //$NON-NLS-1$
 			_text.setText(point.getNom());
 		}
 		layout();
@@ -220,12 +212,11 @@ public class GeorefFollowUp extends Composite implements FollowUp,
 					}
 
 					Point point = _course.getPointAvecRang(_currentRang + 1);
-					if (point != null 
-							&& point.isDesservi() == false) {
-						if (point.getLongitude() == 0 && point.getLatitude() == 0){
-						_label
-								.setText(Messages
-										.getString("GeorefFollowUp.prochain-arret-non-geolocalise")); //$NON-NLS-1$
+					if (point != null && point.isDesservi() == false) {
+						if (point.getLongitude() == 0
+								&& point.getLatitude() == 0) {
+							_label.setText(Messages
+									.getString("GeorefFollowUp.prochain-arret-non-geolocalise")); //$NON-NLS-1$
 						}
 						_text.setText(point.getNom());
 					}
@@ -250,6 +241,5 @@ public class GeorefFollowUp extends Composite implements FollowUp,
 	public void setHorsItineraire(boolean b) {
 
 	}
-
 
 }
