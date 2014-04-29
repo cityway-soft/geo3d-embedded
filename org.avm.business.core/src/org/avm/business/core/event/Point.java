@@ -3,6 +3,13 @@ package org.avm.business.core.event;
 import java.util.HashMap;
 
 public class Point implements Event {
+
+	public final static int ITL_NONE = 1;
+
+	public final static int ITL_NO_DOWN = 2;
+
+	public final static int ITL_NO_UP = 3;
+
 	private int _idu;
 
 	private int _id;
@@ -25,9 +32,9 @@ public class Point implements Event {
 
 	private float _latitude;
 
-//	private boolean _isEntryNotify = false;
-	
-	public static final Integer ATTRIBUT_NOTIFY_POINT=new Integer(40);
+	// private boolean _isEntryNotify = false;
+
+	public static final Integer ATTRIBUT_NOTIFY_POINT = new Integer(40);
 
 	private String _nomReduitGroupePoint;
 
@@ -39,6 +46,8 @@ public class Point implements Event {
 
 	private int _attenteTheorique;
 
+	private int itl = 0;
+
 	public Point(int id, int idu, String nom, int type, float x, float y) {
 		_id = id;
 		_idu = idu;
@@ -46,24 +55,23 @@ public class Point implements Event {
 		_type = type;
 		_longitude = x;
 		_latitude = y;
-		_attente=-1;
+		_attente = -1;
 		_nomReduitGroupePoint = "-";
 		_attributes = new HashMap();
 	}
-	
+
 	public Point(int id, int idu, String nom, int type, int arrivee,
 			int attenteTheorique, int rang, float distance, float x, float y,
-			int codeGirouette) {
+			int codeGirouette, int itl) {
 		this(id, idu, nom, type, x, y);
 		_arriveeTheorique = arrivee;
 		_arriveeTempsReel = arrivee;
 		_attenteTheorique = attenteTheorique;
 		_rang = rang;
 		_distance = distance;
+		this.itl = itl;
 		setCodeGirouette(codeGirouette);
 	}
-
-
 
 	public String getNomReduitGroupePoint() {
 		return _nomReduitGroupePoint;
@@ -87,14 +95,14 @@ public class Point implements Event {
 
 	public boolean isEntryNotify() {
 		boolean result = false;
-		String val=getAttribute(ATTRIBUT_NOTIFY_POINT);
-		result = (val != null && val.toUpperCase().indexOf("E")!=-1 );
+		String val = getAttribute(ATTRIBUT_NOTIFY_POINT);
+		result = (val != null && val.toUpperCase().indexOf("E") != -1);
 		return result;
 	}
 
-//	public void setEntryNotify(boolean t) {
-//		_isEntryNotify = t;
-//	}
+	// public void setEntryNotify(boolean t) {
+	// _isEntryNotify = t;
+	// }
 
 	public int getArriveeTheorique() {
 		return _arriveeTheorique;
@@ -103,7 +111,7 @@ public class Point implements Event {
 	public int getAttente() {
 		return _attente;
 	}
-	
+
 	public int getAttenteTheorique() {
 		return _attenteTheorique;
 	}
@@ -168,20 +176,18 @@ public class Point implements Event {
 		StringBuffer buf = new StringBuffer();
 		buf.append("[");
 		String state = null;
-		if (getAttente()==0){
-			state="=";
-		}
-		else if (getAttente()>0){
-			state="X";
-		}
-		else {
-			state=".";
+		if (getAttente() == 0) {
+			state = "=";
+		} else if (getAttente() > 0) {
+			state = "X";
+		} else {
+			state = ".";
 		}
 		buf.append(isDesservi() ? (state) : " ");
 		buf.append("] ");
 		buf.append("#");
-		buf.append( ((_rang<=9)?"0":""));
-		buf.append( _rang);
+		buf.append(((_rang <= 9) ? "0" : ""));
+		buf.append(_rang);
 		buf.append(" dep(");
 		buf.append(getHeureDepartTheorique());
 		buf.append(")");
@@ -189,7 +195,7 @@ public class Point implements Event {
 		buf.append(getHeureArriveeTempsReel());
 		buf.append(")");
 		buf.append(" att(");
-		buf.append(getAttente()<0?0:getAttente());
+		buf.append(getAttente() < 0 ? 0 : getAttente());
 		buf.append("s)");
 		buf.append(" idu(");
 		buf.append(_idu);
@@ -229,7 +235,7 @@ public class Point implements Event {
 	public void setArriveeTheorique(int arriveeTheorique) {
 		_arriveeTheorique = arriveeTheorique;
 	}
-	
+
 	public void setAttenteTheorique(int attente) {
 		_attenteTheorique = (attente < 0) ? 0 : attente;
 	}
@@ -255,7 +261,8 @@ public class Point implements Event {
 	public Object clone() {
 		Point p = new Point(this._id, this._idu, this._nom, this._type,
 				this._arriveeTheorique, this._attente, this._rang,
-				this._distance, this._longitude, this._latitude, this._codeGirouette);
+				this._distance, this._longitude, this._latitude,
+				this._codeGirouette, this.itl);
 		p._arriveeTheorique = this._arriveeTheorique;
 		p._arriveeTempsReel = this._arriveeTempsReel;
 		p._nomReduitGroupePoint = this._nomReduitGroupePoint;
@@ -272,11 +279,16 @@ public class Point implements Event {
 			_attributes.put(attId, att_val);
 		}
 	}
-	
-	public String getAttribute(Integer id){
-		return (String)_attributes.get(id);
+
+	public String getAttribute(Integer id) {
+		return (String) _attributes.get(id);
 	}
 
+	public int getItl() {
+		return itl;
+	}
 
-
+	public void setItl(int itl) {
+		this.itl = itl;
+	}
 }

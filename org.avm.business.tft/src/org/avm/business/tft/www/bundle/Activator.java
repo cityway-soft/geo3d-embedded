@@ -46,7 +46,6 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer {
 	}
 
 	public void start(BundleContext context) {
-		System.out.println("staryt");
 		_context = context;
 		_peer.setContext(_context);
 		_css.setContext(_context);

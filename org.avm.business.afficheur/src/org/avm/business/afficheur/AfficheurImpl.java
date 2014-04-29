@@ -100,27 +100,26 @@ public class AfficheurImpl implements Afficheur, ManageableService,
 	private void clear() {
 		print(""); //$NON-NLS-1$
 	}
-	
-	private String convertEncoding(String message){
+
+	private String convertEncoding(String message) {
 		String temp = message;
 		String from = System.getProperty("from.charset", "UTF-8");
 		String to = System.getProperty("to.charset", "iso-8859-1");
-		_log.debug("from="+from+", to="+to);
+		_log.debug("from=" + from + ", to=" + to);
 		if (from != null && to != null) {
 			_log.debug("Avant conversion " + temp);
 			try {
-				byte[] m = new String(temp.getBytes(), from)
-						.getBytes(to);
+				byte[] m = new String(temp.getBytes(), from).getBytes(to);
 				temp = new String(m);
 				_log.debug("Après conversion " + temp);
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-			
+
 		} else {
 			_log.debug("Aucune conversion " + temp);
 		}
-		
+
 		return temp;
 	}
 
@@ -167,7 +166,7 @@ public class AfficheurImpl implements Afficheur, ManageableService,
 		protected void onStateEnCourseArretSurItineraire(AvmModel model) {
 			Point point = model.getDernierPoint();
 			String arret = point.getNom();
-			//arret = convertEncoding(arret);
+			// arret = convertEncoding(arret);
 			print(Messages.getString("org.avm.business.afficheur.arret") + arret + "                   "); //$NON-NLS-1$
 		}
 
@@ -178,8 +177,13 @@ public class AfficheurImpl implements Afficheur, ManageableService,
 				buffer.append(Messages
 						.getString("org.avm.business.afficheur.prochain-arret"));
 				String arret = point.getNom();
-				//arret = convertEncoding(arret);
+				// arret = convertEncoding(arret);
 				buffer.append(arret);
+				if (point.getItl() == Point.ITL_NO_DOWN) {
+					buffer.append(" - ");
+					buffer.append(Messages
+							.getString("org.avm.business.afficheur.itl.no.down"));
+				}
 				buffer.append("                   ");
 
 				String[] messages = getMessages(model);
@@ -213,26 +217,26 @@ public class AfficheurImpl implements Afficheur, ManageableService,
 
 			while (iter.hasNext()) {
 				Properties props = (Properties) iter.next();
-				String temp = props.getProperty(org.avm.business.messages.Messages.MESSAGE);
+				String temp = props
+						.getProperty(org.avm.business.messages.Messages.MESSAGE);
 
-				
-//				temp = convertEncoding(temp);
-				
-//				_log.debug("from="+from+", to="+to);
-//				if (from != null && to != null) {
-//					_log.debug("Avant conversion " + temp);
-//					try {
-//						byte[] m = new String(temp.getBytes(), from)
-//								.getBytes(to);
-//						temp = new String(m);
-//						_log.debug("Après conversion " + temp);
-//					} catch (UnsupportedEncodingException e) {
-//						e.printStackTrace();
-//					}
-//					
-//				} else {
-//					_log.debug("Aucune conversion " + temp);
-//				}
+				// temp = convertEncoding(temp);
+
+				// _log.debug("from="+from+", to="+to);
+				// if (from != null && to != null) {
+				// _log.debug("Avant conversion " + temp);
+				// try {
+				// byte[] m = new String(temp.getBytes(), from)
+				// .getBytes(to);
+				// temp = new String(m);
+				// _log.debug("Après conversion " + temp);
+				// } catch (UnsupportedEncodingException e) {
+				// e.printStackTrace();
+				// }
+				//
+				// } else {
+				// _log.debug("Aucune conversion " + temp);
+				// }
 
 				msg[i] = temp;
 				i++;

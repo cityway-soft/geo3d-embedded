@@ -76,9 +76,15 @@ public class SimpleFollowUp extends Composite implements FollowUp {
 		_labelArret.setVisible(true);
 		_labelArret.setText(Messages.getString("FollowJourney.prochain_arret")); //$NON-NLS-1$
 		_textArret.setVisible(true);
+		String itl = "";
+		if (prochain.getItl() == Point.ITL_NO_DOWN) {
+			itl = "\n" + Messages.getString("FollowJourney.itl.nodown");
+		} else if (prochain.getItl() == Point.ITL_NO_UP) {
+			itl = "\n" + Messages.getString("FollowJourney.itl.noup");
+		}
 		_textArret
 				.setText(prochain.getNom()
-						+ "\n" + Messages.getString("FollowJourney.arrivee_a") + prochain.getHeureArriveeTheorique()); //$NON-NLS-1$
+						+ "\n" + Messages.getString("FollowJourney.arrivee_a") + prochain.getHeureArriveeTheorique()+itl); //$NON-NLS-1$
 	}
 
 	public void updatePoint() {
