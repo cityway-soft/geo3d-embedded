@@ -167,7 +167,13 @@ public class AfficheurImpl implements Afficheur, ManageableService,
 			Point point = model.getDernierPoint();
 			String arret = point.getNom();
 			// arret = convertEncoding(arret);
-			print(Messages.getString("org.avm.business.afficheur.arret") + arret + "                   "); //$NON-NLS-1$
+			String itlText = "";
+			if (point.getItl() == Point.ITL_NO_DOWN) {
+				itlText = " - ";
+				itlText += Messages
+						.getString("org.avm.business.afficheur.itl.no.down");
+			}
+			print(Messages.getString("org.avm.business.afficheur.arret") + arret + itlText + "                   "); //$NON-NLS-1$
 		}
 
 		protected void onStateEnCourseInterarretSurItineraire(AvmModel model) {
