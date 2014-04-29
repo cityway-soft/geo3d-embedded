@@ -1,6 +1,5 @@
 package org.avm.business.tft.model;
 
-
 public class POINT {
 
 	private int PNT_ID;
@@ -14,9 +13,9 @@ public class POINT {
 	private float PNT_X;
 
 	private float PNT_Y;
-	
+
 	private int PSI_DISTANCE;
-	
+
 	private int PSP_GIR;
 
 	private int HOD_ARRIVEE;
@@ -30,17 +29,19 @@ public class POINT {
 	private int HOD_RANG;
 
 	private int HOD_STATUT;
-	
+
+	private int PSP_ITL;
+
 	
 
 	public POINT() {
-		this(0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+		this(0, 0, "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	}
 
 	public POINT(int pnt_id, int pnt_idu, String pnt_nom, String grp_nom,
 			float pnt_x, float pnt_y, int psi_distance, int psp_gir,
 			int hod_arrivee, int hod_attente, int hod_arrivee_theorique,
-			int hod_attente_theorique, int hod_rang, int hod_statut) {
+			int hod_attente_theorique, int hod_rang, int hod_statut, int psp_itl) {
 		super();
 		PNT_ID = pnt_id;
 		PNT_IDU = pnt_idu;
@@ -56,6 +57,7 @@ public class POINT {
 		HOD_ATTENTE_THEORIQUE = hod_attente_theorique;
 		HOD_RANG = hod_rang;
 		HOD_STATUT = hod_statut;
+		PSP_ITL = psp_itl;
 	}
 
 	public int getPNT_ID() {
@@ -169,5 +171,12 @@ public class POINT {
 	protected void setHOD_STATUT(int hod_statut) {
 		HOD_STATUT = hod_statut;
 	}
-	
+
+	public int getPSP_ITL() {
+		return PSP_ITL;
+	}
+
+	public void setPSP_ITL(int pSP_ITL) {
+		PSP_ITL = pSP_ITL;
+	}
 }
