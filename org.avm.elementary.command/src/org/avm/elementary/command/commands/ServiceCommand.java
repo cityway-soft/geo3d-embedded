@@ -47,6 +47,12 @@ public class ServiceCommand implements org.apache.commons.chain.Command {
 		} else {
 			service.setCourse(0);
 		}
+		
+		if (model.getServiceAgent() != null) {
+			service.setServiceAgent(model.getServiceAgent().getIdU());
+		} else {
+			service.setServiceAgent(0);
+		}
 	}
 
 	public boolean execute(final Context context) throws Exception {
