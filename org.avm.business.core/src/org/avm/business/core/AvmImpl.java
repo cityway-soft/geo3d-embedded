@@ -139,7 +139,6 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 
 	private void init() {
 		_log = Logger.getInstance(this.getClass());
-		_log.setPriority(Priority.DEBUG);
 		_suiviItineraire = new SuiviItineraire();
 		_suiviItineraire.setAvm(this);
 		_defautPrisePosteService = new DefaultPrisePoste();

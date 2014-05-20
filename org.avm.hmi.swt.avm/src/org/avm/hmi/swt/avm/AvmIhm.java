@@ -80,7 +80,7 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 
 	public AvmIhm(Composite parent, int style) {
 		super(parent, style);
-		_log.info("Creation...");
+		_log.debug("Creation...");
 		try {
 			// _log.setPriority(Priority.DEBUG);
 
@@ -90,7 +90,7 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 			t.printStackTrace();
 			_log.error("Erreur creation avmihm", t);
 		}
-		_log.info("Create OK");
+		_log.debug("Create OK");
 	}
 
 	private void initialize() {
@@ -229,7 +229,6 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 			private ReplacementSelection _replacementSelection;
 
 			public void run() {
-				_log.debug("AvmIhm.java activateInitial (asyncExec) : BEGIN");
 				if (_compositePanels != null && !_compositePanels.isDisposed()) {
 					GridData gridData;
 					gridData = new GridData();
@@ -349,7 +348,6 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 	public void activateSaisieCourse(final ServiceAgent sa) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				_log.debug("AvmIhm.java activateSaisieCourse (asyncExec) : BEGIN");
 
 				if (_activeIHM != _journeySelection || _activeIHM == null) {
 					GridData gridData;
@@ -390,7 +388,6 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 				layout();
 				refresh(_compositePanels);
 				refresh(_compositeButtons);
-				_log.debug("AvmIhm.java activateSaisieCourse (asyncExec) : END");
 
 			}
 		});
@@ -412,11 +409,9 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 						if (course.getNombrePoint() == 0) {
 							_suiviCourse = new FollowSimpleJourney(
 									_compositePanels, SWT.NONE);
-							_log.debug("AvmIhm.java activateSuiviCourse : SimpleJourney ");
 						} else {
 							_suiviCourse = new FollowNormalJourney(
 									_compositePanels, SWT.NONE);
-							_log.debug("AvmIhm.java activateSuiviCourse : NormalJourney ");
 						}
 						_suiviCourse.setDesktop(_desktop);
 						_suiviCourse.setAvm(_avm);
@@ -432,10 +427,8 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 						refresh(_compositePanels);
 						refresh(_compositeButtons);
 
-						_log.debug("AvmIhm.java activateSuiviCourse sync : call activatePanel ");
 
 						_suiviCourse.activatePanel();
-						_log.debug("AvmIhm.java activateSuiviCourse sync : call updateMessage ");
 					}
 					_activeIHM = _suiviCourse;
 					activeCurrentIHM();
@@ -443,10 +436,8 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 					setAvanceRetard(_avm.getModel().getAvanceRetard());
 					_suiviCourse.setService(_avm.getModel().getServiceAgent());
 					_suiviCourse.setCourse(_avm.getModel().getCourse());
-					_log.debug("AvmIhm.java activateSuiviCourse sync : after call updateMessage ");
 
 				}
-				_log.debug("AvmIhm.java activateSuiviCourse (asyncExec) : END ");
 
 			}
 		});
@@ -503,17 +494,14 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 
 	public void setPoint(final Point point) {
 
-		_log.info("AvmIhm setPoint [DISABLED]");
 		if (isDisposed())
 			return;
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				_log.debug("AvmIhm.java setPoint (asyncExec) : BEGIN");
 				_log.debug("AvmIhm setPoint : _suivicourse= " + _suiviCourse);
 				if (_suiviCourse != null && _suiviCourse.isDisposed() == false) {
 					_suiviCourse.setPoint(point);
 				}
-				_log.debug("AvmIhm.java setPoint (asyncExec) : END");
 
 			}
 		});
@@ -521,12 +509,10 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 	}
 
 	void setAvanceRetard(final int ar) {
-		_log.info("AvmIhm setAvanceRetard [DISABLED]");
 		if (isDisposed())
 			return;
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
-				_log.debug("AvmIhm.java setAvanceRetard (asyncExec) : BEGIN");
 
 				_log.debug("AvmIhm setAvanceRetard : _suivicourse= "
 						+ _suiviCourse);
@@ -539,7 +525,6 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 					_suiviCourse.setAvanceRetard(ar);
 					refresh(_suiviCourse);
 				}
-				_log.debug("AvmIhm.java setAvanceRetard (asyncExec) : END");
 
 			}
 		});
@@ -572,7 +557,7 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 	}
 
 	public void setMessage(final String message) {
-		_log.info("AvmIhm setMessage");
+		_log.debug("AvmIhm setMessage");
 		if (isDisposed())
 			return;
 		Display.getDefault().syncExec(new Runnable() {
@@ -584,7 +569,7 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 
 	public void setMessageBox(final String title, final String message,
 			final int important) {
-		_log.info("AvmIhm setMessageBox");
+		_log.debug("AvmIhm setMessageBox");
 		if (isDisposed())
 			return;
 		Display.getDefault().syncExec(new Runnable() {
@@ -993,7 +978,7 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 
 		public void run() {
 			try {
-				_log.info("execute task..."); //$NON-NLS-1$
+				_log.debug("execute task..."); //$NON-NLS-1$
 				if (_avm != null) {
 					Point dernier = _avm.getModel().getDernierPoint();
 

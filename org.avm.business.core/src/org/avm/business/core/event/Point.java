@@ -225,14 +225,13 @@ public class Point implements Event {
 		}
 		return buf.toString();
 	}
-	
-	private String getItlLabel(){
+
+	private String getItlLabel() {
 		switch (itl) {
 		case ITL_NO_DOWN:
-			return "D";		
+			return "D";
 		case ITL_NO_UP:
-				return "M";
-
+			return "M";
 
 		default:
 			return "-";
@@ -308,7 +307,7 @@ public class Point implements Event {
 	}
 
 	public void setItl(int itl) {
-		if (itl == 0){
+		if (itl == 0) {
 			itl = ITL_NONE;
 		}
 		this.itl = itl;

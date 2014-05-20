@@ -57,7 +57,6 @@ public class AvmImpl implements ConsumerService, ManageableService,
 
 	public AvmImpl() {
 		_log = Logger.getInstance(this.getClass());
-		_log.setPriority(Priority.DEBUG);
 		_instance = this;
 	}
 
@@ -95,10 +94,7 @@ public class AvmImpl implements ConsumerService, ManageableService,
 						if (_avm != null && _avm.getModel().getState() != null) {
 							//_log.debug("Synchronizing with AVM"); //$NON-NLS-1$
 							State state = _avm.getModel().getState();
-							System.out.println("open : call notifyAvm before : instance=" + _instance);
-							System.out.println("open : synchronize with state " + state + "...");
 							_instance.notifyAvm(state);
-							System.out.println("open : call notifyAvm before");
 						}
 						_log.info("instantiation AvmIHM ok...");
 					} catch (Throwable t) {
@@ -109,11 +105,9 @@ public class AvmImpl implements ConsumerService, ManageableService,
 				
 
 				
-				System.out.println("AvmIhm = " + _avmihm);
 				_desktop.addTabItem(NAME, _avmihm, 0);
 				_desktop.activateItem(NAME);
 
-				System.out.println("open : end");
 
 			}
 		});
@@ -133,7 +127,6 @@ public class AvmImpl implements ConsumerService, ManageableService,
 
 	public void notify(Object o) {
 		_log.info(o);
-		System.out.println("AvmImpl.java notify : BEGIN [DISABLED]");
 
 		if (o instanceof State) {
 			State state = (State) o;
@@ -154,7 +147,6 @@ public class AvmImpl implements ConsumerService, ManageableService,
 				_avmihm.setAvanceRetard(_avm.getModel().getAvanceRetard());
 			}
 		}
-		System.out.println("AvmImpl.java notify : END");
 
 	}
 
@@ -168,7 +160,6 @@ public class AvmImpl implements ConsumerService, ManageableService,
 	}
 
 	public synchronized void notifyAvm(State state) {
-		System.out.println("AvmImpl.java notifyAvm : BEGIN state=" + state);
 		if (_avmihm != null && _avm != null && _avmihm.isDisposed() == false && isAuthenticated()) {
 			switch (state.getValue()) {
 			case AvmModel.STATE_INITIAL: {
@@ -201,15 +192,9 @@ public class AvmImpl implements ConsumerService, ManageableService,
 				break;
 			case AvmModel.STATE_EN_COURSE_HORS_ITINERAIRE: {
 				_log.debug(AvmModel.STATE_NAMES[state.getValue()]);
-				System.out
-						.println("notifyAvm STATE_EN_COURSE_HORS_ITINERAIRE : call activateSuiviCourse Before ");
 				activateSuiviCourse();
-				System.out
-						.println("notifyAvm STATE_EN_COURSE_HORS_ITINERAIRE : call activateSuiviCourse After ");
 
 				_avmihm.setHorsItineraire(true);
-				System.out
-						.println("notifyAvm STATE_EN_COURSE_HORS_ITINERAIRE : finished. ");
 			}
 				break;
 			case AvmModel.STATE_EN_COURSE_ARRET_SUR_ITINERAIRE: {
@@ -242,15 +227,12 @@ public class AvmImpl implements ConsumerService, ManageableService,
 						MessageBox.MESSAGE_WARNING);
 			}
 		}
-		System.out.println("AvmImpl.java notifyAvm : END");
 
 	}
 
 	private void activateSuiviCourse() {
-		System.out.println("AvmImpl.java call activateSuiviCourse BEGIN--");
 		Course course = _avm.getModel().getCourse();
 		_avmihm.activateSuiviCourse(course);
-		System.out.println("AvmImpl.java call activateSuiviCourse END--");
 	}
 
 	private void activateServiceSpecial() {
