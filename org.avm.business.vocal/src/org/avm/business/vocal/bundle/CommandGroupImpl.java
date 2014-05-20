@@ -27,10 +27,10 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	public final static String USAGE_SETSLEEPBEFOREPLAY = "[<time>]";
 	public final static String[] HELP_SETSLEEPBEFOREPLAY = new String[] { "Set time (in milliseconds) to sleep (to wait for amplifier) before play sound", };
 
-	public int cmdSetsleepbeforeplay(Dictionary opts, Reader in, PrintWriter out,
-			Session session) {
+	public int cmdSetsleepbeforeplay(Dictionary opts, Reader in,
+			PrintWriter out, Session session) {
 		String time = (String) opts.get("time");
-		if(time != null){
+		if (time != null) {
 			((VocalConfig) _config).setSleepBeforePlay(Long.parseLong(time));
 			_config.updateConfig();
 		}
@@ -38,9 +38,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 				+ ((VocalConfig) _config).getSleepBeforePlay());
 		return 0;
 	}
-	
-	
-	
+
 	public final static String USAGE_SETFILENAME = "<path>";
 	public final static String[] HELP_SETFILENAME = new String[] { "Set sound path", };
 
@@ -86,29 +84,26 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 	public int cmdTestvoyageur(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
-		String exterieur = (String)opts.get("exterieur");
+		String exterieur = (String) opts.get("exterieur");
 		String mp3 = _peer.getMP3Filename(Vocal.TEST_VOYAGEUR);
 		String[] messages = { mp3 };
 		try {
-			if (exterieur!=null && exterieur.toLowerCase().startsWith("ext")){
+			if (exterieur != null && exterieur.toLowerCase().startsWith("ext")) {
 				out.println("Annonce Exterieure : " + mp3);
-				_peer.annonce(messages, Vocal.VOYAGEUR_EXTERIEUR);			
-			}
-			else{
+				_peer.annonce(messages, Vocal.VOYAGEUR_EXTERIEUR);
+			} else {
 				out.println("Annonce Interieure : " + mp3);
-				_peer.annonce(messages, Vocal.VOYAGEUR_INTERIEUR);						
+				_peer.annonce(messages, Vocal.VOYAGEUR_INTERIEUR);
 			}
 		} catch (Exception e) {
 			out.println("Erreur : " + e.getMessage());
 			e.printStackTrace();
 		}
 
-
 		out.flush();
 		return 0;
 	}
 
-	
 	// Add
 	public final static String USAGE_SETCONFEXT = "[<args>] ...";
 
@@ -121,7 +116,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		_config.updateConfig(false);
 		return 0;
 	}
-	
+
 	// Add
 	public final static String USAGE_SETCONFINT = "[<args>] ...";
 
@@ -140,13 +135,13 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 	public final static String[] HELP_SETCONFCONDUCTEUR = new String[] { "Add properties", };
 
-	public int cmdSetconfconducteur(Dictionary opts, Reader in, PrintWriter out,
-			Session session) {
+	public int cmdSetconfconducteur(Dictionary opts, Reader in,
+			PrintWriter out, Session session) {
 		String[] args = (String[]) opts.get("args");
 		addConf(Vocal.CONFIGURATION_CONDUCTEUR, args, out);
 		_config.updateConfig(false);
 		return 0;
-	}	
+	}
 
 	// Add
 	public final static String USAGE_SETCONFDEFAUT = "[<args>] ...";
@@ -159,21 +154,22 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		addConf(Vocal.CONFIGURATION_DEFAUT, args, out);
 		_config.updateConfig(false);
 		return 0;
-	}	
-	
+	}
+
 	public int addConf(String name, String[] digi, PrintWriter out) {
 		Properties properties = new Properties();
 		properties.put(Vocal.KEY, name);
-		
+
 		if (digi != null) {
-			int j=0;
+			int j = 0;
 			for (int i = 0; i < digi.length && i < 3; i++) {
 				String value = digi[i];
-				if (!value.equals("0") && !value.equals("1")){
-					out.println("La valeur de sortie doit etre 0 ou 1 : " + value + " est incorrect");
+				if (!value.equals("0") && !value.equals("1")) {
+					out.println("La valeur de sortie doit etre 0 ou 1 : "
+							+ value + " est incorrect");
 					break;
 				}
-				String key = "do"+j;
+				String key = "do" + j;
 				j++;
 				properties.put(key, value);
 			}
@@ -195,7 +191,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		_config.updateConfig(false);
 		return 0;
 	}
-	
+
 	// Languages
 	public final static String USAGE_SETLANG = "[<langs>]";
 
@@ -203,20 +199,20 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 	public int cmdSetlang(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
-		
+
 		String langs = ((String) opts.get("langs"));
-		
-		if (langs != null){
+
+		if (langs != null) {
 			((VocalConfig) _config).setLanguages(langs);
 			_config.updateConfig(false);
-			((VocalImpl)_peer).configure(_config);
+			((VocalImpl) _peer).configure(_config);
 		}
-		
+
 		String[] languages = ((VocalConfig) _config).getLanguages();
-		
+
 		StringBuffer list = new StringBuffer();
 		for (int i = 0; i < languages.length; i++) {
-			if (i>0){
+			if (i > 0) {
 				list.append(", ");
 			}
 			list.append(languages[i]);
@@ -234,31 +230,30 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			Session session) {
 		Properties props = ((VocalConfig) _config).getProperty(null);
 		Enumeration keys = props.keys();
-		
-		
+
 		StringBuffer buf = new StringBuffer();
 		buf.append("                    do0  do1  do2");
 		buf.append(System.getProperty("line.separator"));
-		while(keys.hasMoreElements()){
-			String key = (String)keys.nextElement();
-			if (key.equals("filename")) continue;
-			Properties digi = (Properties)props.get(key);
+		while (keys.hasMoreElements()) {
+			String key = (String) keys.nextElement();
+
+			if (key.equals(ConfigImpl.FILENAME_TAG)
+					|| key.equals(ConfigImpl.SLEEP_TAG)
+					|| key.equals(ConfigImpl.LANGUAGES_TAG))
+				continue;
+			Properties digi = (Properties) props.get(key);
 			buf.append((key + "......................").substring(0, 20));
 			buf.append(" ");
-			buf.append(digi.getProperty("do0"));buf.append("    ");
-			buf.append(digi.getProperty("do1"));buf.append("    ");
-			buf.append(digi.getProperty("do2"));buf.append("    ");
-			buf.append(System.getProperty("line.separator"));			
+			buf.append(digi.getProperty("do0"));
+			buf.append("    ");
+			buf.append(digi.getProperty("do1"));
+			buf.append("    ");
+			buf.append(digi.getProperty("do2"));
+			buf.append("    ");
+			buf.append(System.getProperty("line.separator"));
 		}
 		out.println(buf);
 		return 0;
 	}
-	
-	
-
-
-
-
-
 
 }
