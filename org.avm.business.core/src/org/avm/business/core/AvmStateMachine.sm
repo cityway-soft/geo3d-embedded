@@ -148,7 +148,7 @@ Exit { exitHorsItineraire();
 // 		Trans 								Next State 					Actions
 
 		entree(balise:  int)
-		[ctxt.isArret(balise) == true]		ArretSurItineraire			{ actionEntreeArret(balise);  }	
+		[ctxt.isArret(balise) == true]		ArretSurItineraire			{ actionFinHorsItineraire(balise);  }	
 			
 		sortieItineraire					nil							{  }
 }
