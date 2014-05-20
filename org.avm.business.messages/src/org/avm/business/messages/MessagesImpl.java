@@ -511,7 +511,23 @@ public class MessagesImpl implements Messages, ConfigurableService,
 			message.getEntete().setReference(reference);
 			message.getEntete().getReference().setAcquittement(1);
 			message.getEntete().getReference().setId(Long.parseLong(msgId));
-			message.setMessage("LU '" + msg.getProperty(Messages.MESSAGE) + "'");
+			String response = "LU '" + msg.getProperty(Messages.MESSAGE) + "'";
+			String m=response;
+			try {
+				
+				String  toCharset  = System.getProperty("message.from-charset",
+						System.getProperty("file.encoding"));
+				String fromCharset = System
+						.getProperty("message.to-charset", "utf-8");
+				if (!fromCharset.equalsIgnoreCase(toCharset)) {
+					m = new String(response.getBytes(fromCharset), toCharset);
+				}
+				_log.debug("from=" + fromCharset + ", to=" + toCharset + ", msg="
+						+ m);
+			} catch (UnsupportedEncodingException e) {
+				_log.error("Error unsupportedEncodingException : " + e.getMessage());
+			}
+			message.setMessage(m);
 			_log.info("Emission du message d'acquittement : " + message);
 			send(message);
 		}
