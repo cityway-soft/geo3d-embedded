@@ -1228,6 +1228,10 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 		}
 	}
 
+	public void actionFinHorsItineraire(int balise) {
+		_suiviItineraire.entree(balise, true);
+	}
+	
 	public void actionEntreeArret(int balise) {
 		_suiviItineraire.entree(balise);
 	}

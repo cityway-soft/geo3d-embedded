@@ -46,7 +46,7 @@ public class Sender implements Runnable {
 		_thread = null;
 	}
 
-	public void send(Hashtable medias, String mediaName, Dictionary header, byte[] data) {
+	public  synchronized void send(Hashtable medias, String mediaName, Dictionary header, byte[] data) {
 		try {
 			execute(new SendTask(medias, mediaName, header, data));
 		} catch (InterruptedException e) {

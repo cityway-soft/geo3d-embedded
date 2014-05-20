@@ -115,6 +115,9 @@ public class ConfigImpl extends AbstractConfig implements VocalConfig {
 
 	public String[] getLanguages() {
 		String languages = (String) _config.get(LANGUAGES_TAG);
+		if (languages == null){
+			languages = "fr";
+		}
 		StringTokenizer t = new StringTokenizer(languages, ",");
 		String[] result = new String[t.countTokens()];
 		int i=0;

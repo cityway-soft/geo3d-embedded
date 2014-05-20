@@ -6,9 +6,6 @@
 <property name="service.pid">
 <value type="String">org.avm.business.vocal.Vocal</value>
 </property>
-<property name="languages">
-<value type="String">eu</value>
-</property>
 <property name="sleep-before-play">
 <value type="String">2000</value>
 </property>
