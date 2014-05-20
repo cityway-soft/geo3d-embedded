@@ -126,8 +126,7 @@ public class WifiManagerImpl implements WifiManager, ConfigurableService,
 	
 	private void fillMapBaliseWithAttr(String attr) {
 		if (database != null) {
-			ResultSet rs = database.sql("select * from attribut_point where ATT_ID='" + attr
-					+ "'");
+			ResultSet rs = database.sql("select * from attribut_point where ATT_ID='" + attr +"' and UPPER(ADP_VAL)='O'");
 			try {
 				while (rs.next()) {
 					int ret = rs.getInt("PNT_ID");
