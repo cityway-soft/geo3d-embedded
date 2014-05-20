@@ -2,8 +2,10 @@ package org.avm.business.vocal.bundle;
 
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
 
 import org.avm.business.vocal.Vocal;
@@ -68,7 +70,8 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	public int cmdTestconducteur(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
 		String mp3 = _peer.getMP3Filename(Vocal.TEST_CONDUCTEUR);
-		String[] messages = { mp3 };
+		List messages = new ArrayList();
+		messages.add(mp3);
 		try {
 			_peer.annonce(messages, Vocal.CONDUCTEUR);
 		} catch (Exception e) {
@@ -86,7 +89,8 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			Session session) {
 		String exterieur = (String) opts.get("exterieur");
 		String mp3 = _peer.getMP3Filename(Vocal.TEST_VOYAGEUR);
-		String[] messages = { mp3 };
+		List messages = new ArrayList();
+		messages.add(mp3);
 		try {
 			if (exterieur != null && exterieur.toLowerCase().startsWith("ext")) {
 				out.println("Annonce Exterieure : " + mp3);

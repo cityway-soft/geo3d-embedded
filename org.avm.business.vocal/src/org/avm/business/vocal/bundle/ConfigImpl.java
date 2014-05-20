@@ -121,8 +121,10 @@ public class ConfigImpl extends AbstractConfig implements VocalConfig {
 		StringTokenizer t = new StringTokenizer(languages, ",");
 		String[] result = new String[t.countTokens()];
 		int i=0;
+		String lang;
 		while(t.hasMoreElements()){
-			result[i] = t.nextToken();
+			lang=t.nextToken();
+			result[i] = lang.trim();
 			i++;
 		}
 		return result;
