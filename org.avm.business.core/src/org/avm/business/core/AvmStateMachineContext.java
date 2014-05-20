@@ -922,8 +922,7 @@ public class AvmStateMachineContext
                     context.setState(EnCourseMap.InterArretSurItineraire);
                     (context.getState()).Entry(context);
                 }
-            }
-            else
+            }            else
             {
                 super.sortie(context, balise);
             }
@@ -1094,7 +1093,7 @@ public class AvmStateMachineContext
                 context.clearState();
                 try
                 {
-                    ctxt.actionEntreeArret(balise);
+                    ctxt.actionFinHorsItineraire(balise);
                 }
                 finally
                 {
