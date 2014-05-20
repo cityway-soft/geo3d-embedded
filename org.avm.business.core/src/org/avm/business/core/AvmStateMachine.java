@@ -1,6 +1,5 @@
 package org.avm.business.core;
 
-
 public interface AvmStateMachine extends Avm {
 
 	void actionPrisePoste(int replaceVehicule, int replaceMatricule);
@@ -14,7 +13,6 @@ public interface AvmStateMachine extends Avm {
 	boolean isServiceSpecial(int service);
 
 	boolean isCourseCorrect(int course);
-
 
 	void actionFinPoste();
 
@@ -35,7 +33,7 @@ public interface AvmStateMachine extends Avm {
 	void stopGestionDefautPrisePoste();
 
 	void resetService();
-	
+
 	void resetCourse();
 
 	void stopSuiviItineraire();
@@ -49,7 +47,7 @@ public interface AvmStateMachine extends Avm {
 	boolean isTerminusDepart(int balise);
 
 	boolean isTerminusArrivee(int balise);
-	
+
 	boolean isArretCourant(int balise);
 
 	void notifyProgression(int pourcentage);
@@ -60,10 +58,12 @@ public interface AvmStateMachine extends Avm {
 
 	void checkPlanification();
 
+	void actionFinHorsItineraire(int balise);
+
 	void actionEntreeArret(int balise);
 
 	void actionSortieArret(int balise);
-	
+
 	void actionSortieArret();
 
 	void actionSortieItineraire();
@@ -91,7 +91,5 @@ public interface AvmStateMachine extends Avm {
 	void showMessage();
 
 	void checkAutomaticCourse();
-
-	
 
 }

@@ -615,8 +615,12 @@ public class SuiviItineraire implements ConfigurableService {
 		Point prochain = _avm.getModel().getProchainPoint();
 		return (prochain != null && prochain.getId() == balise);
 	}
-
+	
 	public void entree(int balise) {
+		entree(balise, false);
+	}
+
+	public void entree(int balise, boolean finHorsItineraire) {
 		int currentRang = 0;
 		if (getDernierArret() != null) {
 			currentRang = getDernierArret().getRang();
@@ -655,10 +659,10 @@ public class SuiviItineraire implements ConfigurableService {
 
 				// -- emission du passage a l'entree si le point horaire est
 				// configure pour l'emission a l'entree
-				if (p.isEntryNotify()) {
-					if (!getModel().isDepart()) {
-						_log.warn("Message 'passage arret' non envoye : pas de depart");
-					} else {
+				if (p.isEntryNotify() || finHorsItineraire) {
+					//if (!getModel().isDepart()) {
+						//_log.warn("Message 'passage arret' non envoye : pas de depart");
+					//} else {
 						_log.debug("ENTREE ARRET : Message 'passage arret' envoye");
 						setEnteteMessage(_passageArret);
 						setEnteteMessage(_avanceRetard);
@@ -671,7 +675,7 @@ public class SuiviItineraire implements ConfigurableService {
 						getModel().setGeorefMode(
 								prochain != null
 										&& prochain.isGeoref() == false);
-					}
+					//}
 				}
 			}
 
