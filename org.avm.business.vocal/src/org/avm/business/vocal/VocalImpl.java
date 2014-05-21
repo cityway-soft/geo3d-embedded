@@ -227,39 +227,6 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 		}
 	}
 
-	// private int updatePlayList(String template, List messages,
-	// String[] languages, int idx) {
-	// int c = idx;
-	// for (int i = 0; i < languages.length; i++) {
-	// StringBuffer lang = new StringBuffer();
-	// if (!languages[i].equals("fr")) {
-	// lang.append(languages[i]);
-	// lang.append("_");
-	//
-	// }
-	//
-	// lang.append(template);
-	// String mp3 = getMP3Filename(lang.toString());
-	// File file = new File(mp3);
-	// if (file.exists() || i == 0) {
-	// messages.add(c, mp3);
-	// }
-	// if (!file.exists()) {
-	// _log.warn("File " + file.getAbsolutePath() + " does not exists");
-	// }
-	//
-	// c++;
-	// }
-	// return c;
-	// }
-
-	// private int updatePlayList(String name, List messages, int idx) {
-	// int c = idx;
-	// messages.add(c, getMP3Filename(name));
-	// c++;
-	// return c;
-	// }
-
 	private List getTranslatedAnnoncement(String template) throws Exception {
 		List items = null;
 		for (int i = 0; i < languages.length; i++) {
@@ -293,43 +260,6 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 		return items;
 	}
 
-	// private List getPlaylist(String template, String[] languages, String
-	// name,
-	// boolean reverse) {
-	// List messages = new ArrayList();
-	//
-	// int c = 0;
-	// if (!reverse) {
-	// _log.info("update playlist for template");
-	// c = updatePlayList(template, messages, languages, c);
-	// _log.info("update playlist for name " + name);
-	// c = updatePlayList(name, messages, c);
-	// } else {
-	// _log.info("(reverse) update playlist for name " + name);
-	// c = updatePlayList(name, messages, c);
-	// _log.info("(reverse) update playlist for template");
-	// c = updatePlayList(template, messages, languages, c);
-	// }
-	//
-	// if (_log.isDebugEnabled()) {
-	// StringBuffer debug = new StringBuffer();
-	// debug.append("playlist " + template + " :");
-	// Iterator iter = messages.iterator();
-	// int i = 0;
-	// while (iter.hasNext()) {
-	// if (i > 0) {
-	// debug.append(", ");
-	// }
-	// debug.append(iter.next());
-	// i++;
-	// }
-	//
-	// _log.debug(debug);
-	// }
-	// return messages;
-	//
-	// }
-
 	protected void annonceLigne(int destinataire) throws Exception {
 		if (_avm.getModel().getCourse() != null) {
 			int lgnIdu = _avm.getModel().getCourse().getLigneIdu();
@@ -342,10 +272,6 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 	protected void annonceProchainArret(int destinataire) throws Exception {
 		Point prochainArret = _avm.getModel().getProchainPoint();
 		if (prochainArret != null) {
-			// String prochain = getMP3Filename(PROCHAIN);
-			// String name = getMP3Filename(prochainArret
-			// .getNomReduitGroupePoint());
-			// String[] messages = { prochain, name };
 
 			int itl = prochainArret.getItl();
 
@@ -461,9 +387,9 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 
 	private void annonceVoyageurInterieur(List messages) throws Exception {
 		_log.debug("Annonce Voyageur interieur...");
-		// modeVoyageurInterieur();
+		modeVoyageurInterieur();
 		play(messages);
-		// modeDefaut();
+		modeDefaut();
 		_log.debug("Annonce Voyageur ok");
 
 	}
@@ -471,9 +397,9 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 	private void annonceVoyageurExterieur(List messages) throws Exception {
 
 		_log.debug("Annonce Voyageur exterieur...");
-		// modeVoyageurExterieur();
+		modeVoyageurExterieur();
 		play(messages);
-		// modeDefaut();
+		modeDefaut();
 		_log.debug("Annonce Voyageur ok");
 
 	}
