@@ -22,6 +22,33 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		_peer = peer;
 	}
 
+	// Set/Update
+	public final static String USAGE_SET = "-n #name# [-f #url#] [-p #priority#] [-v #volume#]";
+	public final static String[] HELP_SET = new String[] { "Update config", };
+
+	public int cmdSet(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+		String name = ((String) opts.get("-n")).trim();
+
+		Properties p = ((ConfigImpl) _config).get(name);
+		String url = ((String) opts.get("-f"));
+		String priority = ((String) opts.get("-p"));
+		String volume = ((String) opts.get("-v"));
+		if (url != null) {
+			p.put(Sound.URL, url.trim());
+		}
+		if (volume != null) {
+			p.put(Sound.VOLUME, volume.trim());
+
+		}
+		if (priority != null) {
+			p.put(Sound.PRIORITY, priority.trim());
+		}
+		((SoundConfig) _config).add(p);
+		_config.updateConfig();
+		return 0;
+	}
+
 	// Add
 	public final static String USAGE_ADD = "-n #name# -f #url# -p #priority# -v #volume#";
 	public final static String[] HELP_ADD = new String[] { "Add config", };
@@ -38,7 +65,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		p.put(Sound.PRIORITY, priority);
 		p.put(Sound.VOLUME, volume);
 		((SoundConfig) _config).add(p);
-		//cmdUpdateconfig(opts, in, out, session);
+		// cmdUpdateconfig(opts, in, out, session);
 		return 0;
 	}
 
@@ -50,7 +77,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			Session session) {
 		String name = ((String) opts.get("-n")).trim();
 		((SoundConfig) _config).remove(name);
-		//cmdUpdateconfig(opts, in, out, session);
+		// cmdUpdateconfig(opts, in, out, session);
 		return 0;
 	}
 
@@ -105,9 +132,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		Short value = new Short(((String) opts.get("max")).trim());
 		((SoundConfig) _config).setMaxVolume(value.shortValue());
 		_config.updateConfig();
-		out
-				.println("Current value : "
-						+ ((SoundConfig) _config).getMaxVolume());
+		out.println("Current value : " + ((SoundConfig) _config).getMaxVolume());
 		return 0;
 	}
 
@@ -116,9 +141,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 	public int cmdShowdelay(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
-		out
-				.println("Current value : "
-						+ ((SoundConfig) _config).getMaxVolume());
+		out.println("Current value : " + ((SoundConfig) _config).getMaxVolume());
 		return 0;
 	}
 
