@@ -27,6 +27,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	public final static String[] HELP_SET = new String[] { "Update config", };
 
 	public int cmdSet(Dictionary opts, Reader in, PrintWriter out,
+
 			Session session) {
 		String name = ((String) opts.get("-n")).trim();
 
