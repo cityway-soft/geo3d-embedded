@@ -1,7 +1,5 @@
 package org.avm.device.generic.afficheur.aesys.protocol;
 
-import java.io.UnsupportedEncodingException;
-
 import org.apache.log4j.Logger;
 import org.avm.device.afficheur.AfficheurProtocol;
 

@@ -45,6 +45,7 @@
 		<module>../org.avm.device.generic.afficheur.matis</module>
 		<module>../org.avm.device.generic.afficheur.mobitec</module>
 		<module>../org.avm.device.generic.afficheur.aesys</module>
+		<module>../org.avm.device.generic.afficheur.duhamel</module>
 		<module>../org.avm.device.generic.can</module>
 		<module>../org.avm.device.generic.comptage.elinap</module>
 		<module>../org.avm.device.generic.girouette.duhamel</module>
