@@ -33,5 +33,7 @@ public class TestDuhatiers extends TestCase {
 		assertEquals(trame.length(), expected.length());
 		assertEquals(expected, trame);
 	}
+	
+	
 
 }

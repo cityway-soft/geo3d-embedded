@@ -22,7 +22,8 @@ public class Duhatiers extends AfficheurProtocol {
 
 	private static final byte DESTINATAIRE_ADR = 15; //-- Les afficheurs intérieurs portent l’adresse : 15...20 
 	private static final byte EMETTEUR_ADR = 0; //-- calculateur=0
-	private static final byte FONCTION_AFFICHEUR = 29;
+	private static final byte FONCTION_AFFICHEUR = 32;
+	private static final byte SOUS_FONCTION_AFFICHEUR = 29;
 	public static byte STX = 0x02;
 	public static byte ETX = 0x03;
 
@@ -87,7 +88,8 @@ public class Duhatiers extends AfficheurProtocol {
 			data.write(formatEmitterAddress(EMETTEUR_ADR, false));
 			data.write(FONCTION_AFFICHEUR);
 			byte size = (byte)message.length();
-			data.write(size);
+			data.write(size+1);
+			data.write(SOUS_FONCTION_AFFICHEUR);
 			data.write(message.getBytes());
 			byte crc = (byte) (checksum(data.toByteArray()));
 			buffer.write(data.toByteArray());
