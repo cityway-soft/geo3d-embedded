@@ -19,7 +19,7 @@ public class AfficheurDriver extends AbstractActivator implements Driver,
 
 	public static final String CATEGORY = Afficheur.class.getName();
 
-	public static final String MODEL = "org.avm.device.afficheur.mobitec";
+	public static final String MODEL = "org.avm.device.afficheur.duhamel";
 
 	public static final String _spec = "(&" + " ( " + DEVICE_CATEGORY + "="
 			+ CATEGORY + ")" + " (" + DeviceConfig.DEVICE_MODEL + "=" + MODEL
