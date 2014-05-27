@@ -127,8 +127,18 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 				if (_avm.getModel().isInsidePoint()
 						&& porteAv.getName().equals("porteav")
 						&& porteAv.getValue().getValue() == 0) {
-					annonceLigne(VOYAGEUR_EXTERIEUR);
-					annonceDestination(VOYAGEUR_EXTERIEUR);
+
+					Point dernier = _avm.getModel().getDernierPoint();
+					if (dernier != null) {
+						if (dernier.getItl() == Point.ITL_NO_UP) {// --montée
+																	// interdite
+							annonceMonteeInterdite(VOYAGEUR_EXTERIEUR);
+						} else {
+							annonceLigne(VOYAGEUR_EXTERIEUR);
+							annonceDestination(VOYAGEUR_EXTERIEUR);
+						}
+					}
+
 					_needToTellDirection = false;
 				}
 			} else if (o instanceof State) {
@@ -150,11 +160,8 @@ public class VocalImpl implements Vocal, ManageableService, ConsumerService,
 
 						Point dernier = _avm.getModel().getDernierPoint();
 						if (dernier != null) {
-							if (dernier.getItl() == Point.ITL_NO_UP) {// --montée
-																		// interdite
-								annonceMonteeInterdite(VOYAGEUR_EXTERIEUR);
-							} else if (dernier.getItl() == Point.ITL_NO_DOWN) {// --descente
-								// interdite
+							if (dernier.getItl() == Point.ITL_NO_DOWN) {
+								// --descente interdite
 								annonceDescenteInterdite(VOYAGEUR_INTERIEUR);
 							} else {
 								annonceArret(VOYAGEUR_INTERIEUR);
