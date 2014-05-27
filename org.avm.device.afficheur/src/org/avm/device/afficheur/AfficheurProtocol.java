@@ -38,7 +38,7 @@ public abstract class AfficheurProtocol {
 				out.write(c);
 			}
 		} else {
-			logger.warn("Nothing to read on port (?)...");
+			logger.debug("Nothing to read on port (?)...");
 		}
 		return (out != null) ? out.toByteArray() : null;
 	}
@@ -56,7 +56,7 @@ public abstract class AfficheurProtocol {
 		send(buffer);
 	}
 
-	private void purge() {
+	protected void purge() {
 		try {
 			if (in.available() > 0) {
 				out = new ByteArrayOutputStream();
@@ -127,7 +127,7 @@ public abstract class AfficheurProtocol {
 		}
 		return data;
 	}
-	
+
 	protected String removeCharWithAccent(String message) {
 		final StringBuffer buffer = new StringBuffer();
 		message = message.toLowerCase();

@@ -20,8 +20,10 @@ import org.avm.device.afficheur.Utils;
  */
 public class Duhatiers extends AfficheurProtocol {
 
-	private static final byte DESTINATAIRE_ADR = 15; //-- Les afficheurs intérieurs portent l’adresse : 15...20 
-	private static final byte EMETTEUR_ADR = 0; //-- calculateur=0
+	private static final byte DESTINATAIRE_ADR = 15; // -- Les afficheurs
+														// intérieurs portent
+														// l’adresse : 15...20
+	private static final byte EMETTEUR_ADR = 0; // -- calculateur=0
 	private static final byte FONCTION_AFFICHEUR = 32;
 	private static final byte SOUS_FONCTION_AFFICHEUR = 29;
 	public static byte STX = 0x02;
@@ -34,28 +36,30 @@ public class Duhatiers extends AfficheurProtocol {
 
 	public Duhatiers() {
 	}
-	
-	private byte formatDestAddress(int addr){
-//		5 bits de poids fort de l'octet + 3 bits de poids faibles à 0
-		int a=addr<<3;
-		return (byte)a;
-		
+
+	private byte formatDestAddress(int addr) {
+		// 5 bits de poids fort de l'octet + 3 bits de poids faibles à 0
+		int a = addr << 3;
+		return (byte) a;
+
 	}
 
-	
-	private byte formatEmitterAddress(int addr, boolean moreThan128){
-//		5 bits de poids fort de l'octet +
-		int a=addr<<3;
-		if (moreThan128){
-//		1 bit B2 (4 en valeur), d’indication de poursuite d’échange (*).
-//		* Ce bit Sert à transmettre plus de 128 octets de données pour une fonction donnée. Ce bit doit être à 1 de la 1ere à
-//		l’avant dernière trame. La dernière trame doit avoir ce bit à 0 pour indiquer que l’échange est terminé. ATTENTION : Répéter
-//		systématiquement le numéro de sous fonction Data[0] dans chaque trame avec
+	private byte formatEmitterAddress(int addr, boolean moreThan128) {
+		// 5 bits de poids fort de l'octet +
+		int a = addr << 3;
+		if (moreThan128) {
+			// 1 bit B2 (4 en valeur), d’indication de poursuite d’échange (*).
+			// * Ce bit Sert à transmettre plus de 128 octets de données pour
+			// une fonction donnée. Ce bit doit être à 1 de la 1ere à
+			// l’avant dernière trame. La dernière trame doit avoir ce bit à 0
+			// pour indiquer que l’échange est terminé. ATTENTION : Répéter
+			// systématiquement le numéro de sous fonction Data[0] dans chaque
+			// trame avec
 			a = a & 0x01;
 		}
-//		2 bits de poids faibles à 0
-		
-		return (byte)a;
+		// 2 bits de poids faibles à 0
+
+		return (byte) a;
 
 	}
 
@@ -63,10 +67,16 @@ public class Duhatiers extends AfficheurProtocol {
 
 		_log.debug("print " + "[" + this + "] " + message);
 		byte[] buffer = generateMessage(Utils.format(message));
-		_log.debug("end " + "[" + this + "] " + toHexaString(buffer));
+		_log.debug("hexa duhatiers encoded :" + toHexaString(buffer));
 
 		try {
+			purge();
 			send(buffer);
+			_log.debug("Request sent.");
+			byte[] result = receive();
+			String response = AfficheurProtocol.toHexaAscii(result);
+			_log.debug("Response:" + response);
+
 		} catch (IOException e) {
 			// retry one
 			try {
@@ -78,21 +88,30 @@ public class Duhatiers extends AfficheurProtocol {
 	}
 
 	public byte[] generateMessage(String message) {
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		
-		ByteArrayOutputStream data = new ByteArrayOutputStream();
+		byte[] buffer = generateMessageSousFonction29(message, 1);
+		
+		return buffer;
+	}
+	
+	
+	private byte[] generateMessageSousFonction29(String message, int msgRank) {
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+		ByteArrayOutputStream frameForChecksum = new ByteArrayOutputStream();
 
 		try {
 			buffer.write(STX);
-			data.write(formatDestAddress(DESTINATAIRE_ADR));
-			data.write(formatEmitterAddress(EMETTEUR_ADR, false));
-			data.write(FONCTION_AFFICHEUR);
-			byte size = (byte)message.length();
-			data.write(size+1);
-			data.write(SOUS_FONCTION_AFFICHEUR);
-			data.write(message.getBytes());
-			byte crc = (byte) (checksum(data.toByteArray()));
-			buffer.write(data.toByteArray());
+			frameForChecksum.write(formatDestAddress(DESTINATAIRE_ADR));
+			frameForChecksum.write(formatEmitterAddress(EMETTEUR_ADR, false));
+			frameForChecksum.write(FONCTION_AFFICHEUR);
+			byte size = (byte) message.length();
+			frameForChecksum.write(size + 2);
+			frameForChecksum.write(SOUS_FONCTION_AFFICHEUR);
+			frameForChecksum.write(msgRank);//message 1
+			frameForChecksum.write(message.getBytes());
+			byte crc = (byte) (checksum(frameForChecksum.toByteArray()));
+			buffer.write(frameForChecksum.toByteArray());
 			buffer.write(crc);
 			buffer.write(ETX);
 		} catch (IOException e) {
@@ -123,7 +142,5 @@ public class Duhatiers extends AfficheurProtocol {
 		}
 		return new String(buffer);
 	}
-	
-	
 
 }

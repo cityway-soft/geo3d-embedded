@@ -28,8 +28,9 @@ public class TestDuhatiers extends TestCase {
 		String code = "BONJOUR";
 		String trame = generate(code);
 
-		String expected = "0278001D07424F4E4A4F55522303";
-		debug("code=" + code + "   =>" + trame);
+//		String expected = "0278001D07424F4E4A4F55522303";
+		String expected = "02780020081D424F4E4A4F55520C03";
+		debug("message=" + code + "   =>" + trame);
 		assertEquals(trame.length(), expected.length());
 		assertEquals(expected, trame);
 	}
