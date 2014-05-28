@@ -116,11 +116,11 @@ public class Activator extends AbstractActivator implements AlarmProvider {
 		_peer.setContext(null);
 	}
 
-	public void setGirouette(org.avm.device.afficheur.Afficheur afficheur) {
+	public void setAfficheur(org.avm.device.afficheur.Afficheur afficheur) {
 		_peer.setAfficheur(afficheur);
 	}
 
-	public void unsetGirouette(org.avm.device.afficheur.Afficheur afficheur) {
+	public void unsetAfficheur(org.avm.device.afficheur.Afficheur afficheur) {
 		_peer.unsetAfficheur(afficheur);
 	}
 

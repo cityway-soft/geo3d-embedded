@@ -28,6 +28,18 @@ public abstract class AfficheurProtocol {
 		out.write(buffer);
 		out.flush();
 	}
+	
+	protected byte[] request(byte[] buffer) throws IOException {
+		purge();
+		logger.debug("Requesting :" + toHexaAscii(buffer));
+		out.write(buffer);
+		out.flush();
+		byte[] result = receive();
+		if (result != null){
+			logger.info("Response :"+toHexaAscii(result));
+		}
+		return result;
+	}
 
 	protected byte[] receive() throws IOException {
 		ByteArrayOutputStream out = null;

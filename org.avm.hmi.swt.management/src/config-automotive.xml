@@ -10,7 +10,7 @@
 <value type="String">http://localhost/org.avm.hmi.swt.management.jar</value>
 </property>
 <property name="org.avm.config.version">
-<value type="Integer">42</value>
+<value type="Integer">43</value>
 </property>
 <property name="reboot">
 	<value type="String">#Tue Nov 21 11:52:37 CET 2006
@@ -171,23 +171,25 @@
 
 <property name="config-girouettes">
 	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
-	DUHAMEL-PF5005-PCE300=duhamel|comm:1|1200|7|1|none
-	DUHAMEL-PF5005-PCE311=duhamel|comm:1|9600|7|1|none
-	MATIS-DH20=matis|comm:1|4800|8|1|even
-	MATIS-HE200=matis|comm:1|4800|8|1|even
-	MATIS-C10000=matis|comm:1|1200|8|1|even
-	SPEC=spec|comm:1|9600|8|1|even
-	HANOVER-ERIC+=hanover|comm:1|9600|8|1|none
-	AESYS=aesys|comm:1|9600|8|1|none
+	DUHAMEL-PF5005-PCE300=duhamel|comm:5|1200|7|1|none
+	DUHAMEL-PF5005-PCE311=duhamel|comm:5|9600|7|1|none
+	DUHAMEL-PF5005-DUHATIER=duhamel|comm:5|38400|8|1|none|Duhatiers
+	MATIS-DH20=matis|comm:5|4800|8|1|even
+	MATIS-HE200=matis|comm:5|4800|8|1|even
+	MATIS-C10000=matis|comm:5|1200|8|1|even
+	SPEC=spec|comm:5|9600|8|1|even
+	HANOVER-ERIC+=hanover|comm:5|9600|8|1|none
+	AESYS=aesys|comm:5|9600|8|1|none
 	</value>
 </property>
 
 <property name="config-afficheurs">
 	<value type="String">#Thu Oct 05 22:12:56 CEST 2006
-	MOBITEC=mobitec|rs485:0|1200|7|2|even
-	MATIS=matis|rs485:0|1200|8|1|even
-	HANOVER=hanover|rs485:0|4800|8|1|none
-	AESYS=aesys|rs485:0|9600|8|1|none
+	MOBITEC=mobitec|rs485:6|1200|7|2|even
+	MATIS=matis|rs485:6|1200|8|1|even
+	HANOVER=hanover|rs485:6|4800|8|1|none
+	AESYS=aesys|rs485:6|9600|8|1|none
+	DUHAMEL=duhamel|rs485:6|9600|8|1|none|Duhatiers
 	</value>
 </property>
 

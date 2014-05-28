@@ -123,11 +123,15 @@ public class DriverSelection extends Composite {
 		_ports.add("comm:2");
 		_ports.add("comm:3");
 		_ports.add("comm:4");
+		_ports.add("comm:5");
+		_ports.add("comm:6");
 		_ports.add("rs485:0");
 		_ports.add("rs485:1");
 		_ports.add("rs485:2");
 		_ports.add("rs485:3");
 		_ports.add("rs485:4");
+		_ports.add("rs485:5");
+		_ports.add("rs485:6");
 		_ports.select(1);
 		_ports.setLayoutData(gridData);
 		_ports.setFont(fontCombo);
@@ -152,6 +156,7 @@ public class DriverSelection extends Composite {
 		_speeds.add("1200");
 		_speeds.add("4800");
 		_speeds.add("9600");
+		_speeds.add("38400");
 		_speeds.select(0);
 		_speeds.setFont(fontCombo);
 

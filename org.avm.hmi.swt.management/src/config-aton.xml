@@ -10,7 +10,7 @@
 <value type="String">http://localhost/org.avm.hmi.swt.management.jar</value>
 </property>
 <property name="org.avm.config.version">
-<value type="Integer">50</value>
+<value type="Integer">52</value>
 </property>
 <property name="reboot">
 	<value type="String">#Tue Nov 21 11:52:37 CET 2006
@@ -67,42 +67,56 @@
 <property name="onescreenv2">
 <value type="String">#Tue Nov 21 11:52:37 CET 2006
     start=/management shell exec /etc/sysconfig/xconfig 1
-    name=Pupitre 6.5''V2 seul
+    name=IHM 6.5''V2 seul
     group=system
 </value>
 </property>
 <property name="dualscreenv2">
 <value type="String">#Tue Nov 21 11:52:37 CET 2006
     start=/management shell exec /etc/sysconfig/xconfig 2
-    name=Pupitre 6.5''V2 + TFT
+    name=IHM 6.5''V2 + TFT
     group=system
 </value>
 </property>
 <property name="onescreenv3">
 <value type="String">#Tue Nov 21 11:52:37 CET 2006
     start=/management shell exec /etc/sysconfig/xconfig 3
-    name=Pupitre 6.5''V3 seul
+    name=IHM 6.5''V3 seul
     group=system
 </value>
 </property>
 <property name="dualscreenv3">
 <value type="String">#Tue Nov 21 11:52:37 CET 2006
     start=/management shell exec /etc/sysconfig/xconfig 4
-    name=Pupitre 6.5''V3 + TFT
+    name=IHM 6.5''V3 + TFT
     group=system
 </value>
 </property> 
 <property name="dualscreen7pouces">
 <value type="String">#Tue Nov 21 11:52:37 CET 2006
     start=/management shell exec /etc/sysconfig/xconfig 5
-    name=Pupitre 7'' seul
+    name=IHM 7'' seul c/c
     group=system
 </value>
 </property> 
 <property name="dualscreen7poucesTFT">
 <value type="String">#Tue Nov 21 11:52:37 CET 2006
     start=/management shell exec /etc/sysconfig/xconfig 6
-    name=Pupitre 7'' + TFT
+    name=IHM 7'' + TFT c/c
+    group=system
+</value>
+</property> 
+<property name="dualscreen7pouces_11">
+<value type="String">#Tue Nov 21 11:52:37 CET 2006
+    start=/management shell exec /etc/sysconfig/xconfig 7
+    name=IHM 7'' seul 1/1
+    group=system
+</value>
+</property> 
+<property name="dualscreen7poucesTFT_11">
+<value type="String">#Tue Nov 21 11:52:37 CET 2006
+    start=/management shell exec /etc/sysconfig/xconfig 8
+    name=IHM 7'' + TFT 1/1
     group=system
 </value>
 </property> 
@@ -214,6 +228,7 @@
 	SPEC=spec|comm:1|9600|8|1|even|SPEC
 	DUHAMEL-PF5005-PCE300=duhamel|comm:1|1200|7|1|none|PCE3xx
 	DUHAMEL-PF5005-PCE311=duhamel|comm:1|9600|7|1|none|PCE3xx
+	DUHAMEL-PF5005-DUHATIER=duhamel|comm:1|38400|8|1|none|Duhatiers
 	MOBITEC=mobitec|rs485:2|1200|7|2|even|ICU400
 	HANOVER-(D)ERIC+=hanover|comm:1|9600|8|1|none|GTMH_1,SOCRIE_B
 	AESYS=aesys|comm:1|9600|8|1|none|KC640_32G,KC2S_1,KC2S_2,KC2S_3
@@ -226,6 +241,7 @@
 	MATIS=matis|rs485:0|1200|8|1|even|MATIS
 	HANOVER=hanover|rs485:0|4800|8|1|none|GTMH_1,SOCRIE_B
 	AESYS=aesys|rs485:0|9600|8|1|none|AESYS
+	DUHAMEL=duhamel|rs485:0|9600|8|1|none|Duhatiers
 	</value>
 </property>
 

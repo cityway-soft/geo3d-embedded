@@ -1,130 +1,92 @@
-package org.avm.device.generic.afficheur.duhamel.protocol;
+package org.avm.device.generic.girouette.duhamel.protocol;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.avm.device.afficheur.AfficheurProtocol;
-import org.avm.device.afficheur.Utils;
+import org.avm.device.girouette.GirouetteProtocol;
 import org.avm.elementary.common.Util;
 
 /**
- * DEVICE_CATEGORY : org.avm.device.afficheur.Afficheur DEVICE_DESCRIPTION :
- * Controleur d'afficheur Mobitec DEVICE_MANUFACTURER : mobitec DEVICE_MODEL :
- * org.avm.device.afficheur.mobitec DEVICE_NAME :
- * org.avm.device.afficheur.mobitec DEVICE_SERIAL :
- * 4df3687a-9b67-46c5-b83f-b581c98feff2 DEVICE_VERSION : 1.0.0 url :
- * rs485:2;baudrate
- * =1200;stopbits=2;parity=even;bitsperchar=7;autocts=off;autorts=off protocol :
- * NSI
+ * DEVICE_CATEGORY : org.avm.device.girouette.Afficheur 
+ * DEVICE_DESCRIPTION : Controleur de girouette Duhamel 
+ * DEVICE_MANUFACTURER : duhamel 
+ * DEVICE_MODEL : org.avm.device.girouette.duhamel 
+ * DEVICE_NAME : org.avm.device.girouette.duhamel 
+ * DEVICE_SERIAL : 4df3687a-9b67-46c5-b83f-b581c98feff2 
+ * DEVICE_VERSION : 1.0.0 
+ * url :  comm:4;baudrate=9600;stopbits=1;parity=none;bitsperchar=8;blocking=off
+ * protocol : Duhatiers
  * 
  */
-public class Duhatiers extends AfficheurProtocol {
+public class Duhatiers extends GirouetteProtocol {
 
-	private static final byte DESTINATAIRE_ADR = 15; // -- Les afficheurs
-														// intérieurs portent
-														// l’adresse : 15...20
+	private static final byte DESTINATAIRE_ADR = 1; // -- Le pupitre duhamel
+													// porte l'adresse 1
 	private static final byte EMETTEUR_ADR = 0; // -- calculateur=0
+	//
 	private static final byte FONCTION_INTERROGATION = 1;
 	private static final byte FONCTION_ACQUITTEMENT = 2;
-	private static final byte FONCTION_AFFICHEUR = 32;
-	private static final byte SOUS_FONCTION_AFFICHEUR = 29;
-	private static final byte SOUS_FONCTION_NOM_ARRET = 22;
+	private static final byte FONCTION_GIROUETTE = 32;
+	//
+	private static final byte SOUS_FONCTION_DESTINATION = 10;
 	private static final byte SOUS_FONCTION_VIDE = -1;
+	//
 	public static byte STX = 0x02;
 	public static byte ETX = 0x03;
 
 	private Logger _log = Logger.getInstance(this.getClass());
 	static {
-		AfficheurProtocolFactory.factory.put(Duhatiers.class, new Duhatiers());
+		GirouetteProtocolFactory.factory.put(Duhatiers.class, new Duhatiers());
 	}
 
 	public Duhatiers() {
 	}
 
-
-
-//	public void print(String message) {
-//
-//		_log.debug("print " + "[" + this + "] " + message);
-//		byte[] buffer = generateMessage(Utils.format(message));
-//		_log.debug("hexa duhatiers encoded :" + Util.toHexaString(buffer));
-//
-//		try {
-//			purge();
-//			send(buffer);
-//			_log.debug("Request sent.");
-//			byte[] result = receive();
-//			String response = AfficheurProtocol.toHexaAscii(result);
-//			_log.debug("Response:" + response);
-//
-//		} catch (IOException e) {
-//			// retry one
-//			try {
-//				send(buffer);
-//			} catch (IOException e1) {
-//				_log.error(e.getMessage(), e);
-//			}
-//		}
-//	}
-
-	public byte[] generateMessage(String message) {
-
-		byte[] buffer = generateMessageLibre(message, (byte)1, DESTINATAIRE_ADR);
-//		byte[] buffer = generateArret(message, DESTINATAIRE_ADR);
-		return buffer;
-	}
-
-
-
-	private byte[] generateMessageLibre(String message, byte msgRank,
-			byte destinataire) {
-		byte[] result = null;
-
+	public byte[] generateDestination(final String code) {
+		byte[] result=null;
 		try {
+			int c = Integer.parseInt(code);
 			ByteArrayOutputStream data = new ByteArrayOutputStream();
-			data.write(msgRank);
-			data.write(message.getBytes());
-			result = generate(FONCTION_AFFICHEUR, SOUS_FONCTION_AFFICHEUR,
-					data.toByteArray(), formatDestAddress(destinataire), formatEmitterAddress(EMETTEUR_ADR, false));
+			data.write(toBytes(c));
+			result = generate(FONCTION_GIROUETTE, SOUS_FONCTION_DESTINATION,
+					data.toByteArray(), formatDestAddress(DESTINATAIRE_ADR), formatEmitterAddress(EMETTEUR_ADR, false));
 		} catch (IOException e) {
-			_log.error(e);
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		return result;
 	}
 	
-	private byte[] generateArret(String arret, byte destinataire) {
-		byte[] result = null;
+	private byte[] toBytes(int i)
+	{
+	  byte[] result = new byte[2];
+	  int c=0;
+//	  result[c++] = (byte) (i >> 24);
+//	  result[c++] = (byte) (i >> 16);
+	  result[c++] = (byte) (i >> 8);
+	  result[c++] = (byte) (i /*>> 0*/);
 
-		try {
-			ByteArrayOutputStream data = new ByteArrayOutputStream();
-			data.write(arret.getBytes());
-			result = generate(FONCTION_AFFICHEUR, SOUS_FONCTION_NOM_ARRET,
-					data.toByteArray(), formatDestAddress(destinataire), formatEmitterAddress(EMETTEUR_ADR, false));
-		} catch (IOException e) {
-			_log.error(e);
-		}
-
-		return result;
+	  return result;
 	}
 
+	public byte[] generateStatus() {
+		byte[] status = generateInterrogation(DESTINATAIRE_ADR);
+		_log.debug("status request frame=" + toHexaAscii(status));
+		return status;
+	}
 
-	
-//	public byte[] generateStatus() {
-//		byte[] status = generateInterrogation(DESTINATAIRE_ADR);
-//		_log.debug("status request frame=" + toHexaAscii(status));
-//		return status;
-//	}
-//	
-//	public int checkStatus(String status) {
-//		byte[] expectedData = generateAcquittement(DESTINATAIRE_ADR, EMETTEUR_ADR, (byte)0);
-//		String expected=toHexaAscii(expectedData);
-//		int result = status.compareTo(expected);
-//		_log.debug("status response frame=" + status + "; expected="+expected + " => " + result);
-//		return result;
-//	}
-	
+	public int checkStatus(String status) {
+		byte[] expectedData = generateAcquittement(EMETTEUR_ADR,
+				DESTINATAIRE_ADR, (byte) 0);
+		String expected = toHexaAscii(expectedData);
+		int result = status.compareTo(expected);
+		_log.debug("status response frame=" + status + "; expected=" + expected
+				+ " => " + result + " ("+new String(Util.fromHexaString(status))+")");
+		return result;
+	}
 
 	/******************************************************************************************
 	 * Fonctions communes Afficheur / Girourette pour le protocol DUHATIERS
@@ -227,6 +189,5 @@ public class Duhatiers extends AfficheurProtocol {
 
 		return result;
 	}
-
 
 }

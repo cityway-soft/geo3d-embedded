@@ -43,8 +43,8 @@ public class AfficheurDevice extends AbstractDevice implements AlarmProvider,
 		checkStatus();
 	}
 
-	public void setAfficheur(Afficheur girouette) {
-		this.afficheur = girouette;
+	public void setAfficheur(Afficheur afficheur) {
+		this.afficheur = afficheur;
 		checkStatus();
 	}
 
@@ -85,10 +85,13 @@ public class AfficheurDevice extends AbstractDevice implements AlarmProvider,
 				e.printStackTrace();
 			}
 		}
+		else{
+			logger.warn("check impossible : afficheur="+afficheur + ", producer="+producer);
+		}
 		return result;
 	}
 
-	public void unsetAfficheur(Afficheur girouette) {
+	public void unsetAfficheur(Afficheur afficheur) {
 
 	}
 
