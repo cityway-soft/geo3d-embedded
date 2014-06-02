@@ -7,6 +7,7 @@ import org.avm.business.core.event.ServiceAgent;
 import org.avm.hmi.swt.avm.widget.VerticalARGauge;
 import org.avm.hmi.swt.desktop.DesktopImpl;
 import org.avm.hmi.swt.desktop.DesktopStyle;
+import org.avm.hmi.swt.desktop.Gauge;
 import org.avm.hmi.swt.desktop.MessageBox;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -312,6 +313,10 @@ public class FollowNormalJourney extends FollowJourney {
 						_followPanel.updateCourse();
 						_details.layout();
 						setAvm(_avm);
+						if (_gauge != null){
+							Course course = _avm.getModel().getCourse();
+							_gauge.setLimits(course.getChevauchement(), course.getAmplitude());
+						}
 					}
 				} catch (Throwable t) {
 				}

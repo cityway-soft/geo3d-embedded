@@ -40,6 +40,10 @@ public class VerticalARGauge extends Composite implements Runnable {
 
 	private Label _avanceRetard;
 
+	private int limitLow = 30;
+
+	private int limitHigh = 180;
+
 	public VerticalARGauge(Composite parent, int ctrl) {
 		super(parent, ctrl);
 		_instance = this;
@@ -54,11 +58,11 @@ public class VerticalARGauge extends Composite implements Runnable {
 		setBackground(DesktopStyle.getBackgroundColor());
 
 		_font = DesktopImpl.getFont(5, SWT.NORMAL);
-		_avanceRetard = new Label(this, SWT.CENTER|SWT.BORDER);
+		_avanceRetard = new Label(this, SWT.CENTER | SWT.BORDER);
 		_avanceRetard.setFont(DesktopImpl.getFont(5, SWT.BOLD));
 		GridData data = new GridData();
 		data.grabExcessHorizontalSpace = true;
-//		data.grabExcessVerticalSpace = true;
+		// data.grabExcessVerticalSpace = true;
 		data.horizontalAlignment = GridData.FILL;
 		data.heightHint = 15;
 		_avanceRetard.setLayoutData(data);
@@ -74,16 +78,19 @@ public class VerticalARGauge extends Composite implements Runnable {
 
 	private void activate(int val) {
 		int idx;
-		boolean clig;
-		if (val > 6) {
+		boolean clig = false;
+		if (val > limitHigh) {
 			idx = 7;
 			clig = true;
-		} else if (val < -6) {
+		} else if (val < -limitLow) {
 			idx = 1;
 			clig = true;
+		} else if (val < 0) {
+			idx = ((limitLow + val) / (limitLow / 4)) + 1;
+		} else if (val > 0) {
+			idx = ((val - limitHigh) / (limitHigh / 4)) + 7;
 		} else {
-			idx = (val / 2) + 4;
-			clig = false;
+			idx = 4;
 		}
 
 		// idx = 8 - idx;
@@ -95,7 +102,7 @@ public class VerticalARGauge extends Composite implements Runnable {
 		}
 		_list[idx - 1].setBackground(_color[idx - 1]);
 		_list[idx].setBackground(_color[idx]);
-		//_list[idx].setFont(_font);
+		// _list[idx].setFont(_font);
 		// _list[idx].setText(format(val));
 		_list[idx + 1].setBackground(_color[idx + 1]);
 
@@ -157,12 +164,19 @@ public class VerticalARGauge extends Composite implements Runnable {
 		composite.layout();
 	}
 
+	// FLA : AR en secondes et plus en minute
 	public void setAvanceRetard(final int ar) {
-		int curseur = ar;
+		// int curseur = getCursor(ar);
 
-		activate(curseur);
-		_avanceRetard.setText(format(ar));
+		activate(ar);
+		_avanceRetard.setText(format(ar / 60));
 		refresh(_instance);
+	}
+
+	private int getCursor(final int ar) {
+		int cursor = 1;
+
+		return cursor;
 	}
 
 	public void clignote(boolean b) {
@@ -224,6 +238,11 @@ public class VerticalARGauge extends Composite implements Runnable {
 			_display.timerExec(FREQ, this);
 		}
 		_clignot = !_clignot;
+	}
+
+	public void setLimits(int limitLow, int limitHigh) {
+		this.limitLow = limitLow;
+		this.limitHigh = limitHigh;
 	}
 
 }
