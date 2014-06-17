@@ -31,6 +31,7 @@ public class AvmModelManager implements AvmModel, Serializable {
 
 	private Planification _planification;
 
+	// FLA avance retard exprimée désormais en secondes
 	private int _avanceRetard;
 
 	private boolean _isHorsItineraire;
@@ -224,7 +225,7 @@ public class AvmModelManager implements AvmModel, Serializable {
 		buf.append("Prochain Arret     : " + _prochainPoint);
 		buf.append(System.getProperty("line.separator"));
 		buf.append("Avance Retard      : " + _avanceRetard + "("+
-				(_avanceRetard<0?"avance "+Point.formatHour(-_avanceRetard*60)+")":"retard "+Point.formatHour(_avanceRetard*60)+")")
+				(_avanceRetard<0?"avance "+Point.formatHour(-_avanceRetard)+")":"retard "+Point.formatHour(_avanceRetard)+")")
 				
 				
 				

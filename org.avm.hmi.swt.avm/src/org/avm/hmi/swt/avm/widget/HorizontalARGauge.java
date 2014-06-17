@@ -1,33 +1,18 @@
 package org.avm.hmi.swt.avm.widget;
 
-import org.avm.business.protocol.phoebus.AvanceRetard;
 import org.avm.hmi.swt.desktop.DesktopStyle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 
-public class HorizontalARGauge extends Composite {
+public class HorizontalARGauge extends AbstractARGauge {
 
-	private HorizontalARGauge _instance;
-
-	private Display _display;
-
-	private static final int MAX = 9;
-
-	private static final String[] TITLE = new String[] { "En retard",
-			"A l'heure", "En Avance" };
-
-	private Label[] _list;
-
-	private Color[] _color;
-
+	
 	public HorizontalARGauge(Composite parent, int ctrl) {
 		super(parent, ctrl);
-		_instance = this;
 		create(this);
 	}
 
@@ -48,25 +33,7 @@ public class HorizontalARGauge extends Composite {
 
 	}
 
-	private void activate(int val) {
-		int idx;
-		if (val > 6) {
-			idx = 7;
-		} else if (val < -6) {
-			idx = 1;
-		} else {
-			idx = (val / 2) + 4;
-		}
-
-		for (int i = 0; i < MAX; i++) {
-			_list[i].setBackground(_display.getSystemColor(SWT.COLOR_WHITE));
-		}
-		_list[idx - 1].setBackground(_color[idx - 1]);
-		_list[idx].setBackground(_color[idx]);
-		_list[idx + 1].setBackground(_color[idx + 1]);
-
-	}
-
+	
 	private void createGauge(Composite composite) {
 		// Composite panel = composite;//new Composite(composite, SWT.NONE);
 
@@ -112,22 +79,4 @@ public class HorizontalARGauge extends Composite {
 		}
 	}
 
-	private void refresh(Composite composite) {
-		composite.layout();
-	}
-
-	public void setAvanceRetard(final AvanceRetard ar) {
-		System.out.println("[swt.avm.HorizontalARGauge] obj ar=" + ar);
-		System.out.println("[swt.avm.HorizontalARGauge] entete="
-				+ ar.getEntete());
-		System.out.println("[swt.avm.HorizontalARGauge] prog="
-				+ ar.getEntete().getProgression());
-		System.out.println("[swt.avm.HorizontalARGauge] ar="
-				+ ar.getEntete().getProgression().getRetard());
-
-		int curseur = ar.getEntete().getProgression().getRetard();
-
-		activate(curseur);
-		refresh(_instance);
-	}
 }

@@ -153,7 +153,7 @@ public class TftImpl implements Tft, ConsumerService, ManageableService,
 			session.putValue("count", new Long(_count));
 
 			session.setMaxInactiveInterval(120);
-			response.setContentType("text/plain");
+			response.setContentType("application/json");
 			try {
 				PrintWriter writer = response.getWriter();
 				String ligneIdu = "";

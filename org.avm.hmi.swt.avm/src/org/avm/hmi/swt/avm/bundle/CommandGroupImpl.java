@@ -22,6 +22,26 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 				"Configuration commands for the HMI Avm.");
 		_peer = peer;
 	}
+	
+	//SetAR in seconds
+	public final static String USAGE_SETAR = "[<value>]";
+
+	public final static String[] HELP_SETAR= new String[] { "Set A/R", };
+
+	public int cmdSetar(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+		
+		String sval = (String)opts.get("value");
+		if (sval != null){
+			int val=Integer.parseInt(sval) ;
+			_peer.setDemoAR(val);
+		}
+		else{
+			out.println("value is mandatory");
+		}
+		
+		return 0;
+	}
 
 
 	// Setperiode
