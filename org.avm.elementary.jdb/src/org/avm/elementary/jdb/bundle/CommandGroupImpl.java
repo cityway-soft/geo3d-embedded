@@ -114,33 +114,27 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		return 0;
 	}
 
-	// sync
+	// sync (deprecated)
 	public final static String USAGE_SYNC = "";
 
-	public final static String[] HELP_SYNC = new String[] { "Synchronize buffer", };
+	public final static String[] HELP_SYNC = new String[] { "Synchronize buffer (deprecated)", };
 
 	public int cmdSync(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
 		_peer.sync();
 		return 0;
 	}
+	
+	// Flush
+	public final static String USAGE_FLUSH = "";
 
-	// test
-	// public final static String USAGE_TEST = "";
-	//
-	// public final static String[] HELP_TEST = new String[] { "", };
-	//
-	// public int cmdTest(Dictionary opts, Reader in, PrintWriter out,
-	// Session session) {
-	// out.println("path: " + _peer.getRootPath());
-	// out.println("period: " + _peer.getCheckPeriod());
-	// out.println("filename: " + _peer.getScheduledFilename(new Date()));
-	//
-	// GregorianCalendar calandar = new GregorianCalendar();
-	// calandar.roll(Calendar.DAY_OF_WEEK, -6);
-	// out.println("filename: "
-	// + _peer.getScheduledFilename(new Date(calandar
-	// .getTimeInMillis())));
-	// return 0;
-	// }
+	public final static String[] HELP_FLUSH = new String[] { "Flush buffer", };
+
+	public int cmdFlush(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+		_peer.sync();
+		return 0;
+	}
+
+
 }

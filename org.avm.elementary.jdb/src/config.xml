@@ -6,11 +6,14 @@
 <property name="service.pid">
 <value type="String">org.avm.elementary.jdb.JDB</value>
 </property>
+<property name="org.avm.config.version">
+<value type="Integer">2</value>
+</property>
 <property name="filename">
 <value type="String">{0}/data/upload/jdb.gz</value>
 </property>
 <property name="pattern">
-<value type="String">.E</value>
+<value type="String">.dd</value>
 </property>
 <property name="size">
 <value type="Integer">16384</value>
