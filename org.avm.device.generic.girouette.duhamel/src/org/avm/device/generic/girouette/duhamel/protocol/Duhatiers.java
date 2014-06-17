@@ -64,8 +64,6 @@ public class Duhatiers extends GirouetteProtocol {
 	{
 	  byte[] result = new byte[2];
 	  int c=0;
-//	  result[c++] = (byte) (i >> 24);
-//	  result[c++] = (byte) (i >> 16);
 	  result[c++] = (byte) (i >> 8);
 	  result[c++] = (byte) (i /*>> 0*/);
 

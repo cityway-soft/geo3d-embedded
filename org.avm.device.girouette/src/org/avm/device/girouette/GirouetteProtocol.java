@@ -59,7 +59,6 @@ public abstract class GirouetteProtocol {
 	private void purge() {
 		try {
 			if (in.available() > 0) {
-				out = new ByteArrayOutputStream();
 				while (in.read() != -1)
 					;
 			}
