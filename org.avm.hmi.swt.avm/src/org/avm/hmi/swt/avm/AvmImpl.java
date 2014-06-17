@@ -407,4 +407,10 @@ public class AvmImpl implements ConsumerService, ManageableService,
 		} 
 	}
 
+	public void setDemoAR(int val) {
+		if (_avmihm != null){
+			_avmihm.setAvanceRetard(val);
+		}
+	}
+
 }

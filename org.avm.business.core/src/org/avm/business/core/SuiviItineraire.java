@@ -13,7 +13,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.avm.business.core.bundle.ConfigImpl;
 import org.avm.business.core.event.Course;
 import org.avm.business.core.event.Point;
@@ -58,34 +57,9 @@ public class SuiviItineraire implements ConfigurableService {
 	private double _indexOdometer;
 
 	private int _progressionVersProchainArret;
-	private int _chevauchement;// en MINUTES !
-	private int _amplitude;// en MINUTES !
 
 	private boolean _running;
 
-	// Nombre de tranches de RETARD ou tranche d'AVANCE : au total nous avons
-	// donc 2*_nbTranches
-	private int _nbTranche = 16;
-	// Tableau contenant les bornes inf des tranches. Sa taille est donc de
-	// 2*_nbTranche.
-	// L'index 0 correspond à la tranche de l'avance Max
-	// L'index 2*_nbTranche -1 correspond à la tranche du retard max.
-	// La borne sup se déduit de la inf en ajoutant _amplitude.
-
-	private int[] _arrayOfBornesInf;
-	// Index de la tranche correspondant au retard max possible
-	private int _indexRetardMax;
-	// Index de la tranche correspondant à l'avance max possible
-	private int _indexAvanceMax;
-
-	// index est entre 0 et 2*_nbTranche -1
-	// alors que les tranches sont entre -_nbTranche (<0 => avance) et
-	// _nbTranche -1 (>0 => retard)
-	// la tranche se déduit de l'index : T = I -_nbTranche;
-	// et ... l'index se déduit de la Tranche : I = T + _nbTranche
-	// Donc Avance pour les index compris entre 0 et _nbTranche
-	// et reatrd pour les index compris entre _nbTranche + 1 et 2*_nbTranche-1
-	private int _indexCourant;
 	private long _entryTime;
 
 	public void setAvm(Avm avm) {
@@ -94,7 +68,7 @@ public class SuiviItineraire implements ConfigurableService {
 
 	public SuiviItineraire() {
 		_log = Logger.getInstance(SuiviItineraire.class);
-		//_log.setPriority(Priority.DEBUG);
+		// _log.setPriority(Priority.DEBUG);
 	}
 
 	public void setProducer(ProducerManager producer) {
@@ -119,8 +93,6 @@ public class SuiviItineraire implements ConfigurableService {
 	public void start() {
 		_running = true;
 		_distParcourue = 0;
-		_chevauchement = getCourse().getChevauchement();
-		_amplitude = getCourse().getAmplitude();
 
 		resetOdometer();
 		_avanceRetardTask = new Timer();
@@ -130,8 +102,6 @@ public class SuiviItineraire implements ConfigurableService {
 		_passageArret = new PassageArret();
 		setEnteteMessage(_avanceRetard);
 
-		// LBR : Initialisation du retard au départ (il peut y en avoir un
-		// !)...
 		Point dep = null;
 		int ar = 0;
 		if (getCourse() != null) {
@@ -141,48 +111,6 @@ public class SuiviItineraire implements ConfigurableService {
 			_avanceRetard.getEntete().getProgression().setRetard(ar);
 			_producer.publish(_avanceRetard);
 		}
-		// on est dans la Tranche 0 au début cad [-15,10].
-		// _indexCourant = _nbTranche; // -> ca donne [0,25] : tranche 1
-		// d'ou
-		_indexCourant = _nbTranche - 1;
-		_indexRetardMax = 0;// DLA à voir avec LOLO => plantage si sequence =
-		// 'validation course'+'fin
-		// course'+'validationcourse'
-		_indexAvanceMax = 0;// DLA
-		setIndexCourantFromAR(ar, 0);
-		// fin LBR
-
-		_log.debug("Amplitude = " + _amplitude + ", Chevauchement = "
-				+ _chevauchement);
-		_arrayOfBornesInf = new int[2 * _nbTranche];
-		// Index de la tranche correspondant au retard max possible
-		_indexRetardMax = 2 * _nbTranche - 1;
-		// Index de la tranche correspondant à l'avance max possible
-		_indexAvanceMax = 0;
-
-		// Entre 0 et _nbTranche on est en avance (ar négative)
-		// entre _nbIndexAR et 2*_nbIndexAR-1 on est en retard (ar positive)
-		if (_amplitude < _chevauchement) {
-			_log.error("L'amplitude DOIT etre superieure au chevauchement !");
-			int tmp = _amplitude;
-			_amplitude = _chevauchement;
-			_chevauchement = tmp;
-		}
-
-		int pas = _amplitude - _chevauchement;
-
-		int borne = -pas * (_nbTranche);
-		for (int i = _indexAvanceMax; i <= _indexRetardMax; i++) {
-			_arrayOfBornesInf[i] = borne + (i * pas);
-		}
-
-		_log.debug("Index courant = " + _indexCourant + " ["
-				+ _arrayOfBornesInf[_indexCourant] + ","
-				+ (_arrayOfBornesInf[_indexCourant] + _amplitude) + "]");
-
-		_log.info("Dernier arret desservi:" + getModel().getDernierPoint());
-		_log.info("avanceretard obj:" + _avanceRetard);
-		_log.info("avanceretard model:" + getModel().getAvanceRetard());
 
 	}
 
@@ -193,7 +121,6 @@ public class SuiviItineraire implements ConfigurableService {
 	public void stop() {
 		_running = false;
 		_avanceRetardTask.cancel();
-		_arrayOfBornesInf = null;
 	}
 
 	// public AvanceRetard getAvanceRetard() {
@@ -262,7 +189,7 @@ public class SuiviItineraire implements ConfigurableService {
 				_log.debug("Heure theorique = " + point.getArriveeTheorique());
 			}
 			ar = (getCurrentHourInSecondFromMidnight() - point
-					.getArriveeTheorique()) / 60;
+					.getArriveeTheorique());
 		}
 		_log.debug("Calcul de l'avance/retard : " + ar);
 
@@ -366,9 +293,6 @@ public class SuiviItineraire implements ConfigurableService {
 	public void configure(Config config) {
 		Integer i;
 
-		i = ((ConfigImpl) config).getMaxTranche();
-		setMaxTranche(i);
-
 		i = ((ConfigImpl) config).getToleranceDev();
 		setToleranceDev(i);
 
@@ -384,10 +308,6 @@ public class SuiviItineraire implements ConfigurableService {
 		_toleranceDev = (i == null) ? 0 : i.intValue();
 	}
 
-	public void setMaxTranche(Integer i) {
-		_nbTranche = (i == null) ? 16 : i.intValue();
-	}
-
 	public void sendAvanceRetard() {
 		_log.debug("Emission avance retard");
 		((AvmImpl) _avm).sendMessage(_avanceRetard);
@@ -396,7 +316,7 @@ public class SuiviItineraire implements ConfigurableService {
 	public void sendPassageArret() {
 		_log.debug("Emission passage arret");
 		Point dernier = _avm.getModel().getDernierPoint();
-		if (dernier != null){
+		if (dernier != null) {
 			_passageArret.setAttente(dernier.getAttente());
 		}
 		((AvmImpl) _avm).sendMessage(_passageArret);
@@ -417,25 +337,13 @@ public class SuiviItineraire implements ConfigurableService {
 
 		if (isNecessarySendAR(advDelay, oldadvDelay)) {
 			if (_log.isDebugEnabled()) {
-				_log.debug("AR = "
-						+ advDelay
-						+ " ; Changement d'index d'avance/retard. index courant = "
-						+ _indexCourant + " ["
-						+ _arrayOfBornesInf[_indexCourant] + ","
-						+ (_arrayOfBornesInf[_indexCourant] + _amplitude) + "]");
+				_log.debug("AR = " + advDelay);
 			}
 			_producer.publish(_avanceRetard);
 			// on envoie un message que si on est parti
 			if (_avm.getModel().isDepart()) {
 				sendAvanceRetard();
 			}
-		} else {
-			_log.debug("AR = "
-					+ advDelay
-					+ " ; PAS de changement d'index d'avance/retard. index courant = "
-					+ _indexCourant + " [" + _arrayOfBornesInf[_indexCourant]
-					+ "," + (_arrayOfBornesInf[_indexCourant] + _amplitude)
-					+ "]");
 		}
 	}
 
@@ -450,84 +358,8 @@ public class SuiviItineraire implements ConfigurableService {
 	 * @return true si on a change de tranche, false sinon.
 	 */
 	private boolean isNecessarySendAR(int ar, int oldAr) {
-		// Si l'ar n'a pas changé rien a faire :
-		if (ar == oldAr)
-			return false;
-		// à quel niveau d'avanceretard sommes nous ?
-		if (isBetweenBornes(ar, _indexCourant)) {
-			// Si on est toujours dans la même tranche ...
-			return false;
-		}
-		return setIndexCourantFromAR(ar, oldAr);
-	}
-
-	/**
-	 * Reinit _indexCourant.
-	 * 
-	 * @param ar
-	 *            : avance retard courant
-	 * @param oldAr
-	 *            : avance retard precedemment calculé
-	 * @return true si on a change de tranche, false sinon.
-	 */
-	private boolean setIndexCourantFromAR(int ar, int oldAr) {
-		int index = _indexCourant;
-		if (ar > oldAr) {
-			index = getIndexIncr(_indexCourant, ar);
-		} else {
-			index = getIndexDecr(_indexCourant, ar);
-		}
-
-		if (index != _indexCourant) {
-			_indexCourant = index;
-			return true;
-		}
+		// TODO
 		return false;
-	}
-
-	private boolean isBetweenBornes(int ar, int index) {
-		if (index < 0 || index > _indexRetardMax)
-			return false;
-		int bi = _arrayOfBornesInf[index];
-		int bs = bi + _amplitude;
-		if (bi < ar && ar <= bs) {
-			return true;
-		}
-		return false;
-	}
-
-	public int getIndexDecr(int i, int ar) {
-		if (i < _indexAvanceMax)
-			return _indexAvanceMax;
-		if (i > _indexRetardMax)
-			return _indexRetardMax;
-
-		if (ar < _arrayOfBornesInf[_indexAvanceMax])
-			return _indexAvanceMax;
-		if (ar > _arrayOfBornesInf[_indexRetardMax])
-			return _indexRetardMax;
-
-		if (isBetweenBornes(ar, i)) {
-			return i;
-		}
-		return getIndexDecr(--i, ar);
-	}
-
-	public int getIndexIncr(int i, int ar) {
-		if (i < _indexAvanceMax)
-			return _indexAvanceMax;
-		if (i > _indexRetardMax)
-			return _indexRetardMax;
-
-		if (ar < _arrayOfBornesInf[_indexAvanceMax])
-			return _indexAvanceMax;
-		if (ar > _arrayOfBornesInf[_indexRetardMax])
-			return _indexRetardMax;
-
-		if (isBetweenBornes(ar, i)) {
-			return i;
-		}
-		return getIndexIncr(++i, ar);
 	}
 
 	/*
@@ -615,7 +447,7 @@ public class SuiviItineraire implements ConfigurableService {
 		Point prochain = _avm.getModel().getProchainPoint();
 		return (prochain != null && prochain.getId() == balise);
 	}
-	
+
 	public void entree(int balise) {
 		entree(balise, false);
 	}
@@ -638,7 +470,8 @@ public class SuiviItineraire implements ConfigurableService {
 					_avanceRetard.getEntete().getProgression().getRetard());
 			getModel().setInsidePoint(true);
 			if (_log.isDebugEnabled()) {
-				_log.debug("Entree Arret " + getDernierArret() + " at " + _entryTime);
+				_log.debug("Entree Arret " + getDernierArret() + " at "
+						+ _entryTime);
 			}
 
 			if (_avm.getModel().isGeorefMode()) {
@@ -660,22 +493,21 @@ public class SuiviItineraire implements ConfigurableService {
 				// -- emission du passage a l'entree si le point horaire est
 				// configure pour l'emission a l'entree
 				if (p.isEntryNotify() || finHorsItineraire) {
-					//if (!getModel().isDepart()) {
-						//_log.warn("Message 'passage arret' non envoye : pas de depart");
-					//} else {
-						_log.debug("ENTREE ARRET : Message 'passage arret' envoye");
-						setEnteteMessage(_passageArret);
-						setEnteteMessage(_avanceRetard);
-						sendPassageArret();
+					// if (!getModel().isDepart()) {
+					// _log.warn("Message 'passage arret' non envoye : pas de depart");
+					// } else {
+					_log.debug("ENTREE ARRET : Message 'passage arret' envoye");
+					setEnteteMessage(_passageArret);
+					setEnteteMessage(_avanceRetard);
+					sendPassageArret();
 
-						// -- automatiquement en mode georef, si le prochain
-						// arret n'est
-						// pas georef.
-						Point prochain = getModel().getProchainPoint();
-						getModel().setGeorefMode(
-								prochain != null
-										&& prochain.isGeoref() == false);
-					//}
+					// -- automatiquement en mode georef, si le prochain
+					// arret n'est
+					// pas georef.
+					Point prochain = getModel().getProchainPoint();
+					getModel().setGeorefMode(
+							prochain != null && prochain.isGeoref() == false);
+					// }
 				}
 			}
 
@@ -702,7 +534,7 @@ public class SuiviItineraire implements ConfigurableService {
 			updateAttente(getDernierArret(), false);
 			if (_log.isDebugEnabled()) {
 				_log.debug("sortie balise (" + balise + "): "
-						+ getDernierArret() + " at " + _entryTime );
+						+ getDernierArret() + " at " + _entryTime);
 			}
 			StringBuffer buf = new StringBuffer();
 			buf.append("ARRET;OUT;");
@@ -732,19 +564,18 @@ public class SuiviItineraire implements ConfigurableService {
 					+ " n'est pas le dernier point desservi (!?)");
 		}
 	}
-	
-	private Horodate getHorodate(long time){
+
+	private Horodate getHorodate(long time) {
 		java.util.Calendar cal = java.util.Calendar.getInstance();
 		cal.setTime(new Date(time));
 		int annee = cal.get(java.util.Calendar.YEAR) - 1990;
-		int mois = cal.get(java.util.Calendar.MONTH) +1 ;
+		int mois = cal.get(java.util.Calendar.MONTH) + 1;
 		int jour = cal.get(java.util.Calendar.DAY_OF_MONTH);
 		int heure = cal.get(java.util.Calendar.HOUR_OF_DAY);
 		int minute = cal.get(java.util.Calendar.MINUTE);
 		int seconde = cal.get(java.util.Calendar.SECOND);
-		
-		return new Horodate(annee, mois, jour, heure, minute,
-				seconde);
+
+		return new Horodate(annee, mois, jour, heure, minute, seconde);
 	}
 
 	private void updateAttente(Point p, boolean entry) {
@@ -755,11 +586,10 @@ public class SuiviItineraire implements ConfigurableService {
 			if (_entryTime > 0 && _entryTime < now) {
 				attente = (int) ((now - _entryTime) / 1000);
 			}
-			if (attente<=0){
-				attente=1;
+			if (attente <= 0) {
+				attente = 1;
 			}
-		}
-		else{
+		} else {
 			_entryTime = System.currentTimeMillis();
 		}
 		p.setAttente(attente);
