@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.business.hmi.web.authentification.Authentification
+Bundle-SymbolicName: org.avm.business.hmi.web.authentification
+Bundle-Version: 1.0.0.qualifier
+Service-Component: META-INF/component.xml
+Include-Resource: res
+Import-Package: javax.servlet;version="2.3.0",
+ javax.servlet.http;version="2.3.0",
+ org.avm.business.hmi.web.desktop,
+ org.avm.business.protocol.phoebus,
+ org.avm.elementary.common,
+ org.avm.elementary.useradmin,
+ org.osgi.framework;version="1.3.0",
+ org.osgi.service.component;version="1.0.0",
+ org.osgi.service.http;version="1.2.0"
+ 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.business.hmi.web.authentification.Authentification" immediate="true">
+	<implementation class="org.avm.business.hmi.web.authentification.bundle.AuthentificationComponent" />
+	<reference name="httpService"
+		interface="org.osgi.service.http.HttpService" />
+		<reference name="userSession"
+		interface="org.avm.elementary.useradmin.UserSessionService" />
+		
+	<service>						
+		<provide interface="org.avm.business.hmi.web.desktop.DesktopUser"/>		
+	</service>
+</component>
