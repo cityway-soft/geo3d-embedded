@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.business.hmi.web.desktop.Desktop" immediate="true">
+	<implementation class="org.avm.business.hmi.web.desktop.bundle.DesktopComponent" />
+	<reference name="httpService"
+		interface="org.osgi.service.http.HttpService" />
+	<reference name="desktopUser"
+		interface="org.avm.business.hmi.web.desktop.DesktopUser" 
+		cardinality="0..n" policy="dynamic" bind="addDesktopUser" unbind="removeDesktopUser" />
+</component>

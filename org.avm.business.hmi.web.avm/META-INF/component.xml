@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.business.hmi.web.avm.Avm" immediate="true">
+	<implementation class="org.avm.business.hmi.web.avm.bundle.AvmComponent" />
+	<reference name="httpService" interface="org.osgi.service.http.HttpService" />
+	<reference name="avm" interface="org.avm.business.core.Avm"
+		cardinality="0..1" policy="dynamic" bind="setAvm" unbind="unsetAvm" />
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin" />
+	<service>
+		<provide interface="org.avm.business.hmi.web.desktop.DesktopUser" />
+	</service>
+</component>

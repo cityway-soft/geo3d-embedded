@@ -1,0 +1,31 @@
+<div id="debugavm"></div>
+<div id="avmcontent">
+	<div id="avmpriseposte" class="avmactivity">
+		<div id="avmprisepostebutton" onclick="doPrisePoste();"><p>Effectuer la prise de poste</p></div>
+	</div>
+	<div id="avmlistcourse" class="avmactivity"></div>
+	<div id="avmattentedepart" class="avmactivity">
+		<div id="departure"></div>
+		<div id="departbutton" onclick="doDepart();">
+			<p>Depart</p>
+		</div>
+		<div id="startpoint"></div>
+		<div id="endpoint"></div>
+	</div>
+	<div id="avmencourse" class="avmactivity">
+		<div id="avmencoursebuttons">
+			<ul>
+				<li><a href="#" onclick="doFinService();">Fin Service</a></li>
+				<li><a href="#" onclick="doFinCourse();">Fin Course</a></li>
+				<li><a href="#" onclick="doDeviation();">D&eacute;viation</a></li>
+			</ul>
+		</div>
+		<div style="clear:both;"></div>
+		<div id="avmencourseinfos"></div>
+		<div id="avmencoursetitle"></div>
+		<div id="avmencoursecontent"></div>
+	</div>
+</div>
+<script type="text/javascript">
+	initAvm();
+</script>
