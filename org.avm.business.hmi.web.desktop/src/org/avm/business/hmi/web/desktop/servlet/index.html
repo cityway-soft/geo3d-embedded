@@ -5,22 +5,25 @@
 <!-- base js -->
 <script src="js/jquery-2.1.1.min.js"></script>
 <script src="js/desktop.js"></script>
+<script src="js/keyboard.js"></script>
 $JS
 <!-- base style -->
 <link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/keyboard.css">
 
 
 </head>
-<body onload="showActivity(defaultActivity);">
+<body onload="initDesktop();">
 	<div id="screen">
-		<div id="title"><div id="clock"></div></div>
-		<div id="infos"></div>
-		<div id="content">
-		<div id="defaultActivity" class="activity"></div>$CONTENT
-		<div id="switch">$SWITCH</div>
+		<div id="title">
+			<div id="clock"></div>
 		</div>
-		
+		<div id="infos">$INFOS</div>
+		<div id="content">
+			<div id="defaultActivity" class="activity"></div>
+			$CONTENT
+			<div id="switch">$SWITCH</div>
+		</div>
 	</div>
 </body>
-
 </html>
