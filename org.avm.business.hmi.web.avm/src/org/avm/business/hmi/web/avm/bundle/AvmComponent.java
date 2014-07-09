@@ -5,61 +5,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Properties;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 
 import org.avm.business.core.Avm;
 import org.avm.business.hmi.web.avm.servlet.AvmServlet;
 import org.avm.business.hmi.web.desktop.DesktopUser;
+import org.avm.business.hmi.web.utils.HmiWebComponent;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 
-public class AvmComponent implements DesktopUser {
+public class AvmComponent extends HmiWebComponent implements DesktopUser {
 
 	private AvmServlet servlet;
-	private HttpService httpService;
-	private String page="SAE";
-	private ConsumerImpl consumer;
-
-	public void activate(ComponentContext context) {
-		servlet = new AvmServlet();
-		consumer = new ConsumerImpl(context, servlet);
-		consumer.start();
-		httpService = (HttpService) context.locateService("httpService");
-		loadPage(context);
-		if (httpService != null) {
-			try {
-				httpService.registerServlet("/avm", servlet, null, null);
-				httpService.registerResources("/desktop/js/avm.js", "www/js/avm.js", null);
-			} catch (ServletException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NamespaceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
 	
-	public void loadPage(ComponentContext context){
-		URL authUrl = context
-				.getBundleContext()
-				.getBundle()
-				.getResource(
-						"org/avm/business/hmi/web/avm/servlet/avm.html");
-		try {
-			page = fromStream(authUrl.openStream());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public void deactivate(ComponentContext context) {
-		consumer.stop();
-	}
-
 	public void setAvm(Avm avm) {
 		servlet.setAvm(avm);
 	}
@@ -92,7 +54,7 @@ public class AvmComponent implements DesktopUser {
 		// TODO Auto-generated method stub
 		return "js/avm.js";
 	}
-	
+
 	public static String fromStream(InputStream in) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		StringBuffer out = new StringBuffer();
@@ -103,6 +65,33 @@ public class AvmComponent implements DesktopUser {
 			out.append(newLine);
 		}
 		return out.toString();
+	}
+
+	protected HttpServlet getServlet() {
+		return servlet;
+	}
+
+	protected void init(ComponentContext context) {
+		servlet = new AvmServlet();
+		consumer = new ConsumerImpl(context, servlet);
+	}
+
+	protected void uninit(ComponentContext context) {
+
+	}
+
+	protected String getPageRessource() {
+		return "org/avm/business/hmi/web/avm/servlet/avm.html";
+	}
+
+	protected String getServletPath() {
+		return "/avm";
+	}
+
+	protected Properties resourcesToRegister() {
+		Properties res = new Properties();
+		res.put("/desktop/js/avm.js", "www/js/avm.js");
+		return res;
 	}
 
 }
