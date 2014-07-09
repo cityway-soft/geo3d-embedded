@@ -5,6 +5,7 @@ import java.net.URL;
 import javax.servlet.ServletException;
 
 import org.apache.log4j.Logger;
+import org.avm.business.hmi.web.desktop.DesktopInfosUser;
 import org.avm.business.hmi.web.desktop.DesktopUser;
 import org.avm.business.hmi.web.desktop.servlet.DesktopServlet;
 import org.osgi.service.component.ComponentContext;
@@ -50,5 +51,13 @@ public class DesktopComponent {
 	
 	public void removeDesktopUser(DesktopUser desktopUser){
 		desktopServlet.removeDesktopUser(desktopUser);
+	}
+	
+	public void addDesktopInfosUser(DesktopInfosUser desktopInfosUser){
+		desktopServlet.addDesktopInfosUser(desktopInfosUser);
+	}
+	
+	public void removeDesktopInfosUser(DesktopInfosUser desktopInfosUser){
+		desktopServlet.removeDesktopInfosUser(desktopInfosUser);
 	}
 }

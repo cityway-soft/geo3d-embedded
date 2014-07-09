@@ -14,13 +14,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.avm.business.hmi.web.desktop.DesktopInfosUser;
 import org.avm.business.hmi.web.desktop.DesktopUser;
-import org.osgi.framework.BundleContext;
 
 public class DesktopServlet extends HttpServlet {
 
 	private URL indexURL;
 	private List desktopUsers = new ArrayList();
+	private List desktopInfosUsers = new ArrayList();
 
 	public URL getIndexURL() {
 		return indexURL;
@@ -39,9 +40,24 @@ public class DesktopServlet extends HttpServlet {
 			page = replaceOnce(page, "$SWITCH", getSwitches());
 			page = replaceOnce(page, "$CONTENT", getContent());
 			page = replaceOnce(page, "$JS", getJSs());
+			page = replaceOnce(page, "$INFOS", getInfosContent());
 			os.write(page.getBytes());
 			os.flush();
 		}
+	}
+	
+	private String getInfosContent (){
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < desktopInfosUsers.size(); ++i) {
+			DesktopInfosUser elt = (DesktopInfosUser) desktopInfosUsers.get(i);
+			sb.append("<div id=\"");
+			sb.append(elt.getName());
+			sb.append("\" class=\"infosactivity\">");
+			String tmp = elt.getDivContent();
+			sb.append((elt != null) ? tmp : "");
+			sb.append("</div>");
+		}
+		return sb.toString();
 	}
 
 	private String getContent() {
@@ -63,10 +79,13 @@ public class DesktopServlet extends HttpServlet {
 		sb.append("<ul>");
 		for (int i = 0; i < desktopUsers.size(); ++i) {
 			DesktopUser elt = (DesktopUser) desktopUsers.get(i);
-			sb.append("<li><a href=\"#\" ");
-			sb.append("onclick=\"showActivity('#");
+			sb.append("<li><a class=\"switchlink\" href=\"#\" ");
+			sb.append("onclick=\"showActivity('");
 			sb.append(elt.getName());
-			sb.append("');\">");
+			sb.append("');\" id=\"menu");
+			sb.append(elt.getName());
+			sb.append("\"");
+			sb.append(">");
 			sb.append(elt.getSwitchLabel());
 			sb.append("</a></li>");
 		}
@@ -78,6 +97,15 @@ public class DesktopServlet extends HttpServlet {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < desktopUsers.size(); ++i) {
 			DesktopUser elt = (DesktopUser) desktopUsers.get(i);
+			String js = elt.getJS();
+			if (js != null && !js.equals("")) {
+				sb.append("<script src=\"");
+				sb.append(js);
+				sb.append("\"></script>");
+			}
+		}
+		for (int i = 0; i < desktopInfosUsers.size(); ++i) {
+			DesktopInfosUser elt = (DesktopInfosUser) desktopInfosUsers.get(i);
 			String js = elt.getJS();
 			if (js != null && !js.equals("")) {
 				sb.append("<script src=\"");
@@ -120,4 +148,11 @@ public class DesktopServlet extends HttpServlet {
 		desktopUsers.remove(desktopUser);
 	}
 
+	public void addDesktopInfosUser(DesktopInfosUser desktopInfosUser) {
+		desktopInfosUsers.add(desktopInfosUser);
+	}
+
+	public void removeDesktopInfosUser(DesktopInfosUser desktopInfosUser) {
+		desktopInfosUsers.remove(desktopInfosUser);
+	}
 }
