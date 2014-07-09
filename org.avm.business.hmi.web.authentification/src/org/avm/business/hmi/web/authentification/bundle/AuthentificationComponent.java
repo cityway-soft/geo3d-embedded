@@ -5,60 +5,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Properties;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 
 import org.avm.business.hmi.web.authentification.servlet.AuthentificationServlet;
 import org.avm.business.hmi.web.desktop.DesktopUser;
+import org.avm.business.hmi.web.utils.HmiWebComponent;
 import org.avm.elementary.useradmin.UserSessionService;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 
-public class AuthentificationComponent implements DesktopUser {
+public class AuthentificationComponent extends HmiWebComponent implements
+		DesktopUser {
 
-	private String page = "test";
-	private HttpService httpService = null;
 	private UserSessionService userSession = null;
 	private AuthentificationServlet servlet = null;
-
-
-	public void activate(ComponentContext context) {
-		URL authUrl = context
-				.getBundleContext()
-				.getBundle()
-				.getResource(
-						"org/avm/business/hmi/web/authentification/servlet/auth.html");
-		try {
-			page = fromStream(authUrl.openStream());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		httpService = (HttpService) context.locateService("httpService");
-		userSession = (UserSessionService) context.locateService("userSession");
-		if (httpService != null && userSession != null) {
-			servlet = new AuthentificationServlet();
-			
-			servlet.setSession(userSession);
-			try {
-				httpService.registerServlet("/authentification", servlet, null,
-						null);
-				httpService.registerResources("/desktop/js/authentification.js", "www/js/authentification.js", null);
-			} catch (ServletException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NamespaceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-	public void deactivate(ComponentContext context) {
-
-	}
 
 	public String getSwitchLabel() {
 		// TODO Auto-generated method stub
@@ -94,5 +58,33 @@ public class AuthentificationComponent implements DesktopUser {
 			out.append(newLine);
 		}
 		return out.toString();
+	}
+
+	protected HttpServlet getServlet() {
+		return servlet;
+	}
+
+	protected void init(ComponentContext context) {
+		userSession = (UserSessionService) context.locateService("userSession");
+		servlet = new AuthentificationServlet();
+		servlet.setSession(userSession);
+	}
+
+	protected void uninit(ComponentContext context) {
+	}
+
+	protected String getPageRessource() {
+		return "org/avm/business/hmi/web/authentification/servlet/auth.html";
+	}
+
+	protected String getServletPath() {
+		// TODO Auto-generated method stub
+		return "/authentification";
+	}
+
+	protected Properties resourcesToRegister() {
+		Properties res = new Properties();
+		res.put("/desktop/js/authentification.js", "www/js/authentification.js");
+		return res;
 	}
 }
