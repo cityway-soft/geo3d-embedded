@@ -1,7 +1,15 @@
 <div id="debugavm"></div>
 <div id="avmcontent">
 	<div id="avmpriseposte" class="avmactivity">
-		<div id="avmprisepostebutton" onclick="doPrisePoste();"><p>Effectuer la prise de poste</p></div>
+		<div id="avmprisepostebutton" onclick="doPrisePoste();">
+			<p>Effectuer la prise de poste</p>
+		</div>
+	</div>
+	<div id="avmpriseservice" class="avmactivity">
+		<form>
+			<input type="text" id="iduservice" placeholder="service" /><br />
+			<input type="button" value="valider" onclick="doPriseService();" />
+		</form>
 	</div>
 	<div id="avmlistcourse" class="avmactivity"></div>
 	<div id="avmattentedepart" class="avmactivity">
@@ -20,7 +28,7 @@
 				<li><a href="#" onclick="doDeviation();">D&eacute;viation</a></li>
 			</ul>
 		</div>
-		<div style="clear:both;"></div>
+		<div style="clear: both;"></div>
 		<div id="avmencourseinfos"></div>
 		<div id="avmencoursetitle"></div>
 		<div id="avmencoursecontent"></div>
