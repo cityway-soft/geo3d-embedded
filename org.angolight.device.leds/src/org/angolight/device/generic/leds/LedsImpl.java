@@ -56,7 +56,7 @@ public class LedsImpl implements Leds, LedsListener, ConfigurableService,
 
 	public synchronized int J(byte address, short states, byte period,
 			boolean check) {
- 
+  
 		// format message
 		byte[] b;
 		StringBuffer buffer = new StringBuffer();

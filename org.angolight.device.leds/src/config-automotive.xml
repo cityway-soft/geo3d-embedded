@@ -10,7 +10,7 @@
 <value type="String">initial@reference:file:../../geolia/ango/org.angolight.device.leds/</value>
 </property>
 <property name="url.connection">
-<value type="String">comm:2;baudrate=19200</value>
+<value type="String">comm:8;baudrate=19200</value>
 </property>
 <property name="org.avm.config.version">
 <value type="Integer">4</value>
