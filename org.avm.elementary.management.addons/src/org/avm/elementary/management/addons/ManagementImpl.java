@@ -582,4 +582,22 @@ public class ManagementImpl implements ManageableService, ManagementService,
 		getManagementService().sendBundleList();
 	}
 
+	public void setPublicMode() throws Exception {
+		Management managementService = getManagementService();
+		if (managementService != null) {
+			managementService.setPublicMode();
+		} else {
+			_log.error("Management service is null !");
+		}
+	}
+
+	public void setPrivateMode() throws Exception {
+		Management managementService = getManagementService();
+		if (managementService != null) {
+			managementService.setPrivateMode();
+		} else {
+			_log.error("Management service is null !");
+		}
+	}
+
 }

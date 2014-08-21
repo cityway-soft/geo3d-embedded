@@ -160,6 +160,44 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		return 0;
 	}
 
+	// -- SETUPDATEMODE
+	public final static String USAGE_SETUPDATEMODE = "[-m #mode#] [-s #save#]";
+
+	public final static String[] HELP_SETUPDATEMODE = new String[] { "change de mode de mise a jour mode=private|public save=true|false" };
+
+	public int cmdSetupdatemode(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+		String mode = ((String) opts.get("-m"));
+		String save = ((String) opts.get("-s"));
+		boolean bSave = (save != null && save.equalsIgnoreCase("true"));
+
+		if (mode != null) {
+			try {
+				if (mode.equals("public")) {
+					_peer.setPublicMode();
+				} else {
+					mode="private";
+					_peer.setPrivateMode();
+				}
+
+				if (bSave) {
+					ManagementPropertyFile configuration = ManagementPropertyFile
+							.getInstance();
+					configuration.setUpdateMode(mode);
+					try {
+						configuration.save();
+					} catch (IOException e) {
+						out.println("Error:" + e.getMessage());
+					}
+				}
+
+			} catch (Exception e) {
+				out.println("Error :" + e.getMessage());
+			}
+		}
+		return 0;
+	}
+
 	// -- SETPUBLICDURL
 	public final static String USAGE_SETPUBLICURL = "[-u #U#][-d #D#][-s #s#]";
 
@@ -172,9 +210,6 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		String save = ((String) opts.get("-s"));
 		boolean bSave = (save != null && save.equalsIgnoreCase("true"));
 
-		if (save != null) {
-			bSave = true;
-		}
 		if (downloadURL != null) {
 			try {
 				if (downloadURL.equals("default")) {
@@ -302,12 +337,28 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	}
 
 	// -- SYNCHRONIZE
-	public final static String USAGE_SYNCHRONIZE = "";
+	public final static String USAGE_SYNCHRONIZE = "[<mode>]";
 
 	public final static String[] HELP_SYNCHRONIZE = new String[] { "Synchronize bundles" };
 
 	public int cmdSynchronize(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
+		String mode = ((String) opts.get("mode"));
+
+		if (mode == null) {
+			mode = "private";
+		}
+		try {
+			if (mode.equals("public")) {
+				_peer.setPublicMode();
+			} else {
+				_peer.setPrivateMode();
+			}
+		} catch (Exception e) {
+			out.println("Error :" + e.getMessage());
+		}
+
+		out.print("Update using mode : " + mode);
 		synchronize(out);
 		return 0;
 	}

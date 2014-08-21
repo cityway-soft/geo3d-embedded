@@ -41,17 +41,18 @@ public class AlarmCommand implements org.apache.commons.chain.Command {
 			return true;
 		}
 		final Object msg = this._context.getMessage();
+		if (msg == null) {
+			return true;
+		}
 		if (msg instanceof Message) {
 			final Message message = (Message) msg;
-			if (message == null) {
-				return true;
-			}
 			final ComponentContext cc = this._context.getComponentContext();
 			final AlarmService alarm = (AlarmService) cc.locateService("alarm");
 			if (alarm != null) {
-
-				if (_wasAlarm != alarm.isAlarm() || alarm.isAlarm()) {
-					_wasAlarm = alarm.isAlarm();
+				boolean currentState = alarm.isAlarm();
+				if (_wasAlarm != currentState || currentState) {
+					System.err.println("[AlarmCommand] _wasAlarm="+_wasAlarm+", currentState="+currentState+" ************");
+					_wasAlarm = currentState;
 					message.getEntete().getChamps().setAnomalie(1);
 					final BitSet alarms = new BitSet();
 					final Iterator iter = alarm.getList().iterator();

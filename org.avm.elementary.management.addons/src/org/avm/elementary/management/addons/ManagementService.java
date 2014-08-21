@@ -23,6 +23,10 @@ public interface ManagementService {
 	public void setDownloadURL(URL url) throws MalformedURLException, Exception;
 
 	public void setUploadURL(URL url) throws MalformedURLException, Exception;
+	
+	public void setPublicMode() throws MalformedURLException, Exception;
+
+	public void setPrivateMode() throws MalformedURLException, Exception;
 
 	public URL getDownloadURL() throws Exception;
 

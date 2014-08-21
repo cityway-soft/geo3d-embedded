@@ -20,6 +20,17 @@ public class ManagementPropertyFile {
 
 	String privateDownloadUrl;
 	String privateUploadUrl;
+
+	String updateMode;
+
+	public String getUpdateMode() {
+		return updateMode;
+	}
+
+	public void setUpdateMode(String updateMode) {
+		this.updateMode = updateMode;
+	}
+
 	private long modifiedDate;
 
 	private static ManagementPropertyFile _instance = null;
@@ -66,12 +77,18 @@ public class ManagementPropertyFile {
 					System.getProperty(Management.PRIVATE_DOWNLOAD_URL_TAG));
 			privateUploadUrl = p.getProperty(Management.PRIVATE_UPLOAD_URL_TAG,
 					System.getProperty(Management.PRIVATE_UPLOAD_URL_TAG));
+			
+			updateMode = p.getProperty(Management.UPDATE_MODE_TAG,
+					System.getProperty(Management.UPDATE_MODE_TAG));
 		}
 		return modified;
 	}
 
 	public void save() throws FileNotFoundException, IOException {
 		Properties p = new Properties();
+		
+		if (updateMode != null)
+			p.setProperty(Management.UPDATE_MODE_TAG, updateMode);
 		if (publicDownloadUrl != null)
 			p.setProperty(Management.PUBLIC_DOWNLOAD_URL_TAG, publicDownloadUrl);
 		if (publicUploadUrl != null)
