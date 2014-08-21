@@ -241,7 +241,7 @@ public class ManagementImpl implements Management {
 					"ftp://avm:avm++@ftpserver.avm.org/upload");
 			try {
 				_uploadURL = new URL(System.getProperty(
-						Management.DEFAULT_UPLOAD_URL_TAG, defaultUrl));
+						Management.PRIVATE_UPLOAD_URL_TAG, defaultUrl));
 			} catch (Throwable t) {
 				_uploadURL = null;
 			}
@@ -259,14 +259,13 @@ public class ManagementImpl implements Management {
 							+ "/$e/$v/bundles");
 			try {
 				_downloadURL = new URL(System.getProperty(
-						Management.DEFAULT_DOWNLOAD_URL_TAG, defaultUrl));
+						Management.PRIVATE_DOWNLOAD_URL_TAG, defaultUrl));
 			} catch (Throwable t) {
 				_downloadURL = null;
 			}
 		} else {
 			_downloadURL = url;
 		}
-
 	}
 
 	public URL getUploadURL() {
@@ -651,6 +650,46 @@ public class ManagementImpl implements Management {
 		} catch (IOException e) {
 			error("IOException (sendReport) :" + e.getMessage());
 		}
+	}
+
+	public void setPublicMode() throws MalformedURLException {
+		URL url=null;
+		try {
+			url = new URL(System.getProperty(Management.PUBLIC_DOWNLOAD_URL_TAG, ""));
+		} catch (Throwable t) {
+			error("setPrivateMode for download url :" + t.getMessage());
+		}
+		
+		setDownloadURL(url);
+		
+		try {
+			url = new URL(System.getProperty(Management.PUBLIC_UPLOAD_URL_TAG, ""));
+		} catch (Throwable t) {
+			error("setPrivateMode for upload url :" + t.getMessage());
+		}
+		
+		setUploadURL(url);
+		
+	}
+
+	public void setPrivateMode() throws MalformedURLException {
+		URL url=null;
+		try {
+			url = new URL(System.getProperty(Management.PRIVATE_DOWNLOAD_URL_TAG, ""));
+		} catch (Throwable t) {
+			error("setPrivateMode for download url :" + t.getMessage());
+		}
+		
+		setDownloadURL(url);
+		
+		try {
+			url = new URL(System.getProperty(Management.PRIVATE_UPLOAD_URL_TAG, ""));
+		} catch (Throwable t) {
+			error("setPrivateMode for upload url :" + t.getMessage());
+		}
+		
+		setUploadURL(url);
+		
 	}
 
 }

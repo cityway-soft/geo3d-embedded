@@ -160,6 +160,30 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		return 0;
 	}
 
+	// -- SETUPDATEMODE
+	public final static String USAGE_SETUPDATEMODE = "<mode>";
+
+	public final static String[] HELP_SETUPDATEMODE = new String[] { "change de mode de mise a jour mode=private|public" };
+
+	public int cmdSetupdatemode(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+		String mode = ((String) opts.get("mode"));
+		if (mode == null) {
+
+		} else {
+			try {
+				if (mode.equals("public")) {
+					_peer.setPublicMode();
+				} else {
+					_peer.setPrivateMode();
+				}
+			} catch (Exception e) {
+				out.println("Error :" + e.getMessage());
+			}
+		}
+		return 0;
+	}
+
 	// -- SETPUBLICDURL
 	public final static String USAGE_SETPUBLICURL = "[-u #U#][-d #D#][-s #s#]";
 
@@ -302,12 +326,27 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	}
 
 	// -- SYNCHRONIZE
-	public final static String USAGE_SYNCHRONIZE = "";
+	public final static String USAGE_SYNCHRONIZE = "[<mode>]";
 
 	public final static String[] HELP_SYNCHRONIZE = new String[] { "Synchronize bundles" };
 
 	public int cmdSynchronize(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
+		String mode = ((String) opts.get("mode"));
+
+		if (mode == null) {
+			mode = "private";
+		}
+		try {
+			if (mode.equals("public")) {
+				_peer.setPublicMode();
+			} else {
+				_peer.setPrivateMode();
+			}
+		} catch (Exception e) {
+			out.println("Error :" + e.getMessage());
+		}
+
 		synchronize(out);
 		return 0;
 	}

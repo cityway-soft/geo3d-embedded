@@ -254,4 +254,12 @@ public class Activator extends AbstractActivator implements
 	public void setWLANMode(boolean b) throws MalformedURLException {
 		_peer.setWLANMode(b);
 	}
+
+	public void setPublicMode() throws Exception {
+		_peer.setPublicMode();
+	}
+
+	public void setPrivateMode() throws Exception {
+		_peer.setPrivateMode();
+	}
 }
