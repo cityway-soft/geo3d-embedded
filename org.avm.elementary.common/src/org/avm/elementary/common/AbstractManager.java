@@ -188,22 +188,22 @@ public abstract class AbstractManager implements ManageableService,
 							if (version.after(selected)) {
 								selected = version;
 								selectedFile = files[i];
-								System.out.println("=>>>>>>>>>>>>>>Selected="
+								_log.debug("=>>>>>>>>>>>>>>Selected="
 										+ selectedFile);
 							}
 						} catch (ParseException e) {
-
+							_log.error("ParseException :" +e.getMessage());
 						}
 					}
 				}
-				System.out.println("=>>>>>>>>>>>>>>previous oldPath=" + oldPath);
+				_log.debug("=>>>>>>>>>>>>>>previous oldPath=" + oldPath);
 				if (selectedFile != null) {
 					oldPath = root+File.separator+path.getParentFile().getName()
 							+ File.separator + selectedFile
 							+ File.separator + name;
 					newVersion = selected;
 					newTextVersion = selectedFile;
-					System.out.println("=>>>>>>>>>>>>>>newVersion=" + newVersion);
+					_log.debug("=>>>>>>>>>>>>>>newVersion=" + newVersion);
 					String oldDir = oldPath.substring(iroot, iname);
 					oldDir = oldDir.replace('/', File.separatorChar);
 					String newPath = oldPath.substring(0, iversion) + URL_SEPARATOR

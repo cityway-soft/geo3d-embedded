@@ -8,7 +8,6 @@ import org.avm.elementary.management.core.Management;
 import org.avm.elementary.management.core.ManagementImpl;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.service.startlevel.StartLevel;
 
@@ -20,7 +19,6 @@ public class Activator implements BundleActivator, Management {
 			+ "] ";
 
 	private ManagementImpl _peer;
-
 
 	private boolean DEBUG;
 
@@ -85,6 +83,14 @@ public class Activator implements BundleActivator, Management {
 
 	public void sendBundleList() {
 		_peer.sendBundleList();
+	}
+
+	public void setPublicMode() throws MalformedURLException {
+		_peer.setPublicMode();
+	}
+
+	public void setPrivateMode() throws MalformedURLException {
+		_peer.setPrivateMode();
 	}
 
 }

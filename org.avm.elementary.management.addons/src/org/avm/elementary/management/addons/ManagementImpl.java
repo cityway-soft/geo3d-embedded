@@ -573,13 +573,32 @@ public class ManagementImpl implements ManageableService, ManagementService,
 			setUploadURL(new URL(configuration.getPrivateUploadUrl()));
 
 		} else {
-			setDownloadURL(new URL(configuration.getPublicDownloadUrl()));
-			setUploadURL(new URL(configuration.getPublicUploadUrl()));
+			// default url
+			setDownloadURL(null);
+			setUploadURL(null);
 		}
 	}
 
 	public void sendBundleList() throws Exception {
 		getManagementService().sendBundleList();
+	}
+
+	public void setPublicMode() throws Exception {
+		Management managementService = getManagementService();
+		if (managementService != null) {
+			managementService.setPublicMode();
+		} else {
+			_log.error("Management service is null !");
+		}
+	}
+
+	public void setPrivateMode() throws Exception {
+		Management managementService = getManagementService();
+		if (managementService != null) {
+			managementService.setPrivateMode();
+		} else {
+			_log.error("Management service is null !");
+		}
 	}
 
 }
