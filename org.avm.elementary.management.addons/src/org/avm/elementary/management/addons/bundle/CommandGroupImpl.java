@@ -266,7 +266,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			}
 		}
 
-		out.println("public download:" + configuration.getPublicUploadUrl());
+		out.println("public download:" + configuration.getPublicDownloadUrl());
 		out.println("public upload:" + configuration.getPublicUploadUrl());
 		return 0;
 	}
@@ -330,7 +330,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 				out.println("Error :" + e.getMessage());
 			}
 		}
-		out.println("private download:" + configuration.getPrivateUploadUrl());
+		out.println("private download:" + configuration.getPrivateDownloadUrl());
 		out.println("private upload:" + configuration.getPrivateUploadUrl());
 		return 0;
 	}

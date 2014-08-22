@@ -19,6 +19,7 @@ public interface Management {
 
 	String PRIVATE_DOWNLOAD_URL_TAG = "org.avm.download.private.url";
 	String PRIVATE_UPLOAD_URL_TAG = "org.avm.upload.private.url";
+	//
 	String PUBLIC_DOWNLOAD_URL_TAG = "org.avm.download.public.url";
 	String PUBLIC_UPLOAD_URL_TAG = "org.avm.upload.public.url";
 
