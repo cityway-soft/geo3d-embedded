@@ -177,7 +177,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 				if (mode.equals("public")) {
 					_peer.setPublicMode();
 				} else {
-					mode="private";
+					mode = "private";
 					_peer.setPrivateMode();
 				}
 
@@ -192,15 +192,22 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 					}
 				}
 
-
 			} catch (Exception e) {
 				out.println("Error :" + e.getMessage());
 			}
 		}
+
+		try {
+			out.println("current download:" + _peer.getDownloadURL());
+			out.println("current upload:" + _peer.getUploadURL());
+		} catch (Exception e) {
+			out.println("Error :" + e.getMessage());
+		}
+
 		return 0;
 	}
 
-	// -- SETPUBLICDURL
+	// -- SETPUBLICURL
 	public final static String USAGE_SETPUBLICURL = "[-u #U#][-d #D#][-s #s#]";
 
 	public final static String[] HELP_SETPUBLICURL = new String[] { "-u upload -d download -s save(true|false)" };
@@ -212,6 +219,9 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		String save = ((String) opts.get("-s"));
 		boolean bSave = (save != null && save.equalsIgnoreCase("true"));
 
+		ManagementPropertyFile configuration = ManagementPropertyFile
+				.getInstance();
+
 		if (downloadURL != null) {
 			try {
 				if (downloadURL.equals("default")) {
@@ -219,8 +229,6 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 				} else {
 					_peer.setDownloadURL(new URL(downloadURL));
 					if (bSave) {
-						ManagementPropertyFile configuration = ManagementPropertyFile
-								.getInstance();
 						configuration.setPublicDownloadUrl(downloadURL);
 						try {
 							configuration.save();
@@ -242,8 +250,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 				} else {
 					_peer.setUploadURL(new URL(uploadURL));
 					if (bSave) {
-						ManagementPropertyFile configuration = ManagementPropertyFile
-								.getInstance();
+
 						configuration.setPublicUploadUrl(uploadURL);
 						try {
 							configuration.save();
@@ -259,12 +266,8 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			}
 		}
 
-		try {
-			out.println("download:" + _peer.getDownloadURL());
-			out.println("upload:" + _peer.getUploadURL());
-		} catch (Exception e) {
-			out.println("Error :" + e.getMessage());
-		}
+		out.println("public download:" + configuration.getPublicUploadUrl());
+		out.println("public upload:" + configuration.getPublicUploadUrl());
 		return 0;
 	}
 
@@ -283,6 +286,8 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		if (save != null) {
 			bSave = true;
 		}
+		ManagementPropertyFile configuration = ManagementPropertyFile
+				.getInstance();
 		if (downloadURL != null) {
 			try {
 				if (downloadURL.equals("default")) {
@@ -290,8 +295,6 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 				} else {
 					_peer.setDownloadURL(new URL(downloadURL));
 					if (bSave) {
-						ManagementPropertyFile configuration = ManagementPropertyFile
-								.getInstance();
 						configuration.setPrivateDownloadUrl(downloadURL);
 						try {
 							configuration.save();
@@ -313,8 +316,6 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 				} else {
 					_peer.setUploadURL(new URL(uploadURL));
 					if (bSave) {
-						ManagementPropertyFile configuration = ManagementPropertyFile
-								.getInstance();
 						configuration.setPrivateUploadUrl(uploadURL);
 						try {
 							configuration.save();
@@ -329,12 +330,8 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 				out.println("Error :" + e.getMessage());
 			}
 		}
-		try {
-			out.println("download:" + _peer.getDownloadURL());
-			out.println("upload:" + _peer.getUploadURL());
-		} catch (Exception e) {
-			out.println("Error :" + e.getMessage());
-		}
+		out.println("private download:" + configuration.getPublicUploadUrl());
+		out.println("private upload:" + configuration.getPublicUploadUrl());
 		return 0;
 	}
 
@@ -359,7 +356,6 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		} catch (Exception e) {
 			out.println("Error :" + e.getMessage());
 		}
-
 
 		out.print("Update using mode : " + mode);
 
