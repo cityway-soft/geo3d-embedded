@@ -40,9 +40,9 @@ public interface ManagementService {
 
 	public void send(String result);
 	
-	public boolean isWLANMode();
+	public boolean isPrivateMode();
 	
-	public void setWLANMode(boolean b)throws MalformedURLException;
+	public void setPrivateMode(boolean b)throws MalformedURLException;
 	
 	
 	

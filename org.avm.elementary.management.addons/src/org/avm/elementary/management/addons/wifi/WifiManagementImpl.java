@@ -27,20 +27,21 @@ public class WifiManagementImpl implements WifiManagement {
 
 	public WifiManagementImpl(ManagementService management) {
 		_logger = Logger.getInstance(this.getClass());
-		_logger.setPriority(Priority.DEBUG);
 		_management = management;
 	}
 
 	public void notify(Object o) {
 		State state = (State) o;
 		boolean isconnected = state.getValue() > 0;
-		_logger.debug("WifiStatut : "
+		_logger.info("WifiStatut : "
 				+ ((isconnected) ? "connected" : "disconnected"));
 
 		try {
-			_management.setWLANMode(isconnected);
-			((ManagementImpl)_management).updateUrls();
-			_management.synchronize(new PrintWriter(System.out));
+			_management.setPrivateMode(isconnected);
+			((ManagementImpl) _management).updateUrls();
+			if (isconnected) {
+				_management.synchronize(new PrintWriter(System.out));
+			}
 		} catch (Exception e) {
 			_logger.error("Wifi/management synchronization failed.", e);
 		}

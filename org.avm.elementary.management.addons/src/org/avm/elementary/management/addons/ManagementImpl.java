@@ -55,7 +55,7 @@ public class ManagementImpl implements ManageableService, ManagementService,
 
 	private Messenger _messenger;
 
-	private boolean isWLANMode = true;
+	private boolean isPrivateMode = true;
 
 	private Management _managementService;
 
@@ -556,19 +556,19 @@ public class ManagementImpl implements ManageableService, ManagementService,
 		}
 	}
 
-	public boolean isWLANMode() {
-		return isWLANMode;
+	public boolean isPrivateMode() {
+		return isPrivateMode;
 	}
 
-	public void setWLANMode(boolean b) {
-		isWLANMode = b;
+	public void setPrivateMode(boolean b) {
+		isPrivateMode = b;
 	}
 
 	public void updateUrls() throws Exception {
 		ManagementPropertyFile configuration = ManagementPropertyFile
 				.getInstance();
 		configuration.reload();
-		if (isWLANMode) {
+		if (isPrivateMode) {
 			setDownloadURL(new URL(configuration.getPrivateDownloadUrl()));
 			setUploadURL(new URL(configuration.getPrivateUploadUrl()));
 

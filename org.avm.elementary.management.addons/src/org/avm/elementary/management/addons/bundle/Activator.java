@@ -247,12 +247,12 @@ public class Activator extends AbstractActivator implements
 		_peer.send(response);
 	}
 
-	public boolean isWLANMode() {
-		return _peer.isWLANMode();
+	public boolean isPrivateMode() {
+		return _peer.isPrivateMode();
 	}
 
-	public void setWLANMode(boolean b) throws MalformedURLException {
-		_peer.setWLANMode(b);
+	public void setPrivateMode(boolean b) throws MalformedURLException {
+		_peer.setPrivateMode(b);
 	}
 
 	public void setPublicMode() throws Exception {
