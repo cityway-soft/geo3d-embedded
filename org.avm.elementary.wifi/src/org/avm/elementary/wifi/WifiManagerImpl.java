@@ -99,6 +99,7 @@ public class WifiManagerImpl implements WifiManager, ConfigurableService,
 
 	public void start() {
 		_sm = new WifiManagerStateMachine(_wifi);
+
 		if (_config != null) {
 			try {
 				int timeout = Integer.parseInt(_config.getDisconnectTimeout());

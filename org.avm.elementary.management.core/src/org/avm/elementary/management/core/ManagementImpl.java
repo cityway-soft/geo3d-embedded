@@ -259,7 +259,9 @@ public class ManagementImpl implements Management {
 		if (url == null) {
 			String defaultUrl = getDefaultUploadUrl();
 			try {
+
 				_uploadURL = new URL(defaultUrl);
+
 			} catch (Throwable t) {
 				_uploadURL = null;
 			}
@@ -273,6 +275,7 @@ public class ManagementImpl implements Management {
 			String defaultUrl = getDefaultDownloadUrl();
 			try {
 				_downloadURL = new URL(defaultUrl);
+
 			} catch (Throwable t) {
 				_downloadURL = null;
 			}

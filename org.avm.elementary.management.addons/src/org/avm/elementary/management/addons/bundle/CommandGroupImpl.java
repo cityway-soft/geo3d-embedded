@@ -161,6 +161,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	}
 
 	// -- SETUPDATEMODE
+
 	public final static String USAGE_SETUPDATEMODE = "[-m #mode#] [-s #save#]";
 
 	public final static String[] HELP_SETUPDATEMODE = new String[] { "change de mode de mise a jour mode=private|public save=true|false" };
@@ -190,6 +191,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 						out.println("Error:" + e.getMessage());
 					}
 				}
+
 
 			} catch (Exception e) {
 				out.println("Error :" + e.getMessage());
@@ -358,7 +360,9 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			out.println("Error :" + e.getMessage());
 		}
 
+
 		out.print("Update using mode : " + mode);
+
 		synchronize(out);
 		return 0;
 	}

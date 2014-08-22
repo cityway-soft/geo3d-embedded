@@ -21,6 +21,7 @@ public interface Management {
 	String PRIVATE_UPLOAD_URL_TAG = "org.avm.upload.private.url";
 	String PUBLIC_DOWNLOAD_URL_TAG = "org.avm.download.public.url";
 	String PUBLIC_UPLOAD_URL_TAG = "org.avm.upload.public.url";
+
 	
 	String DEFAULT_PRIVATE_UPLOAD_URL ="http://avm:avm++@ftpserver.avm.org/terminal/$i/upload";
 	String DEFAULT_PUBLIC_UPLOAD_URL ="http://avm:avm++@saml.avm.org/terminal/$i/upload";
@@ -30,6 +31,7 @@ public interface Management {
 
 
 	String UPDATE_MODE_TAG = "org.avm.default.upload-download.mode";
+
 
 	String MODE_PUBLIC = "public";
 
