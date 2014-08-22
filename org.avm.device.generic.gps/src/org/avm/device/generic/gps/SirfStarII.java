@@ -71,6 +71,8 @@ public class SirfStarII implements Gps, ConfigurableService, ManageableService,
 		return DEFAULT_POSITION;
 	}
 
+	private final static int MAX_NULL_CONTENT_ERROR = 5;
+
 	private class Task implements Runnable {
 
 		private void execute() throws InterruptedException, IOException,
@@ -78,12 +80,21 @@ public class SirfStarII implements Gps, ConfigurableService, ManageableService,
 			double longitude, latitude, altitude = 0, vitesse, cap;
 			Measurement lat, lon, alt, speed, track;
 			int satellites = 0;
+			// added to check null content
+			int countErrors = 0;
 			while (_running) {
 				Object o = getContent();
 				if (o == null) {
 					Thread.sleep(500);
+					countErrors++;
+					if (countErrors> MAX_NULL_CONTENT_ERROR){
+						throw new IOException("Max null content reached");
+					}
 					continue;
+				}else{
+					countErrors = 0;
 				}
+				
 				if (o instanceof GGASentence) {
 					GGASentence gga = (GGASentence) o;
 					satellites = gga.get_satellites();
@@ -197,9 +208,10 @@ public class SirfStarII implements Gps, ConfigurableService, ManageableService,
 		if (Math.cos(lat) == 0)
 			lon = lon1;
 		else
-			lon = mod(lon1
-					- Math.asin(Math.sin(tc) * Math.sin(d) / Math.cos(lat))
-					+ Math.PI, 2 * Math.PI)
+			lon = mod(
+					lon1
+							- Math.asin(Math.sin(tc) * Math.sin(d)
+									/ Math.cos(lat)) + Math.PI, 2 * Math.PI)
 					- Math.PI;
 		/*
 		 * lat = Math.asin(Math.sin(lat1) * Math.cos(d) + Math.cos(lat1)
@@ -215,7 +227,7 @@ public class SirfStarII implements Gps, ConfigurableService, ManageableService,
 	Position correctPosition(Position p, double delay) {
 		double x = p.getLongitude().getValue() * 180d / Math.PI;
 		double y = p.getLatitude().getValue() * 180d / Math.PI;
-		_log.debug("[DSU] Position original : lon = " + x + " lat = " + y);
+		_log.debug("Position original : lon = " + x + " lat = " + y);
 		double d = delay * p.getSpeed().getValue();
 		double lon1 = p.getLongitude().getValue();
 		double lat1 = p.getLatitude().getValue();
@@ -243,14 +255,26 @@ public class SirfStarII implements Gps, ConfigurableService, ManageableService,
 		}
 		return _in;
 	}
+	
+	private String lastvalidTrame ="";
+	private int countSimilarTrame = 0;
+	private final static int MAX_SIMILAR_TRAME = 5;
 
 	private Object getContent() throws IOException {
 		Object result = null;
 		DataInputStream in = (DataInputStream) getInputStream();
 		String trame = in.readLine();
 		if (trame != null) {
+			if (trame.equals(lastvalidTrame)){
+				if (countSimilarTrame++ > MAX_SIMILAR_TRAME){
+					throw new IOException("Max similar trame reached");
+				}
+			}else{
+				countSimilarTrame=0;
+			}
 			_log.debug(trame);
 			result = parse(trame);
+			lastvalidTrame = trame;
 		}
 		return result;
 	}
