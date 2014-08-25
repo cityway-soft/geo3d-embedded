@@ -562,6 +562,9 @@ public class ManagementImpl implements ManageableService, ManagementService,
 
 	public void setPrivateMode(boolean b) {
 		isPrivateMode = b;
+		ManagementPropertyFile configuration = ManagementPropertyFile
+				.getInstance();
+		configuration.setLastUpdateInPrivateZone(b);
 	}
 
 	public void updateUrls() throws Exception {
@@ -585,6 +588,7 @@ public class ManagementImpl implements ManageableService, ManagementService,
 
 	public void setPublicMode() throws Exception {
 		Management managementService = getManagementService();
+		setPrivateMode(false);
 		if (managementService != null) {
 			managementService.setPublicMode();
 		} else {
@@ -594,6 +598,7 @@ public class ManagementImpl implements ManageableService, ManagementService,
 
 	public void setPrivateMode() throws Exception {
 		Management managementService = getManagementService();
+		setPrivateMode(true);
 		if (managementService != null) {
 			managementService.setPrivateMode();
 		} else {

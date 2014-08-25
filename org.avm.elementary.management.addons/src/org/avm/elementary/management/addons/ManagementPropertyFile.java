@@ -22,6 +22,16 @@ public class ManagementPropertyFile {
 	String privateUploadUrl;
 
 	String updateMode;
+	
+	boolean lastUpdateInPrivateZone=false;
+
+	public boolean isLastUpdateInPrivateZone() {
+		return lastUpdateInPrivateZone;
+	}
+
+	public void setLastUpdateInPrivateZone(boolean lastUpdateInPrivateZone) {
+		this.lastUpdateInPrivateZone = lastUpdateInPrivateZone;
+	}
 
 	public String getUpdateMode() {
 		return updateMode;
@@ -80,6 +90,16 @@ public class ManagementPropertyFile {
 			
 			updateMode = p.getProperty(Management.UPDATE_MODE_TAG,
 					System.getProperty(Management.UPDATE_MODE_TAG));
+			
+			String  temp = p.getProperty(
+					Management.LAST_UPDATE_IN_PRIVATE_ZONE_TAG,
+					System.getProperty(Management.LAST_UPDATE_IN_PRIVATE_ZONE_TAG));
+			if (temp != null && temp.endsWith("true")){
+				lastUpdateInPrivateZone=true;
+			}
+			else{
+				lastUpdateInPrivateZone=false;
+			}
 		}
 		return modified;
 	}
@@ -98,6 +118,10 @@ public class ManagementPropertyFile {
 					privateDownloadUrl);
 		if (privateUploadUrl != null)
 			p.setProperty(Management.PRIVATE_UPLOAD_URL_TAG, privateUploadUrl);
+		
+		p.setProperty(Management.LAST_UPDATE_IN_PRIVATE_ZONE_TAG, lastUpdateInPrivateZone?"true":"false");
+		
+		
 		Utils.saveProperties(p, PERSISTANCE_PROPERTY_FILE);
 	}
 

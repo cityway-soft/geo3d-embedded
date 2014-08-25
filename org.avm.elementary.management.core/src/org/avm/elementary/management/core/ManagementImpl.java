@@ -85,7 +85,7 @@ public class ManagementImpl implements Management {
 		init();
 		debug("registering management core service...");
 		_sr = _context.registerService(Management.class.getName(), this, null);
-		debug("management core service " +_sr + " registered.");
+		debug("management core service " + _sr + " registered.");
 		debug("starting synchronize...");
 		try {
 			synchronize(update, new PrintWriter(System.out));
@@ -156,12 +156,9 @@ public class ManagementImpl implements Management {
 		}
 
 	}
-
-	public void init() {
-		debug("Init management...");
-
-		// -- load property files
-		String filename = "avm.properties";
+	
+	
+	private void updateManagementProperties(String filename){
 		String filepath = System.getProperty(AVMHOME_TAG)
 				+ System.getProperty("file.separator") + "bin"
 				+ System.getProperty("file.separator") + filename;
@@ -169,7 +166,7 @@ public class ManagementImpl implements Management {
 		boolean changed = checkAvmProperties(p);
 		changed = updateWithSystemProperties(p) || changed;
 		if (changed) {
-			debug("Properties for avm.properties changed.");
+			debug("Properties for "+filename+" changed.");
 			try {
 				Utils.saveProperties(p, filepath);
 				Terminal.getInstance().save();
@@ -179,24 +176,50 @@ public class ManagementImpl implements Management {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public void init() {
+		debug("Init management...");
+
+		// -- load property files
+		String filename = "avm.properties";
+		updateManagementProperties(filename);
+//		String filepath = System.getProperty(AVMHOME_TAG)
+//				+ System.getProperty("file.separator") + "bin"
+//				+ System.getProperty("file.separator") + filename;
+//		Properties p = Utils.loadProperties(filepath);
+//		boolean changed = checkAvmProperties(p);
+//		changed = updateWithSystemProperties(p) || changed;
+//		if (changed) {
+//			debug("Properties for avm.properties changed.");
+//			try {
+//				Utils.saveProperties(p, filepath);
+//				Terminal.getInstance().save();
+//			} catch (FileNotFoundException e) {
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
 
 		filename = "management.properties";
-		filepath = System.getProperty(AVMHOME_TAG)
-				+ System.getProperty("file.separator") + "bin"
-				+ System.getProperty("file.separator") + filename;
-		p = Utils.loadProperties(filepath);
-		changed = updateWithSystemProperties(p);
-		if (changed) {
-			debug("Properties for management.properties changed.");
-			try {
-				Utils.saveProperties(p, filepath);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-		}
+		updateManagementProperties(filename);
+//		filepath = System.getProperty(AVMHOME_TAG)
+//				+ System.getProperty("file.separator") + "bin"
+//				+ System.getProperty("file.separator") + filename;
+//		p = Utils.loadProperties(filepath);
+//		changed = updateWithSystemProperties(p);
+//		if (changed) {
+//			debug("Properties for management.properties changed.");
+//			try {
+//				Utils.saveProperties(p, filepath);
+//			} catch (FileNotFoundException e) {
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//
+//		}
 
 		debug("Terminal Info: " + Terminal.getInstance());
 
@@ -234,23 +257,37 @@ public class ManagementImpl implements Management {
 		}
 		debug("Init finished...");
 	}
-	
-	
-	private String getDefaultUploadUrl(){
-		String mode = System.getProperty(UPDATE_MODE_TAG,	"private");
-		String url= System.getProperty(PRIVATE_UPLOAD_URL_TAG,	DEFAULT_PRIVATE_UPLOAD_URL);
-		if (mode.equals("public")){
-			
-			url=System.getProperty(PUBLIC_UPLOAD_URL_TAG,	DEFAULT_PUBLIC_UPLOAD_URL);
+
+	private String getDefaultUploadUrl() {
+		boolean lastModePrivate = System.getProperty(
+				LAST_UPDATE_IN_PRIVATE_ZONE_TAG, "false").equals("true");
+		String mode = "private";
+		String url = System.getProperty(PRIVATE_UPLOAD_URL_TAG,
+				DEFAULT_PRIVATE_UPLOAD_URL);
+		if (lastModePrivate == false) {
+			mode = System.getProperty(UPDATE_MODE_TAG, "private");
+		}
+		if (mode.equals("public")) {
+
+			url = System.getProperty(PUBLIC_UPLOAD_URL_TAG,
+					DEFAULT_PUBLIC_UPLOAD_URL);
 		}
 		return url;
 	}
-	
-	private String getDefaultDownloadUrl(){
-		String mode = System.getProperty(UPDATE_MODE_TAG,	"private");
-		String url= System.getProperty(PRIVATE_DOWNLOAD_URL_TAG,	DEFAULT_PRIVATE_DOWNLOAD_URL);
-		if (mode.equals("public")){
-			url=System.getProperty(PUBLIC_DOWNLOAD_URL_TAG,	DEFAULT_PUBLIC_DOWNLOAD_URL);
+
+	private String getDefaultDownloadUrl() {
+		boolean lastModePrivate = System.getProperty(
+				LAST_UPDATE_IN_PRIVATE_ZONE_TAG, "false").equals("true");
+		String mode = "private";
+		String url = System.getProperty(PRIVATE_DOWNLOAD_URL_TAG,
+				DEFAULT_PRIVATE_DOWNLOAD_URL);
+
+		if (lastModePrivate == false) {
+			mode = System.getProperty(UPDATE_MODE_TAG, "private");
+		}
+		if (mode.equals("public")) {
+			url = System.getProperty(PUBLIC_DOWNLOAD_URL_TAG,
+					DEFAULT_PUBLIC_DOWNLOAD_URL);
 		}
 		return url;
 	}
@@ -397,7 +434,8 @@ public class ManagementImpl implements Management {
 			_out.println("Download url template : " + getDownloadURL());
 			_out.println("Upload url template : " + getUploadURL());
 			_out.flush();
-
+			
+			boolean success=true;
 			while (_retry <= MAX_RETRY && _thread.isInterrupted() == false) {
 				debug("********************** " + _retry + "/" + MAX_RETRY
 						+ " **********************");
@@ -408,6 +446,7 @@ public class ManagementImpl implements Management {
 					cmd.exec();
 					long time = System.currentTimeMillis() - t0;
 					debug("Update [done] (" + time + " ms.)");
+					success=true;
 					break;
 				} catch (IOException ioe) {
 					_out.println("[ERROR] Update IOException : "
@@ -418,10 +457,19 @@ public class ManagementImpl implements Management {
 					} catch (InterruptedException e) {
 						break;
 					}
+					success=false;
 					_retry++;
 				}
 
 			}
+			
+			if (success == false){
+				_out.println("Update failure => ignore last update in private zone");
+				System.setProperty(LAST_UPDATE_IN_PRIVATE_ZONE_TAG, "false");
+				String filename = "avm.properties";
+				updateManagementProperties(filename);
+			}
+			
 			if (interrupted == false) {
 				updateVersion();
 				startAllBundles(_out);
@@ -610,8 +658,7 @@ public class ManagementImpl implements Management {
 			String bundleName = bundles[i].getSymbolicName();
 			String bundleVersion = (String) bundles[i].getHeaders().get(
 					"Bundle-Version");
-			String packName = (String) bundles[i].getHeaders().get(
-					"TAB-Pack");
+			String packName = (String) bundles[i].getHeaders().get("TAB-Pack");
 			bundleList.put(bundleName, bp);
 			bp.setName(bundleName);
 			bp.setVersion(bundleVersion);
@@ -619,8 +666,7 @@ public class ManagementImpl implements Management {
 
 			bp.setStartlevel(getStartLevelService().getBundleStartLevel(
 					bundles[i]));
-			
-		
+
 		}
 		return bundleList;
 	}
@@ -669,43 +715,47 @@ public class ManagementImpl implements Management {
 	}
 
 	public void setPublicMode() throws MalformedURLException {
-		URL url=null;
+		URL url = null;
 		try {
-			url = new URL(System.getProperty(Management.PUBLIC_DOWNLOAD_URL_TAG, ""));
+			url = new URL(System.getProperty(
+					Management.PUBLIC_DOWNLOAD_URL_TAG, ""));
 		} catch (Throwable t) {
 			error("setPrivateMode for download url :" + t.getMessage());
 		}
-		
+
 		setDownloadURL(url);
-		
+
 		try {
-			url = new URL(System.getProperty(Management.PUBLIC_UPLOAD_URL_TAG, ""));
+			url = new URL(System.getProperty(Management.PUBLIC_UPLOAD_URL_TAG,
+					""));
 		} catch (Throwable t) {
 			error("setPrivateMode for upload url :" + t.getMessage());
 		}
-		
+
 		setUploadURL(url);
-		
+
 	}
 
 	public void setPrivateMode() throws MalformedURLException {
-		URL url=null;
+		URL url = null;
 		try {
-			url = new URL(System.getProperty(Management.PRIVATE_DOWNLOAD_URL_TAG, ""));
+			url = new URL(System.getProperty(
+					Management.PRIVATE_DOWNLOAD_URL_TAG, ""));
 		} catch (Throwable t) {
 			error("setPrivateMode for download url :" + t.getMessage());
 		}
-		
+
 		setDownloadURL(url);
-		
+
 		try {
-			url = new URL(System.getProperty(Management.PRIVATE_UPLOAD_URL_TAG, ""));
+			url = new URL(System.getProperty(Management.PRIVATE_UPLOAD_URL_TAG,
+					""));
 		} catch (Throwable t) {
 			error("setPrivateMode for upload url :" + t.getMessage());
 		}
-		
+
 		setUploadURL(url);
-		
+
 	}
 
 }

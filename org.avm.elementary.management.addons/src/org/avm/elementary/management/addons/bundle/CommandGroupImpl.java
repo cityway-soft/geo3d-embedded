@@ -25,7 +25,6 @@ import org.avm.elementary.management.addons.ManagementService;
 import org.avm.elementary.management.core.utils.Terminal;
 import org.avm.elementary.management.core.utils.Utils;
 import org.knopflerfish.service.console.Session;
-import org.osgi.service.cm.Configuration;
 import org.osgi.service.component.ComponentContext;
 
 public class CommandGroupImpl extends AbstractCommandGroup {
@@ -199,7 +198,9 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		}
 
 		try {
-			out.println("current mode :" + (_peer.isPrivateMode()?"private":"public") + " (at boot: "+configuration.getUpdateMode()+")");
+			out.println("current mode :"
+					+ (_peer.isPrivateMode() ? "private" : "public")
+					+ " (at boot: " + configuration.getUpdateMode() + ")");
 			out.println("current download:" + _peer.getDownloadURL());
 			out.println("current upload:" + _peer.getUploadURL());
 		} catch (Exception e) {
@@ -208,57 +209,6 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 		return 0;
 	}
-	
-	
-	
-	// -- SETURL
-	public final static String USAGE_SETURL = "[-u #U#][-d #D#]";
-
-	public final static String[] HELP_SETURL = new String[] { "-u upload -d download" };
-
-	public int cmdSeturl(Dictionary opts, Reader in, PrintWriter out,
-			Session session) {
-		String downloadURL = ((String) opts.get("-d"));
-		String uploadURL = ((String) opts.get("-u"));
-
-		if (downloadURL != null) {
-			try {
-				if (downloadURL.equals("default")) {
-					_peer.setDownloadURL(null);
-				} else {
-					_peer.setDownloadURL(new URL(downloadURL));
-				}
-
-			} catch (Exception e) {
-				out.println("Error :" + e.getMessage());
-			}
-		}
-		if (uploadURL != null) {
-			try {
-				if (uploadURL.equals("default")) {
-					_peer.setUploadURL(null);
-				} else {
-					_peer.setUploadURL(new URL(uploadURL));
-					
-				}
-
-			} catch (Exception e) {
-				out.println("Error :" + e.getMessage());
-			}
-		}
-
-		try {
-			out.println("download:" + _peer.getDownloadURL());
-			out.println("upload:" + _peer.getUploadURL());
-		} catch (Exception e) {
-			out.println("Error :" + e.getMessage());
-		}
-		return 0;
-	}
-
-	
-	
-	
 
 	// -- SETPUBLICURL
 	public final static String USAGE_SETPUBLICURL = "[-u #U#][-d #D#][-s #s#]";
@@ -410,8 +360,6 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			out.println("Error :" + e.getMessage());
 		}
 
-		out.print("Update using mode : " + mode);
-
 		synchronize(out);
 		return 0;
 	}
@@ -430,7 +378,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 	private void synchronize(PrintWriter out) {
 		try {
-			((ManagementImpl) _peer).updateUrls();
+			// ((ManagementImpl) _peer).updateUrls();
 			((ManagementImpl) _peer).synchronize(out);
 		} catch (Exception e) {
 			out.println(e);
