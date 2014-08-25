@@ -574,7 +574,6 @@ public class ManagementImpl implements ManageableService, ManagementService,
 		if (isPrivateMode) {
 			setDownloadURL(new URL(configuration.getPrivateDownloadUrl()));
 			setUploadURL(new URL(configuration.getPrivateUploadUrl()));
-
 		} else {
 			// default url
 			setDownloadURL(null);
