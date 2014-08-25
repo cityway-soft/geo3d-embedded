@@ -51,7 +51,7 @@ public class GirouetteDevice extends AbstractDevice implements AlarmProvider,
 	public int checkStatus() {
 		int result = -1;
 		int cpt = 0;
-		int max = 2;
+		int max = 5;
 
 //		boolean previous = alarm.isStatus();
 		while (result < 0 && cpt <= max) {
