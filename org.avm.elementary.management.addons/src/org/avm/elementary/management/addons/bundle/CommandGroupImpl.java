@@ -349,6 +349,9 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 		if (mode == null) {
 			mode = "private";
+			ManagementPropertyFile configuration = ManagementPropertyFile
+					.getInstance();
+			mode = configuration.getUpdateMode();
 		}
 		try {
 			if (mode.equals("public")) {
