@@ -362,7 +362,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		} catch (Exception e) {
 			out.println("Error :" + e.getMessage());
 		}
-
+		
 		synchronize(out);
 		return 0;
 	}

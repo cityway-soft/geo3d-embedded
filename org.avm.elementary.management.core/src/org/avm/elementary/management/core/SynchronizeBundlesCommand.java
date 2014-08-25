@@ -600,7 +600,6 @@ class SynchronizeBundlesCommand implements BundleListener {
 				BundleProperties bl = (BundleProperties) e.nextElement();
 				String bundlename = bl.getCompleteName();
 				Bundle bundle = getBundle(bundlename);
-				System.out.println("bundleName="+bundlename );
 				// -- on retire les bundles dont le startlevel est negatif
 				if (bundle == null && bl.getStartlevel() <= 0) {
 					bundleList.remove(bundlename);

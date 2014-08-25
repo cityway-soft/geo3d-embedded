@@ -431,8 +431,11 @@ public class ManagementImpl implements Management {
 				_out.println("Download URL is null : update operation is cancelled.");
 				return;
 			}
-			_out.println("Download url template : " + getDownloadURL());
-			_out.println("Upload url template : " + getUploadURL());
+			boolean isModePrivate = System.getProperty(Management.UPDATE_MODE_TAG, "private").equals("private");
+			System.out.println("Update mode  : " + (isModePrivate?"private":"public") + " ("+getDownloadURL()+")");
+			_out.println("Update mode  : " + (isModePrivate?"private":"public"));
+			_out.println("Download url : " + getDownloadURL());
+			_out.println("Upload url   : " + getUploadURL());
 			_out.flush();
 			
 			boolean success=true;
