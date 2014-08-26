@@ -211,61 +211,33 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	}
 
 	// -- SETPUBLICURL
-	public final static String USAGE_SETPUBLICURL = "[-u #U#][-d #D#][-s #s#]";
+	public final static String USAGE_SETPUBLICURL = "[-u #U#][-d #D#]";
 
-	public final static String[] HELP_SETPUBLICURL = new String[] { "-u upload -d download -s save(true|false)" };
+	public final static String[] HELP_SETPUBLICURL = new String[] { "-u upload -d download" };
 
 	public int cmdSetpublicurl(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
 		String downloadURL = ((String) opts.get("-d"));
 		String uploadURL = ((String) opts.get("-u"));
-		String save = ((String) opts.get("-s"));
-		boolean bSave = (save != null && save.equalsIgnoreCase("true"));
 
 		ManagementPropertyFile configuration = ManagementPropertyFile
 				.getInstance();
 
 		if (downloadURL != null) {
+			configuration.setPublicDownloadUrl(downloadURL);
 			try {
-				if (downloadURL.equals("default")) {
-					_peer.setDownloadURL(null);
-				} else {
-					_peer.setDownloadURL(new URL(downloadURL));
-					if (bSave) {
-						configuration.setPublicDownloadUrl(downloadURL);
-						try {
-							configuration.save();
-						} catch (IOException e) {
-							out.println("Error:" + e.getMessage());
-						}
-
-					}
-				}
-
-			} catch (Exception e) {
-				out.println("Error :" + e.getMessage());
+				configuration.save();
+			} catch (IOException e) {
+				out.println("Error:" + e.getMessage());
 			}
 		}
+
 		if (uploadURL != null) {
+			configuration.setPublicUploadUrl(uploadURL);
 			try {
-				if (uploadURL.equals("default")) {
-					_peer.setUploadURL(null);
-				} else {
-					_peer.setUploadURL(new URL(uploadURL));
-					if (bSave) {
-
-						configuration.setPublicUploadUrl(uploadURL);
-						try {
-							configuration.save();
-						} catch (IOException e) {
-							out.println("Error:" + e.getMessage());
-						}
-
-					}
-				}
-
-			} catch (Exception e) {
-				out.println("Error :" + e.getMessage());
+				configuration.save();
+			} catch (IOException e) {
+				out.println("Error:" + e.getMessage());
 			}
 		}
 
@@ -275,37 +247,54 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	}
 
 	// -- SETPRIVATEDURL
-	public final static String USAGE_SETPRIVATEURL = "[-u #U#][-d #D#][-s #s#]";
+	public final static String USAGE_SETPRIVATEURL = "[-u #U#][-d #D#]";
 
-	public final static String[] HELP_SETPRIVATEURL = new String[] { "-u upload -d download -s save(true|false)" };
+	public final static String[] HELP_SETPRIVATEURL = new String[] { "-u upload -d download " };
 
 	public int cmdSetprivateurl(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
 		String downloadURL = ((String) opts.get("-d"));
 		String uploadURL = ((String) opts.get("-u"));
-		String save = ((String) opts.get("-s"));
-		boolean bSave = (save != null && save.equalsIgnoreCase("true"));
 
-		if (save != null) {
-			bSave = true;
-		}
 		ManagementPropertyFile configuration = ManagementPropertyFile
 				.getInstance();
+		if (downloadURL != null) {
+			configuration.setPrivateDownloadUrl(downloadURL);
+			try {
+				configuration.save();
+			} catch (IOException e) {
+				out.println("Error:" + e.getMessage());
+			}
+		}
+		if (uploadURL != null) {
+			configuration.setPrivateUploadUrl(uploadURL);
+			try {
+				configuration.save();
+			} catch (IOException e) {
+				out.println("Error:" + e.getMessage());
+			}
+		}
+		out.println("private download:" + configuration.getPrivateDownloadUrl());
+		out.println("private upload:" + configuration.getPrivateUploadUrl());
+		return 0;
+	}
+
+	// -- SETCURRENTURL
+	public final static String USAGE_SETCURRENTURL = "[-u #U#][-d #D#]";
+
+	public final static String[] HELP_SETCURRENTURL = new String[] { "-u upload -d download" };
+
+	public int cmdSetcurrenturl(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+		String downloadURL = ((String) opts.get("-d"));
+		String uploadURL = ((String) opts.get("-u"));
+
 		if (downloadURL != null) {
 			try {
 				if (downloadURL.equals("default")) {
 					_peer.setDownloadURL(null);
 				} else {
 					_peer.setDownloadURL(new URL(downloadURL));
-					if (bSave) {
-						configuration.setPrivateDownloadUrl(downloadURL);
-						try {
-							configuration.save();
-						} catch (IOException e) {
-							out.println("Error:" + e.getMessage());
-						}
-
-					}
 				}
 
 			} catch (Exception e) {
@@ -318,23 +307,18 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 					_peer.setUploadURL(null);
 				} else {
 					_peer.setUploadURL(new URL(uploadURL));
-					if (bSave) {
-						configuration.setPrivateUploadUrl(uploadURL);
-						try {
-							configuration.save();
-						} catch (IOException e) {
-							out.println("Error:" + e.getMessage());
-						}
-
-					}
 				}
 
 			} catch (Exception e) {
 				out.println("Error :" + e.getMessage());
 			}
 		}
-		out.println("private download:" + configuration.getPrivateDownloadUrl());
-		out.println("private upload:" + configuration.getPrivateUploadUrl());
+		try {
+			out.println("download:" + _peer.getDownloadURL());
+			out.println("upload:" + _peer.getUploadURL());
+		} catch (Exception e) {
+			out.println("Error :" + e.getMessage());
+		}
 		return 0;
 	}
 
@@ -347,22 +331,24 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			Session session) {
 		String mode = ((String) opts.get("mode"));
 
-		if (mode == null) {
-			mode = "private";
-			ManagementPropertyFile configuration = ManagementPropertyFile
-					.getInstance();
-			mode = configuration.getUpdateMode();
-		}
-		try {
-			if (mode.equals("public")) {
-				_peer.setPublicMode();
-			} else {
-				_peer.setPrivateMode();
+		if (mode != null) {
+			if (mode.equals("default")) {
+				ManagementPropertyFile configuration = ManagementPropertyFile
+						.getInstance();
+				mode = configuration.getUpdateMode();
+				out.println("Use default ("+mode+") URLs");
 			}
-		} catch (Exception e) {
-			out.println("Error :" + e.getMessage());
+			try {
+				if (mode.equals("public")) {
+					_peer.setPublicMode();
+				} else {
+					_peer.setPrivateMode();
+				}
+			} catch (Exception e) {
+				out.println("Error :" + e.getMessage());
+			}
 		}
-		
+
 		synchronize(out);
 		return 0;
 	}

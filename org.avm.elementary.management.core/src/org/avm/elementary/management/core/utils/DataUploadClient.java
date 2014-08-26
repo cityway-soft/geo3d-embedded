@@ -15,6 +15,8 @@ public class DataUploadClient implements IRemoteClient {
 			client = new SimpleFTPClient(url);
 		} else if (url.getProtocol().equals("http")) {
 			client = new SimpleHTTPClient(url);
+		} else if (url.getProtocol().equals("file")) {
+			client = new SimpleLocalClient(url);
 		}
 
 	}

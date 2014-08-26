@@ -41,7 +41,7 @@ public class USBManagementImpl implements USBManagement {
 
 				try {
 					_management.setDownloadURL(new URL("file://" + mount
-							+ "/avm/$u/bundles"));
+							+ "/avm/$n/bundles"));
 					_management.setUploadURL(new URL("file://" + mount
 							+ "/avm/upload"));
 					execute(mount);
