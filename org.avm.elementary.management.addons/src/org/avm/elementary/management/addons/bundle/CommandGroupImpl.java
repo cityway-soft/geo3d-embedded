@@ -331,20 +331,22 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			Session session) {
 		String mode = ((String) opts.get("mode"));
 
-		if (mode == null) {
-			mode = "private";
-			ManagementPropertyFile configuration = ManagementPropertyFile
-					.getInstance();
-			mode = configuration.getUpdateMode();
-		}
-		try {
-			if (mode.equals("public")) {
-				_peer.setPublicMode();
-			} else {
-				_peer.setPrivateMode();
+		if (mode != null) {
+			if (mode.equals("default")) {
+				ManagementPropertyFile configuration = ManagementPropertyFile
+						.getInstance();
+				mode = configuration.getUpdateMode();
+				out.println("Use default ("+mode+") URLs");
 			}
-		} catch (Exception e) {
-			out.println("Error :" + e.getMessage());
+			try {
+				if (mode.equals("public")) {
+					_peer.setPublicMode();
+				} else {
+					_peer.setPrivateMode();
+				}
+			} catch (Exception e) {
+				out.println("Error :" + e.getMessage());
+			}
 		}
 
 		synchronize(out);
