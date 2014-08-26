@@ -57,8 +57,6 @@ public class USBManagementImpl implements USBManagement {
 			}
 		} catch (Throwable t) {
 			_logger.error("notify : " + t.getMessage(), t);
-		}
-		finally{
 			try {
 				_management.setDownloadURL(null);
 				_management.setUploadURL(null);

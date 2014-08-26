@@ -56,8 +56,8 @@ class SimpleLocalClient implements IRemoteClient {
 
 		File localfile = new File(filename);
 		file = localfile.getParentFile();
-		if (!localfile.exists()) {
-			localfile.mkdirs();
+		if (!file.exists()) {
+			file.mkdirs();
 		}
 		os = new FileOutputStream(filename, false);
 
