@@ -13,7 +13,7 @@ public class ConsumerImpl extends AbstractConsumer {
 			.getName();
 
 	public static final String WIFI_PRODUCER_PID = "org.avm.device.wifi.Wifi";
-	public static final String USB_PRODUCER_PID = "org.avm.device.usbmass.Usbmass";
+	public static final String USB_PRODUCER_PID = "org.avm.device.usbmass.UsbMass";
 
 	public ConsumerImpl(ComponentContext context, ConsumerService consumer) {
 		super(context, consumer);

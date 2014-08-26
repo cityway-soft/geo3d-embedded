@@ -394,6 +394,9 @@ public class ManagementImpl implements ManageableService, ManagementService,
 
 	public void synchronize(PrintWriter out) throws Exception {
 		_log.debug("Synchronization...");
+		_log.debug("-DownloadURL=" + getDownloadURL());
+		_log.debug("-UploadURL  =" + getUploadURL());
+
 		if (getManagementService() != null) {
 			_log.debug("Begin sync bundles...");
 			getManagementService().synchronize(out);
