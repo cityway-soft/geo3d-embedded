@@ -1,12 +1,8 @@
 package org.avm.device.linux.wifi;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -22,7 +18,6 @@ import org.osgi.util.measurement.State;
 public class WifiImpl implements Wifi, ConfigurableService, ProducerService,
 		ManageableService {
 
-	private static final String GATEWAY = "ftpserver.avm.org";
 
 	private WifiConfig _config;
 
@@ -30,11 +25,9 @@ public class WifiImpl implements Wifi, ConfigurableService, ProducerService,
 
 	private Logger _log = Logger.getInstance(this.getClass());
 
-	private boolean _started = false;
-	
-	private Scheduler _scheduler ;
-	
-	private Object _taskid;
+
+	private Scheduler _scheduler;
+
 
 	public WifiImpl() {
 
@@ -57,24 +50,31 @@ public class WifiImpl implements Wifi, ConfigurableService, ProducerService,
 	}
 
 	public void connect() {
-		boolean result = false;
-
-		final MessageFormat args = new MessageFormat(
-				"ifup-wlan -d {0} -m {1} -e {2} - k {3} -r {4} -c {5} -f{6}");
+		String cmd = _config.getIfUpCommand();
+		if (cmd == null) {
+			// -- config initiale PCCARv3
+			cmd = "ifup-wlan -d {0} -m {1} -e {2} - k {3} -r {4} -c {5} -f{6}";
+		}
+		final MessageFormat args = new MessageFormat(cmd);
 
 		Object[] objects = { _config.getDevice(), _config.getMode(),
 				_config.getEssid(), _config.getKey(), _config.getRate(),
 				_config.getChannel(), _config.getFreq() };
+
 		String[] array = { "sh", "-c", args.format(objects) };
 		exec(array);
-		
-		_scheduler.execute(new StateNoticationTask(false));
 
+		_scheduler.execute(new StateNoticationTask(false));
 
 	}
 
 	public void disconnect() {
-		final MessageFormat args = new MessageFormat("ifdown-wlan -d {0}");
+		String cmd = _config.getIfDownCommand();
+		if (cmd == null) {
+			// -- config initiale PCCARv3
+			cmd = "ifdown-wlan -d {0}";
+		}
+		final MessageFormat args = new MessageFormat(cmd);
 
 		Object[] objects = { _config.getDevice() };
 		String[] array = { "sh", "-c", args.format(objects) };
@@ -91,7 +91,6 @@ public class WifiImpl implements Wifi, ConfigurableService, ProducerService,
 
 		String[] array = { "sh", "-c", args };
 		Process process;
-		List list = new ArrayList();
 		try {
 			process = Runtime.getRuntime().exec(array);
 			process.waitFor();
@@ -114,7 +113,6 @@ public class WifiImpl implements Wifi, ConfigurableService, ProducerService,
 	}
 
 	public Properties getProperties() {
-		// TODO Raccord de méthode auto-généré
 		return null;
 	}
 
@@ -157,12 +155,10 @@ public class WifiImpl implements Wifi, ConfigurableService, ProducerService,
 			if (isConnected()) {
 
 				_producer.publish(new State(1, Wifi.class.getPackage()
-						.getName()
-						+ ".connected"));
+						.getName() + ".connected"));
 			} else {
 				_producer.publish(new State(0, Wifi.class.getPackage()
-						.getName()
-						+ ".disconnected"));
+						.getName() + ".disconnected"));
 			}
 
 		}

@@ -9,12 +9,16 @@ public interface WifiConfig {
 	public static String KEY_TAG = "key";
 
 	public static String MODE_TAG = "mode";
-	
+
 	public static String CHANNEL_TAG = "channel";
 
 	public static String RATE_TAG = "rate";
-	
+
 	public static String FREQ_TAG = "freq";
+
+	public static String IFUP_COMMAND_TAG = "ifup-command";
+
+	public static String IFDOWN_COMMAND_TAG = "ifdown-command";
 
 	public String getDevice();
 
@@ -27,22 +31,25 @@ public interface WifiConfig {
 	public String getKey();
 
 	public void setKey(String key);
-	
+
 	public String getMode();
 
 	public void setMode(String mode);
-	
+
 	public String getChannel();
 
 	public void setChannel(String channel);
-	
+
 	public String getRate();
 
 	public void setRate(String rate);
-	
+
 	public String getFreq();
 
 	public void setFreq(String freq);
 
+	public String getIfDownCommand();
+
+	public String getIfUpCommand();
 
 }

@@ -67,4 +67,20 @@ public class ConfigImpl extends AbstractConfig implements WifiConfig {
 		_config.put(CHANNEL_TAG, channel);
 	}
 
+	public String getIfDownCommand() {
+		return (String) _config.get(IFDOWN_COMMAND_TAG);
+	}
+
+	public String getIfUpCommand() {
+		return (String) _config.get(IFUP_COMMAND_TAG);
+	}
+
+	public void setIfUpCommand(String cmd) {
+		_config.put(IFUP_COMMAND_TAG, cmd);
+	}
+
+	public void setIfDownCommand(String cmd) {
+		_config.put(IFDOWN_COMMAND_TAG, cmd);
+	}
+
 }
