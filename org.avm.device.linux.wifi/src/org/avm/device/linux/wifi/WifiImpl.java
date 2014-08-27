@@ -125,7 +125,6 @@ public class WifiImpl implements Wifi, ConfigurableService, ProducerService,
 	private boolean exec(String[] args) {
 		boolean result = false;
 		try {
-			_log.info("[DSU] exec " + args);
 			Process process = Runtime.getRuntime().exec(args);
 			process.waitFor();
 			result = (process.exitValue() == 0);
