@@ -4,7 +4,7 @@
 <!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
 <configuration pid="org.avm.device.wifi.Wifi" mode="new">
 <property name="org.avm.config.version">
-<value type="Integer">3</value>
+<value type="Integer">4</value>
 </property>
 <property name="service.pid">
 <value type="String">org.avm.device.wifi.Wifi</value>
@@ -13,7 +13,7 @@
 <value type="String">/etc/init.d/wlan stop</value>
 </property>
 <property name="ifup-command">
-<value type="String">/etc/init.d/wlan start</value>
+<value type="String">/etc/init.d/wlan restart</value>
 </property>
 <property name="device">
 <value type="String">wlan0</value>
