@@ -107,8 +107,11 @@ public class ManagementPropertyFile {
 	public void save() throws FileNotFoundException, IOException {
 		Properties p = new Properties();
 		
-		if (updateMode != null)
-			p.setProperty(Management.UPDATE_MODE_TAG, updateMode);
+		if (updateMode == null){
+			updateMode="private";
+		}
+		p.setProperty(Management.UPDATE_MODE_TAG, updateMode);
+		
 		if (publicDownloadUrl != null)
 			p.setProperty(Management.PUBLIC_DOWNLOAD_URL_TAG, publicDownloadUrl);
 		if (publicUploadUrl != null)
