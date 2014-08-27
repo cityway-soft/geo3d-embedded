@@ -18,16 +18,13 @@ import org.osgi.util.measurement.State;
 public class WifiImpl implements Wifi, ConfigurableService, ProducerService,
 		ManageableService {
 
-
 	private WifiConfig _config;
 
 	private ProducerManager _producer;
 
 	private Logger _log = Logger.getInstance(this.getClass());
 
-
 	private Scheduler _scheduler;
-
 
 	public WifiImpl() {
 
@@ -61,7 +58,12 @@ public class WifiImpl implements Wifi, ConfigurableService, ProducerService,
 				_config.getEssid(), _config.getKey(), _config.getRate(),
 				_config.getChannel(), _config.getFreq() };
 
-		String[] array = { "sh", "-c", args.format(objects) };
+		String execCmd = args.format(objects);
+		if (_log.isDebugEnabled()) {
+			_log.debug("Connect command=" + execCmd);
+		}
+
+		String[] array = { "sh", "-c", execCmd };
 		exec(array);
 
 		_scheduler.execute(new StateNoticationTask(false));
@@ -77,7 +79,11 @@ public class WifiImpl implements Wifi, ConfigurableService, ProducerService,
 		final MessageFormat args = new MessageFormat(cmd);
 
 		Object[] objects = { _config.getDevice() };
-		String[] array = { "sh", "-c", args.format(objects) };
+		String execCmd = args.format(objects);
+		if (_log.isDebugEnabled()) {
+			_log.debug("Disconnect command=" + execCmd);
+		}
+		String[] array = { "sh", "-c", execCmd };
 		exec(array);
 
 		_scheduler.execute(new StateNoticationTask(true));
