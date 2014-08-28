@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component name="org.avm.device.wanesy.DeviceWanesy" immediate="true">
-	<implementation class="org.avm.device.wanesy.bundle.Activator"/>
-	<property name="service.pid" value="org.avm.device.wanesy.DeviceWanesy"/>
-	<service>				
-		<provide interface="org.avm.device.wanesy.DeviceWanesy"/>
-	</service>
+<component name="org.avm.device.wanesy.stop.DeviceWanesyStop" immediate="true">
+	<implementation class="org.avm.device.wanesy.stop.bundle.Activator"/>
 	<reference 
 		name="cm" 
 		interface="org.osgi.service.cm.ConfigurationAdmin"
 		/>
+	<reference  name="wanesy" interface="org.avm.device.wanesy.DeviceWanesy" />
 </component>
