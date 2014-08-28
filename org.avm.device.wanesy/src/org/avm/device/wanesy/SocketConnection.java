@@ -79,7 +79,6 @@ public abstract class SocketConnection extends Thread {
 		boolean ret = false;
 		if (socketOs != null) {
 			try {
-				System.out.println(data.getBytes());
 				socketOs.write(data.getBytes());
 				socketOs.flush();
 				ret = true;
@@ -92,10 +91,8 @@ public abstract class SocketConnection extends Thread {
 	}
 
 	public void run() {
-		System.out.println("MAINNNNNNNNNNNN THREADDDDDDDDDDDDDDD");
 		// try to connect
 		while (openConnection() == false) {
-			System.out.println("wait before retry ...");
 			if (!waitOrQuit(timeBetweenConnectionRetry)) {
 				break;
 			}
@@ -110,7 +107,6 @@ public abstract class SocketConnection extends Thread {
 				// - count2)) >= 0) {
 				onInit ();
 				while ((count = socketIs.read(buffer)) >= 0) {
-					System.out.println(count);
 					displayBuffer(buffer, count);
 					onRead(buffer, count);
 				}
@@ -127,7 +123,7 @@ public abstract class SocketConnection extends Thread {
 			// System.out.println(buffer[i]);
 			data.append((char) buffer[i]);
 		}
-		System.out.println(data.toString());
+		//System.out.println(data.toString());
 		// Kms result = KmsFactory.unmarshal(data.toString());
 	}
 
