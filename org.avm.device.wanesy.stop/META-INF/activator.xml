@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.wanesy.DeviceWanesy" immediate="true">
+	<implementation class="org.avm.device.wanesy.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.device.wanesy.DeviceWanesy"/>
+	<service>				
+		<provide interface="org.avm.device.wanesy.DeviceWanesy"/>
+	</service>
+	<reference 
+		name="cm" 
+		interface="org.osgi.service.cm.ConfigurationAdmin"
+		/>
+</component>
