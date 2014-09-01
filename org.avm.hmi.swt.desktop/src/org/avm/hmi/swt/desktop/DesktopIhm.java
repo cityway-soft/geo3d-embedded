@@ -547,11 +547,10 @@ public class DesktopIhm {
 		_display.asyncExec(new Runnable() {
 			public void run() {
 				if (info == null || info.trim().equals("")) {
-					if (org.avm.device.plateform.System.isOnTime()) {
-						_labelInformation2.setText(DF.format(new Date()));
-					} else {
+					if (!org.avm.device.plateform.System.isOnTime()) {
 						launchUpdateTime();
 					}
+					_labelInformation2.setText(DF.format(new Date()));
 				} else {
 					stopUpdateTime();
 					_labelInformation2.setText(info);
