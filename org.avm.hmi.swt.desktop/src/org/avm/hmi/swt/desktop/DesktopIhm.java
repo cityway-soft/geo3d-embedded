@@ -547,8 +547,13 @@ public class DesktopIhm {
 		_display.asyncExec(new Runnable() {
 			public void run() {
 				if (info == null || info.trim().equals("")) {
-					_labelInformation2.setText(DF.format(new Date()));
+					if (org.avm.device.plateform.System.isOnTime()) {
+						_labelInformation2.setText(DF.format(new Date()));
+					} else {
+						launchUpdateTime();
+					}
 				} else {
+					stopUpdateTime();
 					_labelInformation2.setText(info);
 				}
 				_compositeActivite.layout();
@@ -556,7 +561,39 @@ public class DesktopIhm {
 		});
 	}
 
+	private boolean doUpdateTime = false;
+	private boolean updateTimeRunning = false;
+
+	private synchronized void stopUpdateTime() {
+		doUpdateTime = false;
+	}
+
+	private synchronized void launchUpdateTime() {
+		if (!updateTimeRunning) {
+			doUpdateTime = true;
+			updateTimeRunning = true;
+			doUpdateTime();
+		}
+	}
+
+	private void doUpdateTime() {
+		_display.timerExec(1000, new Runnable() {
+			public void run() {
+				if (doUpdateTime) {
+					if (org.avm.device.plateform.System.isOnTime()) {
+						setInformation(null);
+						updateTimeRunning = false;
+						doUpdateTime = false;
+					} else {
+						doUpdateTime();
+					}
+				}
+			}
+		});
+	}
+
 	public void activateItem(final String name) {
+
 		_display.asyncExec(new Runnable() {
 			public void run() {
 				TabItem item = (TabItem) _hashItem.get(name);
