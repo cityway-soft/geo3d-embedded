@@ -40,6 +40,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		return 0;
 	}
 
+	//showfilename
 	public final static String USAGE_SHOWFILENAME = "";
 
 	public final static String[] HELP_SHOWFILENAME = new String[] { "Show current filename", };
