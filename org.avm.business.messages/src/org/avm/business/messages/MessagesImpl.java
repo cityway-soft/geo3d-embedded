@@ -2,6 +2,7 @@ package org.avm.business.messages;
 
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
@@ -250,7 +251,8 @@ public class MessagesImpl implements Messages, ConfigurableService,
 		} else {
 			_log.debug("adding message...");
 			Date reception = new Date();
-			String formatted = DF.format(reception);
+			SimpleDateFormat df= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String formatted = df.format(reception);//DF.format(reception);//
 			_log.debug("Date object=" + reception + ", formatted=" + formatted);
 			addMessage(id, formatted, DF.format(debut), (fin != null) ? DF.format(fin)
 					: null, jours, destinataire, sAffectation, msg, priorite,

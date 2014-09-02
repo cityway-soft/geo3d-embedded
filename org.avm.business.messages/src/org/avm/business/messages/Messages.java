@@ -4,8 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 
 public interface Messages {
-	public static final SimpleDateFormat DF = new SimpleDateFormat(
-	"yyyy-MM-dd HH:mm:ss");
+	public static final SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	
 	public static final int CONDUCTEUR = 0;
