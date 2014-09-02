@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.avm.device.wanesy.standby
+Bundle-SymbolicName: org.avm.device.wanesy.standby
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Cityway
+Import-Package: javax.xml.parsers,
+ org.apache.log4j,
+ org.avm.device.wanesy,
+ org.avm.elementary.common,
+ org.knopflerfish.service.console,
+ org.osgi.framework;version="1.3.0",
+ org.osgi.service.cm,
+ org.osgi.service.component,
+ org.osgi.service.startlevel;version="1.0.0",
+ org.xml.sax,
+ org.xml.sax.helpers
+Export-Package: 
+ org.avm.device.wanesy.standby
+Service-Component: META-INF/activator.xml
+Require-Bundle: org.avm.device.wanesy
+Bundle-ClassPath: lib/crimson.jar,
+ .
