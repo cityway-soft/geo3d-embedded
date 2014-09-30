@@ -9,13 +9,16 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 
 import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.DefaultMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpMethodRetryHandler;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.MultipartPostMethod;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 
 class SimpleHTTPClient implements IRemoteClient {
 
@@ -36,6 +39,18 @@ class SimpleHTTPClient implements IRemoteClient {
 
 	public SimpleHTTPClient(URL url) {
 		client = new HttpClient();
+		
+		HttpMethodRetryHandler handler = new HttpMethodRetryHandler() {
+			
+			public boolean retryMethod(HttpMethod arg0, IOException arg1, int arg2) {
+					return false;
+			}
+		};
+		System.err.println("HTTPPPPPPPPPP retry set to 0");
+		client.getParams()
+				.setParameter(HttpMethodParams.RETRY_HANDLER, handler);
+		
+		
 		this.url = url;
 		String userinfo = url.getUserInfo();
 		String host = url.getHost();
@@ -91,6 +106,9 @@ class SimpleHTTPClient implements IRemoteClient {
 
 	public InputStream get() throws IOException {
 		HttpMethod method = new GetMethod(url.toExternalForm());
+		
+		
+		
 		client.executeMethod(method);
 		return method.getResponseBodyAsStream();
 	}
