@@ -469,7 +469,7 @@ public class ManagementImpl implements Management {
 			if (success == false){
 				_out.println("Update failure => ignore last update in private zone");
 				System.setProperty(LAST_UPDATE_IN_PRIVATE_ZONE_TAG, "false");
-				String filename = "avm.properties";
+				String filename = "management.properties";
 				updateManagementProperties(filename);
 			}
 			
