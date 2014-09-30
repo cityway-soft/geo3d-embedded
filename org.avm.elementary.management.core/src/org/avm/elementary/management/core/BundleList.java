@@ -143,6 +143,13 @@ public class BundleList {
 				nameOptions = name.substring(idx + 1);
 				name = name.substring(0, idx);
 			}
+			idx = name.lastIndexOf("/");
+			if (idx != -1){
+				String relativePath = name.substring(0, idx);
+				bp.setRelativePath(relativePath);
+				name = name.substring(idx+1);
+			}
+			
 			bp.setName(name);
 			bp.setNameOptions(nameOptions);
 

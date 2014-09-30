@@ -333,7 +333,7 @@ class SynchronizeBundlesCommand implements BundleListener {
 							String msg = "[update]" + bName + " INSTALL";
 							println(msg);
 							flush();
-							install(bundleProperties, bName);
+							install(bundleProperties);
 							changed = true;
 							updated = true;
 						} else {
@@ -361,7 +361,7 @@ class SynchronizeBundlesCommand implements BundleListener {
 								continue;
 							}
 
-							update(bName);
+							update(bundleProperties);
 							changed = true;
 							updated = true;
 						}
@@ -420,10 +420,11 @@ class SynchronizeBundlesCommand implements BundleListener {
 		}
 	}
 
-	private void update(String bundleName) throws IOException, BundleException {
-		URLConnection connection = getRemoteBundleURLConnection(bundleName);
+	private void update(BundleProperties bundleProperties) throws IOException, BundleException {
+		String path = bundleProperties.getPath();
+		URLConnection connection = getRemoteBundleURLConnection(path);
 		println("Download " + connection.getURL());
-		Bundle bundle = getBundle(bundleName);
+		Bundle bundle = getBundle(bundleProperties.getName());
 		bundle.update(connection.getInputStream());
 	}
 
@@ -440,16 +441,17 @@ class SynchronizeBundlesCommand implements BundleListener {
 	 * @throws IOException
 	 * @throws BundleException
 	 */
-	private void install(BundleProperties bundleProperties, String bundleName)
-			throws IOException, BundleException {
-		URLConnection connection = getRemoteBundleURLConnection(bundleName);
+	private void install(BundleProperties bundleProperties) throws IOException,
+			BundleException {
+		String path = bundleProperties.getPath();
+		URLConnection connection = getRemoteBundleURLConnection(path);
 		if (connection != null) {
 			println("Downloading " + connection.getURL());
 			Bundle bundle = _context.installBundle(connection.getURL()
 					.toString(), connection.getInputStream());
 			setBundleStartLevel(bundle, bundleProperties.getStartlevel());
 		} else {
-			println("Error cannot download bundle " + bundleName + "  !!!!");
+			println("Error cannot download bundle " + path + "  !!!!");
 		}
 	}
 
@@ -566,32 +568,38 @@ class SynchronizeBundlesCommand implements BundleListener {
 					continue;
 				}
 
-					
-				boolean check ;
-				
-				
+				boolean check;
+
 				String packtoInstall = bundleProperties.getPack();
-				String packInstalled = (String) bundles[i].getHeaders().get("TAB-Pack");
+				String packInstalled = (String) bundles[i].getHeaders().get(
+						"TAB-Pack");
 				// -- on retire les bundles dont les jeux sont identiques
-				check = ( packtoInstall == null && packInstalled == null ) ;
-				check = check || (packtoInstall != null && packInstalled != null && packInstalled.equals(packtoInstall)) ;
-				if (check){
-					//-- si les pack ne sont pas renseignés ou si ils sont égaux on controle la version
-					//System.out.println(packInstalled + " == " + packtoInstall + " ==> pack ok, now check version");
+				check = (packtoInstall == null && packInstalled == null);
+				check = check
+						|| (packtoInstall != null && packInstalled != null && packInstalled
+								.equals(packtoInstall));
+				if (check) {
+					// -- si les pack ne sont pas renseignés ou si ils sont
+					// égaux on controle la version
+					// System.out.println(packInstalled + " == " + packtoInstall
+					// + " ==> pack ok, now check version");
 
 					String ver = bundleProperties.getVersion();
 					double bundleVersion = getVersion(ver);
-					ver = (String) bundles[i].getHeaders().get("Bundle-Version");
+					ver = (String) bundles[i].getHeaders()
+							.get("Bundle-Version");
 					double currentVersion = getVersion(ver);
-					// -- on retire les bundles dont la version est plus recente que
+					// -- on retire les bundles dont la version est plus recente
+					// que
 					// celle du bundles.list
-					check = ( bundleVersion <= currentVersion	&& bundleProperties.getStartlevel() >= 0);
-					
+					check = (bundleVersion <= currentVersion && bundleProperties
+							.getStartlevel() >= 0);
+
 					if (check) {
 						bundleList.remove(bundleName);
 					}
 				}
-				
+
 			}
 			flush();
 
@@ -751,31 +759,31 @@ class SynchronizeBundlesCommand implements BundleListener {
 		c.getInputStream();
 	}
 
-	private String bundleState2String(int state) {
-		switch (state) {
-		case BundleEvent.INSTALLED:
-			return "INSTALLED";
-		case BundleEvent.RESOLVED:
-			return "RESOLVED";
-		case BundleEvent.STARTED:
-			return "STARTED";
-		case BundleEvent.STARTING:
-			return "STARTING";
-		case BundleEvent.STOPPED:
-			return "STOPPED";
-		case BundleEvent.STOPPING:
-			return "STOPPING";
-		case BundleEvent.UNINSTALLED:
-			return "UNINSTALLED";
-		case BundleEvent.UNRESOLVED:
-			return "UNRESOLVED";
-		case BundleEvent.UPDATED:
-			return "UPDATED";
-
-		default:
-			return "unknown. ";
-		}
-	}
+//	private String bundleState2String(int state) {
+//		switch (state) {
+//		case BundleEvent.INSTALLED:
+//			return "INSTALLED";
+//		case BundleEvent.RESOLVED:
+//			return "RESOLVED";
+//		case BundleEvent.STARTED:
+//			return "STARTED";
+//		case BundleEvent.STARTING:
+//			return "STARTING";
+//		case BundleEvent.STOPPED:
+//			return "STOPPED";
+//		case BundleEvent.STOPPING:
+//			return "STOPPING";
+//		case BundleEvent.UNINSTALLED:
+//			return "UNINSTALLED";
+//		case BundleEvent.UNRESOLVED:
+//			return "UNRESOLVED";
+//		case BundleEvent.UPDATED:
+//			return "UPDATED";
+//
+//		default:
+//			return "unknown. ";
+//		}
+//	}
 
 	public void bundleChanged(BundleEvent bundleEvent) {
 		if (bundleEvent.getType() == BundleEvent.RESOLVED) {

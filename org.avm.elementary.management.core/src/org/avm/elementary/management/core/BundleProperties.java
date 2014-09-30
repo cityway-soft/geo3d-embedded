@@ -13,6 +13,8 @@ public class BundleProperties {
 	private String _version;
 
 	private String _name;
+	
+	private String _relativePath="";
 
 	private String _nameOptions = null;
 
@@ -33,7 +35,12 @@ public class BundleProperties {
 			if (idx != -1) {
 				_name = _name.substring(0, idx);
 			}
-
+			
+			idx = _name.lastIndexOf("/");
+			if (idx != -1){
+				_relativePath = _name.substring(0, idx);
+				_name = _name.substring(idx+1);
+			}
 		}
 		_version = reader.getProperty("Bundle-Version");
 
@@ -52,6 +59,23 @@ public class BundleProperties {
 
 	public int getStartlevel() {
 		return _startlevel;
+	}
+	
+	public String getPath(){
+		String path =  _name;
+		if (_relativePath != null){
+			path = _relativePath+"/"+_name; 
+		}
+			
+		return path;
+	}
+	
+	public String getRelativePath(){	
+		return _relativePath;
+	}
+	
+	public void setRelativePath(String r){
+		_relativePath = r;
 	}
 
 	public void setStartlevel(int startlevel) {
