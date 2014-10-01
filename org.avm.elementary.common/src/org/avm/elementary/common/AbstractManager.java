@@ -84,19 +84,19 @@ public abstract class AbstractManager implements ManageableService,
 			try {
 				// _lock.acquire();
 				if (!_initialized) {
-					_log.debug("[DSU] init manager: wait for manager initialized");
+					_log.debug("Init manager: wait for manager initialized");
 					_initializedCondVar.timedwait(1000);
 					if (!_initialized) {
-						_log.debug("[DSU] init manager:  time out initialisation ");
+						_log.debug("Init manager:  time out initialisation ");
 						return;
 					}
 				}
-				_log.debug("[DSU] init manager: manager initialized");
+				_log.debug("Init manager: manager initialized");
 				while (!_deployed) {
-					_log.debug("[DSU] init manager: wait for data deployed");
+					_log.debug("Init manager: wait for data deployed");
 					_deployedCondVar.await();
 				}
-				_log.debug("[DSU] init manager: data deployed");
+				_log.debug("Init manager: data deployed");
 			} catch (InterruptedException e) {
 				_log.error(e.getMessage());
 			} finally {
@@ -117,7 +117,7 @@ public abstract class AbstractManager implements ManageableService,
 
 	public Object addingService(ServiceReference reference) {
 		_data = (DataDeployer) _context.getService(reference);
-		_log.info("[DSU] addingService " + reference);
+		_log.debug("AddingService " + reference);
 		if (acquireLock()) {
 			// liberation du manager
 			try {
@@ -136,11 +136,11 @@ public abstract class AbstractManager implements ManageableService,
 	}
 
 	public void modifiedService(ServiceReference reference, Object service) {
-		_log.info("[DSU] modifiedService " + reference);
+		_log.debug("ModifiedService " + reference);
 	}
 
 	public void removedService(ServiceReference reference, Object service) {
-		_log.info("[DSU] removedService " + reference);
+		_log.debug("RemovedService " + reference);
 		_context.ungetService(reference);
 	}
 
