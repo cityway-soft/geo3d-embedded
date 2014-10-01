@@ -1,5 +1,6 @@
 package org.avm.elementary.management.core;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,7 +12,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -194,28 +194,43 @@ public class BundleList {
 	public static BundleList load(URL url) throws IOException, ConnectException {
 
 		BundleList bundleList = new BundleList();
-		//URLConnection connection = url.openConnection();
+		// URLConnection connection = url.openConnection();
 		InputStream primaryInputStream;
-		
-		DataUploadClient client = new DataUploadClient(url);
-		primaryInputStream = client.get();
 
+		DataUploadClient client = new DataUploadClient(url);
+
+		primaryInputStream = new BufferedInputStream(client.get(), 2048);
+
+		boolean compressed = url.getFile().endsWith(COMPRESSED_EXT);
+
+		byte[] bytes = new byte[1024];
+		String localFilename = "/tmp/bundles.list"
+				+ (compressed ? ".gz" : "");
+		
+		File bundleListFile = new File(localFilename);
+		if (bundleListFile.exists()){
+			bundleListFile.delete();
+		}
+		FileOutputStream out = new FileOutputStream(localFilename);
+		int read = 0;
+		while ((read = primaryInputStream.read(bytes)) != -1) {
+			out.write(bytes, 0, read);
+		}
+		out.close();
+
+		
+		primaryInputStream = new FileInputStream(localFilename);
+		
 		InputStream in = null;
 
-		if (url.getFile().endsWith(COMPRESSED_EXT)) {
+		if (compressed) {
 			try {
 				in = new MultiMemberGZIPInputStream(primaryInputStream);
 			} catch (IOException e) {
-				// e.printStackTrace();
 				return null;
 			}
 		} else {
-//			try {
-				in = primaryInputStream;
-//			} catch (IOException e) {
-//				// e.printStackTrace();
-//				return null;
-//			}
+			in = primaryInputStream;
 		}
 		if (in != null) {
 			bundleList.load(in);
@@ -324,17 +339,20 @@ public class BundleList {
 	}
 
 	public static void main(String[] args) throws IOException {
-//		if (args.length != 2) {
-//			System.out
-//					.println("Usage <bundles repository dir> <bundles list file>");
-//		} else {
-//			BundleList.create(args[0], args[1]);
-//			BundleList.compress(args[1]);
-//		}
-		
-		//BundleList b = BundleList.load(new URL("http://avm:avm++@10.10.1.199:8080/frontal.terminal-manager/rest/terminal/0200001002FF67FD/aton/999/100/download/bundles.list"));
-		BundleList b = BundleList.load(new URL("http://avm:avm++@10.10.1.199:8080/frontal.terminal-manager/rest/terminal/0200001002FF67FD/aton/999/100/download/bundles.list.gz"));
-		System.out.println("BundleList="+b);
+		// if (args.length != 2) {
+		// System.out
+		// .println("Usage <bundles repository dir> <bundles list file>");
+		// } else {
+		// BundleList.create(args[0], args[1]);
+		// BundleList.compress(args[1]);
+		// }
+
+		// BundleList b = BundleList.load(new
+		// URL("http://avm:avm++@10.10.1.199:8080/frontal.terminal-manager/rest/terminal/0200001002FF67FD/aton/999/100/download/bundles.list"));
+		BundleList b = BundleList
+				.load(new URL(
+						"http://avm:avm++@10.10.1.199:8080/frontal.terminal-manager/rest/terminal/0200001002FF67FD/aton/999/100/download/bundles.list.gz"));
+		System.out.println("BundleList=" + b);
 	}
 
 	public class JarFileFilter implements FilenameFilter {
@@ -375,7 +393,5 @@ public class BundleList {
 	public boolean exist(String bundleName) {
 		return (_hashBundle.get(bundleName) != null);
 	}
-	
-
 
 }

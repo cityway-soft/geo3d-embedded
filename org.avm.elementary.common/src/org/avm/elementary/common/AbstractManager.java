@@ -155,6 +155,9 @@ public abstract class AbstractManager implements ManageableService,
 			if (oldUrl == null) {
 				return;
 			}
+			
+			
+			
 
 			String oldPath = oldUrl.getPath();
 
@@ -210,7 +213,7 @@ public abstract class AbstractManager implements ManageableService,
 							+ newTextVersion + URL_SEPARATOR + name;
 					URL newURL = new URL(oldUrl.getProtocol(), oldUrl.getHost(),
 							oldUrl.getPort(), newPath);
-					updateUrlRepository(newURL, newTextVersion);
+					updateUrlRepository(newURL, data.getVdrId());
 					return;
 				}
 			}
