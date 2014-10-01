@@ -40,7 +40,7 @@ public class USBManagementImpl implements USBManagement {
 				String mount = getMountPoint(state);
 
 				try {
-					_management.setDownloadURL(new URL("file:////" + mount+ "/avm/$n/bundles"));
+					_management.setDownloadURL(new URL("file:////" + mount+ "/avm/$i/bundles"));
 					_management.setUploadURL(new URL("file:////" + mount	+ "/avm/upload"));
 					execute(mount);
 				} catch (Exception e) {
