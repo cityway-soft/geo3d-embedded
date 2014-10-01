@@ -284,7 +284,7 @@ public class Course implements Event {
 		int horaire;
 		for (int i = idx; i <= getNombrePoint(); i++) {
 			point = getPointAvecRang(i);
-			horaire = point.getArriveeTheorique() + ar * 60;
+			horaire = point.getArriveeTheorique() + ar;
 			point.setArriveeTempsReel(horaire);
 		}
 	}
