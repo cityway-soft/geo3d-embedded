@@ -523,7 +523,7 @@ class SynchronizeBundlesCommand implements BundleListener {
 	}
 
 	private String getBundleListURL(String filename, boolean useDefault) {
-		String strurl = _management.getDownloadURL() + "/" + filename;
+		String strurl = _management.getDownloadURL() + "/" + filename + "?mode="+_management.getCurrentMode();
 		strurl = Utils.formatURL(strurl, useDefault);
 		return strurl;
 	}

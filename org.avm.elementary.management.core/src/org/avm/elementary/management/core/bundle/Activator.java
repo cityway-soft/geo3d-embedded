@@ -93,4 +93,8 @@ public class Activator implements BundleActivator, Management {
 		_peer.setPrivateMode();
 	}
 
+	public String getCurrentMode() {
+		return _peer.getCurrentMode();
+	}
+
 }
