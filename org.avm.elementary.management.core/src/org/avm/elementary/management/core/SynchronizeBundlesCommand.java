@@ -256,7 +256,7 @@ class SynchronizeBundlesCommand implements BundleListener {
 		while (e.hasMoreElements()) {
 			BundleProperties bp = (BundleProperties) e.nextElement();
 			if (bp.getStartlevel() > 0) {
-				String bundleName = bp.getName();
+				String bundleName = bp.getSymbolicName();
 				Bundle bundle = getBundle(bundleName);
 
 				boolean isManagementBundle = this.getClass().getPackage()
@@ -283,119 +283,125 @@ class SynchronizeBundlesCommand implements BundleListener {
 	}
 
 	public void deploy() throws IOException {
-		BundleList bundleList = downloadBundleList();
-		if (bundleList == null) {
-			String url1 = getBundleListURL(BundleList.FILENAME, false);
-			println("Failed to get bundles list : " + url1);
-			String url2 = getBundleListURL(BundleList.FILENAME, true);
-			println("Failed to get default bundles list : " + url2);
-			throw new IOException("Cannot get bundle.list from " + url1
-					+ " or " + url2);
-		}
+		BundleList bundleList;
+		try {
+			bundleList = downloadBundleList();
 
-		updateStartLevel(bundleList);
-		bundleList = getBundlesToUpdate(bundleList);
+			if (bundleList == null) {
+				String url1 = getBundleListURL(BundleList.FILENAME, false);
+				println("Failed to get bundles list : " + url1);
+				String url2 = getBundleListURL(BundleList.FILENAME, true);
+				println("Failed to get default bundles list : " + url2);
+				throw new IOException("Cannot get bundle.list from " + url1
+						+ " or " + url2);
+			}
 
-		println("##########################################");
-		println(bundleList.toString());
-		println("######### TOTAL : " + bundleList.size()
-				+ "######################");
-		flush();
-		stopBundlesToUpdate(bundleList);
-		Vector updatedBundles = new Vector();
+			updateStartLevel(bundleList);
+			bundleList = getBundlesToUpdate(bundleList);
 
-		boolean updated;
-		_context.removeBundleListener(this);
-		_context.addBundleListener(this);
-		boolean changed = false;
-		if (bundleList.size() > 0) {
-			Enumeration e = bundleList.elements();
+			println("##########################################");
+			println(bundleList.toString());
+			println("######### TOTAL : " + bundleList.size()
+					+ "######################");
+			flush();
+			stopBundlesToUpdate(bundleList);
+			Vector updatedBundles = new Vector();
 
-			while (e.hasMoreElements()) {
-				updated = false;
-				BundleProperties bundleProperties = (BundleProperties) e
-						.nextElement();
-				int bundleStartlevel = bundleProperties.getStartlevel();
+			boolean updated;
+			_context.removeBundleListener(this);
+			_context.addBundleListener(this);
+			boolean changed = false;
+			if (bundleList.size() > 0) {
+				Enumeration e = bundleList.elements();
 
-				String bName = bundleProperties.getName();
+				while (e.hasMoreElements()) {
+					updated = false;
+					BundleProperties bundleProperties = (BundleProperties) e
+							.nextElement();
+					int bundleStartlevel = bundleProperties.getStartlevel();
 
-				Bundle bundle = getBundle(bName);
+					String bName = bundleProperties.getSymbolicName();
 
-				try {
-					if (bundleStartlevel < 0) {
-						if (bundle != null) {
-							changed = true;
-							bundle.uninstall();
-						}
-						continue;
-					} else if (bundleStartlevel > 0) {
-						if (bundle == null) {
-							String msg = "[update]" + bName + " INSTALL";
-							println(msg);
-							flush();
-							install(bundleProperties);
-							changed = true;
-							updated = true;
-						} else {
-							String msg = "[update]" + bName + " UPDATE";
-							println(msg);
-							flush();
-							boolean isBundleWithNativeCode = (bundle
-									.getHeaders().get("Bundle-NativeCode") != null);
-							_fwkNeedRestart = (_fwkNeedRestart || isBundleWithNativeCode);
-							if (isBundleWithNativeCode) {
-								println("Bundle '"
-										+ bName
-										+ "' embed native code ; Framework will be restarted after update");
-								if (bundle != null) {
-									bundle.uninstall();
+					Bundle bundle = getBundle(bName);
+
+					try {
+						if (bundleStartlevel < 0) {
+							if (bundle != null) {
+								changed = true;
+								bundle.uninstall();
+							}
+							continue;
+						} else if (bundleStartlevel > 0) {
+							if (bundle == null) {
+								String msg = "[update]" + bName + " INSTALL";
+								println(msg);
+								flush();
+								install(bundleProperties);
+								changed = true;
+								updated = true;
+							} else {
+								String msg = "[update]" + bName + " UPDATE";
+								println(msg);
+								flush();
+								boolean isBundleWithNativeCode = (bundle
+										.getHeaders().get("Bundle-NativeCode") != null);
+								_fwkNeedRestart = (_fwkNeedRestart || isBundleWithNativeCode);
+								if (isBundleWithNativeCode) {
+									println("Bundle '"
+											+ bName
+											+ "' embed native code ; Framework will be restarted after update");
+									if (bundle != null) {
+										bundle.uninstall();
+										continue;
+									}
+								}
+
+								if (_management.getClass().getPackage()
+										.getName().indexOf(bName) != -1) {
+									// --ignore management.core himself !
+
+									downloadManagementBundle();
 									continue;
 								}
+
+								update(bundleProperties);
+								changed = true;
+								updated = true;
 							}
-
-							if (_management.getClass().getPackage().getName()
-									.indexOf(bName) != -1) {
-								// --ignore management.core himself !
-
-								downloadManagementBundle();
-								continue;
+							if (updated) {
+								updatedBundles.addElement(bName);
 							}
-
-							update(bundleProperties);
-							changed = true;
-							updated = true;
 						}
-						if (updated) {
-							updatedBundles.addElement(bName);
-						}
+					} catch (Throwable ex) {
+						println("ERR " + bName + " : " + ex.getMessage());
+						bundle = getBundle(bName);
+						updatedBundles.addElement(bName);
+						ex.printStackTrace();
 					}
-				} catch (Throwable ex) {
-					println("ERR " + bName + " : " + ex.getMessage());
-					bundle = getBundle(bName);
-					updatedBundles.addElement(bName);
-					ex.printStackTrace();
 				}
+
 			}
 
-		}
+			((ManagementImpl) _management).refresh(null, _out);
 
-		((ManagementImpl) _management).refresh(null, _out);
-
-		if (changed) {
-			_management.sendBundleList();
-		}
-
-		if (_fwkNeedRestart) {
-			URL url = new URL(System.getProperty("osgi.configuration.area")
-					+ "avm.deployed");
-			File file = new File(url.getFile());
-			if (file.exists()) {
-				file.delete();
+			if (changed) {
+				_management.sendBundleList();
 			}
-			_management.shutdown(_out, Management.TIME_TO_FWK_SHUTDOWN,
-					Management.EXITCODE_REBOOT_PLATEFORM);
-		}
 
+			if (_fwkNeedRestart) {
+				URL url = new URL(System.getProperty("osgi.configuration.area")
+						+ "avm.deployed");
+				File file = new File(url.getFile());
+				if (file.exists()) {
+					file.delete();
+				}
+				_management.shutdown(_out, Management.TIME_TO_FWK_SHUTDOWN,
+						Management.EXITCODE_REBOOT_PLATEFORM);
+			}
+		} catch (UpdateNotAllowedException e1) {
+			println(Constants.SETCOLOR_FAILURE + "/!\\ UPDATE NOT ALLOWED BY SERVER" + Constants.SETCOLOR_NORMAL);
+			return;
+		}
 		_timerWaitForEndOfUpdateProcess = new Timer();
 		_task = new EndOfProcessTask();
 		_timerWaitForEndOfUpdateProcess.schedule(_task, 2000);
@@ -420,11 +426,12 @@ class SynchronizeBundlesCommand implements BundleListener {
 		}
 	}
 
-	private void update(BundleProperties bundleProperties) throws IOException, BundleException {
+	private void update(BundleProperties bundleProperties) throws IOException,
+			BundleException {
 		String path = bundleProperties.getPath();
 		URLConnection connection = getRemoteBundleURLConnection(path);
 		println("Download " + connection.getURL());
-		Bundle bundle = getBundle(bundleProperties.getName());
+		Bundle bundle = getBundle(bundleProperties.getSymbolicName());
 		bundle.update(connection.getInputStream());
 	}
 
@@ -511,8 +518,10 @@ class SynchronizeBundlesCommand implements BundleListener {
 	 * @throws IOException
 	 * @throws IOException
 	 * @throws IOException
+	 * @throws UpdateNotAllowedException
 	 */
-	private BundleList downloadBundleList() throws IOException {
+	private BundleList downloadBundleList() throws IOException,
+			UpdateNotAllowedException {
 		BundleList bundleList = null;
 		bundleList = getBundleList(BundleList.FILENAME
 				+ BundleList.COMPRESSED_EXT);
@@ -523,12 +532,19 @@ class SynchronizeBundlesCommand implements BundleListener {
 	}
 
 	private String getBundleListURL(String filename, boolean useDefault) {
-		String strurl = _management.getDownloadURL() + "/" + filename + "?mode="+_management.getCurrentMode();
-		strurl = Utils.formatURL(strurl, useDefault);
+		StringBuffer buffer = new StringBuffer();
+
+		buffer.append(_management.getDownloadURL() + "/" + filename);
+		if (_management.getDownloadURL().getProtocol().startsWith("http")) {
+			buffer.append("?mode=" + _management.getCurrentMode());
+		}
+
+		String strurl = Utils.formatURL(buffer.toString(), useDefault);
 		return strurl;
 	}
 
-	private BundleList getBundleList(String filename) {
+	private BundleList getBundleList(String filename)
+			throws UpdateNotAllowedException {
 
 		String strurl = getBundleListURL(filename, false);
 		BundleList bundleList = null;
@@ -606,7 +622,7 @@ class SynchronizeBundlesCommand implements BundleListener {
 			Enumeration e = bundleList.elements();
 			while (e.hasMoreElements()) {
 				BundleProperties bl = (BundleProperties) e.nextElement();
-				String bundlename = bl.getCompleteName();
+				String bundlename = bl.getSymbolicName();
 				Bundle bundle = getBundle(bundlename);
 				// -- on retire les bundles dont le startlevel est negatif
 				if (bundle == null && bl.getStartlevel() <= 0) {
@@ -667,7 +683,8 @@ class SynchronizeBundlesCommand implements BundleListener {
 		return result;
 	}
 
-	private BundleList loadFromURL(String strurl) throws IOException {
+	private BundleList loadFromURL(String strurl) throws IOException,
+			UpdateNotAllowedException {
 		URL url = new URL(strurl);
 		BundleList bundleList = BundleList.load(url);
 		return bundleList;
@@ -724,8 +741,15 @@ class SynchronizeBundlesCommand implements BundleListener {
 
 		StringBuffer buf = new StringBuffer();
 		buf.append(downloadURL);
-		buf.append("/");
+		if (downloadURL.endsWith("/") == false
+				&& filename.startsWith("/") == false) {
+			buf.append("/");
+		}
 		buf.append(filename);
+
+		println("downloadURL : " + downloadURL);
+		println("Filename : " + filename);
+		println("buf : " + buf.toString());
 
 		String surl = Utils.formatURL(buf.toString(), false);
 		URL url = new URL(surl);
@@ -750,40 +774,40 @@ class SynchronizeBundlesCommand implements BundleListener {
 		return null;
 	}
 
-	private URLConnection getRemoteBundleURLConnection(String bundlename)
+	private URLConnection getRemoteBundleURLConnection(String bundlePath)
 			throws MalformedURLException {
-		return getRemoteFileURLConnection(bundlename + ".jar");
+		return getRemoteFileURLConnection(bundlePath);
 	}
 
 	private void check(URLConnection c) throws IOException {
 		c.getInputStream();
 	}
 
-//	private String bundleState2String(int state) {
-//		switch (state) {
-//		case BundleEvent.INSTALLED:
-//			return "INSTALLED";
-//		case BundleEvent.RESOLVED:
-//			return "RESOLVED";
-//		case BundleEvent.STARTED:
-//			return "STARTED";
-//		case BundleEvent.STARTING:
-//			return "STARTING";
-//		case BundleEvent.STOPPED:
-//			return "STOPPED";
-//		case BundleEvent.STOPPING:
-//			return "STOPPING";
-//		case BundleEvent.UNINSTALLED:
-//			return "UNINSTALLED";
-//		case BundleEvent.UNRESOLVED:
-//			return "UNRESOLVED";
-//		case BundleEvent.UPDATED:
-//			return "UPDATED";
-//
-//		default:
-//			return "unknown. ";
-//		}
-//	}
+	// private String bundleState2String(int state) {
+	// switch (state) {
+	// case BundleEvent.INSTALLED:
+	// return "INSTALLED";
+	// case BundleEvent.RESOLVED:
+	// return "RESOLVED";
+	// case BundleEvent.STARTED:
+	// return "STARTED";
+	// case BundleEvent.STARTING:
+	// return "STARTING";
+	// case BundleEvent.STOPPED:
+	// return "STOPPED";
+	// case BundleEvent.STOPPING:
+	// return "STOPPING";
+	// case BundleEvent.UNINSTALLED:
+	// return "UNINSTALLED";
+	// case BundleEvent.UNRESOLVED:
+	// return "UNRESOLVED";
+	// case BundleEvent.UPDATED:
+	// return "UPDATED";
+	//
+	// default:
+	// return "unknown. ";
+	// }
+	// }
 
 	public void bundleChanged(BundleEvent bundleEvent) {
 		if (bundleEvent.getType() == BundleEvent.RESOLVED) {

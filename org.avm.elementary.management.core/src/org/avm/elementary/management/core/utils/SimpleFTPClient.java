@@ -93,4 +93,9 @@ class SimpleFTPClient implements IRemoteClient {
 		return connection.getInputStream();
 	}
 
+	public int getStatus() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

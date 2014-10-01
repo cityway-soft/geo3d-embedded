@@ -10,17 +10,17 @@ import org.avm.elementary.management.core.utils.ManifestReader;
  */
 
 public class BundleProperties {
-	private String _version;
+	private String version;
 
-	private String _name;
+	private String symbolicName;
 	
-	private String _relativePath="";
+	private String nameOptions = null;
 
-	private String _nameOptions = null;
+	private int startlevel;
 
-	private int _startlevel;
+	private String pack = null;
 
-	private String _pack = null;
+	private String path;
 
 	public static final int NOT_SET = 0;
 
@@ -29,93 +29,96 @@ public class BundleProperties {
 
 	public void loadProperties(String filename) throws IOException {
 		ManifestReader reader = new ManifestReader(filename);
-		_name = reader.getProperty("Bundle-SymbolicName");
-		if (_name != null) {
-			int idx = _name.indexOf(";");
+		symbolicName = reader.getProperty("Bundle-SymbolicName");
+		if (symbolicName != null) {
+			int idx = symbolicName.indexOf(";");
 			if (idx != -1) {
-				_name = _name.substring(0, idx);
+				symbolicName = symbolicName.substring(0, idx);
 			}
 			
-			idx = _name.lastIndexOf("/");
+			idx = symbolicName.lastIndexOf("/");
 			if (idx != -1){
-				_relativePath = _name.substring(0, idx);
-				_name = _name.substring(idx+1);
+				symbolicName = symbolicName.substring(idx+1);
 			}
 		}
-		_version = reader.getProperty("Bundle-Version");
+		version = reader.getProperty("Bundle-Version");
 
-		_startlevel = NOT_SET;
+		startlevel = NOT_SET;
 
-		_pack = reader.getProperty("TAB-Pack");
+		pack = reader.getProperty("TAB-Pack");
 	}
 
-	public String getName() {
-		return _name;
+	public String getSymbolicName() {
+		return symbolicName;
 	}
 
-	public String getCompleteName() {
-		return _name;
-	}
-
-	public int getStartlevel() {
-		return _startlevel;
-	}
-	
-	public String getPath(){
-		String path =  _name;
-		if (_relativePath != null){
-			path = _relativePath+"/"+_name; 
-		}
-			
+	public String getPath() {
 		return path;
 	}
 	
-	public String getRelativePath(){	
-		return _relativePath;
-	}
-	
-	public void setRelativePath(String r){
-		_relativePath = r;
+	public void setPath(String path){
+		this.path = path;
 	}
 
+	public int getStartlevel() {
+		return startlevel;
+	}
+	
+//	public String getPath(){
+//		String path =  symbolicName;
+//		if (_relativePath != null){
+//			path = _relativePath+"/"+symbolicName; 
+//		}
+//			
+//		return path;
+//	}
+//	
+//	public String getRelativePath(){	
+//		return _relativePath;
+//	}
+//	
+//	public void setRelativePath(String r){
+//		_relativePath = r;
+//	}
+
 	public void setStartlevel(int startlevel) {
-		_startlevel = startlevel;
+		this.startlevel = startlevel;
 	}
 
 	public String getVersion() {
-		return _version;
+		return version;
 	}
 
-	public void setName(String name) {
-		_name = name;
+	public void setSymbolicName(String name) {
+		symbolicName = name;
 	}
 
 	public void setNameOptions(String opts) {
-		_nameOptions = opts;
+		nameOptions = opts;
 	}
 
 	public String getNameOptions() {
-		return _nameOptions;
+		return nameOptions;
 	}
 
 	public void setVersion(String version) {
-		_version = version;
+		this.version = version;
 	}
 
 	public String toString() {
 		String tag = "";
-		if (_nameOptions != null) {
-			tag = "#" + _nameOptions;
+		if (nameOptions != null) {
+			tag = "#" + nameOptions;
 		}
-		return (_startlevel + ";" + _name + tag + ";" + _version + (_pack == null ? ""
-				: (";" + _pack)));
+		return (startlevel + ";" + symbolicName + tag + ";" + version + (pack == null ? ""
+				: (";" + pack)));
 	}
 
 	public String getPack() {
-		return _pack;
+		return pack;
 	}
 
 	public void setPack(String _pack) {
-		this._pack = _pack;
+		this.pack = _pack;
 	}
 }

@@ -36,13 +36,18 @@ public class BundleList {
 	public BundleList() {
 
 	}
+	
+	
+	public boolean isEmpty(){
+		return _hashBundle.size() == 0;
+	}
 
 	public void put(String name, BundleProperties bp) {
 		_hashBundle.put(name, bp);
 	}
 
 	public static void create(String bundlesDir, String bundlesListDir)
-			throws IOException {
+			throws IOException, UpdateNotAllowedException {
 		BundleList bundleList = null;
 		File dir = new File(bundlesDir);
 
@@ -135,30 +140,38 @@ public class BundleList {
 						+ "' invalid in " + line + " IGNORED !");
 				continue;
 			}
-			// -- name
-			String name = t.nextToken();
+			// -- path
+			String path = t.nextToken();
 			String nameOptions = null;
-			int idx = name.indexOf("#");
+			int idx = path.indexOf("#");
 			if (idx != -1) {
-				nameOptions = name.substring(idx + 1);
-				name = name.substring(0, idx);
+				nameOptions = path.substring(idx + 1);
+				path = path.substring(0, idx);
 			}
-			idx = name.lastIndexOf("/");
+			bp.setNameOptions(nameOptions);
+			
+			bp.setPath(path+".jar");
+			
+			// -- symbolicName
+			String symbolicName=path;
+			idx = symbolicName.lastIndexOf("/");
 			if (idx != -1){
-				String relativePath = name.substring(0, idx);
-				bp.setRelativePath(relativePath);
-				name = name.substring(idx+1);
+				symbolicName = symbolicName.substring(idx+1);
 			}
 			
-			bp.setName(name);
-			bp.setNameOptions(nameOptions);
+			idx = symbolicName.indexOf("_");
+			if (idx != -1) {
+				symbolicName = symbolicName.substring(0, idx);
+			}
+			
+			bp.setSymbolicName(symbolicName);
 
 			// -- version
 			String version = t.nextToken();
 			bp.setVersion(version);
 
 			if (startLevel == 0) {
-				System.out.println("[*Warning*] startlevel for bundle <" + name
+				System.out.println("[*Warning*] startlevel for bundle <" + path
 						+ "> NOT defined !?");
 			}
 			bp.setStartlevel(startLevel);
@@ -192,23 +205,30 @@ public class BundleList {
 	 * 
 	 * @param filename
 	 * @throws IOException
+	 * @throws UpdateNotAllowedException 
 	 */
-	private static BundleList load(String filename) throws IOException {
+	private static BundleList load(String filename) throws IOException, UpdateNotAllowedException {
 		URL url = new URL("file://" + filename);
 		return load(url);
 	}
 
-	public static BundleList load(URL url) throws IOException, ConnectException {
+	public static BundleList load(URL url) throws IOException, ConnectException, UpdateNotAllowedException {
 
 		BundleList bundleList = new BundleList();
-		// URLConnection connection = url.openConnection();
 		InputStream primaryInputStream;
 
 		DataUploadClient client = new DataUploadClient(url);
 
-		primaryInputStream = new BufferedInputStream(client.get(), 2048);
+		InputStream is = client.get();
+		
+		if (client.getStatus() == 204){
+			throw new UpdateNotAllowedException();
+		}
+		
+		
+		primaryInputStream = new BufferedInputStream(is);
 
-		boolean compressed = url.getFile().endsWith(COMPRESSED_EXT);
+		boolean compressed = url.getFile().indexOf(COMPRESSED_EXT)!=-1;
 
 		byte[] bytes = new byte[1024];
 		String localFilename = "/tmp/bundles.list"
@@ -266,13 +286,13 @@ public class BundleList {
 	private boolean updateBundleProperties(BundleProperties bp, boolean report) {
 		boolean newone = true;
 		BundleProperties existingBp = (BundleProperties) _hashBundle.get(bp
-				.getCompleteName());
+				.getSymbolicName());
 		if (existingBp != null) {
 			if (bp.getStartlevel() == BundleProperties.NOT_SET) {
 				newone = false;
 				if (report && !existingBp.getVersion().equals(bp.getVersion())) {
 					System.out.println("[Info] modified Bundle-Name : "
-							+ bp.getCompleteName() + "(" + bp.getVersion()
+							+ bp.getSymbolicName() + "(" + bp.getVersion()
 							+ ")");
 				}
 				bp.setStartlevel(existingBp.getStartlevel());
@@ -283,10 +303,10 @@ public class BundleList {
 			if (bp.getStartlevel() == BundleProperties.NOT_SET) {
 				System.out
 						.println("[Warn] StartLevel must be set for bundle : "
-								+ bp.getCompleteName() + "   !!!!");
+								+ bp.getSymbolicName() + "   !!!!");
 			}
 		}
-		_hashBundle.put(bp.getCompleteName(), bp);
+		_hashBundle.put(bp.getSymbolicName(), bp);
 		return newone;
 	}
 
@@ -298,7 +318,7 @@ public class BundleList {
 			BundleProperties bp = new BundleProperties();
 			try {
 				bp.loadProperties(children[i].getAbsolutePath());
-				if (bp.getName() == null) {
+				if (bp.getSymbolicName() == null) {
 					System.out.println("[Warning] Bundle-Name null for "
 							+ children[i].getAbsolutePath());
 					continue;
@@ -356,9 +376,11 @@ public class BundleList {
 
 		// BundleList b = BundleList.load(new
 		// URL("http://avm:avm++@10.10.1.199:8080/frontal.terminal-manager/rest/terminal/0200001002FF67FD/aton/999/100/download/bundles.list"));
-		BundleList b = BundleList
-				.load(new URL(
-						"http://avm:avm++@10.10.1.199:8080/frontal.terminal-manager/rest/terminal/0200001002FF67FD/aton/999/100/download/bundles.list.gz"));
+//		BundleList b = BundleList
+//				.load(new URL(
+//						"http://avm:avm++@10.10.1.199:8080/frontal.terminal-manager/rest/terminal/0200001002FF67FD/aton/999/100/download/bundles.list.gz"));
+		BundleList b = new BundleList();
+		b.load(new FileInputStream("/tmp/bundles.list"));
 		System.out.println("BundleList=" + b);
 	}
 
@@ -380,9 +402,9 @@ public class BundleList {
 
 			BundleProperties c1 = (BundleProperties) o1;
 			BundleProperties c2 = (BundleProperties) o2;
-			String sl1 = c1.getStartlevel() + c1.getName();
+			String sl1 = c1.getStartlevel() + c1.getSymbolicName();
 
-			String sl2 = c2.getStartlevel() + c2.getName();
+			String sl2 = c2.getStartlevel() + c2.getSymbolicName();
 
 			return sl1.compareTo(sl2);
 

@@ -9,10 +9,9 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 
 import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.DefaultMethodRetryHandler;
+import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpMethodRetryHandler;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -29,6 +28,8 @@ class SimpleHTTPClient implements IRemoteClient {
 	private String mime = "text/plain";
 	private String encoding = "ISO-8859-1";
 
+	private int status=0;
+
 	public void setMime(String mime) {
 		this.mime = mime;
 	}
@@ -39,18 +40,10 @@ class SimpleHTTPClient implements IRemoteClient {
 
 	public SimpleHTTPClient(URL url) {
 		client = new HttpClient();
-		
-		HttpMethodRetryHandler handler = new HttpMethodRetryHandler() {
-			
-			public boolean retryMethod(HttpMethod arg0, IOException arg1, int arg2) {
-					return false;
-			}
-		};
-		System.err.println("HTTPPPPPPPPPP retry set to 0");
-		client.getParams()
-				.setParameter(HttpMethodParams.RETRY_HANDLER, handler);
-		
-		
+
+		client.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
+				new DefaultHttpMethodRetryHandler(0, false));
+
 		this.url = url;
 		String userinfo = url.getUserInfo();
 		String host = url.getHost();
@@ -106,10 +99,12 @@ class SimpleHTTPClient implements IRemoteClient {
 
 	public InputStream get() throws IOException {
 		HttpMethod method = new GetMethod(url.toExternalForm());
-		
-		
-		
-		client.executeMethod(method);
+
+		status = client.executeMethod(method);
 		return method.getResponseBodyAsStream();
+	}
+
+	public int getStatus() {
+		return status;
 	}
 }

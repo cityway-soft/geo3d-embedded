@@ -641,7 +641,7 @@ public class ManagementImpl implements Management {
 					"Bundle-Version");
 			String packName = (String) bundles[i].getHeaders().get("TAB-Pack");
 			bundleList.put(bundleName, bp);
-			bp.setName(bundleName);
+			bp.setSymbolicName(bundleName);
 			bp.setVersion(bundleVersion);
 			bp.setPack(packName);
 
