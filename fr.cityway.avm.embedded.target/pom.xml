@@ -93,6 +93,7 @@
 		<module>../org.avm.elementary.useradmin</module>
 		<module>../org.avm.elementary.variable</module>
 		<module>../org.avm.elementary.wifi</module>
+		<module>../org.avm.elementary.fonts</module>
 		<!-- !!! NE COMPILE PAS !!! -->
 		<!-- <module>../org.avm.elementary.rsync</module> -->
 
