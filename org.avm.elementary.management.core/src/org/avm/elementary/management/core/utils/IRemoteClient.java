@@ -20,5 +20,7 @@ public interface IRemoteClient {
 	public void setMime(String mime);
 
 	public void setEncoding(String encoding);
+	
+	public int getStatus();
 
 }

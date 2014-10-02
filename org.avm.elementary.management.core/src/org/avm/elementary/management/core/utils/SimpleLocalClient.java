@@ -90,4 +90,9 @@ class SimpleLocalClient implements IRemoteClient {
 
 	}
 
+	public int getStatus() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

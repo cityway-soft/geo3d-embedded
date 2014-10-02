@@ -61,6 +61,8 @@ public interface Management {
 	public void setPublicMode() throws MalformedURLException;
 
 	public void setPrivateMode() throws MalformedURLException;
+	
+	public String getCurrentMode();
 
 	public void shutdown(PrintWriter out, int waittime, int exitCode);
 

@@ -82,4 +82,8 @@ public class DataUploadClient implements IRemoteClient {
 		return null;
 	}
 
+	public int getStatus() {
+		return client.getStatus();
+	}
+
 }

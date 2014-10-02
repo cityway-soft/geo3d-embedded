@@ -14,6 +14,7 @@ import org.avm.elementary.management.addons.ManagementService;
 import org.avm.elementary.management.core.BundleList;
 import org.avm.elementary.management.core.BundleProperties;
 import org.avm.elementary.management.core.Management;
+import org.avm.elementary.management.core.UpdateNotAllowedException;
 import org.avm.elementary.management.core.utils.Utils;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -150,7 +151,7 @@ class GetbundlelistCommand extends AbstractCommand {
 			Enumeration e = bundleList.elements();
 			while (e.hasMoreElements()) {
 				BundleProperties bl = (BundleProperties) e.nextElement();
-				String bundlename = bl.getName();
+				String bundlename = bl.getSymbolicName();
 				Bundle bundle = getBundle(context, bundlename);
 				if (bundle == null && bl.getStartlevel() <= 0) {
 					bundleList.remove(bundlename);
@@ -165,7 +166,7 @@ class GetbundlelistCommand extends AbstractCommand {
 	}
 
 	private BundleList loadFromURL(String strurl) throws IOException,
-			ConnectException {
+			ConnectException, UpdateNotAllowedException {
 		URL url = new URL(strurl);
 		BundleList bundleList = BundleList.load(url);
 		return bundleList;

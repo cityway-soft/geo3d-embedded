@@ -90,9 +90,13 @@ public class AbstractDataDeployer implements DataDeployer, BundleActivator,
 	}
 
 	public void deploy(String rootPath) throws IOException {
-
+		File  file = new File(rootPath);
+		if (file.exists() == false){
+			file.mkdirs();
+			_log.info("Root path "+rootPath +" has been created!");
+		}
 		if (isDeployed(rootPath)) {
-			_log.info("[DSU] data already deployed to " + rootPath);
+			_log.info("Data already deployed to " + rootPath);
 			return;
 		}
 
@@ -100,7 +104,7 @@ public class AbstractDataDeployer implements DataDeployer, BundleActivator,
 		String path = rootPath
 				+ (rootPath.endsWith(File.separator) ? "" : File.separator)
 				+ _sdf.format(getVdrDateExp());
-		File file = new File(path);
+		 file = new File(path);
 		if (file.exists()) {
 			rmdir(file);
 		}
@@ -116,7 +120,7 @@ public class AbstractDataDeployer implements DataDeployer, BundleActivator,
 			url = new URL(text);
 		}
 
-		_log.info("[DSU] data deployed to " + rootPath + " from " + url);
+		_log.info("Data deployed to " + rootPath + " from " + url);
 		try {
 			unzip(url, file.getAbsolutePath());
 			file = new File(path + File.separator + DEPLOYED);
@@ -134,13 +138,13 @@ public class AbstractDataDeployer implements DataDeployer, BundleActivator,
 
 	public void start(BundleContext context) throws Exception {
 		_context = context;
-		_log.info("[DSU] load resource from: "
+		_log.info("Load resource from: "
 				+ _context.getBundle().getLocation());
 
 		for (Enumeration iter = _context.getBundle().findEntries("/",
 				"resource.properties", true); iter.hasMoreElements();) {
 			URL url = (URL) iter.nextElement();
-			_log.info("[DSU] entry: " + url);
+			_log.info("Entry: " + url);
 			
 			// load resources
 			try {
