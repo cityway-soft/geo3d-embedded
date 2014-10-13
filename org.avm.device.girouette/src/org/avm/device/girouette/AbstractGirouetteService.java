@@ -2,6 +2,7 @@ package org.avm.device.girouette;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.avm.elementary.common.AbstractDriver;
 import org.avm.elementary.common.DeviceConfig;
 import org.osgi.framework.ServiceReference;
@@ -18,11 +19,11 @@ public abstract class AbstractGirouetteService extends AbstractDriver implements
 
 	public AbstractGirouetteService(final ComponentContext context,
 			final ServiceReference device) {
-
 		super(context, device);
 	}
 
 	public void destination(final String code) {
+		_log.info("Destination CODE=" + code);
 
 		if (!this.started) {
 			this._log.error("[" + this + "] " + "driver not started");
@@ -68,10 +69,15 @@ public abstract class AbstractGirouetteService extends AbstractDriver implements
 	private void sendDestination(String destination) throws IOException {
 
 		try {
+			_log.debug("protocol:" + protocol);
 			if (protocol != null) {
+				_log.debug("port.open()...");
 				port.open();
+				_log.debug("protocol.setInputStream...");
 				protocol.setInputStream(port.getInputStream());
+				_log.debug("protocol.setOutputStream...");
 				protocol.setOutputStream(port.getOutputStream());
+				_log.debug("protocol.sendDestination...");
 				protocol.sendDestination(destination);
 				_log.debug("Destination Frame sent.");
 			}

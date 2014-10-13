@@ -7,7 +7,7 @@
 package org.avm.device.usbmass;
 
 
-/**
+/** 
  * @author root
  * 
  * TODO To change the template for this generated type comment go to Window -

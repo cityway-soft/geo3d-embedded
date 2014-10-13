@@ -46,7 +46,7 @@ public abstract class AbstractPanel extends Composite implements Listener,
 		addListener(SWT.Hide, this);
 		_buttonSelectionListener = new ButtonSelectionListener();
 	}
-
+ 
 	protected abstract void initialize();
 
 	public void start() {

@@ -3,8 +3,11 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.business.hmi.web.authentification.Authentification
 Bundle-SymbolicName: org.avm.business.hmi.web.authentification
 Bundle-Version: 1.0.0.qualifier
-Service-Component: META-INF/component.xml
+Export-Package: org.avm.business.hmi.web.authentification,
+ org.avm.business.hmi.web.authentification.bundle,
+ org.avm.business.hmi.web.authentification.servlet
 Include-Resource: res
+Service-Component: META-INF/component.xml
 Import-Package: javax.servlet;version="2.3.0",
  javax.servlet.http;version="2.3.0",
  org.avm.business.hmi.web.desktop,

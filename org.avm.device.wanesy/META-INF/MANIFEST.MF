@@ -4,20 +4,18 @@ Bundle-Name: org.avm.device.wanesy
 Bundle-SymbolicName: org.avm.device.wanesy
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Cityway
+Export-Package: org.avm.device.knet.model,
+ org.avm.device.knet.parser,
+ org.avm.device.wanesy,
+ org.avm.device.wanesy.bundle
 Import-Package: javax.xml.parsers,
  org.apache.log4j,
+ org.avm.device.wanesy,
+ org.avm.device.wanesy.bundle,
  org.avm.elementary.common,
  org.knopflerfish.service.console,
  org.osgi.service.cm,
  org.osgi.service.component,
  org.xml.sax,
- org.xml.sax.helpers,
- org.avm.device.wanesy,
- org.avm.device.wanesy.bundle
-Export-Package: 
- org.avm.device.wanesy,
- org.avm.device.wanesy.bundle,
- org.avm.device.knet.model
+ org.xml.sax.helpers
 Service-Component: META-INF/activator.xml
-Bundle-ClassPath: lib/crimson.jar,
- .

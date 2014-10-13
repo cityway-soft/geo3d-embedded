@@ -98,7 +98,7 @@ public class Port {
 	
 	public void open(final int access) throws IOException {
 	
-		this.log.debug("port opening");
+		this.log.debug("port opening...");
 		if (!this.opened) {
 			try {
 				final URL url = new URL(this.url);
@@ -118,6 +118,6 @@ public class Port {
 			}
 			this.opened = true;
 		}
-		this.log.debug("port opened");
+		this.log.debug("port opened!");
 	}
 }

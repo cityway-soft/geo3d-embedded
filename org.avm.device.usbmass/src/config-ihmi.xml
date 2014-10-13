@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.device.usbmass.UsbMass" mode="new">
+<property name="org.avm.device.usbmass.mount">
+<value type="String">/mnt/sdb1</value>
+</property>
+<property name="org.avm.device.usbmass.poll">
+<value type="String">5</value>
+</property>
+<property name="service.pid">
+<value type="String">org.avm.device.usbmass.UsbMass</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">initial@reference:file:../../../../../../projets/geolia/common/dev/workspace/geolia/avm/device/org.avm.device.usbmass/</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">2</value>
+</property>
+<property name="config.date">
+<value type="String">Tue Apr 14 09:03:38 CEST 2009</value>
+</property>
+</configuration>
+</cm_data>

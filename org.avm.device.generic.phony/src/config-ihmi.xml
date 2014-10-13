@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.device.phony.Phony" mode="new">
+<property name="org.avm.config.version">
+<value type="Integer">18</value>
+</property>
+<property name="service.pid">
+<value type="String">org.avm.device.phony.Phony</value>
+</property>
+<property name="defaultvolume">
+<value type="Integer">50</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">initial@reference:file:../../home/didier/projets/geolia/common/dev/workspace/avm-futur/org.avm.elementary.phony/</value>
+</property>
+<property name="org.avm.elementary.dummy.property">
+<value type="String">Tue Aug 28 19:41:48 CEST 2007</value>
+</property>
+
+<property name="init">
+<value type="String">
+set-default-melody,set-default-player,set-microphone-gain,listen-mode-off,call-line-presentation
+</value>
+</property>
+
+<property name="at.set-microphone-gain">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=positionne le gain microphone
+request=AT+VGT=250\r
+</value>
+</property>
+
+<property name="at.call-line-presentation">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=presentation du numero appelant
+request=AT+CLIP=1\r
+</value>
+</property>
+
+
+
+<property name="at.set-default-melody">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=selection melodie par defaut,selection 'speaker' comme player par defaut
+request=AT+WCDM=9,1
+</value>
+</property>
+
+<property name="at.set-default-player">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=speaker player par defaut
+request=AT+WCDP=1
+</value>
+</property>
+
+<property name="at.melody9">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=test melodie n°9
+request=AT+CRMP=0,15,0,9
+</value>
+</property>
+
+<property name="at.melody10">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=test melodie n°10
+request=AT+CRMP=0,15,0,10
+</value>
+</property>
+
+<property name="at.listen-mode-on">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=active l'ecoute discrete
+request=AT
+</value>
+</property>
+
+<property name="at.listen-mode-off">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=desactive l'ecoute discrete
+request=AT
+</value>
+</property>
+
+<property name="at.volume0">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=change le volume en sortie de speaker
+request=AT+VGR=255
+</value>
+</property>
+
+<property name="at.volume1">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=change le volume en sortie de speaker
+request=AT+VGR=248
+</value>
+</property>
+
+<property name="at.volume2">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=change le volume en sortie de speaker
+request=AT+VGR=242
+</value>
+</property>
+
+<property name="at.volume3">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=change le volume en sortie de speaker
+request=AT+VGR=236
+</value>
+</property>
+
+<property name="at.volume4">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=change le volume en sortie de speaker
+request=AT+VGR=230
+</value>
+</property>
+
+
+
+</configuration>
+</cm_data>

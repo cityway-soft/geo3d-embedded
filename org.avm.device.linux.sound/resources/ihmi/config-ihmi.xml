@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.device.linux.sound.Sound" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.device.linux.sound.Sound</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">ftp://avm:avm++@ftpserver.avm.org/ihmi/default/bundles/org.avm.device.linux.sound.jar</value>
+</property>
+<property name="default">
+<value type="String">#Tue Feb 03 15:03:42 GMT 2009
+url=/resources/ihmi/silence.cfg
+name=default
+priority=0
+</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">9</value>
+</property>
+
+<property name="voyageur-exterieur">
+<value type="String">#Tue Feb 03 15:06:31 GMT 2009
+url=/resources/ihmi/voyageur-exterieur.cfg
+name=voyageur-exterieur
+priority=2
+volume=20</value>
+</property>
+
+<property name="conducteur-ecoute-discrete">
+<value type="String">#Tue Feb 03 15:06:31 GMT 2009
+url=/resources/ihmi/silence.cfg
+name=conducteur-ecoute-discrete
+priority=0
+</value>
+</property>
+
+
+<property name="voyageur-interieur">
+<value type="String">#Tue Feb 03 15:06:31 GMT 2009
+url=/resources/ihmi/voyageur-interieur.cfg
+name=voyageur-interieur
+priority=2
+volume=20</value>
+</property>
+<property name="config.date">
+<value type="String">Tue Feb 03 14:47:27 GMT 2009</value>
+</property>
+</configuration>
+</cm_data>

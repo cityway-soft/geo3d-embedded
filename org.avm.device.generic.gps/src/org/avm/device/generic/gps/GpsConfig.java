@@ -9,7 +9,7 @@ public interface GpsConfig {
 	public Boolean getCorrect();
 
 	public void setCorrect(Boolean correct);
-
+ 
 	public Double getDelay();
 
 	public void setDelay(Double delay);

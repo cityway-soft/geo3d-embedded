@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.device.io.iocardbus.IOCardBus" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.device.io.iocardbus.IOCardBus</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">3</value>
+</property>
+<property name="atondo">
+<vector length="4">
+<value type="String">org.avm.device.io.DigitalIODevice</value>
+<value type="String">aton.fr</value>
+<value type="String">org.avm.device.io.linux.DigitalOutput</value>
+<value type="String">45ed08d9-9ed4-4c4f-867d-03364ac2fe69</value>
+</vector>
+</property>
+<property name="atondi">
+<vector length="4">
+<value type="String">org.avm.device.io.DigitalIODevice</value>
+<value type="String">aton.fr</value>
+<value type="String">org.avm.device.io.linux.DigitalInput</value>
+<value type="String">3f216bfa-9399-4ef9-bdb6-4a61dcafd598</value>
+</vector>
+</property>
+<property name="service.bundleLocation">
+<value type="String">ftp://avm:avm++@ftpserver.avm.org/aton/106/bundles/org.avm.device.generic.io.iocardbus.jar</value>
+</property>
+<property name="counter1">
+<vector length="4">
+<value type="String">org.avm.device.io.CounterDevice</value>
+<value type="String">mercur.fr</value>
+<value type="String">org.avm.device.io.memory.OdometerCounter</value>
+<value type="String">a1bb7bb5-bde8-4dad-9750-2542e5d67550</value>
+</vector>
+</property>
+<property name="config.date">
+<value type="String">Mon May 18 15:04:47 GMT 2009</value>
+</property>
+</configuration>
+</cm_data>

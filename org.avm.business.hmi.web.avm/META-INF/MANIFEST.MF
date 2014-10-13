@@ -3,8 +3,11 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.business.hmi.web.avm.Avm
 Bundle-SymbolicName: org.avm.business.hmi.web.avm
 Bundle-Version: 1.0.0.qualifier
-Service-Component: META-INF/component.xml
+Export-Package: org.avm.business.hmi.web.avm,
+ org.avm.business.hmi.web.avm.bundle,
+ org.avm.business.hmi.web.avm.servlet
 Include-Resource: res
+Service-Component: META-INF/component.xml
 Import-Package: javax.servlet;version="2.3.0",
  javax.servlet.http;version="2.3.0",
  org.avm.business.core,

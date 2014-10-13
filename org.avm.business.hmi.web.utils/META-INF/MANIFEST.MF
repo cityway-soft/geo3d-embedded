@@ -3,6 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.business.hmi.web.utils
 Bundle-SymbolicName: org.avm.business.hmi.web.utils
 Bundle-Version: 1.0.0.qualifier
+Export-Package: org.avm.business.hmi.web.utils
 Import-Package: javax.servlet;version="2.3.0",
  javax.servlet.http;version="2.3.0",
  org.avm.elementary.common,
@@ -11,4 +12,3 @@ Import-Package: javax.servlet;version="2.3.0",
  org.osgi.service.component;version="1.0.0",
  org.osgi.service.http;version="1.2.0",
  org.stringtree.json
-Export-Package: org.avm.business.hmi.web.utils

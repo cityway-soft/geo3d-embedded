@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.device.afficheur.AfficheurDevice" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.device.afficheur.AfficheurDevice</value>
+</property>
+<property name="DEVICE_MANUFACTURER">
+<value type="String">mobitec.com</value>
+</property>
+<property name="DEVICE_DESCRIPTION">
+<value type="String">Controleur d&apos;afficheur Mobitec</value>
+</property>
+<property name="DEVICE_MODEL">
+<value type="String">org.avm.device.afficheur.mobitec</value>
+</property>
+<property name="DEVICE_NAME">
+<value type="String">org.avm.device.afficheur.mobitec</value>
+</property>
+<property name="DEVICE_VERSION">
+<value type="String">1.0.0</value>
+</property>
+<property name="DEVICE_SERIAL">
+<value type="String">4df3687a-9b67-46c5-b83f-b581c98feff2</value>
+</property>
+<property name="org.avm.elementary.dummy.property">
+<value type="String">Mon Nov 12 12:29:25 CET 2007</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">ftp://avm:avm++@10.1.1.99/aton/default/bundles/org.avm.device.afficheur.jar</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">3</value>
+</property>
+<property name="DEVICE_CATEGORY">
+<value type="String">org.avm.device.afficheur.Afficheur</value>
+</property>
+<property name="parameters">
+<value type="String">#Mon May 25 15:42:45 GMT 2009
+url=rs485\:0;baudrate\=1200;stopbits\=2;parity\=even;bitsperchar\=7
+protocol=MOBITEC</value>
+</property>
+<property name="config.date">
+<value type="String">Thu Mar 05 15:46:23 GMT 2009</value>
+</property>
+</configuration>
+</cm_data>

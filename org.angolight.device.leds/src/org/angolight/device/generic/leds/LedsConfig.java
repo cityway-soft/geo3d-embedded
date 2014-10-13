@@ -1,5 +1,5 @@
 package org.angolight.device.generic.leds;
-
+ 
 
 public interface LedsConfig {
 

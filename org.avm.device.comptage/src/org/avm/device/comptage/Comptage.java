@@ -1,5 +1,5 @@
 package org.avm.device.comptage;
-
+ 
 import java.util.Properties;
 
 public interface Comptage {
