@@ -2,10 +2,13 @@ package org.avm.elementary.common;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.ParseException;
@@ -81,19 +84,29 @@ public class AbstractDataDeployer implements DataDeployer, BundleActivator,
 		return _properties.getProperty(URL_CONNECTION);
 	}
 
+	public String getPack() {
+		return _properties.getProperty(PACK, "default");
+	}
+
 	public boolean isDeployed(String rootPath) {
 		String path = rootPath
 				+ (rootPath.endsWith(File.separator) ? "" : File.separator)
 				+ _sdf.format(getVdrDateExp()) + File.separator + DEPLOYED;
+		
 		File file = new File(path.trim());
-		return file.exists();
+		
+		File parent = file.getParentFile();
+		String[] list = parent.list();
+		
+		
+		return file.exists() && list != null && list.length > 1 ;
 	}
 
 	public void deploy(String rootPath) throws IOException {
-		File  file = new File(rootPath);
-		if (file.exists() == false){
+		File file = new File(rootPath);
+		if (file.exists() == false) {
 			file.mkdirs();
-			_log.info("Root path "+rootPath +" has been created!");
+			_log.info("Root path " + rootPath + " has been created!");
 		}
 		if (isDeployed(rootPath)) {
 			_log.info("Data already deployed to " + rootPath);
@@ -104,7 +117,7 @@ public class AbstractDataDeployer implements DataDeployer, BundleActivator,
 		String path = rootPath
 				+ (rootPath.endsWith(File.separator) ? "" : File.separator)
 				+ _sdf.format(getVdrDateExp());
-		 file = new File(path);
+		file = new File(path);
 		if (file.exists()) {
 			rmdir(file);
 		}
@@ -121,13 +134,23 @@ public class AbstractDataDeployer implements DataDeployer, BundleActivator,
 		}
 
 		_log.info("Data deployed to " + rootPath + " from " + url);
+	
+
+		Writer writer = null;
+
 		try {
 			unzip(url, file.getAbsolutePath());
-			file = new File(path + File.separator + DEPLOYED);
-			file.createNewFile();
-
-		} catch (Throwable e) {
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(path + File.separator + DEPLOYED),
+					"utf-8"));
+			writer.write(getPack());
+		} catch (IOException e) {
 			throw new IOException(e.getMessage());
+		} finally {
+			try {
+				writer.close();
+			} catch (Exception ex) {
+			}
 		}
 
 	}
@@ -138,14 +161,13 @@ public class AbstractDataDeployer implements DataDeployer, BundleActivator,
 
 	public void start(BundleContext context) throws Exception {
 		_context = context;
-		_log.info("Load resource from: "
-				+ _context.getBundle().getLocation());
+		_log.info("Load resource from: " + _context.getBundle().getLocation());
 
 		for (Enumeration iter = _context.getBundle().findEntries("/",
 				"resource.properties", true); iter.hasMoreElements();) {
 			URL url = (URL) iter.nextElement();
 			_log.info("Entry: " + url);
-			
+
 			// load resources
 			try {
 				InputStream in = url.openStream();
@@ -153,6 +175,12 @@ public class AbstractDataDeployer implements DataDeployer, BundleActivator,
 				_properties.load(in);
 			} catch (IOException e) {
 				_log.error(e.getMessage());
+			}
+
+			Object pack = _context.getBundle().getHeaders().get("TAB-Pack");
+			if (pack != null) {
+				_log.info("DataPack=" + pack);
+				_properties.put(DataDeployer.PACK, pack.toString());
 			}
 		}
 
@@ -175,8 +203,8 @@ public class AbstractDataDeployer implements DataDeployer, BundleActivator,
 
 		BufferedOutputStream dest = null;
 		URLConnection conn = url.openConnection();
-		ZipInputStream zis = new ZipInputStream(new BufferedInputStream(conn
-				.getInputStream()));
+		ZipInputStream zis = new ZipInputStream(new BufferedInputStream(
+				conn.getInputStream()));
 		ZipEntry entry;
 		while ((entry = zis.getNextEntry()) != null) {
 			_log.info("Extracting: " + entry + " to " + rootPath);

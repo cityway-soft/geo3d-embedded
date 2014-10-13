@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Date;
 
 public interface DataDeployer {
+	public static final String PACK = "pack";
 
 	public static final String URL_CONNECTION = "url.connection";
 
@@ -18,6 +19,8 @@ public interface DataDeployer {
 	public static final String JEX_DATE_FIN = "jex.date.fin";
 
 	public String getVdrId();
+	
+	public String getPack();
 
 	public String getVdrNom();
 

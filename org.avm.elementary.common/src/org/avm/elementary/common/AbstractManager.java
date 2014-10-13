@@ -1,7 +1,9 @@
 package org.avm.elementary.common;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileReader;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -155,9 +157,6 @@ public abstract class AbstractManager implements ManageableService,
 			if (oldUrl == null) {
 				return;
 			}
-			
-			
-			
 
 			String oldPath = oldUrl.getPath();
 
@@ -169,6 +168,8 @@ public abstract class AbstractManager implements ManageableService,
 			String name = oldPath.substring(iname + 1);
 			String oldTextVersion = oldPath.substring(iversion + 1, iname);
 			Date oldVersion = _frVdrDateExpFormater.parse(oldTextVersion);
+			String newPack = data.getPack();
+			String oldPack = "default";
 			Date newVersion = data.getVdrDateExp();
 			String newTextVersion = _defaultVdrDateExpFormater
 					.format(newVersion);
@@ -176,8 +177,29 @@ public abstract class AbstractManager implements ManageableService,
 			root = root.replace('/', File.separatorChar);
 
 			File path = new File(root + File.separatorChar + oldTextVersion);
-			String template = System.getProperty("org.avm.home")+File.separator+"data";
-			if (!path.exists() && path.getAbsolutePath().indexOf(template) != -1) {
+			BufferedReader br = null;
+			try {
+				br = new BufferedReader(new FileReader(path + File.separator
+						+ AbstractDataDeployer.DEPLOYED));
+				String line = br.readLine();
+				if (line != null) {
+					oldPack = line;
+				}
+			} catch (Throwable t) {
+			} finally {
+				if (br != null) {
+					br.close();
+				}
+			}
+			_log.info("Old pack :" + oldPack);
+			
+			String template = System.getProperty("org.avm.home")
+					+ File.separator + "data";
+
+			if (!path.exists()
+					&& path.getAbsolutePath().indexOf(template) != -1) {
+				// -- si le repertoire data en conf n'existe pas on essaie de
+				// -- retrouver le repertoire data le plus recent
 				String selectedFile = null;
 				Date selected = new Date(0);
 				String[] files = path.getParentFile().list();
@@ -195,26 +217,31 @@ public abstract class AbstractManager implements ManageableService,
 										+ selectedFile);
 							}
 						} catch (ParseException e) {
-							_log.error("ParseException :" +e.getMessage());
+							_log.error("ParseException :" + e.getMessage());
 						}
 					}
 				}
 				_log.debug("=>>>>>>>>>>>>>>previous oldPath=" + oldPath);
 				if (selectedFile != null) {
-					oldPath = root+File.separator+path.getParentFile().getName()
-							+ File.separator + selectedFile
-							+ File.separator + name;
+					// -- si on a trouvé, on force sa prise en compte
+					oldPath = root + File.separator
+							+ path.getParentFile().getName() + File.separator
+							+ selectedFile + File.separator + name;
 					newVersion = selected;
 					newTextVersion = selectedFile;
 					_log.debug("=>>>>>>>>>>>>>>newVersion=" + newVersion);
 					String oldDir = oldPath.substring(iroot, iname);
 					oldDir = oldDir.replace('/', File.separatorChar);
-					String newPath = oldPath.substring(0, iversion) + URL_SEPARATOR
-							+ newTextVersion + URL_SEPARATOR + name;
-					URL newURL = new URL(oldUrl.getProtocol(), oldUrl.getHost(),
-							oldUrl.getPort(), newPath);
+					String newPath = oldPath.substring(0, iversion)
+							+ URL_SEPARATOR + newTextVersion + URL_SEPARATOR
+							+ name;
+					URL newURL = new URL(oldUrl.getProtocol(),
+							oldUrl.getHost(), oldUrl.getPort(), newPath);
 					updateUrlRepository(newURL, data.getVdrId());
 					return;
+				}
+				else{
+					oldPack="none";
 				}
 			}
 
@@ -227,25 +254,38 @@ public abstract class AbstractManager implements ManageableService,
 
 			StringBuffer info = new StringBuffer();
 			info.append(org.avm.elementary.log4j.Constants.SETCOLOR_SUCCESS);
-			info.append("\nOLD URL: " + oldUrl);
 			info.append("\nNAME: " + name);
 			info.append("\nROOT PATH: " + root);
-			info.append("\nOLD VERSION: " + oldVersion);
-			info.append("\nNEW VERSION: " + newVersion);
-			info.append("\nNEW URL: " + newURL);
 			info.append("\nOLD DIR: " + oldDir);
+			info.append("\nOLD VERSION: " + oldVersion);
+			info.append("\n->NEW VERSION: " + newVersion);
+			info.append("\nOLD URL: " + oldUrl);
+			info.append("\n->NEW URL: " + newURL);			
+			info.append("\nOLD PACK: " + oldPack);
+			info.append("\n->NEW PACK: " + newPack);
 			info.append(org.avm.elementary.log4j.Constants.SETCOLOR_NORMAL);
 
 			_log.info(info.toString());
 
 			// deploy new version
-			if (!oldVersion.equals(newVersion) && newVersion.after(oldVersion)) {
+			if ( ( !oldVersion.equals(newVersion) && newVersion.after(oldVersion) )
+					|| !oldPack.equals(newPack)) {
+				if (oldPack.equals(newPack)){
 				_log.info(org.avm.elementary.log4j.Constants.SETCOLOR_SUCCESS
 						+ " deploy version "
 						+ _defaultVdrDateExpFormater.format(oldVersion)
 						+ "  -> "
 						+ _defaultVdrDateExpFormater.format(newVersion)
 						+ org.avm.elementary.log4j.Constants.SETCOLOR_NORMAL);
+				}
+				else{
+					_log.info(org.avm.elementary.log4j.Constants.SETCOLOR_SUCCESS
+							+ " deploy pack "
+							+ oldPack
+							+ "  -> "
+							+ newPack
+							+ org.avm.elementary.log4j.Constants.SETCOLOR_NORMAL);
+				}
 
 				data.deploy(root);
 
@@ -260,8 +300,8 @@ public abstract class AbstractManager implements ManageableService,
 						+ _frVdrDateExpFormater.format(data.getJexDateFin())
 						+ org.avm.elementary.log4j.Constants.SETCOLOR_NORMAL);
 
-				if (now.after(data.getJexDateDeb())
-						&& now.before(data.getJexDateFin())) {
+				if ((now.after(data.getJexDateDeb()) && now.before(data
+						.getJexDateFin())) ) {
 					_log.info(org.avm.elementary.log4j.Constants.SETCOLOR_SUCCESS
 							+ "Reinit url = "
 							+ newURL
@@ -271,7 +311,7 @@ public abstract class AbstractManager implements ManageableService,
 
 					updateUrlRepository(newURL, data.getVdrId());
 
-					if (!_started) {
+					if (!_started && newURL.toString().indexOf(oldDir) == -1) {
 						_log.info(org.avm.elementary.log4j.Constants.SETCOLOR_SUCCESS
 								+ "Undeploy old version from "
 								+ oldDir

@@ -16,7 +16,7 @@ public class DirectoryImpl implements Directory, ConfigurableService {
 
 	public void configure(final Config config) {
 		_config = (DirectoryConfig) config;
-		if (!_config.loadProperties(null)){
+		if (_config !=null && !_config.loadProperties(null)){
 			_config.createDefaultProperties();
 		}
 		
