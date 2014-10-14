@@ -65,24 +65,42 @@ public class Activator implements BundleActivator, Management {
 		_peer.synchronize(p);
 	}
 
-	public URL getDownloadURL() {
-		return _peer.getDownloadURL();
+	public URL getCurrentDownloadUrl() {
+		return _peer.getCurrentDownloadUrl();
 	}
 
-	public URL getUploadURL() {
-		return _peer.getUploadURL();
+	public URL getCurrentUploadUrl() {
+		return _peer.getCurrentUploadUrl();
 	}
 
-	public void setDownloadURL(URL url) throws MalformedURLException {
-		_peer.setDownloadURL(url);
+	public void setDownloadUrl(URL url) throws MalformedURLException {
+		_peer.setDownloadUrl(url);
 	}
 
-	public void setUploadURL(URL url) throws MalformedURLException {
-		_peer.setUploadURL(url);
+	public void setUploadUrl(URL url) throws MalformedURLException {
+		_peer.setUploadUrl(url);
+	}
+	
+	public void setDownloadUrl(int mode) throws MalformedURLException {
+		_peer.setDownloadUrl(mode);
 	}
 
-	public void sendBundleList() {
-		_peer.sendBundleList();
+	public void setUploadUrl(int mode) throws MalformedURLException {
+		_peer.setUploadUrl(mode);
+	}
+	
+	
+	public String getDownloadUrl(int mode)  {
+		return _peer.getDownloadUrl(mode);
+	}
+
+	public String getUploadUrl(int mode)  {
+		return _peer.getUploadUrl(mode);
+	}
+
+
+	public void sendBundleList(int mode) {
+		_peer.sendBundleList(mode);
 	}
 
 	public void setPublicMode() throws MalformedURLException {
@@ -93,7 +111,7 @@ public class Activator implements BundleActivator, Management {
 		_peer.setPrivateMode();
 	}
 
-	public String getCurrentMode() {
+	public int getCurrentMode() {
 		return _peer.getCurrentMode();
 	}
 

@@ -61,7 +61,7 @@ public class ManagementImpl implements Management {
 
 	private ServiceRegistration _sr;
 
-	private String currentMode;
+	private int currentMode;
 
 	/**
 	 * @param context
@@ -193,8 +193,8 @@ public class ManagementImpl implements Management {
 
 		// -- set default download & upload URL
 		try {
-			setDownloadURL(null);
-			setUploadURL(null);
+			setDownloadUrl(null);
+			setUploadUrl(null);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -229,22 +229,30 @@ public class ManagementImpl implements Management {
 	private void checkMode() {
 		boolean lastModePrivate = System.getProperty(
 				LAST_UPDATE_IN_PRIVATE_ZONE_TAG, "false").equals("true");
-		if (lastModePrivate == false) {
+		if (lastModePrivate == true) {
 			// -- derniere mise a jour effectuee par WiFi (private) ; donc on
 			// tente a nouveau...
-			currentMode = "private";
+			currentMode = MODE_PRIVATE;
+			debug("Last update in private zone, retry (mode=private)");
 		} else {
 			// -- recuperation du mode de mise a jour par defaut. si rien est
 			// defini alors 'private'
-			currentMode = System.getProperty(UPDATE_MODE_TAG, "private");
+			String tmp = System.getProperty(UPDATE_MODE_TAG);
+			if (tmp == null) {
+				currentMode = MODE_PRIVATE;
+				debug("default mode not set : using private");
+			} else {
+				currentMode = tmp.equals("public") ? MODE_PUBLIC : MODE_PRIVATE;
+
+				debug("default mode is : " + currentMode);
+			}
 		}
 
 	}
 
-	private String getDefaultUploadUrl() {
+	public String getUploadUrl(int mode) {
 		String url = null;
-		checkMode();
-		if (currentMode.equals("public")) {
+		if (mode == MODE_PUBLIC) {
 			url = System.getProperty(PUBLIC_UPLOAD_URL_TAG,
 					DEFAULT_PUBLIC_UPLOAD_URL);
 		} else {
@@ -255,11 +263,16 @@ public class ManagementImpl implements Management {
 		return url;
 	}
 
-	private String getDefaultDownloadUrl() {
+	private String getDefaultUploadUrl() {
+		checkMode();
+		String url = getUploadUrl(currentMode);
+		return url;
+	}
+
+	public String getDownloadUrl(int mode) {
 
 		String url = null;
-		checkMode();
-		if (currentMode.equals("public")) {
+		if (mode == MODE_PUBLIC) {
 			url = System.getProperty(PUBLIC_DOWNLOAD_URL_TAG,
 					DEFAULT_PUBLIC_DOWNLOAD_URL);
 		} else {
@@ -269,7 +282,15 @@ public class ManagementImpl implements Management {
 		return url;
 	}
 
-	public void setUploadURL(URL url) throws MalformedURLException {
+	private String getDefaultDownloadUrl() {
+
+		checkMode();
+		String url = getDownloadUrl(currentMode);
+
+		return url;
+	}
+
+	public void setUploadUrl(URL url) throws MalformedURLException {
 		if (url == null) {
 			String defaultUrl = getDefaultUploadUrl();
 			try {
@@ -280,11 +301,18 @@ public class ManagementImpl implements Management {
 				_uploadURL = null;
 			}
 		} else {
+			currentMode = MODE_USER;
 			_uploadURL = url;
 		}
 	}
+	
 
-	public void setDownloadURL(URL url) throws MalformedURLException {
+	public void setUploadUrl(int mode) throws MalformedURLException {
+		String defaultUrl = getUploadUrl(mode);
+		_uploadURL = new URL(defaultUrl);
+	}
+
+	public void setDownloadUrl(URL url) throws MalformedURLException {
 		if (url == null) {
 			String defaultUrl = getDefaultDownloadUrl();
 			try {
@@ -294,17 +322,16 @@ public class ManagementImpl implements Management {
 				_downloadURL = null;
 			}
 		} else {
+			currentMode = MODE_USER;
 			_downloadURL = url;
 		}
 	}
 
-	public URL getUploadURL() {
-		return _uploadURL;
+	public void setDownloadUrl(int mode) throws MalformedURLException {
+		String defaultUrl = getDownloadUrl(mode);
+		_downloadURL = new URL(defaultUrl);
 	}
 
-	public URL getDownloadURL() {
-		return _downloadURL;
-	}
 
 	public void synchronize(PrintWriter out) throws Exception {
 		synchronize(true, out);
@@ -404,16 +431,16 @@ public class ManagementImpl implements Management {
 
 		public void run() {
 
-			if (getDownloadURL() == null) {
+			if (getCurrentDownloadUrl() == null) {
 				_out.println("Download URL is null : update operation is cancelled.");
 				return;
 			}
 			checkMode();
 			System.out.println("Update mode  : " + currentMode + " ("
-					+ getDownloadURL() + ")");
+					+ getCurrentDownloadUrl() + ")");
 			_out.println("Update mode  : " + currentMode);
-			_out.println("Download url : " + getDownloadURL());
-			_out.println("Upload url   : " + getUploadURL());
+			_out.println("Download url : " + getCurrentDownloadUrl());
+			_out.println("Upload url   : " + getCurrentUploadUrl());
 			_out.flush();
 
 			boolean success = true;
@@ -652,12 +679,18 @@ public class ManagementImpl implements Management {
 		return bundleList;
 	}
 
-	public void sendBundleList() {
+	public void sendBundleList(int mode) {
 
 		BundleList bundleList = createFromFwk();
 		Enumeration enumeration = bundleList.elements();
 		String filepattern = "$e_$v_$i_" + REPORT_FILENAME;
-		String path = getUploadURL().toString();
+
+		String path;
+		if (mode == MODE_DEFAULT) {
+			path = getDefaultUploadUrl();
+		} else {
+			path = getUploadUrl(mode);
+		}
 
 		String surl = Utils.formatURL(path, false);
 		String filename = Utils.formatURL(filepattern, false);
@@ -696,19 +729,27 @@ public class ManagementImpl implements Management {
 	}
 
 	public void setPublicMode() throws MalformedURLException {
-		System.getProperty(UPDATE_MODE_TAG, "public");
-		setDownloadURL(null);
-		setUploadURL(null);
+		System.setProperty(UPDATE_MODE_TAG, "public");
+		setDownloadUrl(null);
+		setUploadUrl(null);
 	}
 
 	public void setPrivateMode() throws MalformedURLException {
-		System.getProperty(UPDATE_MODE_TAG, "private");
-		setDownloadURL(null);
-		setUploadURL(null);
+		System.setProperty(UPDATE_MODE_TAG, "private");
+		setDownloadUrl(null);
+		setUploadUrl(null);
 	}
 
-	public String getCurrentMode() {
+	public int getCurrentMode() {
 		return currentMode;
+	}
+
+	public URL getCurrentUploadUrl() {
+		return _downloadURL;
+	}
+
+	public URL getCurrentDownloadUrl() {
+		return _uploadURL;
 	}
 
 }

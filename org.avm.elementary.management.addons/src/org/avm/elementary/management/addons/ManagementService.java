@@ -4,7 +4,6 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.avm.elementary.management.core.Management;
 import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.service.startlevel.StartLevel;
 
@@ -20,29 +19,33 @@ public interface ManagementService {
 
 	public PackageAdmin getPackageAdminService();
 
-	public void setDownloadURL(URL url) throws MalformedURLException, Exception;
+	public void setDownloadUrl(URL url) throws MalformedURLException, Exception;
 
-	public void setUploadURL(URL url) throws MalformedURLException, Exception;
+	public void setUploadUrl(URL url) throws MalformedURLException, Exception;
 	
 	public void setPublicMode() throws MalformedURLException, Exception;
 
 	public void setPrivateMode() throws MalformedURLException, Exception;
 
-	public URL getDownloadURL() throws Exception;
+	public URL getDownloadUrl(int mode) throws Exception;
 
-	public URL getUploadURL() throws Exception;
+	public URL getUploadUrl(int mode) throws Exception;
 
 	public void runScript(URL url);
 
-	public void synchronize(PrintWriter out) throws Exception;
+	public void synchronize(PrintWriter out, int mode) throws Exception;
 
 	public void shutdown(PrintWriter out, int waittime, int exitCode) throws Exception;
 
 	public void send(String result);
 	
-	public boolean isPrivateMode();
-	
 	public void setPrivateMode(boolean b)throws MalformedURLException;
+
+	public URL getCurrentDownloadUrl()throws Exception;
+
+	public URL getCurrentUploadUrl()throws Exception;
+	
+	public int getCurrentMode() throws Exception;
 	
 	
 	

@@ -51,7 +51,7 @@ class UpdateCommand extends AbstractCommand {
 				}
 				else{
 					try {
-						bundleURL = management.getDownloadURL().toString();
+						bundleURL = management.getCurrentDownloadUrl().toString();
 					} catch (Exception e) {
 						out.println("Error :" + e.getMessage());
 						break;

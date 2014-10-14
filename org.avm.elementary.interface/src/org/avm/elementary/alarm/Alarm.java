@@ -77,7 +77,7 @@ public class Alarm {
 
 	public String toString() {
 		return "index: "+index+ ", order: " + order +", status: " + status + ", name: " + name + ", date: "
-				+ date +  " type:"+type + " key: " + key + " readonly: " + readonly;
+				+ date +  " type:"+type + " key: " + key + " readonly: " + readonly+ " visible: " + visible;
 	}
 	
 	

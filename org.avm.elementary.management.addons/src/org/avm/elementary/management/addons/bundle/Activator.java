@@ -187,12 +187,12 @@ public class Activator extends AbstractActivator implements
 		_peer.execute(commandName, params, out);
 	}
 
-	public void synchronize(PrintWriter out) throws Exception {
-		_peer.synchronize(out);
+	public void synchronize(PrintWriter out, int mode) throws Exception {
+		_peer.synchronize(out, mode);
 	}
 
-	public void synchronizeData() throws Exception {
-		_peer.synchronizeData();
+	public void synchronizeData(int mode) throws Exception {
+		_peer.synchronizeData(mode );
 	}
 
 	public Management getManagementService() {
@@ -219,20 +219,20 @@ public class Activator extends AbstractActivator implements
 		return _peer.getPackageAdminService();
 	}
 
-	public void setDownloadURL(URL url) throws Exception {
-		_peer.setDownloadURL(url);
+	public void setDownloadUrl(URL url) throws Exception {
+		_peer.setDownloadUrl(url);
 	}
 
-	public void setUploadURL(URL url) throws Exception {
-		_peer.setUploadURL(url);
+	public void setUploadUrl(URL url) throws Exception {
+		_peer.setUploadUrl(url);
 	}
 
-	public URL getDownloadURL() throws Exception{
-		return _peer.getDownloadURL();
+	public URL getDownloadUrl(int mode) throws Exception{
+		return _peer.getDownloadUrl(mode);
 	}
 
-	public URL getUploadURL()throws Exception {
-		return _peer.getUploadURL();
+	public URL getUploadUrl(int mode)throws Exception {
+		return _peer.getUploadUrl(mode);
 	}
 
 	public void runScript(URL url) {
@@ -261,5 +261,17 @@ public class Activator extends AbstractActivator implements
 
 	public void setPrivateMode() throws Exception {
 		_peer.setPrivateMode();
+	}
+
+	public URL getCurrentDownloadUrl() throws Exception {
+		return _peer.getCurrentDownloadUrl();
+	}
+
+	public URL getCurrentUploadUrl() throws Exception {
+		return _peer.getCurrentUploadUrl();
+	}
+
+	public int getCurrentMode() throws Exception {
+		return _peer.getCurrentMode();
 	}
 }

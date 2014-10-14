@@ -67,7 +67,7 @@ class UploadCommand extends AbstractCommand {
 			
 			trace(out, "remove files:" + remove);
 			trace(out, "force copy:" + force);
-			URL u = management.getUploadURL();
+			URL u = management.getCurrentUploadUrl();
 			if (u == null){
 				throw new Exception("Upload URL not set.");
 			}

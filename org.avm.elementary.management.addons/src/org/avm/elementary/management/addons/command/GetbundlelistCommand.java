@@ -67,7 +67,7 @@ class GetbundlelistCommand extends AbstractCommand {
 	}
 	
 	private String getBundleListURL(String filename, boolean useDefault, ManagementService management) throws Exception {
-		String strurl = management.getDownloadURL() + "/" + filename;
+		String strurl = management.getCurrentDownloadUrl() + "/" + filename;
 		strurl = Utils.formatURL(strurl, useDefault);
 		return strurl;
 	}

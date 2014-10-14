@@ -22,6 +22,7 @@ import org.avm.elementary.management.addons.CommandException;
 import org.avm.elementary.management.addons.ManagementImpl;
 import org.avm.elementary.management.addons.ManagementPropertyFile;
 import org.avm.elementary.management.addons.ManagementService;
+import org.avm.elementary.management.core.Management;
 import org.avm.elementary.management.core.utils.Terminal;
 import org.avm.elementary.management.core.utils.Utils;
 import org.knopflerfish.service.console.Session;
@@ -198,11 +199,21 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		}
 
 		try {
+			int currentMode=_peer.getCurrentMode();
+			String m="";
+			if (currentMode == Management.MODE_USER){
+				m="*user*";
+			}
+			else{
+				m=(currentMode == Management.MODE_PRIVATE ? "private"
+						: "public");
+			}
+			
 			out.println("current mode :"
-					+ (_peer.isPrivateMode() ? "private" : "public")
-					+ " (at boot: " + configuration.getUpdateMode() + ")");
-			out.println("current download:" + _peer.getDownloadURL());
-			out.println("current upload:" + _peer.getUploadURL());
+					+ m + " (at boot: "
+					+ configuration.getUpdateMode() + ")");
+			out.println("current download:" + _peer.getCurrentDownloadUrl());
+			out.println("current upload:" + _peer.getCurrentUploadUrl());
 		} catch (Exception e) {
 			out.println("Error :" + e.getMessage());
 		}
@@ -292,9 +303,9 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		if (downloadURL != null) {
 			try {
 				if (downloadURL.equals("default")) {
-					_peer.setDownloadURL(null);
+					_peer.setDownloadUrl(null);
 				} else {
-					_peer.setDownloadURL(new URL(downloadURL));
+					_peer.setDownloadUrl(new URL(downloadURL));
 				}
 
 			} catch (Exception e) {
@@ -304,9 +315,9 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		if (uploadURL != null) {
 			try {
 				if (uploadURL.equals("default")) {
-					_peer.setUploadURL(null);
+					_peer.setUploadUrl(null);
 				} else {
-					_peer.setUploadURL(new URL(uploadURL));
+					_peer.setUploadUrl(new URL(uploadURL));
 				}
 
 			} catch (Exception e) {
@@ -314,8 +325,8 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			}
 		}
 		try {
-			out.println("download:" + _peer.getDownloadURL());
-			out.println("upload:" + _peer.getUploadURL());
+			out.println("download:" + _peer.getCurrentDownloadUrl());
+			out.println("upload:" + _peer.getCurrentUploadUrl());
 		} catch (Exception e) {
 			out.println("Error :" + e.getMessage());
 		}
@@ -329,61 +340,75 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 	public int cmdSynchronize(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
-		String mode = ((String) opts.get("mode"));
+		String smode = ((String) opts.get("mode"));
 
-		if (mode != null) {
-			if (mode.equals("default")) {
+		if (smode != null) {
+			if (smode.equals("default")) {
 				ManagementPropertyFile configuration = ManagementPropertyFile
 						.getInstance();
-				mode = configuration.getUpdateMode();
-				out.println("Use default ("+mode+") URLs");
+				smode = configuration.getUpdateMode();
+				out.println("Use default (" + smode + ") URLs");
 			}
-			try {
-				if (mode.equals("public")) {
-					_peer.setPublicMode();
-				} else {
-					_peer.setPrivateMode();
-				}
-			} catch (Exception e) {
-				out.println("Error :" + e.getMessage());
-			}
+
 		}
 
-		synchronize(out);
+		int mode;
+		if (smode == null) {
+			try {
+				mode = ((ManagementImpl) _peer).getCurrentMode();
+				synchronize(out, mode);
+
+			} catch (Exception e) {
+				out.print(e.getMessage());
+			}
+		} else {
+			mode = smode.equals("public") ? Management.MODE_PUBLIC
+					: Management.MODE_PRIVATE;
+			synchronize(out, mode);
+		}
+
 		return 0;
 	}
 
 	// -- AUTOUPDATE (DEPRECATED!)
-	public final static String USAGE_AUTOUPDATE = "";
+	public final static String USAGE_AUTOUPDATE = "[<mode>]";
 
 	public final static String[] HELP_AUTOUPDATE = new String[] { "Autoupdate all bundles" };
 
 	public int cmdAutoupdate(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
 		out.println("OK, but 'autoupdate' will be deprecated - use 'synchronize'");
-		synchronize(out);
+		cmdSynchronize(opts, in, out, session);
 		return 0;
 	}
 
-	private void synchronize(PrintWriter out) {
+	private void synchronize(PrintWriter out, int mode) {
 		try {
 			// ((ManagementImpl) _peer).updateUrls();
-			((ManagementImpl) _peer).synchronize(out);
+			((ManagementImpl) _peer).synchronize(out, mode);
 		} catch (Exception e) {
 			out.println(e);
 		}
 	}
 
 	// -- SENDBUNDLELIST
-	public final static String USAGE_SENDBUNDLELIST = "";
+	public final static String USAGE_SENDBUNDLELIST = "[<mode>]";
 
-	public final static String[] HELP_SENDBUNDLELIST = new String[] { "Send bundle list bundles" };
+	public final static String[] HELP_SENDBUNDLELIST = new String[] { "Send bundle list bundles (mode=public|private)" };
 
 	public int cmdSendbundlelist(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
 		out.println("Sending bundle list");
 		try {
-			((ManagementImpl) _peer).sendBundleList();
+			String smode = ((String) opts.get("mode"));
+			int mode;
+			if (smode == null) {
+				mode = ((ManagementImpl) _peer).getCurrentMode();
+			} else {
+				mode = smode.equals("public") ? Management.MODE_PUBLIC
+						: Management.MODE_PRIVATE;
+			}
+			((ManagementImpl) _peer).sendBundleList(mode);
 		} catch (Exception e) {
 			out.println("Error :" + e.getMessage());
 		}
@@ -998,8 +1023,8 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	private boolean updateIdent(String terminalName, String terminalOwner)
 			throws Exception {
 		try {
-			String surl = Utils.formatURL(_peer.getDownloadURL().toString(),
-					false);
+			String surl = Utils.formatURL(_peer.getCurrentDownloadUrl()
+					.toString(), false);
 			_log.info("update ident : url=" + surl);
 			URL url = new URL(surl);
 

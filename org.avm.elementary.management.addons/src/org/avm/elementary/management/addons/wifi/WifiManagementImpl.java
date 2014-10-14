@@ -3,9 +3,8 @@ package org.avm.elementary.management.addons.wifi;
 import java.io.PrintWriter;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
-import org.avm.elementary.management.addons.ManagementImpl;
 import org.avm.elementary.management.addons.ManagementService;
+import org.avm.elementary.management.core.Management;
 import org.osgi.util.measurement.State;
 
 /**
@@ -38,9 +37,8 @@ public class WifiManagementImpl implements WifiManagement {
 
 		try {
 			_management.setPrivateMode(isconnected);
-			((ManagementImpl) _management).updateUrls();
 			if (isconnected) {
-				_management.synchronize(new PrintWriter(System.out));
+				_management.synchronize(new PrintWriter(System.out), Management.MODE_PRIVATE);
 			}
 		} catch (Exception e) {
 			_logger.error("Wifi/management synchronization failed.", e);

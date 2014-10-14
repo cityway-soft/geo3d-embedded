@@ -36,9 +36,19 @@ public interface Management {
 	String LAST_UPDATE_IN_PRIVATE_ZONE_TAG = "org.avm.last-update-in-private-zone";
 
 
-	String MODE_PUBLIC = "public";
+	String MODE_PUBLIC_TAG = "public";
 
-	String MODE_PRIVATE = "private";
+	String MODE_PRIVATE_TAG = "private";
+	
+	String MODE_USER_TAG = "user";
+	
+	int MODE_DEFAULT=1000;
+	
+	int MODE_PUBLIC=0;
+	
+	int MODE_PRIVATE=1;
+	
+	int MODE_USER=2;
 
 	// String DEFAULT_DOWNLOAD_URL_TAG = "org.avm.download.default.url";
 	// String DEFAULT_UPLOAD_URL_TAG = "org.avm.upload.default.url";
@@ -56,23 +66,31 @@ public interface Management {
 
 	public void synchronize(PrintWriter out) throws Exception;
 
-	public void sendBundleList();
+	public void sendBundleList(int mode);
 
 	public void setPublicMode() throws MalformedURLException;
 
 	public void setPrivateMode() throws MalformedURLException;
 	
-	public String getCurrentMode();
+	public int getCurrentMode();
 
 	public void shutdown(PrintWriter out, int waittime, int exitCode);
 
-	public void setDownloadURL(URL url) throws MalformedURLException;
+	public void setDownloadUrl(URL url) throws MalformedURLException;
 
-	public void setUploadURL(URL url) throws MalformedURLException;
+	public void setUploadUrl(URL url) throws MalformedURLException;
+	
+	public void setDownloadUrl(int mode) throws MalformedURLException;
 
-	public URL getUploadURL();
+	public void setUploadUrl(int mode) throws MalformedURLException;
 
-	public URL getDownloadURL();
+	public String getUploadUrl(int mode);
+
+	public String getDownloadUrl(int mode);
+	
+	public URL getCurrentUploadUrl();
+
+	public URL getCurrentDownloadUrl();
 
 	public StartLevel getStartLevelService();
 

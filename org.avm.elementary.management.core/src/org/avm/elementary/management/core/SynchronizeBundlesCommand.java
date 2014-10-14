@@ -385,7 +385,7 @@ class SynchronizeBundlesCommand implements BundleListener {
 			((ManagementImpl) _management).refresh(null, _out);
 
 			if (changed) {
-				_management.sendBundleList();
+				_management.sendBundleList(_management.getCurrentMode());
 			}
 
 			if (_fwkNeedRestart) {
@@ -534,8 +534,8 @@ class SynchronizeBundlesCommand implements BundleListener {
 	private String getBundleListURL(String filename, boolean useDefault) {
 		StringBuffer buffer = new StringBuffer();
 
-		buffer.append(_management.getDownloadURL() + "/" + filename);
-		if (_management.getDownloadURL().getProtocol().startsWith("http")) {
+		buffer.append(_management.getCurrentDownloadUrl() + "/" + filename);
+		if (_management.getCurrentDownloadUrl().getProtocol().startsWith("http")) {
 			buffer.append("?mode=" + _management.getCurrentMode());
 		}
 
@@ -737,7 +737,7 @@ class SynchronizeBundlesCommand implements BundleListener {
 
 	private URLConnection getRemoteFileURLConnection(String filename)
 			throws MalformedURLException {
-		String downloadURL = _management.getDownloadURL().toString();
+		String downloadURL = _management.getCurrentDownloadUrl().toString();
 
 		StringBuffer buf = new StringBuffer();
 		buf.append(downloadURL);

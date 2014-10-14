@@ -64,7 +64,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		return 0;
 	}
 
-	// Add
+	// Set
 	public final static String USAGE_SET = "-i #index# [-n #name#] [-s #source#]  [-u #notify-up#] [-d #notify-down#] [-a #acknowledge#] [-t #type#] [-r #readonly#] [-v #visibility#]";
 
 	public final static String[] HELP_SET = new String[] { "Set values to alarm index", };

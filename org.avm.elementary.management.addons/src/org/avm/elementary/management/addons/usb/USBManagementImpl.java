@@ -40,16 +40,16 @@ public class USBManagementImpl implements USBManagement {
 				String mount = getMountPoint(state);
 
 				try {
-					_management.setDownloadURL(new URL("file:////" + mount+ "/avm/$i/bundles"));
-					_management.setUploadURL(new URL("file:////" + mount	+ "/avm/upload"));
+					_management.setDownloadUrl(new URL("file:////" + mount+ "/avm/$i/bundles"));
+					_management.setUploadUrl(new URL("file:////" + mount	+ "/avm/upload"));
 					execute(mount);
 				} catch (Exception e) {
 					_logger.error("Usb/management synchronization failed.", e);
 				}
 			} else {
 				try {
-					_management.setDownloadURL(null);
-					_management.setUploadURL(null);
+					_management.setDownloadUrl(null);
+					_management.setUploadUrl(null);
 				} catch (Exception e) {
 					_logger.error("Usb/management synchronization failed.", e);
 				}
@@ -58,8 +58,8 @@ public class USBManagementImpl implements USBManagement {
 		} catch (Throwable t) {
 			_logger.error("notify : " + t.getMessage(), t);
 			try {
-				_management.setDownloadURL(null);
-				_management.setUploadURL(null);
+				_management.setDownloadUrl(null);
+				_management.setUploadUrl(null);
 			} catch (Exception e) {
 				_logger.error("Usb/management synchronization failed.", e);
 			}
