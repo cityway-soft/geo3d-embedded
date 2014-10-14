@@ -745,11 +745,11 @@ public class ManagementImpl implements Management {
 	}
 
 	public URL getCurrentUploadUrl() {
-		return _downloadURL;
+		return _uploadURL;
 	}
 
 	public URL getCurrentDownloadUrl() {
-		return _uploadURL;
+		return _downloadURL ;
 	}
 
 }
