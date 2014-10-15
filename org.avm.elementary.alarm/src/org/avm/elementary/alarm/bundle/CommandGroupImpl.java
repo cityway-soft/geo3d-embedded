@@ -31,7 +31,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	}
 
 	// Add
-	public final static String USAGE_ADD = "-i #index# -n #name# -s #source#  -u #notify-up# -d #notify-down# -a #acknowledge# -t #type# -r #readonly#";
+	public final static String USAGE_ADD = "-i #index# -n #name# -s #source#  -u #notify-up# -d #notify-down# -a #acknowledge# -t #type# -r #readonly# -v #visibility#";
 
 	public final static String[] HELP_ADD = new String[] { "Add alarm index", };
 
@@ -46,6 +46,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		Boolean acknowledge = Boolean.valueOf((String) opts.get("-a"));
 		Boolean readonly = Boolean.valueOf((String) opts.get("-r"));
 		Integer type = Integer.valueOf((String) opts.get("-t"));
+		Boolean visibility = Boolean.valueOf((String) opts.get("-v"));
 
 		Properties p = new Properties();
 		p.put(Alarm.INDEX, index.toString());
@@ -56,6 +57,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		p.put(Alarm.ACKNOWLEDGE, acknowledge.toString());
 		p.put(Alarm.TYPE, type.toString());
 		p.put(Alarm.READONLY, readonly.toString());
+		p.put(Alarm.VISIBLE, visibility.toString());
 
 		((AlarmServiceConfig) _config).add(p);
 
@@ -65,11 +67,11 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	}
 
 	// Set
-	public final static String USAGE_SET = "-i #index# [-n #name#] [-s #source#]  [-u #notify-up#] [-d #notify-down#] [-a #acknowledge#] [-t #type#] [-r #readonly#] [-v #visibility#]";
+	public final static String USAGE_SETPARAMETER = "-i #index# [-n #name#] [-s #source#]  [-u #notify-up#] [-d #notify-down#] [-a #acknowledge#] [-t #type#] [-r #readonly#] [-v #visibility#]";
 
-	public final static String[] HELP_SET = new String[] { "Set values to alarm index", };
+	public final static String[] HELP_SETPARAMETER = new String[] { "Set values to alarm index", };
 
-	public int cmdSet(Dictionary opts, Reader in, PrintWriter out,
+	public int cmdSetparameter(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
 		String temp;
 		Integer index = Integer.valueOf((String) opts.get("-i"));

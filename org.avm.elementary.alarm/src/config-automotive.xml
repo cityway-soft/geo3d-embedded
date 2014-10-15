@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="Alarm" mode="new">
+<property name="service.pid">
+<value type="String">Alarm</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">initial@reference:file:../../DLA/projets/EN-COURS/AVM/common/dev/workspace/avm-v1/org.avm.elementary.alarm/</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">19</value>
+</property>
+<property name="0">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		acknowledge=false
+		index=0
+		order=0
+		notify-up=true
+		notify-down=true
+		name=Agression
+		type=1
+		key=agression
+	</value>
+</property>
+<property name="1">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		acknowledge=false
+		index=1
+		order=1
+		notify-up=true
+		notify-down=true
+		name=Encha\u00EEnement
+		type=1
+		key=enchainement
+		visible=false
+	</value>
+</property>
+<property name="2">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		acknowledge=false
+		index=2
+		order=2
+		readonly=true
+		notify-up=true
+		notify-down=true
+		name=D\u00E9viation
+		type=1
+		key=deviation
+	</value>
+</property>
+<property name="3">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		acknowledge=false
+		index=3
+		order=3
+		notify-up=true
+		notify-down=true
+		name=Immobilisation
+		type=1
+		key=immobilisation
+		visible=false
+	</value>
+</property>
+<property name="4">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		acknowledge=false
+		index=4
+		order=4
+		notify-up=true
+		notify-down=true
+		name=Fraude
+		type=1
+		key=fraude
+	</value>
+</property>
+<property name="5">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		acknowledge=false
+		index=5
+		order=5
+		notify-up=true
+		notify-down=true
+		name=Surcharge
+		type=1
+		key=surcharge
+	</value>
+</property>
+<property name="6">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		acknowledge=false
+		index=6
+		order=6
+		notify-up=true
+		notify-down=true
+		name=Exploitation
+		type=1
+		key=exploitation
+		visible=false
+	</value>
+</property>
+<property name="7">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		acknowledge=false
+		index=7
+		order=7
+		notify-up=true
+		notify-down=true
+		name=Defaut Prise Poste
+		type=1
+		key=defmat
+		visible=false
+	</value>
+</property>
+<property name="16">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		acknowledge=false
+		index=16
+		order=16
+		notify-up=true
+		notify-down=true
+		name=TFT 1
+		type=0
+		key=tft1
+		visible=false
+	</value>
+</property>
+<property name="17">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		acknowledge=false
+		index=17
+		order=17
+		notify-up=true
+		notify-down=true
+		name=TFT 2
+		type=0
+		key=tft2
+		visible=false
+	</value>
+</property>
+<property name="18">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		acknowledge=false
+		index=18
+		order=18
+		notify-up=true
+		notify-down=true
+		name=Girouette
+		type=0
+		key=girouette
+		visible=false
+	</value>
+</property>
+<property name="19">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		acknowledge=false
+		index=19
+		order=19
+		notify-up=true
+		notify-down=true
+		name=Sonorisation
+		type=0
+		key=sonorisation
+		visible=false
+	</value>
+</property>
+<property name="20">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		acknowledge=false
+		index=20
+		order=20
+		readonly=true
+		notify-up=false
+		notify-down=false
+		name=Liaison PCC
+		type=0
+		key=server-link
+	</value>
+</property>
+<property name="21">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		acknowledge=false
+		index=21
+		order=21
+		readonly=true
+		notify-up=false
+		notify-down=false
+		name=Billettique
+		type=0
+		key=billettique
+		visible=false
+	</value>
+</property>
+<property name="22">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		acknowledge=false
+		index=22
+		order=22
+		readonly=false
+		notify-up=true
+		notify-down=true
+		name=Afficheur
+		type=0
+		key=afficheur
+		visible=false
+	</value>
+</property>
+<property name="23">
+	<value type="String">#Fri Oct 06 11:32:22 CEST 2006
+		acknowledge=false
+		index=23
+		order=23
+		readonly=false
+		notify-up=true
+		notify-down=true
+		name=Comptage
+		type=0
+		key=comptage
+		visible=false
+	</value>
+</property>
+</configuration>
+</cm_data>
