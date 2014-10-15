@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Dictionary;
@@ -201,7 +202,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		try {
 			int currentMode=_peer.getCurrentMode();
 			String m="";
-			if (currentMode == Management.MODE_USER){
+			if (currentMode == Management.MODE_BYUSER){
 				m="*user*";
 			}
 			else{
@@ -356,15 +357,28 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		if (smode == null) {
 			try {
 				mode = ((ManagementImpl) _peer).getCurrentMode();
-				synchronize(out, mode);
+				synchronize(out, false);
 
 			} catch (Exception e) {
 				out.print(e.getMessage());
 			}
 		} else {
-			mode = smode.equals("public") ? Management.MODE_PUBLIC
-					: Management.MODE_PRIVATE;
-			synchronize(out, mode);
+			if (smode.equals("public")){
+				mode=Management.MODE_PUBLIC;
+			}else if (smode.equals("private")){
+				mode=Management.MODE_PRIVATE;
+			}
+			else{
+				mode=Management.MODE_BYUSER;
+			}
+			try {
+				((ManagementImpl)_peer).setCurrentMode(mode);
+			} catch (MalformedURLException e) {
+				out.print(e.getMessage());
+			} catch (Exception e) {
+				out.print(e.getMessage());
+			}
+			synchronize(out, true);
 		}
 
 		return 0;
@@ -382,10 +396,10 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		return 0;
 	}
 
-	private void synchronize(PrintWriter out, int mode) {
+	private void synchronize(PrintWriter out, boolean force) {
 		try {
 			// ((ManagementImpl) _peer).updateUrls();
-			((ManagementImpl) _peer).synchronize(out, mode);
+			((ManagementImpl) _peer).synchronize(out, force);
 		} catch (Exception e) {
 			out.println(e);
 		}

@@ -55,8 +55,6 @@ public class ManagementImpl implements ManageableService, ManagementService,
 
 	private Messenger _messenger;
 
-	private Management _managementService;
-
 	private ServiceReference managementServiceReference;
 
 	public ManagementImpl() {
@@ -76,8 +74,7 @@ public class ManagementImpl implements ManageableService, ManagementService,
 				while (count < MAX_TRY && uploadDone == false
 						&& !_disableUpload) {
 					try {
-						uploadDone = synchronizeData(getManagementService()
-								.getCurrentMode());
+						uploadDone = synchronizeData();
 					} catch (Exception e) {
 						_log.error(e);
 
@@ -386,24 +383,24 @@ public class ManagementImpl implements ManageableService, ManagementService,
 		_syslog.disableSyslog();
 	}
 
-	public void synchronize(PrintWriter out, int mode) throws Exception {
+	public void synchronize(PrintWriter out, boolean force) throws Exception {
 		_log.debug("Synchronization...");
-		_log.debug("-DownloadURL=" + getDownloadUrl(mode));
-		_log.debug("-UploadURL  =" + getUploadUrl(mode));
+		_log.debug("-DownloadURL=" + getCurrentDownloadUrl());
+		_log.debug("-UploadURL  =" + getCurrentUploadUrl());
 
 		if (getManagementService() != null) {
 			_log.debug("Begin sync bundles...");
-			getManagementService().synchronize(out);
+			getManagementService().synchronize(out, force);
 			_log.debug("End sync bundles...");
 		} else {
 			throw new Exception("Management service not available (null?)");
 		}
-		synchronizeData(mode);
+		synchronizeData();
 	}
 
-	public boolean synchronizeData(int mode) throws Exception {
+	public boolean synchronizeData() throws Exception {
 		boolean result = false;
-		if (getUploadUrl(mode) == null) {
+		if (getCurrentUploadUrl() == null) {
 			_log.debug("Cannot upload data : getUploadURL() == null");
 			return false;
 		}
@@ -541,16 +538,16 @@ public class ManagementImpl implements ManageableService, ManagementService,
 		}
 	}
 
-	public boolean isPrivateMode() {
-		return _managementService.getCurrentMode() == Management.MODE_PRIVATE;
+	public boolean isPrivateMode() throws Exception {
+		return getManagementService().getCurrentMode() == Management.MODE_PRIVATE;
 	}
 
-	public void setPrivateMode(boolean b) {
+	public void setPrivateMode(boolean b) throws Exception {
 		try {
 			if (b) {
-				_managementService.setPrivateMode();
+				getManagementService().setCurrentMode(Management.MODE_PRIVATE);
 			} else {
-				_managementService.setPublicMode();
+				getManagementService().setCurrentMode(Management.MODE_PUBLIC);
 			}
 		} catch (MalformedURLException e) {
 			_log.error(e); //$NON-NLS-1$
@@ -565,23 +562,13 @@ public class ManagementImpl implements ManageableService, ManagementService,
 	}
 
 	public void setPublicMode() throws Exception {
-		Management managementService = getManagementService();
 		setPrivateMode(false);
-		if (managementService != null) {
-			managementService.setPublicMode();
-		} else {
-			_log.error("Management service is null !");
-		}
+
 	}
 
 	public void setPrivateMode() throws Exception {
-		Management managementService = getManagementService();
 		setPrivateMode(true);
-		if (managementService != null) {
-			managementService.setPrivateMode();
-		} else {
-			_log.error("Management service is null !");
-		}
+
 	}
 
 	public int getCurrentMode() throws Exception {
@@ -594,6 +581,11 @@ public class ManagementImpl implements ManageableService, ManagementService,
 
 	public URL getCurrentUploadUrl() throws Exception {
 		return getManagementService().getCurrentUploadUrl();
+	}
+
+	public void setCurrentMode(int mode) throws MalformedURLException,
+			Exception {
+		getManagementService().setCurrentMode(mode);
 	}
 
 }

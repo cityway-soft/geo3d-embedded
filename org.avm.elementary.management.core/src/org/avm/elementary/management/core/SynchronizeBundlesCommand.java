@@ -162,6 +162,9 @@ class SynchronizeBundlesCommand implements BundleListener {
 
 					move(md5file, current_md5file);
 					move(jarfile, current_jarfile);
+					File newfile = new File(destdir + "/" + Management.DEPLOYED);
+					FileOutputStream out = new FileOutputStream(newfile);
+					out.close();
 				} else {
 					println("Error: jar or md5 file empty");
 				}
@@ -239,7 +242,7 @@ class SynchronizeBundlesCommand implements BundleListener {
 					.getAbsoluteFile() + "/" + filename));
 
 			result = (genmd5 != null && md5.equals(genmd5));
-			System.out.println("genmd5=" + genmd5 + ", md5=" + md5 + "(check="
+			println("genmd5=" + genmd5 + ", md5=" + md5 + "(check="
 					+ result + ")");
 
 		} catch (FileNotFoundException e) {
@@ -295,6 +298,9 @@ class SynchronizeBundlesCommand implements BundleListener {
 				throw new IOException("Cannot get bundle.list from " + url1
 						+ " or " + url2);
 			}
+			
+			File managementDeployedFile = new File( System.getProperty("org.avm.home")	+ "/lib/" + Management.DEPLOYED);
+			boolean managementDeployedFileExist = managementDeployedFile.exists(); 
 
 			updateStartLevel(bundleList);
 			bundleList = getBundlesToUpdate(bundleList);
@@ -384,8 +390,13 @@ class SynchronizeBundlesCommand implements BundleListener {
 
 			((ManagementImpl) _management).refresh(null, _out);
 
-			if (changed) {
-				_management.sendBundleList(_management.getCurrentMode());
+			if (changed || managementDeployedFileExist) {
+				try {
+					_management.sendBundleList(_management.getCurrentMode());
+					managementDeployedFile.delete();
+				} catch (Exception e) {
+					println("ERR unable to send bundle list report");
+				}
 			}
 
 			if (_fwkNeedRestart) {
@@ -747,9 +758,9 @@ class SynchronizeBundlesCommand implements BundleListener {
 		}
 		buf.append(filename);
 
-		println("downloadURL : " + downloadURL);
-		println("Filename : " + filename);
-		println("buf : " + buf.toString());
+//		println("downloadURL : " + downloadURL);
+//		println("Filename : " + filename);
+//		println("buf : " + buf.toString());
 
 		String surl = Utils.formatURL(buf.toString(), false);
 		URL url = new URL(surl);

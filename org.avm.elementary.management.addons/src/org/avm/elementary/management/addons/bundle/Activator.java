@@ -2,7 +2,6 @@ package org.avm.elementary.management.addons.bundle;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 
@@ -25,8 +24,7 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.service.startlevel.StartLevel;
 
-public class Activator extends AbstractActivator implements
-		ManagementService {
+public class Activator extends AbstractActivator implements ManagementService {
 
 	static final String PID = ManagementService.class.getName();
 
@@ -187,12 +185,12 @@ public class Activator extends AbstractActivator implements
 		_peer.execute(commandName, params, out);
 	}
 
-	public void synchronize(PrintWriter out, int mode) throws Exception {
-		_peer.synchronize(out, mode);
+	public void synchronize(PrintWriter out, boolean force) throws Exception {
+		_peer.synchronize(out, force);
 	}
 
-	public void synchronizeData(int mode) throws Exception {
-		_peer.synchronizeData(mode );
+	public void synchronizeData() throws Exception {
+		_peer.synchronizeData();
 	}
 
 	public Management getManagementService() {
@@ -227,11 +225,11 @@ public class Activator extends AbstractActivator implements
 		_peer.setUploadUrl(url);
 	}
 
-	public URL getDownloadUrl(int mode) throws Exception{
+	public URL getDownloadUrl(int mode) throws Exception {
 		return _peer.getDownloadUrl(mode);
 	}
 
-	public URL getUploadUrl(int mode)throws Exception {
+	public URL getUploadUrl(int mode) throws Exception {
 		return _peer.getUploadUrl(mode);
 	}
 
@@ -239,7 +237,8 @@ public class Activator extends AbstractActivator implements
 		_peer.runScript(url);
 	}
 
-	public void shutdown(PrintWriter out, int waittime, int exitCode)throws Exception {
+	public void shutdown(PrintWriter out, int waittime, int exitCode)
+			throws Exception {
 		_peer.shutdown(out, waittime, exitCode);
 	}
 
@@ -247,11 +246,11 @@ public class Activator extends AbstractActivator implements
 		_peer.send(response);
 	}
 
-	public boolean isPrivateMode() {
+	public boolean isPrivateMode() throws Exception {
 		return _peer.isPrivateMode();
 	}
 
-	public void setPrivateMode(boolean b) throws MalformedURLException {
+	public void setPrivateMode(boolean b) throws Exception {
 		_peer.setPrivateMode(b);
 	}
 

@@ -61,6 +61,10 @@ public class Activator implements BundleActivator, Management {
 		_peer.shutdown(out, timeout, exitcode);
 	}
 
+	public void synchronize(PrintWriter p, boolean force) throws Exception {
+		_peer.synchronize(p, force);
+	}
+	
 	public void synchronize(PrintWriter p) throws Exception {
 		_peer.synchronize(p);
 	}
@@ -99,17 +103,15 @@ public class Activator implements BundleActivator, Management {
 	}
 
 
-	public void sendBundleList(int mode) {
+	public void sendBundleList(int mode) throws Exception {
 		_peer.sendBundleList(mode);
 	}
 
-	public void setPublicMode() throws MalformedURLException {
-		_peer.setPublicMode();
+	public void setCurrentMode(int mode) throws MalformedURLException {
+		_peer.setCurrentMode(mode);
 	}
 
-	public void setPrivateMode() throws MalformedURLException {
-		_peer.setPrivateMode();
-	}
+
 
 	public int getCurrentMode() {
 		return _peer.getCurrentMode();

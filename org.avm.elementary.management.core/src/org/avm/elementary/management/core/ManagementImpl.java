@@ -90,7 +90,7 @@ public class ManagementImpl implements Management {
 		debug("management core service " + _sr + " registered.");
 		debug("starting synchronize...");
 		try {
-			synchronize(update, new PrintWriter(System.out));
+			synchronize(update, new PrintWriter(System.out), false);
 			debug("synchronize done.");
 		} catch (Exception e) {
 			error("synchronize failed!");
@@ -252,13 +252,27 @@ public class ManagementImpl implements Management {
 
 	public String getUploadUrl(int mode) {
 		String url = null;
-		if (mode == MODE_PUBLIC) {
+		switch (mode) {
+
+		case MODE_PUBLIC: {
 			url = System.getProperty(PUBLIC_UPLOAD_URL_TAG,
 					DEFAULT_PUBLIC_UPLOAD_URL);
-		} else {
+		}
+			break;
+		case MODE_PRIVATE: {
 			url = System.getProperty(PRIVATE_UPLOAD_URL_TAG,
 					DEFAULT_PRIVATE_UPLOAD_URL);
 
+		}
+			break;
+		default: {
+			if (_uploadURL != null) {
+				url = _uploadURL.toString();
+			} else {
+				url = "";
+			}
+		}
+			break;
 		}
 		return url;
 	}
@@ -272,12 +286,24 @@ public class ManagementImpl implements Management {
 	public String getDownloadUrl(int mode) {
 
 		String url = null;
-		if (mode == MODE_PUBLIC) {
+		switch (mode) {
+		case MODE_PUBLIC: {
 			url = System.getProperty(PUBLIC_DOWNLOAD_URL_TAG,
 					DEFAULT_PUBLIC_DOWNLOAD_URL);
-		} else {
+		}
+			break;
+		case MODE_PRIVATE: {
 			url = System.getProperty(PRIVATE_DOWNLOAD_URL_TAG,
 					DEFAULT_PRIVATE_DOWNLOAD_URL);
+		}
+			break;
+		default: {
+			if (_downloadURL != null) {
+				url = _downloadURL.toString();
+			} else {
+				url = "";
+			}
+		}
 		}
 		return url;
 	}
@@ -301,11 +327,10 @@ public class ManagementImpl implements Management {
 				_uploadURL = null;
 			}
 		} else {
-			currentMode = MODE_USER;
+			currentMode = MODE_BYUSER;
 			_uploadURL = url;
 		}
 	}
-	
 
 	public void setUploadUrl(int mode) throws MalformedURLException {
 		String defaultUrl = getUploadUrl(mode);
@@ -322,7 +347,7 @@ public class ManagementImpl implements Management {
 				_downloadURL = null;
 			}
 		} else {
-			currentMode = MODE_USER;
+			currentMode = MODE_BYUSER;
 			_downloadURL = url;
 		}
 	}
@@ -332,24 +357,39 @@ public class ManagementImpl implements Management {
 		_downloadURL = new URL(defaultUrl);
 	}
 
-
-	public void synchronize(PrintWriter out) throws Exception {
-		synchronize(true, out);
+	public void synchronize(PrintWriter out, boolean force) throws Exception {
+		synchronize(true, out, force);
 	}
 
-	public void synchronize(boolean update, PrintWriter out) throws Exception {
+	public void synchronize(PrintWriter out) throws Exception {
+		synchronize(true, out, false);
+	}
+	
+	public void synchronize(boolean update, PrintWriter out, boolean force)
+			throws Exception {
 		_retry = 1;
 		MAX_RETRY = Integer.parseInt(System.getProperty(Management.class
 				.getPackage().getName() + ".autoupdate.maxtry", "5"));
-
 		if (_synchronizeBundlesThread == null
 				|| _synchronizeBundlesThread.isAlive() == false) {
 
 			_synchronizeBundlesThread = new SynchronizeBundleThread(out);
 			_synchronizeBundlesThread.start();
 		} else {
-			throw new Exception(
-					"Management synchronisation already in progress...");
+
+			if (force == false) {
+				throw new Exception(
+						"Management synchronisation already in progress...");
+			}else{
+				out.print("Try to restart synchronisation process...");
+				_synchronizeBundlesThread.stop();
+				if (_synchronizeBundlesThread == null
+						|| _synchronizeBundlesThread.isAlive() == false) {
+
+					_synchronizeBundlesThread = new SynchronizeBundleThread(out);
+					_synchronizeBundlesThread.start();
+				}
+			}
 		}
 	}
 
@@ -436,9 +476,20 @@ public class ManagementImpl implements Management {
 				return;
 			}
 			checkMode();
-			System.out.println("Update mode  : " + currentMode + " ("
+			
+			String m="";
+			if (currentMode == Management.MODE_BYUSER){
+				m="*user*";
+			}
+			else{
+				m=(currentMode == Management.MODE_PRIVATE ? "private"
+						: "public");
+			}
+			
+			
+			System.out.println("Update mode  : " + m + " ("
 					+ getCurrentDownloadUrl() + ")");
-			_out.println("Update mode  : " + currentMode);
+			_out.println("Update mode  : " + m);
 			_out.println("Download url : " + getCurrentDownloadUrl());
 			_out.println("Upload url   : " + getCurrentUploadUrl());
 			_out.flush();
@@ -679,7 +730,7 @@ public class ManagementImpl implements Management {
 		return bundleList;
 	}
 
-	public void sendBundleList(int mode) {
+	public void sendBundleList(int mode) throws Exception {
 
 		BundleList bundleList = createFromFwk();
 		Enumeration enumeration = bundleList.elements();
@@ -697,47 +748,42 @@ public class ManagementImpl implements Management {
 
 		File file = new File(System.getProperty("java.io.tmpdir") + "/"
 				+ filename);
-		try {
-			GZIPOutputStream out = new GZIPOutputStream(new FileOutputStream(
-					file.getAbsoluteFile()));
-			// Transfer bytes from the input file to the GZIP output stream
-			while (enumeration.hasMoreElements()) {
-				BundleProperties element = (BundleProperties) enumeration
-						.nextElement();
-				String line = element.toString()
-						+ System.getProperty("line.separator");
-				byte[] data = line.getBytes();
-				out.write(data, 0, data.length);
-			}
-
-			// Complete the GZIP file
-			out.finish();
-			out.close();
-		} catch (IOException e1) {
-			e1.printStackTrace();
+		GZIPOutputStream out = new GZIPOutputStream(new FileOutputStream(
+				file.getAbsoluteFile()));
+		// Transfer bytes from the input file to the GZIP output stream
+		while (enumeration.hasMoreElements()) {
+			BundleProperties element = (BundleProperties) enumeration
+					.nextElement();
+			String line = element.toString()
+					+ System.getProperty("line.separator");
+			byte[] data = line.getBytes();
+			out.write(data, 0, data.length);
 		}
 
-		try {
-			debug("Sending update report (" + file.getName() + ")");
-			DataUploadClient client = new DataUploadClient(new URL(surl));
-			client.put(file, filename);
-			debug("OK Sent " + file.getName() + "");
+		// Complete the GZIP file
+		out.finish();
+		out.close();
 
-		} catch (IOException e) {
-			error("IOException (sendReport) :" + e.getMessage());
+		debug("Sending update report (" + file.getName() + ")");
+		DataUploadClient client = new DataUploadClient(new URL(surl));
+		client.put(file, filename);
+		debug("OK Sent " + file.getName() + "");
+
+	}
+
+	public void setCurrentMode(int mode) throws MalformedURLException {
+		if (mode == MODE_PRIVATE) {
+			System.setProperty(UPDATE_MODE_TAG, "private");
+			setDownloadUrl(null);
+			setUploadUrl(null);
+		} else if (mode == MODE_PUBLIC) {
+			System.setProperty(UPDATE_MODE_TAG, "public");
+			setDownloadUrl(null);
+			setUploadUrl(null);
+		} else if (mode == MODE_DEFAULT) {
+			setDownloadUrl(null);
+			setUploadUrl(null);
 		}
-	}
-
-	public void setPublicMode() throws MalformedURLException {
-		System.setProperty(UPDATE_MODE_TAG, "public");
-		setDownloadUrl(null);
-		setUploadUrl(null);
-	}
-
-	public void setPrivateMode() throws MalformedURLException {
-		System.setProperty(UPDATE_MODE_TAG, "private");
-		setDownloadUrl(null);
-		setUploadUrl(null);
 	}
 
 	public int getCurrentMode() {
@@ -749,7 +795,7 @@ public class ManagementImpl implements Management {
 	}
 
 	public URL getCurrentDownloadUrl() {
-		return _downloadURL ;
+		return _downloadURL;
 	}
 
 }

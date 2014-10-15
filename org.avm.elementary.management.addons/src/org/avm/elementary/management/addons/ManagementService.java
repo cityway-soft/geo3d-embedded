@@ -33,13 +33,13 @@ public interface ManagementService {
 
 	public void runScript(URL url);
 
-	public void synchronize(PrintWriter out, int mode) throws Exception;
+	public void synchronize(PrintWriter out, boolean force) throws Exception;
 
 	public void shutdown(PrintWriter out, int waittime, int exitCode) throws Exception;
 
 	public void send(String result);
 	
-	public void setPrivateMode(boolean b)throws MalformedURLException;
+	public void setPrivateMode(boolean b)throws MalformedURLException, Exception;
 
 	public URL getCurrentDownloadUrl()throws Exception;
 
