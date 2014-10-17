@@ -5,8 +5,6 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.avm.device.afficheur.AfficheurProtocol;
-import org.avm.device.afficheur.Utils;
-import org.avm.elementary.common.Util;
 
 /**
  * DEVICE_CATEGORY : org.avm.device.afficheur.Afficheur DEVICE_DESCRIPTION :
@@ -31,6 +29,7 @@ public class Duhatiers extends AfficheurProtocol {
 	private static final byte SOUS_FONCTION_AFFICHEUR = 29;
 	private static final byte SOUS_FONCTION_NOM_ARRET = 22;
 	private static final byte SOUS_FONCTION_VIDE = -1;
+	private static final byte ESC_EXTENDED_CHAR = 0x1b;
 	public static byte STX = 0x02;
 	public static byte ETX = 0x03;
 
@@ -42,40 +41,132 @@ public class Duhatiers extends AfficheurProtocol {
 	public Duhatiers() {
 	}
 
-
-
-//	public void print(String message) {
-//
-//		_log.debug("print " + "[" + this + "] " + message);
-//		byte[] buffer = generateMessage(Utils.format(message));
-//		_log.debug("hexa duhatiers encoded :" + Util.toHexaString(buffer));
-//
-//		try {
-//			purge();
-//			send(buffer);
-//			_log.debug("Request sent.");
-//			byte[] result = receive();
-//			String response = AfficheurProtocol.toHexaAscii(result);
-//			_log.debug("Response:" + response);
-//
-//		} catch (IOException e) {
-//			// retry one
-//			try {
-//				send(buffer);
-//			} catch (IOException e1) {
-//				_log.error(e.getMessage(), e);
-//			}
-//		}
-//	}
+	// public void print(String message) {
+	//
+	// _log.debug("print " + "[" + this + "] " + message);
+	// byte[] buffer = generateMessage(Utils.format(message));
+	// _log.debug("hexa duhatiers encoded :" + Util.toHexaString(buffer));
+	//
+	// try {
+	// purge();
+	// send(buffer);
+	// _log.debug("Request sent.");
+	// byte[] result = receive();
+	// String response = AfficheurProtocol.toHexaAscii(result);
+	// _log.debug("Response:" + response);
+	//
+	// } catch (IOException e) {
+	// // retry one
+	// try {
+	// send(buffer);
+	// } catch (IOException e1) {
+	// _log.error(e.getMessage(), e);
+	// }
+	// }
+	// }
 
 	public byte[] generateMessage(String message) {
 
-		byte[] buffer = generateMessageLibre(message, (byte)1, DESTINATAIRE_ADR);
-//		byte[] buffer = generateArret(message, DESTINATAIRE_ADR);
+		byte[] buffer = generateMessageLibre(message, (byte) 1,
+				DESTINATAIRE_ADR);
+		// byte[] buffer = generateArret(message, DESTINATAIRE_ADR);
 		return buffer;
 	}
 
+	protected byte[] escapeCharWithAccent(String message) {
+		ByteArrayOutputStream data = new ByteArrayOutputStream();
+		// -- specs
+		// 1Bh + 82h: é
+		// 1Bh + 8Ah: è
+		// 1Bh + 88h: ê
+		// 1Bh + 89h: ë
+		// 1Bh + 85h: à
+		// 1Bh + 83h: â
+		// 1Bh + 8Ch: î
+		// 1Bh + 93h: ô
+		// 1Bh + 97h: ù
+		// 1Bh + 96h: û
+		// 1Bh + 81h: ü
+		// 1Bh + 87h: ç
 
+		for (int i = 0; i < message.length(); i++) {
+			final char c = message.charAt(i);
+
+			switch (c) {
+			case 'é': {
+				data.write(ESC_EXTENDED_CHAR);
+				data.write(0x82);
+			}
+				break;
+			case 'è': {
+				data.write(ESC_EXTENDED_CHAR);
+				data.write(0x8A);
+			}
+				break;
+			case 'ê': {
+				data.write(ESC_EXTENDED_CHAR);
+				data.write(0x88);
+			}
+				break;
+			case 'ë': {
+				data.write(ESC_EXTENDED_CHAR);
+				data.write(0x89);
+			}
+				break;
+
+			case 'à': {
+				data.write(ESC_EXTENDED_CHAR);
+				data.write(0x85);
+			}
+				break;
+			case 'â': {
+				data.write(ESC_EXTENDED_CHAR);
+				data.write(0x83);
+			}
+				break;
+			case 'î': {
+				data.write(ESC_EXTENDED_CHAR);
+				data.write(0x8C);
+			}
+				break;
+			case 'ï': {
+				// data.write(ESC_EXTENDED_CHAR);
+				// data.write(0x??);
+				data.write('i');
+			}
+				break;
+			case 'ô': {
+				data.write(ESC_EXTENDED_CHAR);
+				data.write(0x93);
+			}
+				break;
+			case 'ù': {
+				data.write(ESC_EXTENDED_CHAR);
+				data.write(0x97);
+			}
+				break;
+			case 'û': {
+				data.write(ESC_EXTENDED_CHAR);
+				data.write(0x96);
+			}
+				break;
+			case 'ü': {
+				data.write(ESC_EXTENDED_CHAR);
+				data.write(0x81);
+			}
+				break;
+			case 'ç': {
+				data.write(ESC_EXTENDED_CHAR);
+				data.write(0x87);
+			}
+				break;
+			default:
+				data.write(c);
+			}
+		}
+
+		return data.toByteArray();
+	}
 
 	private byte[] generateMessageLibre(String message, byte msgRank,
 			byte destinataire) {
@@ -84,16 +175,21 @@ public class Duhatiers extends AfficheurProtocol {
 		try {
 			ByteArrayOutputStream data = new ByteArrayOutputStream();
 			data.write(msgRank);
-			data.write(message.getBytes());
+
+			// --test byte[] dataWithAccents =
+			// escapeCharWithAccent("éèêëàâîïôùûüç");
+			byte[] dataWithAccents = escapeCharWithAccent(message);
+			data.write(dataWithAccents);
 			result = generate(FONCTION_AFFICHEUR, SOUS_FONCTION_AFFICHEUR,
-					data.toByteArray(), formatDestAddress(destinataire), formatEmitterAddress(EMETTEUR_ADR, false));
+					data.toByteArray(), formatDestAddress(destinataire),
+					formatEmitterAddress(EMETTEUR_ADR, false));
 		} catch (IOException e) {
 			_log.error(e);
 		}
 
 		return result;
 	}
-	
+
 	private byte[] generateArret(String arret, byte destinataire) {
 		byte[] result = null;
 
@@ -101,7 +197,8 @@ public class Duhatiers extends AfficheurProtocol {
 			ByteArrayOutputStream data = new ByteArrayOutputStream();
 			data.write(arret.getBytes());
 			result = generate(FONCTION_AFFICHEUR, SOUS_FONCTION_NOM_ARRET,
-					data.toByteArray(), formatDestAddress(destinataire), formatEmitterAddress(EMETTEUR_ADR, false));
+					data.toByteArray(), formatDestAddress(destinataire),
+					formatEmitterAddress(EMETTEUR_ADR, false));
 		} catch (IOException e) {
 			_log.error(e);
 		}
@@ -109,22 +206,21 @@ public class Duhatiers extends AfficheurProtocol {
 		return result;
 	}
 
-
-	
-//	public byte[] generateStatus() {
-//		byte[] status = generateInterrogation(DESTINATAIRE_ADR);
-//		_log.debug("status request frame=" + toHexaAscii(status));
-//		return status;
-//	}
-//	
-//	public int checkStatus(String status) {
-//		byte[] expectedData = generateAcquittement(DESTINATAIRE_ADR, EMETTEUR_ADR, (byte)0);
-//		String expected=toHexaAscii(expectedData);
-//		int result = status.compareTo(expected);
-//		_log.debug("status response frame=" + status + "; expected="+expected + " => " + result);
-//		return result;
-//	}
-	
+	// public byte[] generateStatus() {
+	// byte[] status = generateInterrogation(DESTINATAIRE_ADR);
+	// _log.debug("status request frame=" + toHexaAscii(status));
+	// return status;
+	// }
+	//
+	// public int checkStatus(String status) {
+	// byte[] expectedData = generateAcquittement(DESTINATAIRE_ADR,
+	// EMETTEUR_ADR, (byte)0);
+	// String expected=toHexaAscii(expectedData);
+	// int result = status.compareTo(expected);
+	// _log.debug("status response frame=" + status + "; expected="+expected +
+	// " => " + result);
+	// return result;
+	// }
 
 	/******************************************************************************************
 	 * Fonctions communes Afficheur / Girourette pour le protocol DUHATIERS
@@ -150,8 +246,9 @@ public class Duhatiers extends AfficheurProtocol {
 
 		try {
 			buffer.write(STX);
-//			frameForChecksum.write(formatDestAddress(dest));
-//			frameForChecksum.write(formatEmitterAddress(EMETTEUR_ADR, false));
+			// frameForChecksum.write(formatDestAddress(dest));
+			// frameForChecksum.write(formatEmitterAddress(EMETTEUR_ADR,
+			// false));
 			frameForChecksum.write(dest);
 			frameForChecksum.write(emetteur);
 			frameForChecksum.write(fonction);
@@ -211,7 +308,8 @@ public class Duhatiers extends AfficheurProtocol {
 
 		ByteArrayOutputStream data = new ByteArrayOutputStream();
 		result = generate(FONCTION_INTERROGATION, SOUS_FONCTION_VIDE,
-				data.toByteArray(), formatDestAddress(destinataire), formatEmitterAddress(EMETTEUR_ADR, false));
+				data.toByteArray(), formatDestAddress(destinataire),
+				formatEmitterAddress(EMETTEUR_ADR, false));
 
 		return result;
 	}
@@ -223,10 +321,10 @@ public class Duhatiers extends AfficheurProtocol {
 		ByteArrayOutputStream data = new ByteArrayOutputStream();
 		data.write(status);
 		result = generate(FONCTION_ACQUITTEMENT, SOUS_FONCTION_VIDE,
-				data.toByteArray(),  formatDestAddress(emetteur), formatEmitterAddress(destinataire, false));
+				data.toByteArray(), formatDestAddress(emetteur),
+				formatEmitterAddress(destinataire, false));
 
 		return result;
 	}
-
 
 }
