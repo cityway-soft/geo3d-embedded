@@ -69,6 +69,11 @@
 		<module>../org.avm.device.linux.watchdog</module>
 		<module>../org.avm.device.linux.wifi</module>
 		<module>../org.avm.device.usbmass</module>
+		<!-- * device wanesy * -->
+		<module>../org.avm.device.wanesy</module>
+		<module>../org.avm.device.wanesy.standby</module>
+		<module>../org.avm.device.wanesy.stop</module>
+
 
 		<!-- *** ELEMENTARY *** -->
 		<module>../org.avm.elementary.management.bootstrap</module>
