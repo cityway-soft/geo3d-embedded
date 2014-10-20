@@ -47,13 +47,13 @@ public class Utils {
 	}
 
 	public static String formatURL(String url, boolean useDefault) {
-		String terminalName = "default";
-		String terminalId = Terminal.getInstance().getId();
+		String terminalId = "default";
 		String terminalOwner = Terminal.getInstance().getOwner();
 		String plateformType = Terminal.getInstance().getPlateform();
+		String terminalName = Terminal.getInstance().getName();
 
 		if (useDefault == false) {
-			terminalName = Terminal.getInstance().getName();
+			terminalId = Terminal.getInstance().getId();
 		}
 
 		String temp = url;
