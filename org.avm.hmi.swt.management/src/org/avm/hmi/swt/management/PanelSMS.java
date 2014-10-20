@@ -203,7 +203,7 @@ public class PanelSMS extends AbstractPanel implements SelectionListener {
 			public void run() {
 				enableSend(false);
 				String msg = message.replace('\n', ',');
-				String cmd = "/sms sendtexto \"" + msg + "\" "
+				String cmd = "/media.sms sendtexto \"" + msg + "\" "
 				+ mobile;
 				String result = runConsoleCommand(cmd);
 				if (result != null && !result.trim().equals("")) {
