@@ -37,8 +37,12 @@ public class ButtonContactView extends ContactView {
 	}
 
 	public void setFont(Font arg0) {
-		super.setFont(arg0);
-		_font = arg0;
+		if (arg0 != null) {
+			super.setFont(arg0);
+			_font = arg0;
+		} else {
+			_log.error("Font is null!");
+		}
 	}
 
 	public void hangup() {
@@ -51,7 +55,7 @@ public class ButtonContactView extends ContactView {
 					calling = false;
 					while (e.hasMoreElements()) {
 						Button bt = (Button) e.nextElement();
-						//bt.setEnabled(true);
+						// bt.setEnabled(true);
 						bt.setForeground(Display.getCurrent().getSystemColor(
 								SWT.COLOR_WHITE));
 						bt.setBackground(Display.getCurrent().getSystemColor(

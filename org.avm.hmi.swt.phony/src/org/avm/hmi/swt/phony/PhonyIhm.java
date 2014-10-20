@@ -442,13 +442,7 @@ public class PhonyIhm extends Composite implements SelectionListener,
 		_phony.dial(str);
 	}
 
-	protected void finalize() throws Throwable {
-		super.finalize();
-		if (_fontButton != null) {
-			_fontButton.dispose();
-			_fontButton = null;
-		}
-	}
+	
 
 	public void update(final ContactModel model) {
 		_log.debug("Contact model size=" + model.size());
