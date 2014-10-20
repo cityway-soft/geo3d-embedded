@@ -52,6 +52,32 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		return 0;
 	}
 
+	// version
+	public final static String USAGE_SETVERSION = "[<version>]";
+
+	public final static String[] HELP_SETVERSION = new String[] { "Set/Get database version id", };
+
+	public int cmdSetversion(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+		String sVersion = ((String) opts.get("version"));
+
+		if (sVersion != null) {
+			try {
+				int version = Integer.parseInt(sVersion);
+				((DatabaseConfig) _config)
+						.setVersion(Integer.toString(version));
+				_config.updateConfig(true);
+			} catch (Throwable t) {
+				out.println(sVersion + " is not a number!");
+			}
+		}
+
+		out.println("Current version : "
+				+ ((DatabaseConfig) _config).getVersion());
+
+		return 0;
+	}
+
 	// login
 	public final static String USAGE_SETLOGIN = "<login>";
 

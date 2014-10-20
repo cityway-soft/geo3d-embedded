@@ -21,8 +21,7 @@ public class AvmModelManager implements AvmModel, Serializable {
 	}
 
 	private int _state;
-	
-	
+
 	private Authentification _authentification = null;
 
 	private ServiceAgent _serviceAgent = null;
@@ -50,14 +49,9 @@ public class AvmModelManager implements AvmModel, Serializable {
 
 	transient private boolean _isGeorefMode;
 
-
 	private boolean _isVehiculeFull;
 
-
-	private int _debugCount=0;
-	
 	private transient int lastCourseIdu = -1;
-	
 
 	public int getLastCourseIdu() {
 		return lastCourseIdu;
@@ -93,8 +87,8 @@ public class AvmModelManager implements AvmModel, Serializable {
 
 	public int getDatasourceVersion() {
 		int version = -1;
-		if (_datasource != null){
-			version =  _datasource.getVersion();
+		if (_datasource != null) {
+			version = _datasource.getVersion();
 		}
 		return version;
 	}
@@ -102,7 +96,6 @@ public class AvmModelManager implements AvmModel, Serializable {
 	public void setDatasource(AvmDatasource datasource) {
 		_datasource = datasource;
 	}
-	
 
 	public boolean isHorsItineraire() {
 		return _isHorsItineraire;
@@ -143,8 +136,8 @@ public class AvmModelManager implements AvmModel, Serializable {
 		State state = new State(_state, AVM_STATE_NAME);
 		return state;
 	}
-	
-	public String getStateName(){
+
+	public String getStateName() {
 		return STATE_NAMES[_state];
 	}
 
@@ -171,7 +164,7 @@ public class AvmModelManager implements AvmModel, Serializable {
 
 	public void setAvanceRetard(int avanceRetard) {
 		_avanceRetard = avanceRetard;
-		if (_course != null){
+		if (_course != null) {
 			_course.setAvanceRetard(_dernierPoint, avanceRetard);
 		}
 	}
@@ -194,13 +187,26 @@ public class AvmModelManager implements AvmModel, Serializable {
 
 	public String toString() {
 		StringBuffer buf = new StringBuffer();
-		buf.append("State              : " + getStateName() + " ("+getState()+")");
+		buf.append("Etat               : " + getStateName() + " (" + getState()
+				+ ")");
 		buf.append(System.getProperty("line.separator"));
-		
-		buf.append("Datasource         : " + ((_datasource==null)?"no datasource":_datasource.getClass().getName()
-				+ " (version " + _datasource.getVersion() + ")"));
-		buf.append("Validite           : periodes=" +  ((_datasource==null)?"no datasource":
-				_datasource.getValiditePeriode() + ", proprietes=" + _datasource.getValiditePropriete()) );
+
+		buf.append("Source des donnees : "
+				+ ((_datasource == null) ? "no datasource" : _datasource
+						.getClass().getName()));
+		buf.append(System.getProperty("line.separator"));
+
+		buf.append("Version des donnees: "
+				+ ((_datasource == null) ? "-" : "" + _datasource.getVersion()));
+		buf.append(System.getProperty("line.separator"));
+
+		buf.append("Valid. des donnees : periodes="
+				+ ((_datasource == null) ? "no datasource" : _datasource
+						.getValiditePeriode()
+						+ " - proprietes="
+						+ _datasource.getValiditePropriete()));
+		buf.append(System.getProperty("line.separator"));
+
 		buf.append(System.getProperty("line.separator"));
 		buf.append("Authentification   : " + _authentification);
 		buf.append(System.getProperty("line.separator"));
@@ -208,7 +214,7 @@ public class AvmModelManager implements AvmModel, Serializable {
 		buf.append(System.getProperty("line.separator"));
 		buf.append("Course             : " + _course);
 		buf.append(System.getProperty("line.separator"));
-		buf.append("Inside ?           : " + _inside);
+		buf.append("Dans la balise ?   : " + _inside);
 		buf.append(System.getProperty("line.separator"));
 		buf.append("Depart ?           : " + _depart);
 		buf.append(System.getProperty("line.separator"));
@@ -224,12 +230,14 @@ public class AvmModelManager implements AvmModel, Serializable {
 		buf.append(System.getProperty("line.separator"));
 		buf.append("Prochain Arret     : " + _prochainPoint);
 		buf.append(System.getProperty("line.separator"));
-		buf.append("Avance Retard      : " + _avanceRetard + "("+
-				(_avanceRetard<0?"avance "+Point.formatHour(-_avanceRetard)+")":"retard "+Point.formatHour(_avanceRetard)+")")
-				
-				
-				
-				);
+		buf.append("Avance Retard      : "
+				+ _avanceRetard
+				+ " ("
+				+ (_avanceRetard < 0 ? "avance "
+						+ Point.formatHour(-_avanceRetard) + ")" : "retard "
+						+ Point.formatHour(_avanceRetard) + ")")
+
+		);
 		buf.append(System.getProperty("line.separator"));
 		buf.append("Planification      : " + _planification);
 		buf.append(System.getProperty("line.separator"));
@@ -270,11 +278,10 @@ public class AvmModelManager implements AvmModel, Serializable {
 	public int getCodeGirouette() {
 		int code = 0;
 		Point dernier = _dernierPoint;
-		if (dernier == null && _course != null){
+		if (dernier == null && _course != null) {
 			dernier = _course.getPointAvecRang(1);
 		}
-		if (dernier != null && _course != null
-				&& _course.getPoints() != null) {
+		if (dernier != null && _course != null && _course.getPoints() != null) {
 			Point pts[] = _course.getPoints();
 			int c;
 			for (int i = dernier.getRang(); i > 0; i--) {
@@ -291,8 +298,8 @@ public class AvmModelManager implements AvmModel, Serializable {
 	public boolean isVehiculeFull() {
 		return _isVehiculeFull;
 	}
-	
-	public void setVehiculeFull(boolean b){
+
+	public void setVehiculeFull(boolean b) {
 		_isVehiculeFull = b;
 	}
 
