@@ -634,6 +634,12 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 				priseService.getEntete().getChamps().setPosition(1);
 				initService(priseService.getEntete().getService());
 				sendMessage(priseService);
+				try {
+					//-- pour éviter d'envoyer en même temps prise de service et prise de course
+					//-- (pas le temps de faire mieux!!!)
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+				}
 				if (_log.isDebugEnabled()) {
 					_log.debug("Message prise-service sent : " + priseService);
 				}
