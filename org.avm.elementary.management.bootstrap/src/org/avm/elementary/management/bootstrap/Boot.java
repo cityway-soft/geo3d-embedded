@@ -174,7 +174,7 @@ public class Boot implements BundleActivator {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		while (output.length() < 32) {
+		while (output.length() <= 32) {
 			output.insert(0, "0");
 		}
 		return output.toString();

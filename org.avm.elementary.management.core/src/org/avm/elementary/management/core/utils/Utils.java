@@ -120,7 +120,7 @@ public class Utils {
 
 	public static String genMD5(File file) {
 		MessageDigest md;
-		String output = null;
+		StringBuffer output = null;
 		try {
 			md = MessageDigest.getInstance("MD5");
 			InputStream inStream = new FileInputStream(file);
@@ -131,16 +131,20 @@ public class Utils {
 			}
 			byte[] md5sum = md.digest();
 			BigInteger bigInt = new BigInteger(1, md5sum);
-			output = bigInt.toString(16);
+			output = new StringBuffer(bigInt.toString(16));
 
 			inStream.close();
+			
+			while (output.length() <= 32) {
+				output.insert(0, "0");
+			}
 
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return output;
+		return output.toString();
 	}
 
 	public static void writeMD5(String md5, File file) throws IOException {
