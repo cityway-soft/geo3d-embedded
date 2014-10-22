@@ -1,6 +1,7 @@
 package org.avm.elementary.wifi;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 import org.avm.elementary.common.Scheduler;
 
 public class WifiManagerStateMachine {
@@ -17,6 +18,7 @@ public class WifiManagerStateMachine {
 		_fsm = new WifiManagerStateMachineContext(this);
 		_peer = wifi;
 		_log = Logger.getInstance(this.getClass());
+		_fsm.setDebugFlag(_log.getPriority() == Priority.DEBUG);
 		_scheduler = new Scheduler();
 	}
 
@@ -30,12 +32,11 @@ public class WifiManagerStateMachine {
 			_log.debug("Cancel timer disconnect.");
 			_scheduler.cancel(_disconnectTimerTaskId);
 			_disconnectTimerTaskId = null;
-		} else {
-			try {
-				_peer.connect();
-			} catch (Exception e) {
-				_log.error(e.getMessage(), e);
-			}
+		}
+		try {
+			_peer.connect();
+		} catch (Exception e) {
+			_log.error(e.getMessage(), e);
 		}
 	}
 
@@ -60,6 +61,7 @@ public class WifiManagerStateMachine {
 		public void run() {
 			try {
 				_peer.disconnect();
+				_disconnectTimerTaskId = null;
 			} catch (Exception e) {
 				_log.error(e.getMessage(), e);
 			}

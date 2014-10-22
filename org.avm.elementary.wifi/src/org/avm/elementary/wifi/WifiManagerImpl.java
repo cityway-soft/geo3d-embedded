@@ -76,7 +76,6 @@ public class WifiManagerImpl implements WifiManager, ConfigurableService,
 			}
 
 		} else {
-			_log.error("There is no Config or No Database");
 			_map = null;
 		}
 	}
