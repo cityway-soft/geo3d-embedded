@@ -194,9 +194,19 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 	 * .database.Database)
 	 */
 	public void setDatabase(Database database) {
+		int currentVersion=-1;
+		
+		if (_currentDatasource != null){
+			currentVersion = _currentDatasource.getVersion();
+		}
+		
 		debug("Initialisation de la database " + database); //$NON-NLS-1$
 		_databaseDatasource = AvmDatabaseDatasource.getInstance();
 		try {
+			int lastVersion = _databaseDatasource.getVersion();
+			if (lastVersion != 0 && currentVersion != _databaseDatasource.getVersion()){
+				finService();
+			}
 			_databaseDatasource.setDatabase(database);
 		} catch (AvmDatabaseException e) {
 			_model.setError(e.getError());
