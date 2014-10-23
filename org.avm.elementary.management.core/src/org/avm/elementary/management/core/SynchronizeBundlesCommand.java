@@ -202,30 +202,7 @@ class SynchronizeBundlesCommand implements BundleListener {
 
 	}
 
-	public static String genMD5(File file) {
-		MessageDigest md;
-		String output = null;
-		try {
-			md = MessageDigest.getInstance("MD5");
-			InputStream inStream = new FileInputStream(file);
-			byte[] buffer = new byte[8192];
-			int read = 0;
-			while ((read = inStream.read(buffer)) > 0) {
-				md.update(buffer, 0, read);
-			}
-			byte[] md5sum = md.digest();
-			BigInteger bigInt = new BigInteger(1, md5sum);
-			output = bigInt.toString(16);
 
-			inStream.close();
-
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return output;
-	}
 
 	public static boolean checkFile(File md5file) {
 		boolean result = false;
@@ -238,7 +215,7 @@ class SynchronizeBundlesCommand implements BundleListener {
 			String md5 = line.substring(0, idx).trim();
 			String filename = line.substring(idx + 1).trim();
 
-			String genmd5 = genMD5(new File(md5file.getParentFile()
+			String genmd5 = Utils.genMD5(new File(md5file.getParentFile()
 					.getAbsoluteFile() + "/" + filename));
 
 			result = (genmd5 != null && md5.equals(genmd5));
