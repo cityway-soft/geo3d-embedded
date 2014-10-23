@@ -76,10 +76,6 @@ public interface Management {
 
 	public void setUploadUrl(URL url) throws MalformedURLException;
 
-	public void setDownloadUrl(int mode) throws MalformedURLException;
-
-	public void setUploadUrl(int mode) throws MalformedURLException;
-
 	public String getUploadUrl(int mode);
 
 	public String getDownloadUrl(int mode);

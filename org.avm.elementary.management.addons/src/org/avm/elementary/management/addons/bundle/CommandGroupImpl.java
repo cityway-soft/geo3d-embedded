@@ -200,18 +200,16 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		}
 
 		try {
-			int currentMode=_peer.getCurrentMode();
-			String m="";
-			if (currentMode == Management.MODE_BYUSER){
-				m="*user*";
-			}
-			else{
-				m=(currentMode == Management.MODE_PRIVATE ? "private"
+			int currentMode = _peer.getCurrentMode();
+			String m = "";
+			if (currentMode == Management.MODE_BYUSER) {
+				m = "*user*";
+			} else {
+				m = (currentMode == Management.MODE_PRIVATE ? "private"
 						: "public");
 			}
-			
-			out.println("current mode :"
-					+ m + " (at boot: "
+
+			out.println("current mode :" + m + " (at boot: "
 					+ configuration.getUpdateMode() + ")");
 			out.println("current download:" + _peer.getCurrentDownloadUrl());
 			out.println("current upload:" + _peer.getCurrentUploadUrl());
@@ -342,7 +340,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	public int cmdSynchronize(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
 		String smode = ((String) opts.get("mode"));
-
+		out.println("debug: mode=" + smode);
 		if (smode != null) {
 			if (smode.equals("default")) {
 				ManagementPropertyFile configuration = ManagementPropertyFile
@@ -350,36 +348,28 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 				smode = configuration.getUpdateMode();
 				out.println("Use default (" + smode + ") URLs");
 			}
-
 		}
 
 		int mode;
 		if (smode == null) {
-			try {
-				mode = ((ManagementImpl) _peer).getCurrentMode();
-				synchronize(out, false);
-
-			} catch (Exception e) {
-				out.print(e.getMessage());
-			}
+			mode = Management.MODE_BYUSER;
 		} else {
-			if (smode.equals("public")){
-				mode=Management.MODE_PUBLIC;
-			}else if (smode.equals("private")){
-				mode=Management.MODE_PRIVATE;
+			mode = Management.MODE_DEFAULT;
+			if (smode.equals("public")) {
+				mode = Management.MODE_PUBLIC;
+			} else if (smode.equals("private")) {
+				mode = Management.MODE_PRIVATE;
 			}
-			else{
-				mode=Management.MODE_BYUSER;
-			}
-			try {
-				((ManagementImpl)_peer).setCurrentMode(mode);
-			} catch (MalformedURLException e) {
-				out.print(e.getMessage());
-			} catch (Exception e) {
-				out.print(e.getMessage());
-			}
-			synchronize(out, true);
 		}
+		try {
+			out.println("debug: mode int =" + mode);
+			((ManagementImpl) _peer).setCurrentMode(mode);
+		} catch (MalformedURLException e) {
+			out.print(e.getMessage());
+		} catch (Exception e) {
+			out.print(e.getMessage());
+		}
+		synchronize(out, true);
 
 		return 0;
 	}
@@ -413,16 +403,26 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	public int cmdSendbundlelist(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
 		out.println("Sending bundle list");
+		String smode = ((String) opts.get("mode"));
+		
 		try {
-			String smode = ((String) opts.get("mode"));
+			
 			int mode;
 			if (smode == null) {
-				mode = ((ManagementImpl) _peer).getCurrentMode();
+				mode = Management.MODE_BYUSER;
 			} else {
-				mode = smode.equals("public") ? Management.MODE_PUBLIC
-						: Management.MODE_PRIVATE;
-			}
+				mode = Management.MODE_DEFAULT;
+				if (smode.equals("public")) {
+					mode = Management.MODE_PUBLIC;
+				} else if (smode.equals("private")) {
+					mode = Management.MODE_PRIVATE;
+				}
+			}			
+			
+			out.println("Using : "
+					+ ((ManagementImpl) _peer).getDownloadUrl(mode));
 			((ManagementImpl) _peer).sendBundleList(mode);
+
 		} catch (Exception e) {
 			out.println("Error :" + e.getMessage());
 		}

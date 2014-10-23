@@ -192,12 +192,15 @@ public class ManagementImpl implements Management {
 		debug("Terminal Info: " + Terminal.getInstance());
 
 		// -- set default download & upload URL
-		try {
-			setDownloadUrl(null);
-			setUploadUrl(null);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
+		String tmp = System.getProperty(UPDATE_MODE_TAG);
+		if (tmp == null) {
+			currentMode = MODE_PRIVATE;
+			tmp = "private";
+			debug("default mode not set : using private");
+		} else {
+			currentMode = tmp.equals("public") ? MODE_PUBLIC : MODE_PRIVATE;
 		}
+		debug("default mode is : " + tmp);
 
 		debug("Check packages...");
 
@@ -226,29 +229,29 @@ public class ManagementImpl implements Management {
 		debug("Init finished...");
 	}
 
-	private void checkMode() {
-		boolean lastModePrivate = System.getProperty(
-				LAST_UPDATE_IN_PRIVATE_ZONE_TAG, "false").equals("true");
-		if (lastModePrivate == true) {
-			// -- derniere mise a jour effectuee par WiFi (private) ; donc on
-			// tente a nouveau...
-			currentMode = MODE_PRIVATE;
-			debug("Last update in private zone, retry (mode=private)");
-		} else {
-			// -- recuperation du mode de mise a jour par defaut. si rien est
-			// defini alors 'private'
-			String tmp = System.getProperty(UPDATE_MODE_TAG);
-			if (tmp == null) {
-				currentMode = MODE_PRIVATE;
-				debug("default mode not set : using private");
-			} else {
-				currentMode = tmp.equals("public") ? MODE_PUBLIC : MODE_PRIVATE;
-
-				debug("default mode is : " + currentMode);
-			}
-		}
-
-	}
+	// private void checkMode() {
+	// boolean lastModePrivate = System.getProperty(
+	// LAST_UPDATE_IN_PRIVATE_ZONE_TAG, "false").equals("true");
+	// if (lastModePrivate == true) {
+	// // -- derniere mise a jour effectuee par WiFi (private) ; donc on
+	// // tente a nouveau...
+	// currentMode = MODE_PRIVATE;
+	// debug("Last update in private zone, retry (mode=private)");
+	// } else {
+	// // -- recuperation du mode de mise a jour par defaut. si rien est
+	// // defini alors 'private'
+	// String tmp = System.getProperty(UPDATE_MODE_TAG);
+	// if (tmp == null) {
+	// currentMode = MODE_PRIVATE;
+	// debug("default mode not set : using private");
+	// } else {
+	// currentMode = tmp.equals("public") ? MODE_PUBLIC : MODE_PRIVATE;
+	//
+	// debug("default mode is : " + currentMode);
+	// }
+	// }
+	//
+	// }
 
 	public String getUploadUrl(int mode) {
 		String url = null;
@@ -265,11 +268,27 @@ public class ManagementImpl implements Management {
 
 		}
 			break;
-		default: {
-			if (_uploadURL != null) {
-				url = _uploadURL.toString();
+		case MODE_BYUSER: {
+			if (_uploadURL == null) {
+				url = getUploadUrl(MODE_DEFAULT);
 			} else {
-				url = "";
+				url = _uploadURL.toString();
+			}
+		}
+			break;
+		default: {
+
+			String tmp = System.getProperty(UPDATE_MODE_TAG);
+			if (tmp == null) {
+				url = getUploadUrl(MODE_PRIVATE);
+				debug("default mode not set : using private");
+			} else {
+				int m = tmp.equals("public") ? MODE_PUBLIC : MODE_PRIVATE;
+				if (!tmp.equals("public")) {
+					tmp = "private";
+				}
+				url = getUploadUrl(m);
+				debug("default mode is : " + tmp);
 			}
 		}
 			break;
@@ -277,11 +296,11 @@ public class ManagementImpl implements Management {
 		return url;
 	}
 
-	private String getDefaultUploadUrl() {
-		checkMode();
-		String url = getUploadUrl(currentMode);
-		return url;
-	}
+	// private String getDefaultUploadUrl() {
+	// checkMode();
+	// String url = getUploadUrl(currentMode);
+	// return url;
+	// }
 
 	public String getDownloadUrl(int mode) {
 
@@ -297,64 +316,46 @@ public class ManagementImpl implements Management {
 					DEFAULT_PRIVATE_DOWNLOAD_URL);
 		}
 			break;
-		default: {
-			if (_downloadURL != null) {
-				url = _downloadURL.toString();
+		case MODE_BYUSER: {
+			if (_downloadURL == null) {
+				url = getDownloadUrl(MODE_DEFAULT);
 			} else {
-				url = "";
+				url = _downloadURL.toString();
+			}
+		}
+			break;
+		default: {
+			String tmp = System.getProperty(UPDATE_MODE_TAG);
+			if (tmp == null) {
+				url = getDownloadUrl(MODE_PRIVATE);
+				debug("default mode not set : using private");
+			} else {
+				int m = tmp.equals("public") ? MODE_PUBLIC : MODE_PRIVATE;
+				url = getDownloadUrl(m);
+				debug("default mode is : " + m);
 			}
 		}
 		}
 		return url;
 	}
 
-	private String getDefaultDownloadUrl() {
-
-		checkMode();
-		String url = getDownloadUrl(currentMode);
-
-		return url;
-	}
+	// private String getDefaultDownloadUrl() {
+	//
+	// checkMode();
+	// String url = getDownloadUrl(currentMode);
+	//
+	// return url;
+	// }
 
 	public void setUploadUrl(URL url) throws MalformedURLException {
-		if (url == null) {
-			String defaultUrl = getDefaultUploadUrl();
-			try {
-
-				_uploadURL = new URL(defaultUrl);
-
-			} catch (Throwable t) {
-				_uploadURL = null;
-			}
-		} else {
-			currentMode = MODE_BYUSER;
-			_uploadURL = url;
-		}
-	}
-
-	public void setUploadUrl(int mode) throws MalformedURLException {
-		String defaultUrl = getUploadUrl(mode);
-		_uploadURL = new URL(defaultUrl);
+		currentMode = MODE_BYUSER;
+		_uploadURL = url;
 	}
 
 	public void setDownloadUrl(URL url) throws MalformedURLException {
-		if (url == null) {
-			String defaultUrl = getDefaultDownloadUrl();
-			try {
-				_downloadURL = new URL(defaultUrl);
 
-			} catch (Throwable t) {
-				_downloadURL = null;
-			}
-		} else {
-			currentMode = MODE_BYUSER;
-			_downloadURL = url;
-		}
-	}
-
-	public void setDownloadUrl(int mode) throws MalformedURLException {
-		String defaultUrl = getDownloadUrl(mode);
-		_downloadURL = new URL(defaultUrl);
+		currentMode = MODE_BYUSER;
+		_downloadURL = url;
 	}
 
 	public void synchronize(PrintWriter out, boolean force) throws Exception {
@@ -364,7 +365,7 @@ public class ManagementImpl implements Management {
 	public void synchronize(PrintWriter out) throws Exception {
 		synchronize(true, out, false);
 	}
-	
+
 	public void synchronize(boolean update, PrintWriter out, boolean force)
 			throws Exception {
 		_retry = 1;
@@ -380,7 +381,7 @@ public class ManagementImpl implements Management {
 			if (force == false) {
 				throw new Exception(
 						"Management synchronisation already in progress...");
-			}else{
+			} else {
 				out.print("Try to restart synchronisation process...");
 				_synchronizeBundlesThread.stop();
 				if (_synchronizeBundlesThread == null
@@ -475,18 +476,15 @@ public class ManagementImpl implements Management {
 				_out.println("Download URL is null : update operation is cancelled.");
 				return;
 			}
-			checkMode();
-			
-			String m="";
-			if (currentMode == Management.MODE_BYUSER){
-				m="*user*";
-			}
-			else{
-				m=(currentMode == Management.MODE_PRIVATE ? "private"
+
+			String m = "";
+			if (currentMode == Management.MODE_BYUSER) {
+				m = "*user*";
+			} else {
+				m = (currentMode == Management.MODE_PRIVATE ? "private"
 						: "public");
 			}
-			
-			
+
 			System.out.println("Update mode  : " + m + " ("
 					+ getCurrentDownloadUrl() + ")");
 			_out.println("Update mode  : " + m);
@@ -736,12 +734,7 @@ public class ManagementImpl implements Management {
 		Enumeration enumeration = bundleList.elements();
 		String filepattern = "$e_$v_$i_" + REPORT_FILENAME;
 
-		String path;
-		if (mode == MODE_DEFAULT) {
-			path = getDefaultUploadUrl();
-		} else {
-			path = getUploadUrl(mode);
-		}
+		String path = getUploadUrl(mode);
 
 		String surl = Utils.formatURL(path, false);
 		String filename = Utils.formatURL(filepattern, false);
@@ -772,18 +765,7 @@ public class ManagementImpl implements Management {
 	}
 
 	public void setCurrentMode(int mode) throws MalformedURLException {
-		if (mode == MODE_PRIVATE) {
-			System.setProperty(UPDATE_MODE_TAG, "private");
-			setDownloadUrl(null);
-			setUploadUrl(null);
-		} else if (mode == MODE_PUBLIC) {
-			System.setProperty(UPDATE_MODE_TAG, "public");
-			setDownloadUrl(null);
-			setUploadUrl(null);
-		} else if (mode == MODE_DEFAULT) {
-			setDownloadUrl(null);
-			setUploadUrl(null);
-		}
+		currentMode = mode;
 	}
 
 	public int getCurrentMode() {
@@ -791,11 +773,21 @@ public class ManagementImpl implements Management {
 	}
 
 	public URL getCurrentUploadUrl() {
-		return _uploadURL;
+		try {
+			return new URL(getUploadUrl(currentMode));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public URL getCurrentDownloadUrl() {
-		return _downloadURL;
+		try {
+			return new URL(getDownloadUrl(currentMode));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

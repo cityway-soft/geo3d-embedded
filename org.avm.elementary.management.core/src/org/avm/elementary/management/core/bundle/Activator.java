@@ -85,14 +85,6 @@ public class Activator implements BundleActivator, Management {
 		_peer.setUploadUrl(url);
 	}
 	
-	public void setDownloadUrl(int mode) throws MalformedURLException {
-		_peer.setDownloadUrl(mode);
-	}
-
-	public void setUploadUrl(int mode) throws MalformedURLException {
-		_peer.setUploadUrl(mode);
-	}
-	
 	
 	public String getDownloadUrl(int mode)  {
 		return _peer.getDownloadUrl(mode);

@@ -11,12 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -131,7 +128,8 @@ class SynchronizeBundlesCommand implements BundleListener {
 
 	}
 
-	private void downloadManagementBundle() {
+	private boolean downloadManagementBundle() {
+		boolean status = false;
 		String bundlefilename = this.getClass().getPackage().getName() + ".jar";
 		println("/!\\ Downloading management bundle");
 		try {
@@ -162,9 +160,8 @@ class SynchronizeBundlesCommand implements BundleListener {
 
 					move(md5file, current_md5file);
 					move(jarfile, current_jarfile);
-					File newfile = new File(destdir + "/" + Management.DEPLOYED);
-					FileOutputStream out = new FileOutputStream(newfile);
-					out.close();
+					status = true;
+
 				} else {
 					println("Error: jar or md5 file empty");
 				}
@@ -175,6 +172,8 @@ class SynchronizeBundlesCommand implements BundleListener {
 			t.printStackTrace();
 			println("Error:" + t.getMessage());
 		}
+
+		return status;
 	}
 
 	private void move(File afile, File bfile) throws IOException {
@@ -201,8 +200,6 @@ class SynchronizeBundlesCommand implements BundleListener {
 		afile.delete();
 
 	}
-
-
 
 	public static boolean checkFile(File md5file) {
 		boolean result = false;
@@ -279,8 +276,7 @@ class SynchronizeBundlesCommand implements BundleListener {
 			File managementDeployedFile = new File(
 					System.getProperty("org.avm.home") + "/lib/"
 							+ Management.DEPLOYED);
-			boolean managementDeployedFileExist = managementDeployedFile
-					.exists();
+			boolean forceSendBundleList = managementDeployedFile.exists();
 
 			updateStartLevel(bundleList);
 			bundleList = getBundlesToUpdate(bundleList);
@@ -346,7 +342,39 @@ class SynchronizeBundlesCommand implements BundleListener {
 										.getName().indexOf(bName) != -1) {
 									// --ignore management.core himself !
 
-									downloadManagementBundle();
+									String versionToDownload = bundleProperties
+											.getVersion().trim();
+									String versionAlreadyDownloaded = "";
+									if (managementDeployedFile.exists()) {
+										FileInputStream in = new FileInputStream(
+												managementDeployedFile);
+										byte[] buf = new byte[1024];
+										in.read(buf);
+										versionAlreadyDownloaded = new String(
+												buf).trim();
+									}
+									println("Management version to download         : '"
+											+ versionToDownload + "'");
+									println("Management version already downloaded  : '"
+											+ versionAlreadyDownloaded + "'");
+									if (versionToDownload
+											.equals(versionAlreadyDownloaded) == false) {
+										if (downloadManagementBundle()) {
+											// -- creation fichier temoin pour
+											// forcer l'envoi du rapport de mise
+											// à jour au prochain démarrage
+											FileOutputStream out = new FileOutputStream(
+													managementDeployedFile);
+											out.write(versionToDownload
+													.getBytes());
+											out.close();
+										}
+									}
+									else{
+										println("Management version already downloaded : '"
+												+ versionAlreadyDownloaded + "' !");
+									}
+									forceSendBundleList = false;
 									continue;
 								}
 
@@ -370,10 +398,10 @@ class SynchronizeBundlesCommand implements BundleListener {
 
 			((ManagementImpl) _management).refresh(null, _out);
 
-			if (changed || managementDeployedFileExist) {
+			if (changed || forceSendBundleList) {
 				try {
 					_management.sendBundleList(_management.getCurrentMode());
-					if (managementDeployedFileExist) {
+					if (forceSendBundleList) {
 						managementDeployedFile.delete();
 					}
 				} catch (Exception e) {
