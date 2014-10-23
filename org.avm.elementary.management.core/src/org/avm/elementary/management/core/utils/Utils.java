@@ -135,7 +135,7 @@ public class Utils {
 
 			inStream.close();
 			
-			while (output.length() <= 32) {
+			while (output.length() < 32) {
 				output.insert(0, "0");
 			}
 

@@ -174,7 +174,7 @@ public class Boot implements BundleActivator {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		while (output.length() <= 32) {
+		while (output.length() < 32) {
 			output.insert(0, "0");
 		}
 		return output.toString();
@@ -195,8 +195,7 @@ public class Boot implements BundleActivator {
 					.getAbsoluteFile() + "/" + filename));
 
 			result = (genmd5 != null && md5.equals(genmd5));
-			System.out.println("genmd5=" + genmd5 + ", md5=" + md5 + "(check="
-					+ result + ")");
+			System.out.println("[BOOTSTRAP] genmd5=" + genmd5 + ", md5=" + md5 + "(check="	+ result + ")");
 			br.close();
 
 		} catch (FileNotFoundException e) {
