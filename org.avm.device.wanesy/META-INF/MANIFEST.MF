@@ -19,3 +19,4 @@ Import-Package: javax.xml.parsers,
  org.xml.sax,
  org.xml.sax.helpers
 Service-Component: META-INF/activator.xml
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

@@ -3,9 +3,11 @@ SETCOLOR_SUCCESS="echo -en \\033[1;32m"
 SETCOLOR_FAILURE="echo -en \\033[1;31m"
 SETCOLOR_WARNING="echo -en \\033[1;33m"
 SETCOLOR_NORMAL="echo -en \\033[0;39m"
-groupid="fr.cityway.avm.embedded.tab"
+groupid="fr.cityway.avm.embedded"
 repo="http://nexus.paris.cityway.fr:8081/nexus/service/local/repositories/releases/content/"
+p2repo="http://dev.paris.cityway.fr/repo/fr.cityway.avm.embedded.target/tab"
 outputdir=""
+project=""
 filename=""
 version="LATEST"
 bundlelist=""
@@ -13,17 +15,17 @@ bundlelist=""
 function usage(){
 	#mvn org.apache.maven.plugins:maven-dependency-plugin:2.4:get -DartifactId=PCTC -DgroupId=fr.cityway.avm.simulator -Dversion=LATEST -DremoteRepositories=http://nexus.paris.cityway.fr:8081/nexus/service/local/repositories/releases/content/ -Ddest=./toto
 
-	echo "Usage : `basename $0` -a <artifactid> [-g <groupid>] [-v <version>] [-o <outputdir>]  [-r <repo>] [-f <bundle-list>]"
-	exit 1
+	echo "Usage : `basename $0` -a <artifactid> -p <project> [-g <groupid>] [-v <version>] [-o <outputdir>]  [-r <repo>] [-f <bundle-list>]"
 }
 
-function getVersion(){
+function getInfo(){
 	jarfile=$1
-	cuurentdir=`pwd`
-	workdir=`mktemp -d "/tmp/bundlesXXXX"` 
+	info=$2
+	curentdir=`pwd`
+	workdir=`mktemp -d "/tmp/modulesXXXX"` 
 	cd $workdir
 	jar xvf $jarfile META-INF/MANIFEST.MF > /dev/null 
-	echo `cat META-INF/MANIFEST.MF|grep Bundle-Version|sed "s/Bundle-Version: //g"| tr -d '\r'`
+	echo `cat META-INF/MANIFEST.MF|grep ^$info|sed "s/$info: //g"| tr -d '\r'`
 	rm -rf $workdir
 }
 
@@ -38,13 +40,26 @@ function download(){
 	filename="${bundlename}.jar"
 
 	echo -n "downloading $bundlename : "
-	CMD="mvn -U org.apache.maven.plugins:maven-dependency-plugin:2.4:get -DartifactId=$bundlename -DgroupId=$groupid -Dversion=$version -DremoteRepositories=$repo -Ddest=${outdir}/${filename}"
+	CMD="wget ${p2repo}/${filename} -O ${outdir}/${filename}"
 	#echo $CMD
-	$CMD > /dev/null
+	$CMD > /dev/null 2>&1
 	result=$?
-	
-	if [ "$result" == "0" ];then
-		newfilename="${bundlename}_`getVersion ${outdir}/${filename}`.jar"
+	if [ "$result" != "0" ];then
+		CMD="mvn -U org.apache.maven.plugins:maven-dependency-plugin:2.4:get -DartifactId=$bundlename -DgroupId=${groupid}.${project} -Dversion=$version -DremoteRepositories=$repo -Ddest=${outdir}/${filename}"
+		#echo $CMD
+		$CMD > /dev/null
+	fi
+	result=$?
+
+	filesize=`stat -c %s ${outdir}/${filename}`
+	if [ "$filesize" == "0" ];then
+		rm ${outdir}/${filename}
+		$SETCOLOR_FAILURE
+		echo  "*failed : file empty*"
+		$SETCOLOR_NORMAL
+	elif [ "$result" == "0" ];then
+		newfilename="${bundlename}_`getInfo ${outdir}/${filename} Bundle-Version`.jar"
+		rm ${bundlename}_*.jar > /dev/null 2>&1
 		mv ${outdir}/${filename} ${outdir}/${newfilename}
 		jar tvf ${outdir}/${newfilename}|grep -v META|grep -v config>/dev/null
 		if [ "$?" == "0" ];then
@@ -64,7 +79,7 @@ function download(){
 }
 
 $SETCOLOR_NORMAL
-while getopts "o:a:g:v:r:f:" optname
+while getopts "o:a:g:v:r:f:p:" optname
   do
     case "$optname" in
       "o")
@@ -85,8 +100,12 @@ while getopts "o:a:g:v:r:f:" optname
       "f")
         bundlelist=$OPTARG
         ;;
+      "p")
+        project=$OPTARG
+        ;;
        "?")
        	usage
+	exit 0
         ;;
       ":")
         echo "No argument value for option $OPTARG"
@@ -97,6 +116,14 @@ while getopts "o:a:g:v:r:f:" optname
         ;;
     esac
   done
+
+
+if [ "$project" == "" ];then
+	usage
+	echo "Project must be specified (tab, cg38, ...)"
+	exit 1
+fi
+
 
 
 if [ "$outputdir" == "" ];then
@@ -130,8 +157,7 @@ if [ ! -z "$bundlelist" ]; then
 				$SETCOLOR_NORMAL
 			fi
 		done	
-		zip -jr $outdir/BUNDLES.zip $outdir/*.jar	
-		#rm -rf $outdir
+		zip -jr $outdir/BUNDLES.zip $outdir/*.jar
 	fi
 
 	
@@ -139,6 +165,7 @@ elif [ ! -z "$artifactid" ]; then
 	download $artifactid $outputdir
 else
 	usage
+	exit 1
 fi
 
 
