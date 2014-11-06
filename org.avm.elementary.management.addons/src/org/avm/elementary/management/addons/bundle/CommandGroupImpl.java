@@ -420,7 +420,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			}			
 			
 			out.println("Using : "
-					+ ((ManagementImpl) _peer).getDownloadUrl(mode));
+					+ ((ManagementImpl) _peer).getUploadUrl(mode));
 			((ManagementImpl) _peer).sendBundleList(mode);
 
 		} catch (Exception e) {
