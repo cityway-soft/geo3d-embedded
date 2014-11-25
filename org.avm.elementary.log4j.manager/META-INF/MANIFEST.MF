@@ -6,6 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Cityway
 Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.apache.log4j,
+ org.apache.log4j.spi,
  org.avm.elementary.common,
  org.knopflerfish.service.console,
  org.osgi.framework,
