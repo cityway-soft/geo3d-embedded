@@ -5,11 +5,13 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.avm.device.afficheur.AfficheurProtocol;
+import org.avm.device.afficheur.Utils;
 
 public class GTMH_1 extends AfficheurProtocol {
 
 	public static byte CLEAR = 'C';
-	public static byte PRINT = '0';
+	public static byte DISPLAY_TEXT = '0';
+	public static byte SELF_TEST = '3';
 	public static byte ADDRESS = '0';
 	public static byte STX = 0x02;
 	public static byte ETX = 0x03;
@@ -49,8 +51,7 @@ public class GTMH_1 extends AfficheurProtocol {
 	public void print(String message) {
 		clear();
 		_log.info("Print " + "[" + this + "] " + message);
-		//--DLA : ajout d'espace pour que la police soit correcte (avec les accents)
-		byte[] buffer = generateMessage(message+ "                 ");
+		byte[] buffer = generateMessage(Utils.format(message));
 		_log.info("Send " + "[" + this + "] " + new String(buffer));
 
 		try {
@@ -70,7 +71,7 @@ public class GTMH_1 extends AfficheurProtocol {
 
 		try {
 			buffer.write(STX);
-			buffer.write(PRINT);
+			buffer.write(DISPLAY_TEXT);
 			buffer.write(ADDRESS);
 			buffer.write(message.getBytes());
 			buffer.write(ETX);
@@ -94,18 +95,30 @@ public class GTMH_1 extends AfficheurProtocol {
 		return (byte) ((-result) % 256);
 	}
 
-//	private static String toHexaString(byte[] data) {
-//		byte[] buffer = new byte[data.length * 2];
+//	public byte[] generateSelfTest() {
+//		_log.info("Status");
+//		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+//		buffer.write(STX);
+//		buffer.write(SELF_TEST);
+//		buffer.write(ADDRESS);
+//		buffer.write(ETX);
+//		byte crc = checksum(buffer.toByteArray(), 1, buffer.size() - 1);
+//		int rValue = crc & 0x0F;
+//		int lValue = (crc >> 4) & 0x0F;
+//		buffer.write((byte) ((lValue > 9) ? lValue + 0x37 : lValue + 0x30));
+//		buffer.write((byte) ((rValue > 9) ? rValue + 0x37 : rValue + 0x30));
 //
-//		for (int i = 0; i < data.length; i++) {
-//			int rValue = data[i] & 0x0000000F;
-//			int lValue = (data[i] >> 4) & 0x0000000F;
-//			buffer[i * 2] = (byte) ((lValue > 9) ? lValue + 0x37
-//					: lValue + 0x30);
-//			buffer[i * 2 + 1] = (byte) ((rValue > 9) ? rValue + 0x37
-//					: rValue + 0x30);
+//		_log.info("Send " + "[" + this + "] " + buffer);
+//
+//		try {
+//			send(buffer.toByteArray());
+//		} catch (IOException e) {
+//			_log.error(e.getMessage(), e);
 //		}
-//		return new String(buffer);
+//		
+//		
+//		return buffer.toByteArray();
 //	}
+
 
 }
