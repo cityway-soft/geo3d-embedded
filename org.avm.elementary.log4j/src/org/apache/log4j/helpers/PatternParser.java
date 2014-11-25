@@ -288,7 +288,7 @@ public class PatternParser {
 
 	private static class BasicPatternConverter extends PatternConverter {
 		int type;
-		static String dateFormatStr = "yyyy.MM.dd HH:mm:ss zzz";
+		static String dateFormatStr = "yyyy/MM/dd-HH:mm:ss,SSS";
 		static SimpleDateFormat gmtDateFormatter = new SimpleDateFormat(
 				dateFormatStr);
 		static SimpleDateFormat localDateFormatter = new SimpleDateFormat(

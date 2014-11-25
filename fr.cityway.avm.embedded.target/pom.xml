@@ -32,7 +32,7 @@
 		<module>../org.avm.business.parser.management</module>
 		<module>../org.avm.business.parser.phoebus</module>
 		<module>../org.avm.business.tft</module>
-		<module>../org.avm.business.tft.playzilla</module>
+		<!-- <module>../org.avm.business.tft.playzilla</module> -->
 		<module>../org.avm.business.tracking</module>
 		<module>../org.avm.business.vocal</module>
 		<module>../org.avm.business.billettique.atoumod</module>
@@ -89,6 +89,7 @@
 		<module>../org.avm.elementary.jdb</module>
 		<module>../org.avm.elementary.json</module>
 		<module>../org.avm.elementary.log4j</module>
+		<module>../org.avm.elementary.log4j.manager</module>
 		<module>../org.avm.elementary.management.addons</module>
 		<module>../org.avm.elementary.management.core</module>
 		<module>../org.avm.elementary.media.ctw</module>
