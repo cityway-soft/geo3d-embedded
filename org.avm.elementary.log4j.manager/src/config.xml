@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
+<cm_data version="0.1">
+<!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
+<configuration pid="org.avm.elementary.log4j.manager.Log4jManager" mode="new">
+<property name="service.pid">
+<value type="String">org.avm.elementary.log4j.manager.Log4jManager</value>
+</property>
+<property name="service.bundleLocation">
+<value type="String">initial@reference:file:../../../home/didier/Projets/workspa
+ces/embarque-geolia-CVS/avm/hmi/swt/org.avm.hmi.swt.avm/</value>
+</property>
+<property name="org.avm.config.version">
+<value type="Integer">1</value>
+</property>
+<property name="categories">
+<value type="String">#Tue Nov 25 10:23:44 CET 2014
+    org.avm=DEBUG
+    org.avm.device.usbmass.UsbMassImpl=WARN
+	org.avm.business.core.DefaultPrisePoste=WARN
+	org.avm.device.generic.gps=INFO
+	org.avm.device.generic.gsm=INFO
+	org.avm.hmi.swt.phony.PhonyImpl=INFO
+</value>
+</property>
+
+<property name="pattern">
+<value type="String">%d %-5p [%c] %m%n
+</value>
+</property>
+
+<property name="level">
+<value type="String">INFO
+</value>
+</property>
+
+<property name="colored">
+<value type="String">true
+</value>
+</property>
+
+<property name="end-date">
+<value type="String"></value>
+</property>
+
+<property name="filename">
+<value type="String">avm-{yyyy-MM-dd}.log</value>
+</property>
+
+<property name="rootdir">
+<value type="String">{0}/data/logs/</value>
+</property>
+
+<property name="config.date">
+<value type="String">Fri May 25 17:31:43 CEST 2012</value>
+</property>
+</configuration>
+</cm_data>
