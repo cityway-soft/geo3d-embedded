@@ -154,9 +154,7 @@ public class ConfigImpl extends AbstractConfig implements Config {
 		String sEndDate = (String) _config.get(Config.ENDDATE_TAG);
 		Date endDate = null;
 		if (sEndDate == null || sEndDate.equals("")) {
-			Calendar cal = Calendar.getInstance();
-			cal.add(Calendar.DAY_OF_MONTH, 1);
-			endDate = cal.getTime();
+			return null;
 		} else {
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
