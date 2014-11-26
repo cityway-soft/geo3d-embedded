@@ -649,9 +649,10 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 
 		// activation du bouton de mise en deviation si 'pas deja en deviation'
 		// et 'vehicule entre deux arret'
-		_sortieItineraireButton
-				.setEnabled((_avm.getModel().isHorsItineraire() == false)
-						&& (_avm.getModel().getState().getValue() == AvmModel.STATE_EN_COURSE_INTERARRET_SUR_ITINERAIRE));
+//		_sortieItineraireButton
+//				.setEnabled((_avm.getModel().isHorsItineraire() == false)
+//						&& (_avm.getModel().getState().getValue() == AvmModel.STATE_EN_COURSE_INTERARRET_SUR_ITINERAIRE));
+		_sortieItineraireButton.setEnabled(_avm.getModel().isHorsItineraire() == false);
 
 		layout();
 	}

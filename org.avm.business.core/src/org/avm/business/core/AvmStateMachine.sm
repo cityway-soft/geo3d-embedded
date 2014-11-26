@@ -148,7 +148,7 @@ Exit { exitHorsItineraire();
 // 		Trans 								Next State 					Actions
 
 		entree(balise:  int)
-		[ctxt.isArret(balise) == true]		ArretSurItineraire			{ actionFinHorsItineraire(balise);  }	
+		[ctxt.isArret(balise) == true && ctxt.isArretCourant(balise)==false]		ArretSurItineraire			{ actionFinHorsItineraire(balise);  }	
 			
 		sortieItineraire					nil							{  }
 }
@@ -173,8 +173,8 @@ Exit { }
 		
 		finCourse									ServiceNormalMap::AttenteSaisieCourse	{ actionSortieArret(); actionFinCourse(); }
 		
-		
-		sortieItineraire							nil										{  }
+		sortieItineraire							HorsItineraire							{ actionSortieItineraire(); }	
+//		sortieItineraire							nil										{  }
 		
 }
 

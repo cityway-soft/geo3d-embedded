@@ -1086,7 +1086,7 @@ public class AvmStateMachineContext
         {
             AvmStateMachine ctxt = context.getOwner();
 
-            if (ctxt.isArret(balise) == true)
+            if (ctxt.isArret(balise) == true && ctxt.isArretCourant(balise)==false)
             {
 
                 (context.getState()).Exit(context);
@@ -1233,8 +1233,20 @@ public class AvmStateMachineContext
 
         protected void sortieItineraire(AvmStateMachineContext context)
         {
+            AvmStateMachine ctxt = context.getOwner();
 
 
+            (context.getState()).Exit(context);
+            context.clearState();
+            try
+            {
+                ctxt.actionSortieItineraire();
+            }
+            finally
+            {
+                context.setState(EnCourseMap.HorsItineraire);
+                (context.getState()).Entry(context);
+            }
             return;
         }
 
