@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.avm.elementary.common.ManageableService;
 import org.avm.elementary.common.Scheduler;
 import org.avm.hmi.swt.desktop.Desktop;
+import org.avm.hmi.swt.desktop.DesktopIhm;
 import org.avm.hmi.swt.desktop.DesktopImpl;
 import org.avm.hmi.swt.desktop.DesktopStyle;
 import org.avm.hmi.swt.desktop.MessageBox;
@@ -143,8 +144,11 @@ public abstract class AbstractPanel extends Composite implements Listener,
 			button.setFont(font);
 		} else {
 			StateButton button = new StateButton(composite, SWT.BORDER);
-			button.setActiveColor(getDisplay().getSystemColor(SWT.COLOR_BLUE));
+			button.setActiveColor(DesktopIhm.VERT);	
+			button.setNotActiveColor(getDisplay().getSystemColor(SWT.COLOR_WHITE));
 			button.setText(name);
+			button.setNotActiveLabel("Désact");
+			button.setActiveLabel("Activer");
 			button.setData(cmdgroup);
 			button.addSelectionListener(_buttonSelectionListener);
 			button.setLayoutData(gridData);
