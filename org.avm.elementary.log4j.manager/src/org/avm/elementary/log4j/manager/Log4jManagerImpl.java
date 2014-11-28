@@ -68,6 +68,11 @@ public class Log4jManagerImpl implements Log4jManager, ConfigurableService {
 						.format(c.getLogRootDir(), arguments);
 				File fd = new File(text);
 				String rootDir = fd.getAbsolutePath();
+				
+				File dir = new File(rootDir);
+				if(dir.exists() == false){
+					dir.mkdirs();
+				}
 
 				String filename = rootDir + "/" + c.getFilename();
 
