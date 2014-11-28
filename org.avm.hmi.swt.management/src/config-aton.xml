@@ -10,7 +10,7 @@
 <value type="String">http://localhost/org.avm.hmi.swt.management.jar</value>
 </property>
 <property name="org.avm.config.version">
-<value type="Integer">52</value>
+<value type="Integer">53</value>
 </property>
 <property name="reboot">
 	<value type="String">#Tue Nov 21 11:52:37 CET 2006
@@ -51,7 +51,7 @@
 </property>
 <property name="firefox">
 	<value type="String">#Tue Nov 21 11:52:37 CET 2006
-	start=/management shell exec firefox;
+	start=/management shell exec /root/avm/bin/tft;
 	stop=/management shell exec "sh -c 'killall firefox-bin'"
 	name=Firefox
 	group=system
