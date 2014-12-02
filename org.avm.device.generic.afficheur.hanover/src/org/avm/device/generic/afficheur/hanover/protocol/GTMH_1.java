@@ -25,51 +25,13 @@ public class GTMH_1 extends AfficheurProtocol {
 
 	}
 
-//	public void clear() {
-//
-//		_log.info("Clear");
-//		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-//		buffer.write(STX);
-//		buffer.write(CLEAR);
-//		buffer.write(ADDRESS);
-//		buffer.write(ETX);
-//		byte crc = checksum(buffer.toByteArray(), 1, buffer.size() - 1);
-//		int rValue = crc & 0x0F;
-//		int lValue = (crc >> 4) & 0x0F;
-//		buffer.write((byte) ((lValue > 9) ? lValue + 0x37 : lValue + 0x30));
-//		buffer.write((byte) ((rValue > 9) ? rValue + 0x37 : rValue + 0x30));
-//
-//		_log.info("Send " + "[" + this + "] " + buffer);
-//
-//		try {
-//			send(buffer.toByteArray());
-//		} catch (IOException e) {
-//			_log.error(e.getMessage(), e);
-//		}
-//	}
 
-//	public void print(String message) {
-//		clear();
-//		_log.info("Print " + "[" + this + "] " + message);
-//		byte[] buffer = generateMessage(Utils.format(message));
-//		_log.info("Send " + "[" + this + "] " + new String(buffer));
-//
-//		try {
-//			send(buffer);
-//		} catch (IOException e) {
-//			// retry one
-//			try {
-//				send(buffer);
-//			} catch (IOException e1) {
-//				_log.error(e.getMessage(), e);
-//			}
-//		}
-//	}
 
 	public byte[] generateMessage(String message) {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		
-		String msg = Utils.format(message);
+		//String msg = "\\<" + Utils.format(message) + "         \\;";
+		String msg = "\\<" + message + "                                      \\;";
 
 		try {
 			buffer.write(STX);
