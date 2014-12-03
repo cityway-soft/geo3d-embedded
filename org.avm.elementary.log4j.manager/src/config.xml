@@ -11,7 +11,7 @@
 ces/embarque-geolia-CVS/avm/hmi/swt/org.avm.hmi.swt.avm/</value>
 </property>
 <property name="org.avm.config.version">
-<value type="Integer">1</value>
+<value type="Integer">2</value>
 </property>
 <property name="categories">
 <value type="String">#Tue Nov 25 10:23:44 CET 2014
@@ -21,6 +21,7 @@ ces/embarque-geolia-CVS/avm/hmi/swt/org.avm.hmi.swt.avm/</value>
 	org.avm.device.generic.gps=INFO
 	org.avm.device.generic.gsm=INFO
 	org.avm.hmi.swt.phony.PhonyImpl=INFO
+	org.avm.device.generic.can=INFO
 </value>
 </property>
 
@@ -44,7 +45,7 @@ ces/embarque-geolia-CVS/avm/hmi/swt/org.avm.hmi.swt.avm/</value>
 </property>
 
 <property name="filename">
-<value type="String">avm-{yyyy-MM-dd}.log</value>
+<value type="String">avmapp-{dd}.log</value>
 </property>
 
 <property name="rootdir">

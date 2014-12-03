@@ -9,7 +9,7 @@ public class RollingFileOutputStream extends FileOutputStream {
 
 	public RollingFileOutputStream(String filename)
 			throws FileNotFoundException {
-		super(filename);
+		super(filename,true);
 		this.setFilename(filename);
 	}
 

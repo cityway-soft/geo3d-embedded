@@ -2,6 +2,7 @@ package org.avm.elementary.log4j.manager.bundle;
 
 import org.avm.elementary.common.AbstractActivator;
 import org.avm.elementary.common.ConfigurableService;
+import org.avm.elementary.common.ManageableService;
 import org.avm.elementary.log4j.manager.Log4jManager;
 import org.avm.elementary.log4j.manager.Log4jManagerImpl;
 import org.osgi.service.cm.ConfigurationAdmin;
@@ -31,11 +32,26 @@ public class Activator extends AbstractActivator {
 	protected void start(ComponentContext context) {
 		initializeConfiguration();
 		initializeCommandGroup();
+		startService();
 	}
 
 	protected void stop(ComponentContext context) {
+		stopService();
 		disposeCommandGroup();
 		disposeConfiguration();
+	}
+
+	// service
+	private void stopService() {
+		if (peer instanceof ManageableService) {
+			((ManageableService) peer).stop();
+		}
+	}
+
+	private void startService() {
+		if (peer instanceof ManageableService) {
+			((ManageableService) peer).start();
+		}
 	}
 
 	// config
@@ -46,7 +62,7 @@ public class Activator extends AbstractActivator {
 		try {
 			_config = new ConfigImpl(_context, _cm);
 			_config.start();
-			
+
 			if (peer instanceof ConfigurableService) {
 				((ConfigurableService) peer).configure(_config);
 

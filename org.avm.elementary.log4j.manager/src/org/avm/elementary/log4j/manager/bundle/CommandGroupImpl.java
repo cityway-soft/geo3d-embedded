@@ -1,5 +1,6 @@
 package org.avm.elementary.log4j.manager.bundle;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.Dictionary;
@@ -16,15 +17,11 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 	public static final String COMMAND_GROUP = "log4j.manager";
 
-	private ConfigImpl config;
-
 	private Log4jManager peer;
 
 	CommandGroupImpl(ComponentContext context, Log4jManager peer,
 			ConfigImpl config) {
 		super(context, config, COMMAND_GROUP, "Log4j settings");
-
-		this.config = config;
 
 		this.peer = peer;
 	}
@@ -39,7 +36,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		String category = ((String) opts.get("category")).trim();
 		String level = ((String) opts.get("level"));
 
-		Properties p = config.get(Config.CATEGORIES_TAG);
+		Properties p = ((ConfigImpl) _config).get(Config.CATEGORIES_TAG);
 		if (p == null) {
 			p = new Properties();
 		}
@@ -48,9 +45,9 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 		peer.setCategory(category, level);
 
-		config.putCategories(p);
+		((ConfigImpl) _config).putCategories(p);
 
-		config.updateConfig();
+		_config.updateConfig();
 
 		out.println("Add '" + category + "' with level :   " + level);
 		return 0;
@@ -65,16 +62,16 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			Session session) {
 		String category = ((String) opts.get("category")).trim();
 
-		Properties p = config.get(Config.CATEGORIES_TAG);
+		Properties p = ((ConfigImpl) _config).get(Config.CATEGORIES_TAG);
 		if (p != null) {
 			p.remove(category);
 		}
 
 		peer.setCategory(category, "WARN");
 
-		config.putCategories(p);
+		((ConfigImpl) _config).putCategories(p);
 
-		config.updateConfig();
+		_config.updateConfig();
 
 		out.println("Remove '" + category + "' (level set to WARN)");
 		return 0;
@@ -87,7 +84,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 	public int cmdList(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
-		Properties p = config.get(Config.CATEGORIES_TAG);
+		Properties p = ((ConfigImpl) _config).get(Config.CATEGORIES_TAG);
 		if (p != null && p.isEmpty() == false) {
 			Enumeration e = p.keys();
 			while (e.hasMoreElements()) {
@@ -112,11 +109,11 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 		String pattern = ((String) opts.get("pattern"));
 		if (pattern != null) {
-			config.setPattern(pattern);
-			config.updateConfig();
+			((ConfigImpl) _config).setPattern(pattern);
+			_config.updateConfig();
 		}
 
-		out.println("Pattern:" + config.getPattern());
+		out.println("Pattern:" + ((ConfigImpl) _config).getPattern());
 
 		return 0;
 	}
@@ -131,17 +128,15 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 		String colored = ((String) opts.get("colored"));
 		if (colored != null) {
-			config.setColored(colored.equalsIgnoreCase("true"));
-			config.updateConfig();
+			((ConfigImpl) _config).setColored(colored.equalsIgnoreCase("true"));
+			_config.updateConfig();
 		}
 
-		out.println("Colored:" + config.getColored());
+		out.println("Colored:" + ((ConfigImpl) _config).getColored());
 
 		return 0;
 	}
-	
-	
-	
+
 	// set filename
 	public final static String USAGE_SETFILENAME = "[<filename>]";
 
@@ -152,16 +147,45 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 		String filename = ((String) opts.get("filename"));
 		if (filename != null) {
-			config.setFilename(filename);
-			config.updateConfig();
+			((ConfigImpl) _config).setFilename(filename);
+			_config.updateConfig();
 		}
 
-		out.println("Log filename :" + config.getFilename());
+		out.println("Log filename :" + ((ConfigImpl) _config).getFilename());
 
 		return 0;
 	}
-	
-	
+
+	// set eraselogs
+	public final static String USAGE_ERASELOGS = "";
+
+	public final static String[] HELP_ERASELOGS = new String[] { "Erase all log files", };
+
+	public int cmdEraselogs(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+
+		String rootdir = ((ConfigImpl) _config).getLogRootDir();
+		int count = -1;
+		if (rootdir != null) {
+			File dir = new File(rootdir);
+			File[] content = dir.listFiles();
+			if (content != null) {
+				count = content.length;
+				for (int i = 0; i < content.length; i++) {
+					content[i].delete();
+				}
+			}
+			_config.updateConfig();
+		}
+		if (count != -1) {
+			out.println("#" + count + "file(s) erased.");
+		} else {
+			out.println("No file to erase (rootdir=" + rootdir + ")");
+		}
+
+		return 0;
+	}
+
 	// set rootdir
 	public final static String USAGE_SETROOTDIR = "[<rootdir>]";
 
@@ -172,16 +196,15 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 		String rootdir = ((String) opts.get("rootdir"));
 		if (rootdir != null) {
-			config.setLogRootDir(rootdir);
-			config.updateConfig();
+			((ConfigImpl) _config).setLogRootDir(rootdir);
+			_config.updateConfig();
 		}
 
-		out.println("Log rootdir:" + config.getLogRootDir());
+		out.println("Log rootdir:" + ((ConfigImpl) _config).getLogRootDir());
 
 		return 0;
 	}
-	
-	
+
 	// set rootdir
 	public final static String USAGE_SETENDDATE = "[<enddate>]";
 
@@ -192,11 +215,11 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 		String endDate = ((String) opts.get("enddate"));
 		if (endDate != null) {
-			config.setEndLogDate(endDate);
-			config.updateConfig();
+			((ConfigImpl) _config).setEndLogDate(endDate);
+			_config.updateConfig();
 		}
 
-		out.println("End date:" + config.getEndLogDate());
+		out.println("End date:" + ((ConfigImpl) _config).getEndLogDate());
 
 		return 0;
 	}
