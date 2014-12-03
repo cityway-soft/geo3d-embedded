@@ -435,6 +435,33 @@ public class SuiviItineraire implements ConfigurableService {
 		return (getCourse().getPointAvecId(balise) != null);
 	}
 
+	public boolean isArretEnAval(int balise) {
+		Point[] points = getCourse().getPointAvecId(balise);
+		boolean result = false;
+		if (points != null) {
+			result = false;
+			Point dernierPoint = getDernierArret();
+			if (dernierPoint != null) {
+
+				for (int i = 0; i < points.length; i++) {
+					if (points[i].getRang() > dernierPoint.getRang()) {
+						// --si c'est un arret en _aval_ : son rang est plus grand que
+						// le dernier arret desservi
+						return true;
+					}
+
+				}
+			} else {
+				// -- la course n'a pas commence' ; les 'points' sont donc à
+				// venir...
+				result=true;
+			}
+
+		}
+		return result;
+
+	}
+
 	public boolean isArretCourant(int balise) {
 		return (getDernierArret() != null && getDernierArret().getId() == balise);
 	}

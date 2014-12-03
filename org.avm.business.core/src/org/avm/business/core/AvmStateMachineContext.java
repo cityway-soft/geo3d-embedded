@@ -1086,7 +1086,7 @@ public class AvmStateMachineContext
         {
             AvmStateMachine ctxt = context.getOwner();
 
-            if (ctxt.isArret(balise) == true && ctxt.isArretCourant(balise)==false)
+            if (ctxt.isArretEnAval(balise)==true )
             {
 
                 (context.getState()).Exit(context);

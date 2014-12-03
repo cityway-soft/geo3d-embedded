@@ -5,7 +5,6 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 import org.avm.business.core.Avm;
-import org.avm.business.core.AvmModel;
 import org.avm.business.core.event.Course;
 import org.avm.business.core.event.Point;
 import org.avm.business.core.event.ServiceAgent;
@@ -400,7 +399,6 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 				activateFinServiceButton(true);
 				activateFinCourseButton(true);
 				activateSortieItineraireButton(true);
-				// activateAvanceRetardPanel(true);
 				activateDemoButton(true);
 
 				if (_activeIHM != _suiviCourse || _activeIHM == null) {
@@ -427,7 +425,6 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 						refresh(_compositePanels);
 						refresh(_compositeButtons);
 
-
 						_suiviCourse.activatePanel();
 					}
 					_activeIHM = _suiviCourse;
@@ -448,7 +445,6 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 			return;
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				// removeAnnulerButton();
 				removeFinServiceButton();
 				removeFinCourseButton();
 				removeDemoButton();
@@ -471,10 +467,6 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 					_suiviCourse.dispose();
 				}
 
-				// if (_avance_retard != null && !_avance_retard.isDisposed()) {
-				// _avance_retard.dispose();
-				// _avance_retard = null;
-				// }
 				if (_sortieItineraireButton != null
 						&& !_sortieItineraireButton.isDisposed()) {
 					_sortieItineraireButton.dispose();
@@ -500,6 +492,7 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 			public void run() {
 				_log.debug("AvmIhm setPoint : _suivicourse= " + _suiviCourse);
 				if (_suiviCourse != null && _suiviCourse.isDisposed() == false) {
+					System.err.println("Nom=" + point.getNom());
 					_suiviCourse.setPoint(point);
 				}
 
@@ -513,15 +506,10 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 			return;
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
-
 				_log.debug("AvmIhm setAvanceRetard : _suivicourse= "
 						+ _suiviCourse);
-				if (_suiviCourse != null /*
-										 * && _avance_retard != null &&
-										 * _avance_retard.isDisposed() == false
-										 */) {
-					// _avance_retard.setText(ar
-					//							+ Messages.getString("AvmIhm.min")); //$NON-NLS-1$
+				if (_suiviCourse != null) {
+
 					_suiviCourse.setAvanceRetard(ar);
 					refresh(_suiviCourse);
 				}
@@ -586,11 +574,9 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 			return;
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				_log.debug("AvmIhm.java setHorsItineraire (asyncExec) : BEGIN");
 				if (_suiviCourse != null) {
 					_suiviCourse.setHorsItineraire(true);
 				}
-				_log.debug("AvmIhm.java setHorsItineraire (asyncExec) : END");
 			}
 		});
 
@@ -649,10 +635,12 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 
 		// activation du bouton de mise en deviation si 'pas deja en deviation'
 		// et 'vehicule entre deux arret'
-//		_sortieItineraireButton
-//				.setEnabled((_avm.getModel().isHorsItineraire() == false)
-//						&& (_avm.getModel().getState().getValue() == AvmModel.STATE_EN_COURSE_INTERARRET_SUR_ITINERAIRE));
-		_sortieItineraireButton.setEnabled(_avm.getModel().isHorsItineraire() == false);
+		// _sortieItineraireButton
+		// .setEnabled((_avm.getModel().isHorsItineraire() == false)
+		// && (_avm.getModel().getState().getValue() ==
+		// AvmModel.STATE_EN_COURSE_INTERARRET_SUR_ITINERAIRE));
+		_sortieItineraireButton
+				.setEnabled(_avm.getModel().isHorsItineraire() == false);
 
 		layout();
 	}

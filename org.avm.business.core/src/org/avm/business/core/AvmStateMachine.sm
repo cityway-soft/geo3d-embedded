@@ -102,7 +102,7 @@ Exit {  }
 {
 // 		Trans 										Next State 									Actions
 		depart(balise: int)										
-		[ctxt.isArret(balise) == true]				EnCourseMap::ArretSurItineraire				{ actionEntreeArret(balise);actionDepart(); }
+		[ctxt.isArret(balise) == true]		EnCourseMap::ArretSurItineraire				{ actionEntreeArret(balise);actionDepart(); }
 
 		depart(balise: int)										
 		[ctxt.isArret(balise) == false]				EnCourseMap::HorsItineraire					{ actionDepart(); }
@@ -148,7 +148,7 @@ Exit { exitHorsItineraire();
 // 		Trans 								Next State 					Actions
 
 		entree(balise:  int)
-		[ctxt.isArret(balise) == true && ctxt.isArretCourant(balise)==false]		ArretSurItineraire			{ actionFinHorsItineraire(balise);  }	
+		[ctxt.isArretEnAval(balise)==true ]		ArretSurItineraire			{ actionFinHorsItineraire(balise);  }	
 			
 		sortieItineraire					nil							{  }
 }

@@ -92,4 +92,6 @@ public interface AvmStateMachine extends Avm {
 
 	void checkAutomaticCourse();
 
+	boolean isArretEnAval(int balise);
+
 }
