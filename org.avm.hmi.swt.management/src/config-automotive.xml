@@ -10,7 +10,7 @@
 <value type="String">http://localhost/org.avm.hmi.swt.management.jar</value>
 </property>
 <property name="org.avm.config.version">
-<value type="Integer">43</value>
+<value type="Integer">44</value>
 </property>
 <property name="reboot">
 	<value type="String">#Tue Nov 21 11:52:37 CET 2006
@@ -63,6 +63,17 @@
 	group=system
 	</value>
 </property>
+
+<property name="calib">
+	<value type="String">#Tue Nov 21 11:52:37 CET 2006
+	start=/management shell exec calib.sh;
+	stop=/management shell exec "sh -c 'killall calib.sh'"
+	name=Calibrage
+	group=system
+	</value>
+</property>
+
+ 
 <property name="firefox">
 	<value type="String">#Tue Nov 21 11:52:37 CET 2006
 	start=/management shell exec firefox;

@@ -31,30 +31,31 @@ public class MOBITEC extends AfficheurProtocol {
 	public MOBITEC() {
 	}
 
-	public void print(String message) {
-
-		_log.debug("print " + "[" + this + "] " + message);
-		byte[] buffer = generateMessage(Utils.format(message));
-		_log.debug("end " + "[" + this + "] " + toHexaString(buffer));
-
-		try {
-			send(buffer);
-		} catch (IOException e) {
-			// retry one
-			try {
-				send(buffer);
-			} catch (IOException e1) {
-				_log.error(e.getMessage(), e);
-			}
-		}
-	}
+//	public void print(String message) {
+//
+//		_log.debug("print " + "[" + this + "] " + message);
+//		byte[] buffer = generateMessage(Utils.format(message));
+//		_log.debug("end " + "[" + this + "] " + toHexaString(buffer));
+//
+//		try {
+//			send(buffer);
+//		} catch (IOException e) {
+//			// retry one
+//			try {
+//				send(buffer);
+//			} catch (IOException e1) {
+//				_log.error(e.getMessage(), e);
+//			}
+//		}
+//	}
 
 	public byte[] generateMessage(String message) {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
 		try {
+			String msg = Utils.format(message);
 			buffer.write(COMMAND);
-			buffer.write(message.getBytes());
+			buffer.write(msg.getBytes());
 			buffer.write(CR);
 			byte crc = (byte) (checksum(buffer.toByteArray(), 0, buffer.size()) ^ 0x7F);
 			buffer.write(crc);

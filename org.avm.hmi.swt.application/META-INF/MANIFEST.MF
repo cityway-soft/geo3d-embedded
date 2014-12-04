@@ -4,7 +4,8 @@ Bundle-Name: IHM Application
 Bundle-SymbolicName: org.avm.hmi.swt.application
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .
-Import-Package: org.avm.elementary.management.core,
+Import-Package: org.apache.log4j,
+ org.avm.elementary.management.core,
  org.eclipse.swt;resolution:=optional,
  org.eclipse.swt.custom;resolution:=optional,
  org.eclipse.swt.events;resolution:=optional,

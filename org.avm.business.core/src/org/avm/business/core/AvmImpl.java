@@ -21,7 +21,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.avm.business.core.bundle.ConfigImpl;
 import org.avm.business.core.event.Authentification;
 import org.avm.business.core.event.Course;
@@ -130,8 +129,6 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 
 	private transient AlarmService _alarmService;
 
-	private int _lastState = -1;
-
 	private AvmImpl() {
 		_model = new AvmModelManager();
 		init();
@@ -194,17 +191,18 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 	 * .database.Database)
 	 */
 	public void setDatabase(Database database) {
-		int currentVersion=-1;
-		
-		if (_currentDatasource != null){
+		int currentVersion = -1;
+
+		if (_currentDatasource != null) {
 			currentVersion = _currentDatasource.getVersion();
 		}
-		
+
 		debug("Initialisation de la database " + database); //$NON-NLS-1$
 		_databaseDatasource = AvmDatabaseDatasource.getInstance();
 		try {
 			int lastVersion = _databaseDatasource.getVersion();
-			if (lastVersion != 0 && currentVersion != _databaseDatasource.getVersion()){
+			if (lastVersion != 0
+					&& currentVersion != _databaseDatasource.getVersion()) {
 				finService();
 			}
 			_databaseDatasource.setDatabase(database);
@@ -645,8 +643,9 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 				initService(priseService.getEntete().getService());
 				sendMessage(priseService);
 				try {
-					//-- pour éviter d'envoyer en même temps prise de service et prise de course
-					//-- (pas le temps de faire mieux!!!)
+					// -- pour éviter d'envoyer en même temps prise de service
+					// et prise de course
+					// -- (pas le temps de faire mieux!!!)
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 				}
@@ -1196,6 +1195,12 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 		debug(balise + " is arret : " + result); //$NON-NLS-1$
 		return result;
 	}
+	
+	public boolean isArretEnAval(int balise) {
+		boolean result = _suiviItineraire.isArretEnAval(balise);
+		debug(balise + " is arret en aval : " + result); //$NON-NLS-1$
+		return result;
+	}
 
 	public boolean isProchainArret(int balise) {
 		boolean result = _suiviItineraire.isProchainArret(balise);
@@ -1246,7 +1251,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 	public void actionFinHorsItineraire(int balise) {
 		_suiviItineraire.entree(balise, true);
 	}
-	
+
 	public void actionEntreeArret(int balise) {
 		_suiviItineraire.entree(balise);
 	}
@@ -1473,17 +1478,17 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 	}
 
 	public void checkAutomaticCourse() {
-		System.out.println("auto: " + _config.isAutomaticCourseMode());
-		System.out.println("sa: " + _model.getServiceAgent());
+		debug("auto: " + _config.isAutomaticCourseMode());
+		debug("sa: " + _model.getServiceAgent());
 
 		if (_config.isAutomaticCourseMode() && _model.getServiceAgent() != null) {
 			ServiceAgent sa = _model.getServiceAgent();
-			System.out.println("sa auto " + sa.isAutomaticCourse());
-			System.out.println("sa lib " + sa.getLibelle());
-			System.out.println("sa lab " + sa.getAutomaticLabel());
+			debug("sa auto " + sa.isAutomaticCourse());
+			debug("sa lib " + sa.getLibelle());
+			debug("sa lab " + sa.getAutomaticLabel());
 			if (sa != null && sa.isAutomaticCourse()) {
 				int idu = _model.getLastCourseIdu();
-				System.out.println("idu " + idu);
+				debug("idu " + idu);
 				if (idu != -1) {
 					Course nextCourse = sa.getNextCourse(idu);
 					resetCourse();

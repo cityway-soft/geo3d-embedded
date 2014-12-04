@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Plugin de paramétrage de log4
+Bundle-SymbolicName: org.avm.elementary.log4j.manager
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Cityway
+Import-Package: EDU.oswego.cs.dl.util.concurrent,
+ org.apache.log4j,
+ org.apache.log4j.spi,
+ org.avm.elementary.common,
+ org.knopflerfish.service.console,
+ org.osgi.framework,
+ org.osgi.service.cm,
+ org.osgi.service.component
+Bundle-ClassPath: .
+Service-Component: META-INF/activator.xml
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

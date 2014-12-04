@@ -18,7 +18,6 @@ import org.avm.hmi.swt.desktop.DesktopInjector;
 import org.avm.hmi.swt.desktop.MessageBox;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.osgi.util.measurement.State;
 
@@ -58,6 +57,8 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 	private Object _taskId;
 
 	private JDB _jdb;
+
+	private boolean phonyTabActivated = false;
 
 	public PhonyImpl() {
 		_log = Logger.getInstance(this.getClass());
@@ -130,11 +131,11 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 					_signalLevel = new SignalLevelIhm(_desktop.getRightPanel(),
 							SWT.BORDER);
 					GridData grid = new GridData();
-					grid.heightHint=30;
-					grid.horizontalAlignment=GridData.FILL;
+					grid.heightHint = 30;
+					grid.horizontalAlignment = GridData.FILL;
 					_signalLevel.setLayoutData(grid);
-					//_desktop.getRightPanel().layout();
-					//_signalLevel.layout();
+					// _desktop.getRightPanel().layout();
+					// _signalLevel.layout();
 					checkEnable();
 				}
 			}
@@ -177,9 +178,11 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 				break;
 			case PhoneEvent.RING: {
 				_log.debug("Phony Event Ring"); //$NON-NLS-1$
-				_desktop.activateItem(NAME);
+				if (phonyTabActivated == false) {
+					_desktop.activateItem(NAME);
+					phonyTabActivated = true;
+				}
 				PhoneRingEvent re = (PhoneRingEvent) msg;
-				_desktop.activateItem(NAME);
 				_phonyihm.ringing(re.getCallingNumber());
 				setVolume(_phonyihm.getVolume());
 			}
@@ -192,6 +195,7 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 			case PhoneEvent.ON_LINE: {
 				_log.debug("Phony Event OnLine"); //$NON-NLS-1$
 				_phonyihm.online();
+				phonyTabActivated = false;
 			}
 				break;
 
@@ -203,6 +207,7 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 			case PhoneEvent.ERROR: {
 				_log.debug("Phony Event Ready/Error/No Carrier"); //$NON-NLS-1$
 				_phonyihm.hangup();
+				phonyTabActivated = false;
 			}
 				break;
 			case PhoneEvent.MODEM_NOT_AVAILABLE: {
@@ -278,15 +283,12 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 		if (_phone != null && _phonyihm != null) {
 			_phonyihm.update(_model);
 			_phonyihm.setVolume(_phone.getDefaultSoundVolume());
-			//setVolume(_phone.getDefaultSoundVolume());
+			// setVolume(_phone.getDefaultSoundVolume());
 		}
 	}
 
 	public void unsetPhony(org.avm.device.phony.Phony phony) {
 		_phone = null;
-		if (_phonyihm != null) {
-			_phonyihm.setPhony(null);
-		}
 	}
 
 	// Directory

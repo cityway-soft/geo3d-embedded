@@ -539,7 +539,7 @@ public class PhonyImpl implements Phony, ConfigurableService,
 					break;
 				}
 				// audio conducteur on
-				setAudioConducteur(true);
+				setAudioConducteur(false);
 				// listen sound config
 				setSoundConfiguration(LISTEN_CONFIGURATION);
 				// listen mode on

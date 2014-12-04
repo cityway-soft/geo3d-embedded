@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.elementary.log4j.manager" immediate="true">
+	<implementation class="org.avm.elementary.log4j.manager.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.elementary.log4j.manager.Log4jManager"/>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin"/>	
+
+</component>

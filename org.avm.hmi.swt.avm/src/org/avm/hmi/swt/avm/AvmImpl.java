@@ -1,7 +1,6 @@
 package org.avm.hmi.swt.avm;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.avm.business.core.Avm;
 import org.avm.business.core.AvmModel;
 import org.avm.business.core.event.Course;
@@ -14,7 +13,6 @@ import org.avm.elementary.common.ConsumerService;
 import org.avm.elementary.common.ManageableService;
 import org.avm.elementary.useradmin.UserSessionService;
 import org.avm.elementary.useradmin.UserSessionServiceInjector;
-import org.avm.hmi.swt.avm.bundle.ConfigImpl;
 import org.avm.hmi.swt.desktop.Desktop;
 import org.avm.hmi.swt.desktop.MessageBox;
 import org.eclipse.swt.SWT;
@@ -51,9 +49,8 @@ public class AvmImpl implements ConsumerService, ManageableService,
 	private boolean _georefMode;
 
 	private Object _lastError;
-	
-	private int _periode=12;
 
+	private int _periode = 12;
 
 	public AvmImpl() {
 		_log = Logger.getInstance(this.getClass());
@@ -83,8 +80,7 @@ public class AvmImpl implements ConsumerService, ManageableService,
 				if (_avmihm == null) {
 					try {
 						_log.info("Open AvmIHM...!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-						_avmihm = new AvmIhm(_desktop.getMainPanel(),
-								SWT.NONE);
+						_avmihm = new AvmIhm(_desktop.getMainPanel(), SWT.NONE);
 						_avmihm.setAvm(_avm);
 						_avmihm.setBase(_desktop);
 						_avmihm.setDemoMode(_demoMode);
@@ -102,12 +98,9 @@ public class AvmImpl implements ConsumerService, ManageableService,
 					}
 
 				}
-				
 
-				
 				_desktop.addTabItem(NAME, _avmihm, 0);
 				_desktop.activateItem(NAME);
-
 
 			}
 		});
@@ -132,7 +125,8 @@ public class AvmImpl implements ConsumerService, ManageableService,
 			State state = (State) o;
 			if (state.getName().equals(UserSessionService.class.getName())) {
 				notifyUserSessionService(state);
-			} else if (_session != null && _session.getState().getValue() == UserSessionService.AUTHENTICATED) {
+			} else if (_session != null
+					&& _session.getState().getValue() == UserSessionService.AUTHENTICATED) {
 				notifyAvm(state);
 			}
 		} else if (o instanceof AvanceRetard) {
@@ -140,12 +134,15 @@ public class AvmImpl implements ConsumerService, ManageableService,
 			if (_avmihm != null) {
 				_avmihm.setAvanceRetard(_avm.getModel().getAvanceRetard());
 			}
+
 		} else if (o instanceof Point) {
 			_log.debug("Receive 'Point' : " + o); //$NON-NLS-1$
+
 			if (_avmihm != null) {
 				_avmihm.setPoint(_avm.getModel().getDernierPoint());
 				_avmihm.setAvanceRetard(_avm.getModel().getAvanceRetard());
 			}
+
 		}
 
 	}
@@ -160,7 +157,8 @@ public class AvmImpl implements ConsumerService, ManageableService,
 	}
 
 	public synchronized void notifyAvm(State state) {
-		if (_avmihm != null && _avm != null && _avmihm.isDisposed() == false && isAuthenticated()) {
+		if (_avmihm != null && _avm != null && _avmihm.isDisposed() == false
+				&& isAuthenticated()) {
 			switch (state.getValue()) {
 			case AvmModel.STATE_INITIAL: {
 				activateInitial();
@@ -352,9 +350,11 @@ public class AvmImpl implements ConsumerService, ManageableService,
 			_avmihm.setGeorefRole(b);
 		}
 	}
-	
-	private boolean isAuthenticated(){
-		return _session != null && _session.getState().getValue() == UserSessionService.AUTHENTICATED && _session.hasRole("conducteur");
+
+	private boolean isAuthenticated() {
+		return _session != null
+				&& _session.getState().getValue() == UserSessionService.AUTHENTICATED
+				&& _session.hasRole("conducteur");
 	}
 
 	public void login() {
@@ -368,7 +368,7 @@ public class AvmImpl implements ConsumerService, ManageableService,
 			if (isAuthenticated()) {
 				open();
 				setDemoMode(_session.hasRole("demo")
-						|| _session.hasRole("test"));
+						|| _session.hasRole("simulation"));
 				setGeorefRole(_session.hasRole("georef"));
 			}
 		}
@@ -384,12 +384,12 @@ public class AvmImpl implements ConsumerService, ManageableService,
 				}
 			}
 		});
-		
+
 	}
 
 	public void setUserSessionService(UserSessionService service) {
 		_session = service;
-		//login();
+		// login();
 	}
 
 	public void unsetUserSessionService(UserSessionService service) {
@@ -397,18 +397,18 @@ public class AvmImpl implements ConsumerService, ManageableService,
 	}
 
 	public void configure(Config config) {
-		_periode = ((AvmIhmConfig)config).getPeriode();
+		_periode = ((AvmIhmConfig) config).getPeriode();
 	}
 
 	public void setDemoPeriode(int periode) {
 		_periode = periode;
-		if (_avmihm != null){
+		if (_avmihm != null) {
 			_avmihm.setDemoPeriode(periode);
-		} 
+		}
 	}
 
 	public void setDemoAR(int val) {
-		if (_avmihm != null){
+		if (_avmihm != null) {
 			_avmihm.setAvanceRetard(val);
 		}
 	}

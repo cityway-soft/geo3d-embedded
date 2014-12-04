@@ -78,8 +78,7 @@ public class ComptageService extends AbstractDriver implements Comptage,
 		try {
 			_port.open();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			_log.error("Enable to open Elinap device ("+e.getMessage()+")");
 		}
 		_port.start();
 		_port.addListener(this);

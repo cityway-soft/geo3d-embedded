@@ -180,9 +180,15 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			try {
 				if (mode.equals("public")) {
 					_peer.setPublicMode();
+					//-- url current (i.e user) est écrasée avec celle "public"
+					_peer.setDownloadUrl(_peer.getDownloadUrl(Management.MODE_PUBLIC));
+					_peer.setUploadUrl(_peer.getUploadUrl(Management.MODE_PUBLIC));
 				} else {
 					mode = "private";
 					_peer.setPrivateMode();
+					//-- url current (i.e user) est écrasée avec celle "private"
+					_peer.setDownloadUrl(_peer.getDownloadUrl(Management.MODE_PRIVATE));
+					_peer.setUploadUrl(_peer.getUploadUrl(Management.MODE_PRIVATE));
 				}
 
 				if (bSave) {
@@ -340,7 +346,6 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	public int cmdSynchronize(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
 		String smode = ((String) opts.get("mode"));
-		out.println("debug: mode=" + smode);
 		if (smode != null) {
 			if (smode.equals("default")) {
 				ManagementPropertyFile configuration = ManagementPropertyFile
@@ -362,7 +367,6 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			}
 		}
 		try {
-			out.println("debug: mode int =" + mode);
 			((ManagementImpl) _peer).setCurrentMode(mode);
 		} catch (MalformedURLException e) {
 			out.print(e.getMessage());
@@ -420,7 +424,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			}			
 			
 			out.println("Using : "
-					+ ((ManagementImpl) _peer).getDownloadUrl(mode));
+					+ ((ManagementImpl) _peer).getUploadUrl(mode));
 			((ManagementImpl) _peer).sendBundleList(mode);
 
 		} catch (Exception e) {

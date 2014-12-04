@@ -18,8 +18,12 @@ public class Sender implements Runnable {
 
 	protected volatile boolean shutdown_;
 
+	private static final int QUEUE_SIZE = 50;
+	
+	private long lastTime=0;
+
 	protected Sender() {
-		this(new BoundedLinkedQueue(50));
+		this(new BoundedLinkedQueue(QUEUE_SIZE));
 	}
 
 	protected Sender(Channel queue) {
@@ -46,7 +50,8 @@ public class Sender implements Runnable {
 		_thread = null;
 	}
 
-	public  synchronized void send(Hashtable medias, String mediaName, Dictionary header, byte[] data) {
+	public synchronized void send(Hashtable medias, String mediaName,
+			Dictionary header, byte[] data) {
 		try {
 			execute(new SendTask(medias, mediaName, header, data));
 		} catch (InterruptedException e) {
@@ -73,6 +78,16 @@ public class Sender implements Runnable {
 					} else if (task != null) {
 						task.run();
 						task = (Runnable) (_queue.take());
+						long delta = System.currentTimeMillis() - lastTime;
+						if (delta < 200 || delta > 0){
+							sleep(delta);
+						}
+						else{
+							//--delta < 0 => remise à l'heure !
+							//--delta > 300ms => inutile d'attendre d'avantage...
+						}
+						lastTime = System.currentTimeMillis();
+						
 					} else {
 						sleep(100);
 					}
@@ -138,7 +153,8 @@ public class Sender implements Runnable {
 		private Dictionary _header;
 		private byte[] _data;
 
-		public SendTask(Hashtable medias, String mediaName, Dictionary header, byte[] data) {
+		public SendTask(Hashtable medias, String mediaName, Dictionary header,
+				byte[] data) {
 			_medias = medias;
 			_mediaName = mediaName;
 			_header = header;
