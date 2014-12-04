@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.device.ihmi.z8.addons.Addons" immediate="true">
+	<implementation class="org.avm.device.ihmi.z8.addons.bundle.Activator"/>
+	<property name="service.pid" value="org.avm.device.ihmi.z8.addons.Addons"/>
+</component>

@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Plugin SWT Billettique ATOUMOD
+Bundle-SymbolicName: org.avm.hmi.swt.billettique.atoumod
+Bundle-Version: 1.0.0.qualifier
+Service-Component: META-INF/activator.xml
+Bundle-ClassPath: .
+Import-Package: org.apache.log4j,
+ org.avm.hmi.swt.desktop,
+ org.avm.business.billettique.atoumod,
+ org.avm.elementary.common,
+ org.avm.elementary.useradmin,
+ org.knopflerfish.service.console,
+ org.osgi.service.cm,
+ org.osgi.service.component,
+ org.osgi.service.useradmin,
+ org.osgi.service.wireadmin,
+ org.osgi.util.measurement
+Bundle-Vendor: Cityway
+Export-Package: org.avm.hmi.swt.billettique.atoumod
+XBundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

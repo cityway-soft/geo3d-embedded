@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ihmi.addons
+Bundle-SymbolicName: org.avm.device.ihmi.z8.addons
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
+Import-Package: org.avm.device.ihmi.z8,
+ org.avm.elementary.common,
+ org.knopflerfish.service.console,
+ org.osgi.framework,
+ org.osgi.service.component;version="1.0.0"
+Service-Component: META-INF/activator.xml
