@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: apc.pccar
+Bundle-SymbolicName: org.avm.device.apc.pccar
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Cityway
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
+Import-Package: org.avm.device.linux.watchdog,
+ org.osgi.framework
+Bundle-Activator: org.avm.device.apc.pccar.Activator

@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.avm.device.apc.ihmi
+Bundle-SymbolicName: org.avm.device.apc.ihmi
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
+Import-Package: org.avm.device.ihmi.z8,
+ org.avm.device.linux.watchdog,
+ org.osgi.framework
+Bundle-Activator: org.avm.device.apc.ihmi.Activator
+Bundle-Vendor: Cityway
