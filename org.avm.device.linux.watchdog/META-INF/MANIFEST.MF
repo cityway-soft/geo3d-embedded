@@ -13,3 +13,4 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  statemap
 Bundle-Activator: org.avm.device.linux.watchdog.bundle.Activator
 Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
+Export-Package: org.avm.device.linux.watchdog
