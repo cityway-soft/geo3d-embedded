@@ -31,7 +31,6 @@ public class SignalLevelIhm extends Composite {
 		initialize();
 
 		setBackground(DesktopStyle.getBackgroundColor());
-		//parent.layout();
 	}
 
 	public void setEnabled(boolean b) {
@@ -53,7 +52,6 @@ public class SignalLevelIhm extends Composite {
 	private void createQualityLevel() {
 		GridData gridData4 = new GridData();
 		gridData4.grabExcessHorizontalSpace = false;
-		//gridData4.horizontalAlignment = GridData.FILL;
 		gridData4.verticalAlignment = GridData.FILL;
 		gridData4.grabExcessVerticalSpace = false;
 		qualityLevel = new HorizontalQualityLevel(composite, SWT.NONE);
@@ -101,7 +99,7 @@ public class SignalLevelIhm extends Composite {
 
 	public void setSignalQuality(final int quality) {
 		if (isDisposed() == false && qualityLevel != null) {
-			this.getDisplay().syncExec(new Runnable() {
+			this.getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					if (quality == 0) {
 						_nbBadQuality++;
@@ -121,7 +119,7 @@ public class SignalLevelIhm extends Composite {
 
 	public void setAttachment(final int attached) {
 		if (isDisposed() == false && qualityLevel != null) {
-			this.getDisplay().syncExec(new Runnable() {
+			this.getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					if (_attached == attached)
 						return;

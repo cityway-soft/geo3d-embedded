@@ -185,7 +185,7 @@ public class PhonyImpl implements Phony, ConfigurableService,
 			_executor.execute(new Runnable() {
 				public void run() {
 					try {
-						_log.debug("[DSU] call transition dial " + phone);
+						_log.debug("Call transition dial " + phone);
 						_fsm.dial(phone, listen);
 					} catch (RuntimeException e) {
 						_log.error(e.getMessage(), e);
@@ -202,7 +202,7 @@ public class PhonyImpl implements Phony, ConfigurableService,
 			_executor.execute(new Runnable() {
 				public void run() {
 					try {
-						_log.debug("[DSU] call transition answer");
+						_log.debug("Call transition answer");
 						_fsm.answer();
 					} catch (RuntimeException e) {
 						_log.error(e.getMessage(), e);
@@ -219,7 +219,7 @@ public class PhonyImpl implements Phony, ConfigurableService,
 			_executor.execute(new Runnable() {
 				public void run() {
 					try {
-						_log.debug("[DSU] call transition ring " + phone);
+						_log.debug("Call transition ring " + phone);
 						_fsm.ring(phone);
 					} catch (RuntimeException e) {
 						_log.error(e.getMessage(), e);
@@ -236,7 +236,7 @@ public class PhonyImpl implements Phony, ConfigurableService,
 			_executor.execute(new Runnable() {
 				public void run() {
 					try {
-						_log.debug("[DSU] call transition hangup ");
+						_log.debug("Call transition hangup ");
 						_fsm.hangup();
 					} catch (RuntimeException e) {
 						_log.error(e.getMessage(), e);
@@ -253,7 +253,7 @@ public class PhonyImpl implements Phony, ConfigurableService,
 			_executor.execute(new Runnable() {
 				public void run() {
 					try {
-						_log.debug("[DSU] call transition close");
+						_log.debug("Call transition close");
 						_fsm.close();
 					} catch (RuntimeException e) {
 						_log.error(e.getMessage(), e);
@@ -270,7 +270,7 @@ public class PhonyImpl implements Phony, ConfigurableService,
 			_executor.execute(new Runnable() {
 				public void run() {
 					try {
-						_log.debug("[DSU] call transition open");
+						_log.debug("Call transition open");
 						_fsm.open();
 					} catch (RuntimeException e) {
 						_log.error(e.getMessage(), e);
@@ -336,7 +336,7 @@ public class PhonyImpl implements Phony, ConfigurableService,
 	class RingingTTask implements Runnable {
 		public void run() {
 			try {
-				_log.debug("[DSU] timeout ringing task : hangup");
+				_log.debug("Timeout ringing task : hangup");
 				hangup();
 			} catch (Exception e) {
 				_log.error(e.getMessage(), e);
@@ -357,7 +357,7 @@ public class PhonyImpl implements Phony, ConfigurableService,
 			try {
 				_gsm.send(_request);
 				try {
-					_log.debug("[DSU] call transition online");
+					_log.debug("Call transition online");
 					_fsm.online();
 				} catch (RuntimeException e) {
 					_log.error(e.getMessage(), e);
@@ -377,7 +377,7 @@ public class PhonyImpl implements Phony, ConfigurableService,
 					}
 				}
 			}
-			_log.debug("[DSU] end thread dialing");
+			_log.debug("Dnd thread dialing");
 		}
 
 		public void cancel() {
@@ -420,11 +420,11 @@ public class PhonyImpl implements Phony, ConfigurableService,
 		}
 
 		public void ringing(String phone) {
-			_log.debug("[DSU] call ringing callback");
+			_log.debug("Call ringing callback");
 
 			// stop timer
 			if (_ringingTask != null) {
-				_log.debug("[DSU] cancel ringing task");
+				_log.debug("Cancel ringing task");
 				_scheduler.cancel(_ringingTask);
 				_ringingTask = null;
 			}
@@ -435,13 +435,13 @@ public class PhonyImpl implements Phony, ConfigurableService,
 			publish(new PhoneRingEvent(phone));
 
 			// start timer
-			_log.debug("[DSU] start ringing task");
+			_log.debug("Start ringing task");
 			_ringingTask = _scheduler.schedule(new RingingTTask(), 6000);
 
 		}
 
 		public void answering() {
-			_log.debug("[DSU] call answering callback");
+			_log.debug("Call answering callback");
 			try {
 				GsmRequest reqAnswer = new GsmRequest(AT_ANSWER);
 				_gsm.send(reqAnswer);
@@ -451,7 +451,7 @@ public class PhonyImpl implements Phony, ConfigurableService,
 		}
 
 		public void dialing(String phone, boolean listen) {
-			_log.debug("[DSU] call dialing callback phone : " + phone
+			_log.debug("Call dialing callback phone : " + phone
 					+ " listen : " + listen);
 
 			// set audio mode
@@ -469,12 +469,12 @@ public class PhonyImpl implements Phony, ConfigurableService,
 		}
 
 		public void entryClosed() {
-			_log.debug("[DSU] call entryClosed callback");
+			_log.debug("Call entryClosed callback");
 			publish(PhoneEvent.MODEM_NOT_AVAILABLE_PHONE_EVENT);
 		}
 
 		public void entryReady() {
-			_log.debug("[DSU] call entryReady callback");
+			_log.debug("Call entryReady callback");
 
 			// hanghup
 			try {
@@ -492,7 +492,7 @@ public class PhonyImpl implements Phony, ConfigurableService,
 		}
 
 		public void exitRinging() {
-			_log.debug("[DSU] call exitRinging callback");
+			_log.debug("Call exitRinging callback");
 			// stop timer
 			if (_ringingTask != null) {
 				_scheduler.cancel(_ringingTask);
@@ -501,12 +501,12 @@ public class PhonyImpl implements Phony, ConfigurableService,
 		}
 
 		public void entryDialing() {
-			_log.debug("[DSU] call entryDialing callback");
+			_log.debug("Call entryDialing callback");
 			publish(PhoneEvent.DIALING_PHONE_EVENT);
 		}
 
 		public void exitDialing() {
-			_log.debug("[DSU] call exitDialing callback");
+			_log.debug("Call exitDialing callback");
 			if (_dialingTask != null) {
 				_dialingTask.cancel();
 				_dialingTask = null;
@@ -514,7 +514,7 @@ public class PhonyImpl implements Phony, ConfigurableService,
 		}
 
 		public void entryOnline() {
-			_log.debug("[DSU] call entryOnline callback");
+			_log.debug("Call entryOnline callback");
 			publish(PhoneEvent.ON_LINE_PHONE_EVENT);
 		}
 
@@ -566,7 +566,7 @@ public class PhonyImpl implements Phony, ConfigurableService,
 			if (_cioaudio != null) {
 				try {
 					_cioaudio.setValue(new Measurement(state ? 1 : 0));
-					_log.debug("[DSU] audio conducteur set to " + state);
+					_log.debug("Audio conducteur set to " + state);
 				} catch (Exception e) {
 					_log.error(e.getMessage(), e);
 				}
@@ -576,7 +576,7 @@ public class PhonyImpl implements Phony, ConfigurableService,
 		private void setSoundConfiguration(String name) {
 			if (_sound != null) {
 				try {
-					_log.debug("[DSU] set audio configuration " + name);
+					_log.debug("Set audio configuration " + name);
 					_sound.configure(name);
 				} catch (Exception e) {
 					_log.error(e.getMessage(), e);
@@ -588,7 +588,7 @@ public class PhonyImpl implements Phony, ConfigurableService,
 			try {
 				String name = value ? PhonyConfig.ACTIVATE_LISTEN_MODE
 						: PhonyConfig.DESACTIVATE_LISTEN_MODE;
-				_log.debug("[DSU] set audio mode " + name);
+				_log.debug("Set audio mode " + name);
 				String command = _config.getSpecificCommand(name) + "\r";
 				if (command != null) {
 					GsmRequest request = new GsmRequest(command);

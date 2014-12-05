@@ -47,7 +47,7 @@ public class Scheduler {
 
 	// scheduler -------------------------------------------------------------//
 
-	private static Timer _scheduler = new Timer(true);
+	private Timer _scheduler = new Timer(true);
 
 	public void cancel(Object handle) {
 		if(handle instanceof TimerTask){

@@ -5,7 +5,6 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -41,7 +40,7 @@ public class HorizontalQualityLevel extends Composite implements PaintListener {
 			_bgcolor = _display.getSystemColor(SWT.COLOR_BLACK);
 		}
 	}
-	
+
 	private void initialize() {
 		GridLayout grid = new GridLayout();
 		grid.horizontalSpacing = 0;
@@ -55,12 +54,11 @@ public class HorizontalQualityLevel extends Composite implements PaintListener {
 
 	}
 
-//	public void layout(){
-//		super.layout();
-//		canvas.layout();
-//		canvas.redraw();
-//	}
-	
+	public void layout() {
+		super.layout();
+		canvas.redraw();
+	}
+
 	/**
 	 * This method initializes canvas
 	 * 
@@ -79,41 +77,45 @@ public class HorizontalQualityLevel extends Composite implements PaintListener {
 	}
 
 	private void draw(Rectangle b) {
-		Rectangle bounds = null;
-		if (b == null) {
-			bounds = canvas.getBounds();
-		} else {
-			bounds = b;
-		}
-		bounds.width -= 1;
-		bounds.height -= 35;
-		GC gc = new GC(canvas);
-
-		double x = 0, dy, dx, y = (double)bounds.height;
-		dx = 5d;
-
-		Rectangle rect;
-		double spaceSize = 3d;
-		double dymin = 5d;
-		double f = ((double)bounds.height - dymin) / (double) _numBar;
-		double h;
-		double reverse=(double)bounds.height;
-		for (int i = _numBar; i > 0; i--) {
-			x = (i * dx + (i - 1) * spaceSize);
-			h = ((f) * (double)( i))+dymin;
-			y=0+reverse;
-			dy = bounds.height-h-reverse;
-			rect = new Rectangle((int) x, (int) y, (int) dx, (int) (dy));
-			if (i <= _quality) {
-				gc.setBackground(_fgcolor);
+		try {
+			Rectangle bounds = null;
+			if (b == null) {
+				bounds = canvas.getBounds();
 			} else {
-				gc.setBackground(DesktopStyle.getBackgroundColor());
+				bounds = b;
 			}
-			gc.fillRectangle(rect);
-			gc.setForeground(_bgcolor);
-			gc.drawRectangle(rect);
+			bounds.width -= 1;
+			bounds.height -= 35;
+			GC gc = new GC(canvas);
+
+			double x = 0, dy, dx, y = (double) bounds.height;
+			dx = 5d;
+
+			Rectangle rect;
+			double spaceSize = 3d;
+			double dymin = 5d;
+			double f = ((double) bounds.height - dymin) / (double) _numBar;
+			double h;
+			double reverse = (double) bounds.height;
+			for (int i = _numBar; i > 0; i--) {
+				x = (i * dx + (i - 1) * spaceSize);
+				h = ((f) * (double) (i)) + dymin;
+				y = 0 + reverse;
+				dy = bounds.height - h - reverse;
+				rect = new Rectangle((int) x, (int) y, (int) dx, (int) (dy));
+				if (i <= _quality) {
+					gc.setBackground(_fgcolor);
+				} else {
+					gc.setBackground(DesktopStyle.getBackgroundColor());
+				}
+				gc.fillRectangle(rect);
+				gc.setForeground(_bgcolor);
+				gc.drawRectangle(rect);
+			}
+			gc.dispose();
+		} catch (Throwable t) {
+			t.printStackTrace();
 		}
-		gc.dispose();
 	}
 
 	public void setForegroundColor(Color color) {
@@ -133,7 +135,7 @@ public class HorizontalQualityLevel extends Composite implements PaintListener {
 	}
 
 	public void paintControl(PaintEvent e) {
-		draw( ((Canvas) e.widget).getBounds());
+		draw(((Canvas) e.widget).getBounds());
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"
