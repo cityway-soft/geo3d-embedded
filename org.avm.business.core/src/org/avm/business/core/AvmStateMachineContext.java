@@ -1109,6 +1109,32 @@ public class AvmStateMachineContext
             return;
         }
 
+        protected void sortie(AvmStateMachineContext context, int balise)
+        {
+            AvmStateMachine ctxt = context.getOwner();
+
+            if (ctxt.isArretCourant(balise) == true)
+            {
+                AvmStateMachineState endState = context.getState();
+
+                context.clearState();
+                try
+                {
+                    ctxt.actionSortieArret(balise);
+                }
+                finally
+                {
+                    context.setState(endState);
+                }
+            }
+            else
+            {
+                super.sortie(context, balise);
+            }
+
+            return;
+        }
+
         protected void sortieItineraire(AvmStateMachineContext context)
         {
 

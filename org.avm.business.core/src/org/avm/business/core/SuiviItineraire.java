@@ -557,6 +557,11 @@ public class SuiviItineraire implements ConfigurableService {
 		if (getDernierArret() != null
 				&& (getDernierArret().getId() == balise || getDernierArret()
 						.getRang() == 1)) {
+			int attente = getDernierArret().getAttente();
+			if (attente>0){
+				_log.warn("Deja passé par cet arret !?");
+				return;
+			}
 			getModel().setInsidePoint(false);
 			updateAttente(getDernierArret(), false);
 			if (_log.isDebugEnabled()) {
