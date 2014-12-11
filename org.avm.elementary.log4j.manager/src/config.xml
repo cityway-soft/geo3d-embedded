@@ -22,6 +22,8 @@ ces/embarque-geolia-CVS/avm/hmi/swt/org.avm.hmi.swt.avm/</value>
 	org.avm.device.generic.gsm=INFO
 	org.avm.hmi.swt.phony.PhonyImpl=INFO
 	org.avm.device.generic.can=INFO
+	org.avm.device.generic.io.memory.OdometerCounterService=INFO
+	org.avm.business.tft=INFO
 </value>
 </property>
 
