@@ -14,6 +14,7 @@ Export-Package: org.apache.commons.codec,
  org.avm.elementary.management.core.utils
 Import-Package: org.osgi.framework,
  org.osgi.service.packageadmin,
- org.osgi.service.startlevel;version="1.0.0"
+ org.osgi.service.startlevel;version="1.0.0",
+ junit.framework;version="3.8.2";resolution:=optional
 Bundle-Activator: org.avm.elementary.management.core.bundle.Activator
 Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1

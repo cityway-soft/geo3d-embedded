@@ -16,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 public class Utils {
 	private static final SimpleDateFormat DF = new SimpleDateFormat(
@@ -134,7 +135,7 @@ public class Utils {
 			output = new StringBuffer(bigInt.toString(16));
 
 			inStream.close();
-			
+
 			while (output.length() < 32) {
 				output.insert(0, "0");
 			}
@@ -183,5 +184,138 @@ public class Utils {
 
 		return result;
 	}
+
+	/**
+	 * converti un numero de version au format 1.2.3.20141208 dans un format
+	 * numérique 1.00200320141208 (pour pouvoir effectuer des comparaisons)
+	 * 
+	 * @param version
+	 * @return
+	 */
+	public static double getVersion(String version) {
+		if (version == null)
+			return Double.NaN;
+
+		StringTokenizer t = new StringTokenizer(version, ".");
+		int majeure = 0;
+		int mineure = 0;
+
+		int micro = 0;
+		int other = 0;
+
+		String v;
+
+		double tmp = 0;
+
+		// majeure
+		if (t.hasMoreElements()) {
+			majeure = Integer.parseInt(t.nextToken());
+
+			// --mineure
+			if (t.hasMoreElements()) {
+				v = t.nextToken();
+				mineure = Integer.parseInt(v);
+
+				// micro
+				if (t.hasMoreElements()) {
+					v = t.nextToken();
+					micro = Integer.parseInt(v);
+
+					// other
+					if (t.hasMoreElements()) {
+						StringBuffer b = new StringBuffer();
+						while (t.hasMoreElements()) {
+							v = t.nextToken();
+							b.append(v);
+						}
+						other = Integer.parseInt(b.toString());
+					}
+
+				}
+
+			}
+
+		}
+
+		if (micro > 1000) {
+			int mod = micro % 1000;
+			mineure += (micro - mod) / 1000;
+			micro = mod;
+		}
+
+		if (mineure > 1000) {
+
+			int mod = mineure % 1000;
+			majeure += (mineure - mod) / 1000;
+			mineure = mod;
+
+			// int unit = (int)(mineure/1000d);
+			// majeure +=unit;
+			// mineure = mineure / unit;
+		}
+
+		StringBuffer buf = new StringBuffer();
+		buf.append(majeure);
+		buf.append(".");
+
+		StringBuffer b;
+
+		// --mineure
+		b = new StringBuffer();
+		b.append(mineure);
+		while (b.length() < 3) {
+			b.insert(0, "0");
+		}
+		buf.append(b);
+
+		// --micro
+		b = new StringBuffer();
+		b.append(micro);
+		while (b.length() < 3) {
+			b.insert(0, "0");
+		}
+		buf.append(b);
+
+		// --other
+		buf.append(other);
+
+		double ver;
+		try {
+			ver = Double.parseDouble(buf.toString());
+		} catch (NumberFormatException e) {
+			ver = Double.MAX_VALUE;
+		}
+		return ver;
+	}
+
+	// /**
+	// * converti un numero de version au format 1.0.0.10.2 dans un format
+	// * numérique 1.00102 (pour pouvoir effectuer des comparaisons)
+	// *
+	// * @param version
+	// * @return
+	// */
+	// public static double getVersion(String version) {
+	// if (version == null)
+	// return Double.NaN;
+	// StringBuffer buf = new StringBuffer();
+	// boolean dotfound = false;
+	// for (int i = 0; i < version.length(); i++) {
+	// char c = version.charAt(i);
+	// if (Character.isDigit(c)) {
+	// buf.append(c);
+	// } else if (dotfound == false && c == '.') {
+	// dotfound = true;
+	// buf.append(c);
+	// }
+	// }
+	// double ver;
+	// try {
+	// ver = Double.parseDouble(buf.toString());
+	// } catch (NumberFormatException e) {
+	// ver = Double.MAX_VALUE;
+	// }
+	// return ver;
+	// }
 
 }

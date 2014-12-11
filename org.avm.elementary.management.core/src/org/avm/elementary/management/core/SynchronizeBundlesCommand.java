@@ -504,35 +504,7 @@ class SynchronizeBundlesCommand implements BundleListener {
 		}
 	}
 
-	/**
-	 * converti un numero de version au format 1.0.0.10.2 dans un format
-	 * numérique 1.00102 (pour pouvoir effectuer des comparaisons)
-	 * 
-	 * @param version
-	 * @return
-	 */
-	private double getVersion(String version) {
-		if (version == null)
-			return Double.NaN;
-		StringBuffer buf = new StringBuffer();
-		boolean dotfound = false;
-		for (int i = 0; i < version.length(); i++) {
-			char c = version.charAt(i);
-			if (Character.isDigit(c)) {
-				buf.append(c);
-			} else if (dotfound == false && c == '.') {
-				dotfound = true;
-				buf.append(c);
-			}
-		}
-		double ver;
-		try {
-			ver = Double.parseDouble(buf.toString());
-		} catch (NumberFormatException e) {
-			ver = Double.MAX_VALUE;
-		}
-		return ver;
-	}
+
 
 	/**
 	 * retourne une hashtable contenant la liste des bundles sur le repository
@@ -625,10 +597,10 @@ class SynchronizeBundlesCommand implements BundleListener {
 					// + " ==> pack ok, now check version");
 
 					String ver = bundleProperties.getVersion();
-					double bundleVersion = getVersion(ver);
+					double bundleVersion = Utils.getVersion(ver);
 					ver = (String) bundles[i].getHeaders()
 							.get("Bundle-Version");
-					double currentVersion = getVersion(ver);
+					double currentVersion = Utils.getVersion(ver);
 					// -- on retire les bundles dont la version est plus recente
 					// que
 					// celle du bundles.list
