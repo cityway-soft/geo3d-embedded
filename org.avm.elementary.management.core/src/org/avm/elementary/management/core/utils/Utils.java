@@ -197,29 +197,28 @@ public class Utils {
 			return Double.NaN;
 
 		StringTokenizer t = new StringTokenizer(version, ".");
-		int majeure = 0;
-		int mineure = 0;
+		long majeure = 0;
+		long mineure = 0;
 
-		int micro = 0;
-		int other = 0;
+		long micro = 0;
+		long other = 0;
 
 		String v;
 
-		double tmp = 0;
 
 		// majeure
 		if (t.hasMoreElements()) {
-			majeure = Integer.parseInt(t.nextToken());
+			majeure = Long.parseLong(t.nextToken());
 
 			// --mineure
 			if (t.hasMoreElements()) {
 				v = t.nextToken();
-				mineure = Integer.parseInt(v);
+				mineure = Long.parseLong(v);
 
 				// micro
 				if (t.hasMoreElements()) {
 					v = t.nextToken();
-					micro = Integer.parseInt(v);
+					micro = Long.parseLong(v);
 
 					// other
 					if (t.hasMoreElements()) {
@@ -228,7 +227,7 @@ public class Utils {
 							v = t.nextToken();
 							b.append(v);
 						}
-						other = Integer.parseInt(b.toString());
+						other = Long.parseLong(b.toString());
 					}
 
 				}
@@ -238,14 +237,14 @@ public class Utils {
 		}
 
 		if (micro > 1000) {
-			int mod = micro % 1000;
+			long mod = micro % 1000;
 			mineure += (micro - mod) / 1000;
 			micro = mod;
 		}
 
 		if (mineure > 1000) {
 
-			int mod = mineure % 1000;
+			long mod = mineure % 1000;
 			majeure += (mineure - mod) / 1000;
 			mineure = mod;
 
