@@ -265,7 +265,7 @@ public class Utils {
 		while (b.length() < 3) {
 			b.insert(0, "0");
 		}
-		buf.append(b);
+		buf.append(b.toString());
 
 		// --micro
 		b = new StringBuffer();
