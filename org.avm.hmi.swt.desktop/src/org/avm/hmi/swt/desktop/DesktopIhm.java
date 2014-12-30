@@ -9,6 +9,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.avm.elementary.common.Config;
 import org.avm.elementary.common.Scheduler;
+import org.avm.hmi.swt.application.display.AVMDisplay;
 import org.avm.hmi.swt.application.display.Application;
 import org.avm.hmi.swt.desktop.bundle.ConfigImpl;
 import org.eclipse.swt.SWT;
@@ -207,7 +208,11 @@ public class DesktopIhm {
 		gridData.grabExcessHorizontalSpace = true;
 		_tabFolder = new TabFolder(_shell, SWT.NONE | SWT.BOTTOM);
 
-		Font _fontTabFolder = getFont(6, SWT.NORMAL);
+		
+			
+	Font _fontTabFolder = getFont(AVMDisplay.TABFOLDER_FONT, AVMDisplay.TABFOLDER_FONTSIZE_DELTA, SWT.NORMAL);
+		// _fontTabFolder = new Font(Display.getDefault(), "Context Ultra Condensed SSi",
+		//		AVMDisplay.DEFAULT_FONTSIZE + 20, SWT.NORMAL);
 		_tabFolder.setFont(_fontTabFolder);
 		_tabFolder.setBackground(DesktopStyle.getBackgroundColor());
 		_tabFolder.setLayoutData(gridData);
@@ -629,6 +634,10 @@ public class DesktopIhm {
 
 	public static Font getFont(int deltasize, int style) {
 		return Application.getFont(deltasize, style);
+	}
+	
+	public static Font getFont(String fontname, int deltasize, int style) {
+		return Application.getFont(fontname, deltasize, style);
 	}
 
 	public void setTabItemImage(String name, Image image) {
