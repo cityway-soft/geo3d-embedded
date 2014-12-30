@@ -149,6 +149,10 @@ Exit { exitHorsItineraire();
 
 		entree(balise:  int)
 		[ctxt.isArretEnAval(balise)==true ]		ArretSurItineraire			{ actionFinHorsItineraire(balise);  }	
+		
+		sortie(balise:  int)
+		[ctxt.isArretCourant(balise) == true]	nil							{ actionSortieArret(balise); }
+		
 			
 		sortieItineraire					nil							{  }
 }

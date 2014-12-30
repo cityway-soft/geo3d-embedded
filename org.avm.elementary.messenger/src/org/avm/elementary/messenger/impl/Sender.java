@@ -79,7 +79,7 @@ public class Sender implements Runnable {
 						task.run();
 						task = (Runnable) (_queue.take());
 						long delta = System.currentTimeMillis() - lastTime;
-						if (delta < 200 || delta > 0){
+						if (delta < 200 && delta > 0){
 							sleep(delta);
 						}
 						else{

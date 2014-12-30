@@ -32,7 +32,7 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 
 	private org.avm.device.phony.Phony _phone;
 
-	private static final int PERIOD = 10000;
+	private static final long PERIOD = 5000;
 
 	private Desktop _desktop;
 
@@ -65,7 +65,6 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 		_instance = this;
 		_model = new ContactModel();
 		_scheduler = new Scheduler();
-		// _log.setPriority(Priority.DEBUG);
 	}
 
 	public void start() {
@@ -134,8 +133,6 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 					grid.heightHint = 30;
 					grid.horizontalAlignment = GridData.FILL;
 					_signalLevel.setLayoutData(grid);
-					// _desktop.getRightPanel().layout();
-					// _signalLevel.layout();
 					checkEnable();
 				}
 			}
@@ -144,6 +141,7 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 
 	private void closeSignalLevel() {
 		if (_taskId != null) {
+			_log.info("Close signal level");
 			_scheduler.cancel(_taskId);
 			_taskId = null;
 		}
@@ -283,7 +281,6 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 		if (_phone != null && _phonyihm != null) {
 			_phonyihm.update(_model);
 			_phonyihm.setVolume(_phone.getDefaultSoundVolume());
-			// setVolume(_phone.getDefaultSoundVolume());
 		}
 	}
 
@@ -321,6 +318,7 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 	}
 
 	class QualitySignalTask implements Runnable {
+
 		private int _previousAttachment;
 
 		public void run() {

@@ -70,9 +70,16 @@ public class RecorderService implements Recorder, ConfigurableService,
 	}
 
 	public void notify(Object o) {
+		
 		if (o instanceof State) {
 			State state = (State) o;
 			if (state.getName().equals(NAME) && _stateValue != state.getValue()) {
+				
+				if (_indicator == null) {
+					_log.info("Indicator is null on notify !");
+					return;
+				}
+					
 				_stateValue  = state.getValue();
 				int key = state.getValue();
 				switch (key) {
@@ -86,6 +93,7 @@ public class RecorderService implements Recorder, ConfigurableService,
 					break;
 				case AvmModel.STATE_ATTENTE_SAISIE_SERVICE: {
 					// authentifie
+					_log.debug("_indicator is null ? => "+(_indicator==null));
 					Map map = _indicator.evaluate();
 					_indicator.reset();
 					serialize(map);
@@ -117,6 +125,8 @@ public class RecorderService implements Recorder, ConfigurableService,
 			}
 		}
 	}
+	
+	
 
 	private void serialize(Map map) {
 		try {

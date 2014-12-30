@@ -722,6 +722,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 			_fsm.depart(balise);
 		} catch (RuntimeException e) {
 			_log.error("Erreur 'Depart'", e); //$NON-NLS-1$
+			_log.error(e); //$NON-NLS-1$
 		}
 	}
 

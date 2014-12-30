@@ -8,7 +8,7 @@
 </property>
 
 <property name="org.avm.config.version">
-<value type="Integer">15</value>
+<value type="Integer">16</value>
 </property>
 
 <property name="service.bundleLocation">
@@ -20,7 +20,7 @@
 </property>
 
 <property name="groups">
-<value type="String">conducteur,phone,sae,demo,tab,alarm,admin,georef,test</value>
+<value type="String">conducteur,phone,sae,demo,tab,alarm,admin,georef,simulation</value>
 </property>
 
 <property name="authenticate">

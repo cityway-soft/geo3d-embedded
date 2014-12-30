@@ -104,7 +104,7 @@ public class GsmImpl implements Gsm, ModemListener, ConfigurableService,
 				}
 			}
 		} catch (InterruptedException e) {
-			_log.error("[DSU] send InterruptedException  : " + e.getMessage());
+			_log.error("Send InterruptedException  : " + e.getMessage());
 		}
 
 		if (command.result != null && command.result.status == GsmResponse.KO) {
@@ -123,13 +123,14 @@ public class GsmImpl implements Gsm, ModemListener, ConfigurableService,
 			command.add(new GsmRequest(AT_ECHO_OFF));
 			send(command, false);
 		} catch (Exception e) {
-			_log.error(e);
+			_log.error("Initialize error", e);
+			sleep(5000);
 		}
 	}
 
 	private void sleep(long time) {
 		try {
-			Thread.currentThread().sleep(time);
+			Thread.sleep(time);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -219,14 +220,14 @@ public class GsmImpl implements Gsm, ModemListener, ConfigurableService,
 	}
 
 	public void modemClosed() {
-		_log.info("[DSU] modem closed");
+		_log.info("Modem closed");
 		if (_producer != null) {
 			_producer.publish(new GsmEvent(this, GsmEvent.MODEM_CLOSED));
 		}
 	}
 
 	public void modemOpened() {
-		_log.info("[DSU] modem opened");
+		_log.info("Modem opened");
 		_producer.publish(new GsmEvent(this, GsmEvent.MODEM_OPENED));
 	}
 
