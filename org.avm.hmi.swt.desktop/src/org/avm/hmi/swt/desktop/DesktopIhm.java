@@ -211,8 +211,7 @@ public class DesktopIhm {
 		
 			
 	Font _fontTabFolder = getFont(AVMDisplay.TABFOLDER_FONT, AVMDisplay.TABFOLDER_FONTSIZE_DELTA, SWT.NORMAL);
-		// _fontTabFolder = new Font(Display.getDefault(), "Context Ultra Condensed SSi",
-		//		AVMDisplay.DEFAULT_FONTSIZE + 20, SWT.NORMAL);
+		
 		_tabFolder.setFont(_fontTabFolder);
 		_tabFolder.setBackground(DesktopStyle.getBackgroundColor());
 		_tabFolder.setLayoutData(gridData);
