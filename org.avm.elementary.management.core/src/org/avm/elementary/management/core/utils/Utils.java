@@ -192,9 +192,9 @@ public class Utils {
 	 * @param version
 	 * @return
 	 */
-	public static double getVersion(String version) {
+	public static String getVersion(String version) {
 		if (version == null)
-			return Double.NaN;
+			return null;
 
 		StringTokenizer t = new StringTokenizer(version, ".");
 		long majeure = 0;
@@ -278,13 +278,23 @@ public class Utils {
 		// --other
 		buf.append(other);
 
-		double ver;
-		try {
-			ver = Double.parseDouble(buf.toString());
-		} catch (NumberFormatException e) {
-			ver = Double.MAX_VALUE;
-		}
-		return ver;
+//		double ver;
+//		try {
+//			ver = Double.parseDouble(buf.toString());
+//		} catch (NumberFormatException e) {
+//			ver = Double.MAX_VALUE;
+//		}
+//		return ver;
+		return buf.toString();
+	}
+
+	public static int compareVersion(String v1,
+			String v2) {
+		String formattedV1 = getVersion(v1);
+		String formattedV2 = getVersion(v2);
+		
+		
+		return formattedV1.compareTo(formattedV2);
 	}
 
 	// /**

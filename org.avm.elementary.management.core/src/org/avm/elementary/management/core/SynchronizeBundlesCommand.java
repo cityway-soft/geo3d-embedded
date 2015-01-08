@@ -596,15 +596,20 @@ class SynchronizeBundlesCommand implements BundleListener {
 					// System.out.println(packInstalled + " == " + packtoInstall
 					// + " ==> pack ok, now check version");
 
-					String ver = bundleProperties.getVersion();
-					double bundleVersion = Utils.getVersion(ver);
-					ver = (String) bundles[i].getHeaders()
+					String bundleListVersion = bundleProperties.getVersion();
+					//double bundleVersion = Utils.getVersion(bundleListVersion);
+					
+					
+					String currentBundleVersion = (String) bundles[i].getHeaders()
 							.get("Bundle-Version");
-					double currentVersion = Utils.getVersion(ver);
+					//double currentVersion = Utils.getVersion(currentBundleVersion);
+					
+					
+					int result = Utils.compareVersion(bundleListVersion, currentBundleVersion);
 					// -- on retire les bundles dont la version est plus recente
 					// que
 					// celle du bundles.list
-					check = (bundleVersion <= currentVersion && bundleProperties
+					check = ((result==0 || result==-1) && bundleProperties
 							.getStartlevel() >= 0);
 
 					if (check) {
