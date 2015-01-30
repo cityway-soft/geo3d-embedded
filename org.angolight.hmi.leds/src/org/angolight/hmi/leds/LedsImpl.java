@@ -14,10 +14,12 @@ import org.angolight.device.leds.LedsInjector;
 import org.angolight.hmi.leds.bundle.Activator;
 import org.angolight.hmi.leds.bundle.ConfigImpl;
 import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 import org.avm.elementary.common.Config;
 import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ConsumerService;
 import org.avm.elementary.common.ManageableService;
+import org.avm.elementary.common.Scheduler;
 import org.avm.elementary.useradmin.UserSessionService;
 import org.osgi.util.measurement.State;
 
@@ -34,12 +36,17 @@ public class LedsImpl implements org.angolight.hmi.leds.Leds, LedsInjector,
 	private String[] _statesName;
 
 	private boolean _initialized = false;
-	private String _previousState ="";
+	private String _previousState = "";
 
-	private static int TIMEOUT = 5000;// secondes
+	private static int TIMEOUT = 5000;// millisecondes
+
+	private Scheduler scheduler = new Scheduler();
+	private DisplayTask displayTask;
 
 	public LedsImpl() {
 		_log = Activator.getDefault().getLogger();
+		_log.setPriority(Priority.DEBUG);
+		displayTask = new DisplayTask();
 	}
 
 	public void configure(Config config) {
@@ -73,7 +80,7 @@ public class LedsImpl implements org.angolight.hmi.leds.Leds, LedsInjector,
 	private void waitForInitialization() {
 		int cpt = 0;
 		long fraction = TIMEOUT / 25;
-		_log.debug("_initialized:" + _initialized);
+		_log.debug("initialized:" + _initialized);
 		while (!_initialized) {
 			try {
 				_log.debug("sleep:" + fraction);
@@ -95,23 +102,56 @@ public class LedsImpl implements org.angolight.hmi.leds.Leds, LedsInjector,
 				} else {
 					_statesValue[NOT_AUTHENTICATED_STATE_ID] = 1;
 				}
-				display();
+				// display();
+				scheduler.execute(displayTask);
 			} else if (state.getName().equals(
 					org.angolight.device.leds.Leds.class.getName())) {
 				_log.debug("notify: state 'end sequence'.............................................");
 				_initialized = true;
-				display();
+				// display();
+				scheduler.execute(displayTask);
 			} else {
-				waitForInitialization();
-				for (int i = 0; i < _statesName.length; i++) {
-					if (state.getName().equals(_statesName[i])) {
-						_statesValue[i] = state.getValue();
-						break;
-					}
-				}
-				display();
+				// waitForInitialization();
+				// for (int i = 0; i < _statesName.length; i++) {
+				// if (state.getName().equals(_statesName[i])) {
+				// _statesValue[i] = state.getValue();
+				// break;
+				// }
+				// }
+				// display();
+				scheduler.execute(new InitializeAndDisplayTask(state));
 			}
 		}
+	}
+
+	class InitializeAndDisplayTask implements Runnable {
+		private State state;
+
+		InitializeAndDisplayTask(State state) {
+			this.state = state;
+		}
+
+		public void run() {
+			_log.debug("Wait for initialization...");
+			waitForInitialization();
+			for (int i = 0; i < _statesName.length; i++) {
+				if (state.getName().equals(_statesName[i])) {
+					_statesValue[i] = state.getValue();
+					break;
+				}
+			}
+			display();
+		}
+
+	}
+
+	class DisplayTask implements Runnable {
+
+		public void run() {
+			_log.debug("Displaying leds...");
+			display();
+		}
+
 	}
 
 	public void start() {
@@ -136,10 +176,11 @@ public class LedsImpl implements org.angolight.hmi.leds.Leds, LedsInjector,
 	}
 
 	private void display() {
+		_log.debug("Display ango state...");
 		String state = getPriorState();
-		if (!state.equals(_previousState)){
+		if (!state.equals(_previousState)) {
 			display(state);
-			_previousState  = state;
+			_previousState = state;
 		}
 	}
 
