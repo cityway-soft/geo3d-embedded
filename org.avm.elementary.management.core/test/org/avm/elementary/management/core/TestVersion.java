@@ -61,31 +61,31 @@ public class TestVersion extends TestCase {
 		assertEquals(e2, g2);
 		assertTrue(g1.compareTo(g2) == 0);
 	}
-	public void test3() {
-
-		String version = "1.2222.3.20141208";
-
-		String generated = Utils.getVersion(version);
-
-		String expected = "3.22200320141208";
-		// double expected = 1.2320141208d;
-		debug("version=" + version + "   => generated:" + generated
-				+ ", expected:" + expected);
-		assertEquals(expected, generated);
-	}
-
-	public void test4() {
-
-		String version = "1.0.2222.20141208";
-
-		String generated = Utils.getVersion(version);
-
-		String expected = "1.00222220141208";
-		// double expected = 1.2320141208d;
-		debug("version=" + version + "   => generated:" + generated
-				+ ", expected:" + expected);
-		assertEquals(expected, generated);
-	}
+//	public void test3() {
+//
+//		String version = "1.2222.3.20141208";
+//
+//		String generated = Utils.getVersion(version);
+//
+//		String expected = "3.22200320141208";
+//		// double expected = 1.2320141208d;
+//		debug("version=" + version + "   => generated:" + generated
+//				+ ", expected:" + expected);
+//		assertEquals(expected, generated);
+//	}
+//
+//	public void test4() {
+//
+//		String version = "1.0.2222.20141208";
+//
+//		String generated = Utils.getVersion(version);
+//
+//		String expected = "1.00222220141208";
+//		// double expected = 1.2320141208d;
+//		debug("version=" + version + "   => generated:" + generated
+//				+ ", expected:" + expected);
+//		assertEquals(expected, generated);
+//	}
 
 	public void test5() {
 
@@ -136,6 +136,19 @@ public class TestVersion extends TestCase {
 		String generated = Utils.getVersion(version);
 
 		String expected = "1.99999929991231235959";
+		debug("version=" + version + "   => generated:" + generated
+				+ ", expected:" + expected);
+		assertEquals(expected, generated);
+	}
+	
+	
+	public void test9() {
+
+		String version = "2.201504011617.014";
+
+		String generated = Utils.getVersion(version);
+
+		String expected = "2.2015040116170140";
 		debug("version=" + version + "   => generated:" + generated
 				+ ", expected:" + expected);
 		assertEquals(expected, generated);

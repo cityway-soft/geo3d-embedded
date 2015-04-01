@@ -236,22 +236,22 @@ public class Utils {
 
 		}
 
-		if (micro > 1000) {
-			long mod = micro % 1000;
-			mineure += (micro - mod) / 1000;
-			micro = mod;
-		}
-
-		if (mineure > 1000) {
-
-			long mod = mineure % 1000;
-			majeure += (mineure - mod) / 1000;
-			mineure = mod;
-
-			// int unit = (int)(mineure/1000d);
-			// majeure +=unit;
-			// mineure = mineure / unit;
-		}
+//		if (micro > 1000) {
+//			long mod = micro % 1000;
+//			mineure += (micro - mod) / 1000;
+//			micro = mod;
+//		}
+//
+//		if (mineure > 1000) {
+//
+//			long mod = mineure % 1000;
+//			majeure += (mineure - mod) / 1000;
+//			mineure = mod;
+//
+//			// int unit = (int)(mineure/1000d);
+//			// majeure +=unit;
+//			// mineure = mineure / unit;
+//		}
 
 		StringBuffer buf = new StringBuffer();
 		buf.append(majeure);
