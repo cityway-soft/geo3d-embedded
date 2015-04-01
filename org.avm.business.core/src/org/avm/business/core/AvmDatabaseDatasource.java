@@ -89,7 +89,8 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 
 	private static final String TEST_ITL = "SELECT * FROM POINT_SUR_PARCOURS";
 
-	private static final String REQ_ATTRIBUTS_POINTS = "SELECT ADP_ID,ATT_ID,PNT_ID,ATT_NOM,ADP_VAL from attribut, attribut_point where attribut.att_id = attribut_point.att_id";
+	//private static final String REQ_ATTRIBUTS_POINTS = "SELECT ADP_ID,ATT_ID,PNT_ID,ATT_NOM,ADP_VAL from attribut, attribut_point where attribut.att_id = attribut_point.att_id";
+	private static final String REQ_ATTRIBUTS_POINTS = "select adp_id, att_id, pnt_id, adp_val from attribut_point attp join point_sur_itineraire psi on psi.pnt_id = attp.pnt_id join point_sur_parcours psp on psi.psi_id = psp.psi_id join parcours pcr on pcr.pcr_id = psp.pcr_id join course crs on crs.pcr_id = pcr.pcr_id where crs_id=?";
 
 	private static final String REQ_SERVICES_AGENT = "SELECT SAG_IDU FROM SERVICE_AGENT";
 
@@ -613,20 +614,22 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 					e.printStackTrace();
 					return;
 				}
+				long time = System.currentTimeMillis();
 				PreparedStatement requete;
 				requete = connexion.prepareStatement(REQ_ATTRIBUTS_POINTS);
+				requete.setInt(1, course.getId());
 				rs = requete.executeQuery();
 
 				_log.debug("Attributs : Contruction du la liste de points...");
 
 				if (rs != null) {
-					long time = System.currentTimeMillis();
+					
 					while (rs.next()) {
 						int idx = 1;
 						int adp_id = rs.getInt(idx++);
 						int att_id = rs.getInt(idx++);
 						int pnt_id = rs.getInt(idx++);
-						String att_nom = rs.getString(idx++);
+						//String att_nom = rs.getString(idx++);
 						String att_val = rs.getString(idx++);
 						Point[] points = course.getPointAvecId(pnt_id);
 						if (points != null) {
@@ -638,6 +641,10 @@ public class AvmDatabaseDatasource implements AvmDatasource {
 										+ new Integer(att_id) + ") => "
 										+ att_val);
 							}
+							//System.out.println("point[" + points[0].getNom()
+							//			+ "].setAttribut("
+							//			+ new Integer(att_id) + ") => "
+							//			+ att_val);
 						}
 					}
 					_log.info("Attributs : temps traitement  "

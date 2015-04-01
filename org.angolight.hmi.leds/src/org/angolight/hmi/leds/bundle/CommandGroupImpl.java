@@ -338,14 +338,11 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 		byte address = ((SequenceManager) _peer).getSequenceAddress("" + id);
 
-		long now = System.currentTimeMillis();
 		int result = ((LedsImpl)_peer).X(address, cycle, period, check);
 		if (result < 0) {
 			out.println("Echec execute sequence");
 		}
 
-//		out.println("Execution en "
-//				+ (new Long(System.currentTimeMillis() - now) + " ms"));
 		return 0;
 	}
 
@@ -360,15 +357,12 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		String text = ((String) opts.get("check"));
 		boolean check = (text == null) ? false : Boolean.valueOf(text.trim())
 				.booleanValue();
-		long now = System.currentTimeMillis();
 
 		int result = ((LedsImpl)_peer).S(check);
 		if (result < 0) {
-			out.println("[DSU] echec stop sequence");
+			out.println("Failed stop sequence");
 		}
 
-//		out.println("Execution en "
-//				+ (new Long(System.currentTimeMillis() - now) + " ms"));
 
 		return 0;
 	}
@@ -383,15 +377,11 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		String text = ((String) opts.get("check"));
 		boolean check = (text == null) ? false : Boolean.valueOf(text.trim())
 				.booleanValue();
-		long now = System.currentTimeMillis();
 
 		int result = ((LedsImpl)_peer).T(check);
 		if (result < 0) {
-			out.println("[DSU] echec halt sequence");
+			out.println("Failed halt sequence");
 		}
-
-//		out.println("Execution en "
-//				+ (new Long(System.currentTimeMillis() - now) + " ms"));
 
 		return 0;
 	}
