@@ -31,7 +31,7 @@ public class Activator extends AbstractActivator implements
 
 	private Logger _log;
 
-	private ConfigurationAdmin _cm;
+	private ConfigurationAdmin _cm; 
 
 	private UserAdminManagerImpl _peerUserAdminManager;
 

@@ -8,7 +8,7 @@
 </property>
 
 <property name="org.avm.config.version">
-<value type="Integer">16</value>
+<value type="Integer">17</value>
 </property>
 
 <property name="service.bundleLocation">
