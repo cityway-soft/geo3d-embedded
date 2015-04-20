@@ -427,8 +427,13 @@ public class SuiviItineraire implements ConfigurableService {
 
 	public boolean isTerminusArrivee(int balise) {
 		Point[] p = getCourse().getPointAvecId(balise);
-		return (p != null && p[0] != null && p[0].getRang() == getCourse()
-				.getNombrePoint());
+		for (int i = 0; i < p.length; ++i) {
+			if (p != null && p[i] != null
+					&& p[i].getRang() == getCourse().getNombrePoint()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public boolean isArret(int balise) {
@@ -445,7 +450,8 @@ public class SuiviItineraire implements ConfigurableService {
 
 				for (int i = 0; i < points.length; i++) {
 					if (points[i].getRang() > dernierPoint.getRang()) {
-						// --si c'est un arret en _aval_ : son rang est plus grand que
+						// --si c'est un arret en _aval_ : son rang est plus
+						// grand que
 						// le dernier arret desservi
 						return true;
 					}
@@ -454,7 +460,7 @@ public class SuiviItineraire implements ConfigurableService {
 			} else {
 				// -- la course n'a pas commence' ; les 'points' sont donc à
 				// venir...
-				result=true;
+				result = true;
 			}
 
 		}
@@ -558,7 +564,7 @@ public class SuiviItineraire implements ConfigurableService {
 				&& (getDernierArret().getId() == balise || getDernierArret()
 						.getRang() == 1)) {
 			int attente = getDernierArret().getAttente();
-			if (attente>0){
+			if (attente > 0) {
 				_log.warn("Deja passé par cet arret !?");
 				return;
 			}
