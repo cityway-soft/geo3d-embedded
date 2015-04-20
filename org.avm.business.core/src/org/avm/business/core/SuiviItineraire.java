@@ -428,8 +428,12 @@ public class SuiviItineraire implements ConfigurableService {
 	public boolean isTerminusArrivee(int balise) {
 		Point[] p = getCourse().getPointAvecId(balise);
 		for (int i = 0; i < p.length; ++i) {
-			if (p != null && p[i] != null
-					&& p[i].getRang() == getCourse().getNombrePoint()) {
+			if (p != null
+					&& p[i] != null
+					&& p[i].getRang() == getCourse().getNombrePoint()
+					&& getDernierArret() != null
+					&& getDernierArret().getRang() == getCourse()
+							.getNombrePoint()) {
 				return true;
 			}
 		}
