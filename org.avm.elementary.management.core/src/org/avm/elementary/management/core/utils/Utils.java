@@ -205,7 +205,6 @@ public class Utils {
 
 		String v;
 
-
 		// majeure
 		if (t.hasMoreElements()) {
 			majeure = Long.parseLong(t.nextToken());
@@ -227,7 +226,12 @@ public class Utils {
 							v = t.nextToken();
 							b.append(v);
 						}
-						other = Long.parseLong(b.toString());
+						try {
+							other = Long.parseLong(b.toString());
+						} catch (Exception e) {
+							e.printStackTrace();
+							other = 0;
+						}
 					}
 
 				}
@@ -236,22 +240,22 @@ public class Utils {
 
 		}
 
-//		if (micro > 1000) {
-//			long mod = micro % 1000;
-//			mineure += (micro - mod) / 1000;
-//			micro = mod;
-//		}
-//
-//		if (mineure > 1000) {
-//
-//			long mod = mineure % 1000;
-//			majeure += (mineure - mod) / 1000;
-//			mineure = mod;
-//
-//			// int unit = (int)(mineure/1000d);
-//			// majeure +=unit;
-//			// mineure = mineure / unit;
-//		}
+		// if (micro > 1000) {
+		// long mod = micro % 1000;
+		// mineure += (micro - mod) / 1000;
+		// micro = mod;
+		// }
+		//
+		// if (mineure > 1000) {
+		//
+		// long mod = mineure % 1000;
+		// majeure += (mineure - mod) / 1000;
+		// mineure = mod;
+		//
+		// // int unit = (int)(mineure/1000d);
+		// // majeure +=unit;
+		// // mineure = mineure / unit;
+		// }
 
 		StringBuffer buf = new StringBuffer();
 		buf.append(majeure);
@@ -278,22 +282,20 @@ public class Utils {
 		// --other
 		buf.append(other);
 
-//		double ver;
-//		try {
-//			ver = Double.parseDouble(buf.toString());
-//		} catch (NumberFormatException e) {
-//			ver = Double.MAX_VALUE;
-//		}
-//		return ver;
+		// double ver;
+		// try {
+		// ver = Double.parseDouble(buf.toString());
+		// } catch (NumberFormatException e) {
+		// ver = Double.MAX_VALUE;
+		// }
+		// return ver;
 		return buf.toString();
 	}
 
-	public static int compareVersion(String v1,
-			String v2) {
+	public static int compareVersion(String v1, String v2) {
 		String formattedV1 = getVersion(v1);
 		String formattedV2 = getVersion(v2);
-		
-		
+
 		return formattedV1.compareTo(formattedV2);
 	}
 
