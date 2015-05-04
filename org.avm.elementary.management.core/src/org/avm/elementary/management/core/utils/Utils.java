@@ -229,8 +229,9 @@ public class Utils {
 						try {
 							other = Long.parseLong(b.toString());
 						} catch (Exception e) {
+							// on ne s'occupe pas de la version other si pas un nombre
 							e.printStackTrace();
-							other = 0;
+							other=0;
 						}
 					}
 

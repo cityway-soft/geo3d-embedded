@@ -1,12 +1,12 @@
 package org.avm.hmi.swt.message.bundle;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.avm.business.messages.Messages;
 import org.avm.elementary.common.AbstractActivator;
 import org.avm.elementary.common.ConfigurableService;
 import org.avm.elementary.common.ConsumerService;
 import org.avm.elementary.common.ManageableService;
+import org.avm.elementary.jdb.JDB;
 import org.avm.elementary.messenger.Messenger;
 import org.avm.elementary.useradmin.UserSessionService;
 import org.avm.elementary.useradmin.UserSessionServiceInjector;
@@ -16,7 +16,8 @@ import org.avm.hmi.swt.message.MessageImpl;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 
-public class Activator extends AbstractActivator implements MessageIhm, UserSessionServiceInjector {
+public class Activator extends AbstractActivator implements MessageIhm,
+		UserSessionServiceInjector {
 
 	static final String PID = MessageIhm.class.getName();
 
@@ -35,7 +36,7 @@ public class Activator extends AbstractActivator implements MessageIhm, UserSess
 	public Activator() {
 		_plugin = this;
 		_log = Logger.getInstance(this.getClass());
-		_log.setPriority(Priority.DEBUG);
+		// _log.setPriority(Priority.DEBUG);
 		_peer = new MessageImpl();
 	}
 
@@ -61,6 +62,8 @@ public class Activator extends AbstractActivator implements MessageIhm, UserSess
 		disposeCommandGroup();
 		disposeConfiguration();
 	}
+	
+	
 
 	// config
 	private void initializeConfiguration() {
@@ -84,7 +87,7 @@ public class Activator extends AbstractActivator implements MessageIhm, UserSess
 			((ConfigurableService) _peer).configure(null);
 		}
 	}
-	
+
 	// commands
 	private void initializeCommandGroup() {
 		_commands = new CommandGroupImpl(_context, _peer, _config);
@@ -95,8 +98,7 @@ public class Activator extends AbstractActivator implements MessageIhm, UserSess
 		if (_commands != null)
 			_commands.stop();
 	}
-	
-	
+
 	// Desktop
 	private void initializeBaseIhm() {
 		Desktop base = (Desktop) _context.locateService("desktop");
@@ -106,7 +108,6 @@ public class Activator extends AbstractActivator implements MessageIhm, UserSess
 	private void disposeBaseIhm() {
 		_peer.setDesktop(null);
 	}
-
 
 	// consumer
 	private void initializeConsumer() {
@@ -121,7 +122,7 @@ public class Activator extends AbstractActivator implements MessageIhm, UserSess
 			_consumer.stop();
 		}
 	}
-	
+
 	// messenger
 	private void initializeMessenger() {
 		Messenger messenger = (Messenger) _context.locateService("messenger");
@@ -164,13 +165,24 @@ public class Activator extends AbstractActivator implements MessageIhm, UserSess
 	public void unsetUserSessionService(UserSessionService service) {
 		_peer.unsetUserSessionService(service);
 	}
-	
+
 	public void setMessages(Messages messages) {
 		_peer.setMessages(messages);
 	}
 
 	public void unsetMessages(Messages messages) {
 		_peer.unsetMessages(null);
+	}
+	
+	
+	public void setJdb(JDB jdb) {
+		_log.debug("setJdb = " + jdb);
+		_peer.setJdb(jdb);
+	}
+
+	public void unsetJdb(JDB jdb) {
+		_log.debug("unsetJdb");
+		_peer.unsetJdb(null);
 	}
 
 }

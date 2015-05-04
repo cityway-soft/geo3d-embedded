@@ -9,13 +9,13 @@ public interface AVMDisplay {
 			.getProperty("org.avm.hmi.swt.fontsize", "10"));
 
 	public static final String DEFAULT_FONT = System.getProperty(
-			"org.avm.hmi.swt.font", "Liberation-Sans");
+			"org.avm.hmi.swt.font", "Liberation Sans");
 
 	public static final boolean DEBUG = !System.getProperty("org.avm.debug",
 			"false").equals("false");
 
 	public static final String TABFOLDER_FONT = System.getProperty(
-			"org.avm.hmi.swt.tabfolder.font", "Liberation-Sans");
+			"org.avm.hmi.swt.tabfolder.font", "Liberation Sans");
 
 	public static final int TABFOLDER_FONTSIZE_DELTA = Integer.parseInt(System
 			.getProperty("org.avm.hmi.swt.tabfolder.fontsize.delta", "6"));

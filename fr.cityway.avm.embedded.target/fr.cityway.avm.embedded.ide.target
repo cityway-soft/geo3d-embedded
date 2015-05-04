@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="fr.cityway.avm.embedded.ide" sequenceNumber="64">
+<?pde version="3.8"?><target name="fr.cityway.avm.embedded.ide" sequenceNumber="77">
 <locations>
-<location path="${project_loc}/equinox/" type="Directory"/>
 <location path="${project_loc}/knopflerfish/" type="Directory"/>
 <location path="${project_loc}/3rdparty/" type="Directory"/>
+<location path="${project_loc}/equinox/" type="Directory"/>
 </locations>
 <includeBundles>
 <plugin id="org.eclipse.equinox.device"/>
@@ -24,5 +24,5 @@
 <plugin id="org.eclipse.equinox.common"/>
 <plugin id="org.eclipse.osgi"/>
 </includeBundles>
-<targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/CG38"/>
+<targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/OSGi%Minimum-1.1"/>
 </target>

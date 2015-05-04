@@ -5,12 +5,13 @@ Bundle-SymbolicName: org.avm.hmi.swt.message
 Bundle-Version: 1.0.0.qualifier
 Service-Component: META-INF/activator.xml
 Bundle-ClassPath: .
-Import-Package: org.apache.log4j,
- EDU.oswego.cs.dl.util.concurrent,
- org.avm.elementary.alarm,
+Import-Package: EDU.oswego.cs.dl.util.concurrent,
+ org.apache.log4j,
  org.avm.business.messages,
  org.avm.business.protocol.phoebus,
+ org.avm.elementary.alarm,
  org.avm.elementary.common,
+ org.avm.elementary.jdb,
  org.avm.elementary.messenger,
  org.avm.elementary.useradmin,
  org.avm.hmi.swt.desktop,

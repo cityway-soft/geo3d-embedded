@@ -15,6 +15,8 @@ import org.avm.elementary.common.ConsumerService;
 import org.avm.elementary.common.ManageableService;
 import org.avm.elementary.common.ProducerManager;
 import org.avm.elementary.common.Scheduler;
+import org.avm.elementary.jdb.JDB;
+import org.avm.elementary.jdb.JDBInjector;
 import org.avm.elementary.messenger.Messenger;
 import org.avm.elementary.messenger.MessengerInjector;
 import org.avm.elementary.useradmin.UserSessionService;
@@ -34,9 +36,11 @@ import EDU.oswego.cs.dl.util.concurrent.Takable;
 
 public class MessageImpl implements MessageIhm, ManageableService,
 		ConsumerService, UserSessionServiceInjector,
-		ConfigurableService, MessengerInjector, MessagesInjector {
+		ConfigurableService, MessengerInjector, MessagesInjector,JDBInjector {
 	protected static final String NAME = "Messages";
 
+	public static final String JDB_TAG = "swt.messages";
+	
 	private MessageIhmImpl _ihm;
 
 	private Desktop _desktop;
@@ -64,6 +68,8 @@ public class MessageImpl implements MessageIhm, ManageableService,
 	private Hashtable _hashMessage = new Hashtable();
 
 	private boolean _initialized;
+
+	private JDB _jdb;
 
 	public MessageImpl() {
 		_log = Logger.getInstance(this.getClass());
@@ -192,6 +198,7 @@ public class MessageImpl implements MessageIhm, ManageableService,
 						_ihm.setLogger(_log);
 						_ihm.setMessenger(_messenger);
 						_ihm.configure(_config);
+						_ihm.setJdb(_jdb);
 						_desktop.addTabItem(NAME, _ihm);
 						populate();
 					}
@@ -308,6 +315,32 @@ public class MessageImpl implements MessageIhm, ManageableService,
 	public void addPredefinedMessag(String title, String message) {
 		if (_ihm != null) {
 			_ihm.addPredefinedMessage(title, message);
+		}
+	}
+	
+	public void journalize(String message) {
+		_log.info(message);
+
+		if (_jdb != null) {
+			try {
+				_jdb.journalize(JDB_TAG, message);
+			} catch (Throwable t) {
+				t.printStackTrace();
+			}
+		}
+	}
+
+	public void setJdb(JDB jdb) {
+		_jdb = jdb;
+		if (_ihm != null){
+			_ihm.setJdb(_jdb);
+		}
+	}
+
+	public void unsetJdb(JDB jdb) {
+		_jdb = null;
+		if (_ihm != null){
+			_ihm.setJdb(_jdb);
 		}
 	}
 	

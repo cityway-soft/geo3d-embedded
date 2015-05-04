@@ -12,10 +12,11 @@ import org.avm.business.protocol.phoebus.Entete;
 import org.avm.business.protocol.phoebus.MessageText;
 import org.avm.elementary.common.Config;
 import org.avm.elementary.common.ConfigurableService;
+import org.avm.elementary.jdb.JDB;
+import org.avm.elementary.jdb.JDBInjector;
 import org.avm.elementary.messenger.Messenger;
 import org.avm.elementary.messenger.MessengerInjector;
 import org.avm.hmi.swt.desktop.AzertyCompleteKeyboard;
-import org.avm.hmi.swt.desktop.Desktop;
 import org.avm.hmi.swt.desktop.DesktopImpl;
 import org.avm.hmi.swt.desktop.DesktopStyle;
 import org.avm.hmi.swt.desktop.KeyboardDialog;
@@ -40,7 +41,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 public class MessageIhmImpl extends Composite implements MessageIhm,
-		MessengerInjector, ConfigurableService {
+		MessengerInjector, ConfigurableService, JDBInjector {
 
 	private static final SimpleDateFormat HF = new SimpleDateFormat("HH:mm:ss"); //$NON-NLS-1$
 
@@ -67,8 +68,10 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 	private Font _fontText;
 
 	private Group _panelSend;
-	
-	private int _receiveMessageCounter=0;
+
+	private int _receiveMessageCounter = 0;
+
+	private JDB _jdb;
 
 	public MessageIhmImpl(Composite parent, int style) {
 		super(parent, style);
@@ -80,9 +83,9 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 		this.setLayout(gridLayout);
 		setBackground(DesktopStyle.getBackgroundColor());
 
-		_fontTable = DesktopImpl.getFont( 5, SWT.NORMAL); //$NON-NLS-1$
+		_fontTable = DesktopImpl.getFont(5, SWT.NORMAL); //$NON-NLS-1$
 
-		_fontText = DesktopImpl.getFont( 9, SWT.NORMAL); //$NON-NLS-1$
+		_fontText = DesktopImpl.getFont(9, SWT.NORMAL); //$NON-NLS-1$
 
 		_panelSend = new Group(this, SWT.NONE);
 		_panelSend.setText(Messages.getString("Message.boite-envoi")); //$NON-NLS-1$
@@ -107,6 +110,7 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 		KeyboardListener messagelistener = new KeyboardListener() {
 			public void validation(String str) {
 				if (str != null && !str.trim().equals("")) { //$NON-NLS-1$
+					journalize("DRIVERMESSAGE;" + str );
 					send(str);
 				}
 			}
@@ -166,7 +170,7 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 		gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL;
 		gridData.grabExcessHorizontalSpace = true;
-		gridData.heightHint=70;
+		gridData.heightHint = 70;
 		_text.setLayoutData(gridData);
 
 	}
@@ -228,37 +232,36 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 
 	}
 
-
 	public void addMessage(final Properties msgprops) {
 
 		getDisplay().asyncExec(new Runnable() {
-			
 
 			public void run() {
 				try {
 					String id = (String) msgprops
 							.get(org.avm.business.messages.Messages.ID);
-//					String id = Integer.toString(++_receiveMessageCounter);
+					// String id = Integer.toString(++_receiveMessageCounter);
 					String message = (String) msgprops
 							.get(org.avm.business.messages.Messages.MESSAGE);
 					String reception = (String) msgprops
 							.get(org.avm.business.messages.Messages.RECEPTION);
 					Date dateReception;
-					if (reception != null){
-						dateReception = org.avm.business.messages.Messages.DF.parse(reception);
-					}else{
+					if (reception != null) {
+						dateReception = org.avm.business.messages.Messages.DF
+								.parse(reception);
+					} else {
 						dateReception = new Date();
 					}
 
 					String priority = (String) msgprops
 							.get(org.avm.business.messages.Messages.PRIORITE);
-					_log.debug("##Adding message :" + id +", msg:" + message ); //$NON-NLS-1$ //$NON-NLS-2$
+					_log.debug("##Adding message :" + id + ", msg:" + message); //$NON-NLS-1$ //$NON-NLS-2$
 
 					String date = HF.format(dateReception);
 					String val[] = new String[] { id, date, message, priority };
 					TableItem item = new TableItem(_table, SWT.NONE);
 					item.setText(val);
-					
+
 					int type = MESSAGE_NORMAL;
 					try {
 						type = Integer.parseInt(priority);
@@ -345,10 +348,10 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 			GridData gridData = new GridData();
 			gridData.horizontalAlignment = GridData.FILL;
 			gridData.grabExcessHorizontalSpace = true;
-	
+
 			gridData.verticalAlignment = GridData.FILL;
 			gridData.grabExcessVerticalSpace = true;
-	
+
 			keyboard.setLayoutData(gridData);
 			dialog.setTitle(_title);
 			dialog.open();
@@ -379,6 +382,7 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 			}
 			message.append(_message); //$NON-NLS-1$
 			send(message.toString());
+			journalize("DRIVERINFO;" + button.getText().toLowerCase() + ";" +button.getSelection() );
 		}
 
 	}
@@ -389,8 +393,7 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 			d.put("destination", "sam"); //$NON-NLS-1$ //$NON-NLS-2$
 			d.put("binary", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 
-			
-			String msg=text;
+			String msg = text;
 			String fromCharset = System.getProperty("message.from-charset",
 					System.getProperty("file.encoding"));
 			String toCharset = System
@@ -399,11 +402,11 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 				try {
 					msg = new String(msg.getBytes(fromCharset), toCharset);
 				} catch (UnsupportedEncodingException e) {
-					msg=text;
+					msg = text;
 					e.printStackTrace();
 				}
 			}
-			
+
 			MessageText message = new MessageText();
 			message.setMessage(msg);
 			Entete entete = message.getEntete();
@@ -446,6 +449,26 @@ public class MessageIhmImpl extends Composite implements MessageIhm,
 				addPredefinedMessage(key, props.getProperty(key));
 			}
 			this.layout();
+		}
+	}
+
+	public void setJdb(JDB jdb) {
+		_jdb = jdb;
+	}
+
+	public void unsetJdb(JDB jdb) {
+		_jdb = jdb;
+	}
+
+	public void journalize(String message) {
+		_log.info(message);
+
+		if (_jdb != null) {
+			try {
+				_jdb.journalize(MessageImpl.JDB_TAG, message);
+			} catch (Throwable t) {
+				t.printStackTrace();
+			}
 		}
 	}
 

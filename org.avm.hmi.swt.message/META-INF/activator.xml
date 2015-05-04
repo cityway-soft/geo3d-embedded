@@ -8,6 +8,11 @@
 	<reference name="usersession"	interface="org.avm.elementary.useradmin.UserSessionService" 
 		cardinality="0..1" policy="dynamic" bind="setUserSessionService" unbind="unsetUserSessionService" />
 		
+		
+	<reference name="jdb" interface="org.avm.elementary.jdb.JDB"
+		cardinality="0..1" policy="dynamic" bind="setJdb" unbind="unsetJdb" />
+		
+		
 	<reference name="messenger" interface="org.avm.elementary.messenger.Messenger"/>	
 	<reference name="messages" interface="org.avm.business.messages.Messages" 
 		cardinality="0..1" policy="dynamic" bind="setMessages" unbind="unsetMessages" />	
