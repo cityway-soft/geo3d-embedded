@@ -7,7 +7,6 @@ import java.util.Date;
 
 import org.apache.log4j.Layout;
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.avm.device.gps.Gps;
 import org.avm.device.gps.GpsInjector;
 import org.avm.elementary.common.Config;
@@ -39,6 +38,14 @@ public class JDBImpl implements ConfigurableService, ManageableService, JDB,
 
 	public void configure(Config config) {
 		_config = (JDBConfig) config;
+
+		Object[] arguments = { System.getProperty("org.avm.home") };
+		String dir = MessageFormat.format(_config.getFilename(), arguments);
+		File jdbDir = new File(dir);
+		jdbDir = jdbDir.getParentFile();
+		if (jdbDir.exists() == false) {
+			jdbDir.mkdir();
+		}
 	}
 
 	public void setGps(Gps gps) {
@@ -50,6 +57,7 @@ public class JDBImpl implements ConfigurableService, ManageableService, JDB,
 	}
 
 	public void start() {
+
 		Logger logger = Logger.getInstance(BASE_CATEGORY);
 		logger.removeAllAppenders();
 		logger.setAdditivity(false);
@@ -78,15 +86,15 @@ public class JDBImpl implements ConfigurableService, ManageableService, JDB,
 	}
 
 	public void journalize(String priority, String category, String message) {
-		if (org.avm.device.plateform.System.isOnTime()) {
-			Logger logger = Logger.getInstance(BASE_CATEGORY + "." + category);
-			Position position = null;
-			if (_gps != null) {
-				position = _gps.getCurrentPosition();
-			}
-			logger.callAppenders(new JDBEvent(logger, Priority
-					.toPriority(priority), message, null, position));
+		boolean onTime = org.avm.device.plateform.System.isOnTime();
+		onTime = false;
+		Logger logger = Logger.getInstance(BASE_CATEGORY + "." + category);
+		Position position = null;
+		if (_gps != null) {
+			position = _gps.getCurrentPosition();
 		}
+		logger.callAppenders(new JDBEvent(logger, onTime, message, null,
+				position));
 	}
 
 	public void sync() {

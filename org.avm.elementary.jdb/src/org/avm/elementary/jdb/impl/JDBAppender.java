@@ -1,6 +1,10 @@
 package org.avm.elementary.jdb.impl;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -8,11 +12,11 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.zip.GZIPOutputStream;
 
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Layout;
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.apache.log4j.spi.LoggingEvent;
 
 public class JDBAppender extends AppenderSkeleton {
@@ -45,7 +49,9 @@ public class JDBAppender extends AppenderSkeleton {
 
 	private RollingCalendar _calendar = new RollingCalendar();
 
-	private JDBOutputStream _out;
+	// private JDBOutputStream _out;
+
+	FileOutputStream _out;
 
 	private int _size = 512;
 
@@ -107,6 +113,7 @@ public class JDBAppender extends AppenderSkeleton {
 		String filename = getScheduledFilename(_now);
 		_log.debug("roll over : " + filename);
 		File fd = new File(filename);
+		compressAndMoveAllOther(fd);
 
 		if (fd.exists()) {
 			Date modified = new Date(fd.lastModified());
@@ -132,8 +139,83 @@ public class JDBAppender extends AppenderSkeleton {
 
 		_log.debug("open ouput stream, append : " + append);
 
-		_out = new JDBOutputStream(filename, _size);
+		// -- old version : _out = new JDBOutputStream(filename, _size);
+		_out = new FileOutputStream(filename);
 
+	}
+
+	private void compressAndMoveAllOther(final File current) {
+		File tmp = new File(_filename);
+		tmp = tmp.getParentFile();
+
+		File destDir = new File(tmp.getParentFile().getAbsoluteFile()
+				+ "/upload");
+
+		JdbFileFilter filter = new JdbFileFilter(current);
+		File[] content = tmp.listFiles(filter);
+
+		if (content != null) {
+			for (int i = 0; i < content.length; i++) {
+				File file = content[i];
+				try {
+					File cFile = compressAndMove(file, destDir);
+					// File mFile = move(file, destDir);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	// private File move(File file, File destDir) throws IOException {
+	//
+	// InputStream inStream = null;
+	// OutputStream outStream = null;
+	//
+	// inStream = new FileInputStream(file);
+	// File bfile = new File(destDir.getAbsoluteFile() + "/" + file.getName());
+	// outStream = new FileOutputStream(bfile);
+	//
+	// byte[] buffer = new byte[1024];
+	//
+	// int length;
+	// // copy the file content in bytes
+	// while ((length = inStream.read(buffer)) > 0) {
+	//
+	// outStream.write(buffer, 0, length);
+	//
+	// }
+	//
+	// inStream.close();
+	// outStream.close();
+	//
+	// // delete the original file
+	// file.delete();
+	//
+	// return bfile;
+	// }
+
+	private File compressAndMove(File file, File destDir) throws IOException {
+		BufferedInputStream in = new BufferedInputStream(new FileInputStream(
+				file));
+
+		String filename = destDir.getAbsoluteFile() + "/" + file.getName()
+				+ "_jdb.gz";
+
+		GZIPOutputStream _zout = new GZIPOutputStream(new FileOutputStream(
+				filename, true));
+		byte[] data = new byte[1024];
+
+		int c;
+
+		while ((c = in.read(data)) != -1) {
+			_zout.write(data, 0, c);
+		}
+		in.close();
+		_zout.close();
+		file.delete();
+		return new File(filename);
 	}
 
 	protected void append(LoggingEvent event) {
@@ -167,8 +249,8 @@ public class JDBAppender extends AppenderSkeleton {
 	}
 
 	private int computeCheckPeriod() {
-		RollingCalendar rollingCalendar = new RollingCalendar(TimeZone
-				.getTimeZone("GMT"), Locale.ENGLISH);
+		RollingCalendar rollingCalendar = new RollingCalendar(
+				TimeZone.getTimeZone("GMT"), Locale.ENGLISH);
 
 		Date epoch = new Date(0);
 		if (_pattern != null) {
@@ -214,6 +296,25 @@ public class JDBAppender extends AppenderSkeleton {
 		default:
 			_log.warn("Unknown periodicity for appender [" + name + "].");
 		}
+	}
+
+	class JdbFileFilter implements FileFilter {
+
+		private File current;
+
+		public JdbFileFilter(File currentJdb) {
+			this.current = currentJdb;
+		}
+
+		public boolean accept(File arg0) {
+			boolean result = false;
+
+			result = !arg0.getAbsoluteFile().equals(current.getAbsoluteFile());
+			System.err.println("accept " + arg0.getAbsoluteFile() + " : "
+					+ result);
+			return result;
+		}
+
 	}
 
 	class RollingCalendar extends GregorianCalendar {

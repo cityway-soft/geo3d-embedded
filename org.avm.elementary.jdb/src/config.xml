@@ -7,10 +7,10 @@
 <value type="String">org.avm.elementary.jdb.JDB</value>
 </property>
 <property name="org.avm.config.version">
-<value type="Integer">2</value>
+<value type="Integer">3</value>
 </property>
 <property name="filename">
-<value type="String">{0}/data/upload/jdb.gz</value>
+<value type="String">{0}/data/jdb/f</value>
 </property>
 <property name="pattern">
 <value type="String">.dd</value>

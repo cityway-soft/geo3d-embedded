@@ -9,6 +9,8 @@ import org.apache.log4j.spi.LoggingEvent;
 
 public class JDBLayout extends Layout {
 
+	private static final String VERSION="1.0";
+	
 	private StringBuffer _buffer = new StringBuffer(128);
 
 	protected SimpleDateFormat _df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -38,12 +40,15 @@ public class JDBLayout extends Layout {
 
 		_buffer.append(_df.format(_date));
 		_buffer.append(" ");
-		_buffer.append(event.priority);
+		_buffer.append(VERSION);
 		_buffer.append(" ");
 		_buffer.append(_pf.format(lon));
 		_buffer.append(" ");
 		_buffer.append(_pf.format(lat));
 		_buffer.append(" [");
+		if (event.ontime==false){
+			_buffer.append("*");
+		}
 		_buffer.append(event.loggerName);
 		_buffer.append("] ");
 		_buffer.append(event.getMessage());
