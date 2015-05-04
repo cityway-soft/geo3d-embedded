@@ -227,7 +227,11 @@ public class Utils {
 							v = t.nextToken();
 							b.append(v);
 						}
+						try {
 						other = Long.parseLong(b.toString());
+						} catch (NumberFormatException nfe){
+							// on ne s'occupe pas de la version other si pas un nombre
+						}
 					}
 
 				}
