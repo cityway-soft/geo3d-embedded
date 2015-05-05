@@ -82,12 +82,7 @@ public class JDBImpl implements ConfigurableService, ManageableService, JDB,
 	}
 
 	public void journalize(String category, String message) {
-		journalize("INFO", category, message);
-	}
-
-	public void journalize(String priority, String category, String message) {
 		boolean onTime = org.avm.device.plateform.System.isOnTime();
-		onTime = false;
 		Logger logger = Logger.getInstance(BASE_CATEGORY + "." + category);
 		Position position = null;
 		if (_gps != null) {
@@ -96,6 +91,7 @@ public class JDBImpl implements ConfigurableService, ManageableService, JDB,
 		logger.callAppenders(new JDBEvent(logger, onTime, message, null,
 				position));
 	}
+
 
 	public void sync() {
 		_appender.flush();

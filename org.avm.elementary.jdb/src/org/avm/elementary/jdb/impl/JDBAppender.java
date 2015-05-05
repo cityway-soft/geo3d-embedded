@@ -49,9 +49,7 @@ public class JDBAppender extends AppenderSkeleton {
 
 	private RollingCalendar _calendar = new RollingCalendar();
 
-	// private JDBOutputStream _out;
-
-	FileOutputStream _out;
+	private JDBOutputStream _out;
 
 	private int _size = 512;
 
@@ -139,8 +137,7 @@ public class JDBAppender extends AppenderSkeleton {
 
 		_log.debug("open ouput stream, append : " + append);
 
-		// -- old version : _out = new JDBOutputStream(filename, _size);
-		_out = new FileOutputStream(filename);
+		_out = new JDBOutputStream(filename, _size);
 
 	}
 
@@ -158,43 +155,13 @@ public class JDBAppender extends AppenderSkeleton {
 			for (int i = 0; i < content.length; i++) {
 				File file = content[i];
 				try {
-					File cFile = compressAndMove(file, destDir);
-					// File mFile = move(file, destDir);
+					compressAndMove(file, destDir);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					_log.error("Error on compressAndMove Jdb '"+file.getAbsolutePath()+"' : " + e.getMessage());
 				}
 			}
 		}
 	}
-
-	// private File move(File file, File destDir) throws IOException {
-	//
-	// InputStream inStream = null;
-	// OutputStream outStream = null;
-	//
-	// inStream = new FileInputStream(file);
-	// File bfile = new File(destDir.getAbsoluteFile() + "/" + file.getName());
-	// outStream = new FileOutputStream(bfile);
-	//
-	// byte[] buffer = new byte[1024];
-	//
-	// int length;
-	// // copy the file content in bytes
-	// while ((length = inStream.read(buffer)) > 0) {
-	//
-	// outStream.write(buffer, 0, length);
-	//
-	// }
-	//
-	// inStream.close();
-	// outStream.close();
-	//
-	// // delete the original file
-	// file.delete();
-	//
-	// return bfile;
-	// }
 
 	private File compressAndMove(File file, File destDir) throws IOException {
 		BufferedInputStream in = new BufferedInputStream(new FileInputStream(
