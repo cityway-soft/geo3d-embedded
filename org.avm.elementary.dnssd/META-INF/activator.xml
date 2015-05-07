@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.elementary.dnssd.DnsSdService"
+	immediate="true">
+	<implementation class="org.avm.elementary.dnssd.bundle.Activator" />
+	<service>
+		<provide interface="org.avm.elementary.dnssd.DnsSdService" />
+	</service>
+	<property name="service.pid" value="org.avm.elementary.dnssd.DnsSdService" />
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin" />
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin" />
+	
+
+</component>

@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: DNSSD Service
+Bundle-SymbolicName: org.avm.elementary.dnssd
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: .,
+ lib/dnsjava-2.1.7.jar,
+ lib/org.xbill.mdns_2.1.5.jar
+Service-Component: META-INF/activator.xml
+Bundle-Vendor: Cityway
+Export-Package: org.avm.elementary.dnssd
+Import-Package: EDU.oswego.cs.dl.util.concurrent,
+ flavor,
+ org.apache.log4j,
+ org.avm.device.gps,
+ org.avm.elementary.alarm,
+ org.avm.elementary.common,
+ org.avm.elementary.jdb,
+ org.knopflerfish.service.console,
+ org.osgi.service.cm,
+ org.osgi.service.component,
+ org.osgi.service.wireadmin,
+ org.osgi.util.measurement,
+ org.osgi.util.position,
+ statemap
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
