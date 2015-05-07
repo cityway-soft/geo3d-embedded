@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.avm.elementary.media.mqtt.MediaMqtt"
+	immediate="true">
+	<implementation class="org.avm.elementary.media.mqtt.bundle.Activator" />
+	<property name="service.pid" value="org.avm.elementary.media.mqtt.MediaMqtt" />
+	<service>
+		<provide interface="org.avm.elementary.common.Media" />
+		<provide interface="org.avm.elementary.alarm.AlarmProvider"/>
+	</service>
+	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin" />
+	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin" />
+	<reference name="messenger" interface="org.avm.elementary.common.MediaListener" />
+	<reference name="jdb" interface="org.avm.elementary.jdb.JDB"
+		cardinality="0..1" policy="dynamic" bind="setJdb" unbind="unsetJdb" />
+
+</component>

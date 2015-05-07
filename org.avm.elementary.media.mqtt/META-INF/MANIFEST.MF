@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Media MQTT
+Bundle-SymbolicName: org.avm.elementary.media.mqtt
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: .,
+ lib/mqtt-client-0.4.0.jar
+Service-Component: META-INF/activator.xml
+Bundle-Vendor: Cityway
+Export-Package: org.avm.elementary.media.mqtt
+Import-Package: EDU.oswego.cs.dl.util.concurrent,
+ flavor,
+ org.apache.log4j,
+ org.avm.device.gps,
+ org.avm.elementary.alarm,
+ org.avm.elementary.common,
+ org.avm.elementary.jdb,
+ org.knopflerfish.service.console,
+ org.osgi.service.cm,
+ org.osgi.service.component,
+ org.osgi.service.wireadmin,
+ org.osgi.util.measurement,
+ org.osgi.util.position,
+ statemap
+Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
