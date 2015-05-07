@@ -37,7 +37,6 @@ public class JDBOutputStream extends BufferedOutputStream {
 	public void close() throws IOException {
 		try {
 			flush();
-			super.close();
 		} catch (IOException e) {
 		}
 	}
