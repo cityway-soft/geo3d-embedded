@@ -34,7 +34,7 @@
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/OSGi%Minimum-1.1"/>
 <launcherArgs>
 <vmArgs>-Declipse.ignoreApp=true -Dosgi.noShutdown=true
--Xbootclasspath/a:${project_loc:fr.cityway.avm.embedded.target}/bootstrap/${target.os}/${target.arch}/swt.jar
+-Xbootclasspath/a:${project_loc:fr.cityway.avm.embedded.target}/swt-lib/${target.os}/${target.arch}/swt.jar
 -Dorg.avm.home=${project_loc:fr.cityway.avm.embedded.target}/avm_home/
 -Dorg.avm.splash=true
 -Dorg.avm.debug=true

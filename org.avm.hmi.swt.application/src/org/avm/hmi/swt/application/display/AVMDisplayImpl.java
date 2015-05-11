@@ -1,9 +1,5 @@
 package org.avm.hmi.swt.application.display;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -102,16 +98,6 @@ public class AVMDisplayImpl implements AVMDisplay, Runnable {
 	 * This method initializes Shell
 	 */
 	private void open() {
-//		PoorWatchDog wd = PoorWatchDog.getInstance();
-//		File file = new File(System.getProperty("org.avm.home")
-//				+ "/freeze.ignore");
-//		if (file.exists()) {
-//			logger.info("Freeze management ignore");
-//		} else {
-//			logger.info("Freeze management ACTIVATED.");
-//			wd.start();
-//
-//		}
 		debug("Opening display...");
 		synchronized (lock) {
 			if (_display == null) {
@@ -125,7 +111,6 @@ public class AVMDisplayImpl implements AVMDisplay, Runnable {
 		failure = 0;
 		while (!_display.isDisposed() && running) {
 			try {
-//				wd.reset();
 				if (!_display.readAndDispatch())
 					_display.sleep();
 
@@ -183,98 +168,6 @@ public class AVMDisplayImpl implements AVMDisplay, Runnable {
 		}
 	}
 
-//	static class PoorWatchDog {
-//		private long t0 = -1;
-//
-//		private long timeout = 2000;
-//
-//		private Thread thread;
-//
-//		private int count = 0;
-//
-//		boolean wdrunning = false;
-//
-//		private Object wdlock = new Object();
-//
-//		private static PoorWatchDog instance;
-//
-//		public static PoorWatchDog getInstance() {
-//			if (instance == null) {
-//				instance = new PoorWatchDog();
-//			}
-//			return instance;
-//		}
-//
-//		public void stop() {
-//			wdrunning = false;
-//			if (thread != null) {
-//				thread.interrupt();
-//				thread = null;
-//			}
-//		}
-//
-//		public void start() {
-//			if (thread == null) {
-//				wdrunning = true;
-//				thread = new Thread(new Runnable() {
-//
-//					public void run() {
-//						while (wdrunning && thread.isInterrupted() == false) {
-//							long now = System.currentTimeMillis();
-//							if ((now - t0) > timeout) {
-//								count++;
-//							} else {
-//								if (count > 1){
-//									logger.warn("OK mais Blocage SWT : "+ count);
-//								}
-//								count = 0;
-//							}
-//
-//							if (count > 5) {
-//								SimpleDateFormat df = new SimpleDateFormat(
-//										"yyyy-MM-dd_HHmmss");
-//								try {
-//									FileOutputStream fos = new FileOutputStream(
-//											System.getProperty("org.avm.home")
-//													+ "/data/upload/freezeapp-"
-//													+ df.format(new Date())
-//													+ ".txt");
-//									fos.close();
-//								} catch (IOException e) {
-//									e.printStackTrace();
-//								}
-//								logger.warn("Forcage Exit application("
-//										+ new Date() + ") !!!!!!!!!!!");
-//								System.out.println("BLOCAGE SWT (" + new Date()
-//										+ ")");
-//								System.exit(1);
-//							}
-//							try {
-//								synchronized (wdlock) {
-//									wdlock.wait(1000);
-//								}
-//							} catch (InterruptedException e) {
-//							}
-//						}
-//						System.out.println("Arret thread!!!!");
-//
-//					}
-//
-//				});
-//			}
-//			thread.start();
-//		}
-//
-//		public void reset() {
-//			if (wdrunning) {
-//				t0 = System.currentTimeMillis();
-//				synchronized (wdlock) {
-//					wdlock.notify();
-//				}
-//			}
-//
-//		}
-//
-//	}
+
 
 }

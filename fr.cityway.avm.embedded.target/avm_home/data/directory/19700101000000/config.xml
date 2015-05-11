@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><cm_data version="0.1"><configuration pid="org.avm.elementary.directory.Directory"><property name="ATELIER"><value type="String">type=phone
+phone=5
+name=ATELIER</value></property><property name="hlp"><value type="String">type=girouette
+code=1</value></property><property name="hors-service"><value type="String">type=girouette
+code=2</value></property></configuration></cm_data>
