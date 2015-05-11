@@ -16,5 +16,4 @@ Bundle-ClassPath: .
 Service-Component: META-INF/activator.xml
 Bundle-Vendor: Cityway
 Export-Package: org.avm.elementary.media.test
-
 Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
