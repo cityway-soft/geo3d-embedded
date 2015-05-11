@@ -31,5 +31,26 @@
 <plugin id="org.apache.felix.gogo.command"/>
 <plugin id="org.eclipse.equinox.app"/>
 </includeBundles>
-<targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/CG38"/>
+<targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/OSGi%Minimum-1.1"/>
+<launcherArgs>
+<vmArgs>-Declipse.ignoreApp=true -Dosgi.noShutdown=true
+-Xbootclasspath/a:${project_loc:fr.cityway.avm.embedded.target}/bootstrap/${target.os}/${target.arch}/swt.jar
+-Dorg.avm.home=${project_loc:fr.cityway.avm.embedded.target}/avm_home/
+-Dorg.avm.splash=true
+-Dorg.avm.debug=true
+-Dorg.knopflerfish.consoletelnet.port=2332
+-Dorg.osgi.service.http.port=8082
+-Dorg.avm.plateform=aton
+-Dorg.avm.hmi.swt.geometry=640x480+0-480
+-Dorg.avm.hmi.swt.fontsize=7
+-Dorg.avm.hmi.swt.font="Liberation Sans"
+-Dorg.avm.elementary.management.core.autoupdate=false
+-Dorg.avm.exploitation.name=Cityway
+-Dorg.avm.upload.public.url=no
+-Dorg.avm.upload.private.url=no
+-Dorg.avm.download.public.url=no
+-Dorg.avm.download.private.url=no
+-Djava.protocol.handler.pkgs=org.avm.device.protocol
+-Dorg.avm.terminal.id=AA:FF:FF:FF:FF:FF:01:01</vmArgs>
+</launcherArgs>
 </target>
