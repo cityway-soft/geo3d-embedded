@@ -45,7 +45,7 @@
 -Dorg.avm.home=${project_loc:fr.cityway.avm.embedded.target}/avm_home/
 -Dorg.avm.splash=true
 -Dorg.avm.debug=true
--Dorg.knopflerfish.consoletelnet.port=2332
+-Dorg.knopflerfish.consoletelnet.port=2300
 -Dorg.osgi.service.http.port=8082
 -Dorg.avm.plateform=aton
 -Dorg.avm.hmi.swt.geometry=640x480+0-480

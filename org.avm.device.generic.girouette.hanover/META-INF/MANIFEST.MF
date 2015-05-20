@@ -15,6 +15,5 @@ Import-Package: junit.framework;resolution:=optional,
  org.osgi.service.wireadmin,
  org.osgi.util.tracker
 Bundle-ClassPath: .
-Service-Component: META-INF/girouette.xml,
- META-INF/afficheur.xml
+Service-Component: META-INF/girouette.xml
 Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
