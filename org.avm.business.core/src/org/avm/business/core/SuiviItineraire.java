@@ -7,6 +7,7 @@
 
 package org.avm.business.core;
 
+import java.lang.reflect.Modifier;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
@@ -61,6 +62,8 @@ public class SuiviItineraire implements ConfigurableService {
 	private boolean _running;
 
 	private long _entryTime;
+
+	private boolean isAtStop = false;
 
 	public void setAvm(Avm avm) {
 		_avm = avm;
@@ -380,6 +383,16 @@ public class SuiviItineraire implements ConfigurableService {
 					traitementAvanceRetard();
 				}
 			}
+			// on est à un arret
+			if (isAtStop) {
+				Point point = getDernierArret();
+				int ar = (getCurrentHourInSecondFromMidnight()
+						- point.getArriveeTheorique() + point
+						.getAttenteTheorique());
+				_avanceRetard.getEntete().getProgression().setRetard(ar);
+				getModel().setAvanceRetard(ar);
+				_producer.publish(_avanceRetard);
+			}
 		}
 
 		/*
@@ -517,6 +530,7 @@ public class SuiviItineraire implements ConfigurableService {
 						+ getDernierArret().getNom(), true);
 
 			} else {
+				isAtStop = true;
 				StringBuffer buf = new StringBuffer();
 				buf.append("ARRET;IN;");
 				buf.append(getDernierArret().getId());
@@ -578,6 +592,7 @@ public class SuiviItineraire implements ConfigurableService {
 				_log.debug("sortie balise (" + balise + "): "
 						+ getDernierArret() + " at " + _entryTime);
 			}
+			isAtStop = false;
 			StringBuffer buf = new StringBuffer();
 			buf.append("ARRET;OUT;");
 			buf.append(getDernierArret().getId());
