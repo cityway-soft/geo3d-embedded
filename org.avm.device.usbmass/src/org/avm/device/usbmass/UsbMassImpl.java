@@ -54,12 +54,17 @@ public class UsbMassImpl implements UsbMass, ProducerService,
 			_mountPoint = new File(_config.getMountPoint());
 			_frequency = Long.parseLong(_config.getPollFrequency());
 		}
-		_name = UsbMass.class.getName() + "@" + _config.getMountPoint();
-		if (_log.isDebugEnabled()) {
-			_log.debug("taskId=" + _taskId + ", name=" + _name);
-		}
 		_taskId = _scheduler.schedule(new USBTimerTask(), _frequency * 1000,
 				true);
+	}
+
+	private String getName() {
+		if (_name == null) {
+
+			_name = UsbMass.class.getName() + "@" + _config.getMountPoint();
+		}
+
+		return _name;
 	}
 
 	public void stop() {
@@ -83,7 +88,7 @@ public class UsbMassImpl implements UsbMass, ProducerService,
 			try {
 				if (_usbInserted != isAvailable()) {
 					_usbInserted = isAvailable();
-					State state = new State(_usbInserted ? 1 : 0, _name);
+					State state = new State(_usbInserted ? 1 : 0, getName());
 					publish(state);
 					if (_log.isDebugEnabled()) {
 						_log.debug("Published state : '" + state + "'");
