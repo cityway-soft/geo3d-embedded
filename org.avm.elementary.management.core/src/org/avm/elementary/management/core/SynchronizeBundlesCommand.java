@@ -609,7 +609,7 @@ class SynchronizeBundlesCommand implements BundleListener {
 					// -- on retire les bundles dont la version est plus recente
 					// que
 					// celle du bundles.list
-					check = ((result==0 || result==-1) && bundleProperties
+					check = ((result==0 || result<-1) && bundleProperties
 							.getStartlevel() >= 0);
 
 					if (check) {
