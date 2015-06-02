@@ -7,8 +7,6 @@
 		<provide interface="org.avm.elementary.alarm.AlarmProvider" />
 	</service>
 	<reference name="cm" interface="org.osgi.service.cm.ConfigurationAdmin" />
-	<reference name="girouette" interface="org.avm.device.girouette.Girouette"
-		cardinality="0..1" policy="dynamic" />
 	<reference name="wireadmin" interface="org.osgi.service.wireadmin.WireAdmin" />
 	<reference name="girouette" interface="org.avm.device.girouette.Girouette"
 		cardinality="0..1" policy="dynamic" bind="setGirouette" unbind="unsetGirouette" />
