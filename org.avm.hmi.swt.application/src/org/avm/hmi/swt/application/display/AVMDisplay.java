@@ -6,7 +6,7 @@ public interface AVMDisplay {
 	public Display getDisplay();
 
 	public static final int DEFAULT_FONTSIZE = Integer.parseInt(System
-			.getProperty("org.avm.hmi.swt.fontsize", "10"));
+			.getProperty("org.avm.hmi.swt.fontsize", "7"));
 
 	public static final String DEFAULT_FONT = System.getProperty(
 			"org.avm.hmi.swt.font", "Liberation Sans");
