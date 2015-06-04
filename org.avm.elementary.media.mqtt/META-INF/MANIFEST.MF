@@ -15,11 +15,13 @@ Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.avm.elementary.alarm,
  org.avm.elementary.common,
  org.avm.elementary.jdb,
+ org.json,
  org.knopflerfish.service.console,
  org.osgi.service.cm,
  org.osgi.service.component,
  org.osgi.service.wireadmin,
  org.osgi.util.measurement,
  org.osgi.util.position,
+ org.stringtree.json,
  statemap
 Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
