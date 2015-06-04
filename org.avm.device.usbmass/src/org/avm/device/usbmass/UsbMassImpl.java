@@ -56,7 +56,15 @@ public class UsbMassImpl implements UsbMass, ProducerService,
 		}
 		_taskId = _scheduler.schedule(new USBTimerTask(), _frequency * 1000,
 				true);
-		_name = UsbMass.class.getName() + "@" + _config.getMountPoint();
+	}
+
+	private String getName() {
+		if (_name == null) {
+
+			_name = UsbMass.class.getName() + "@" + _config.getMountPoint();
+		}
+
+		return _name;
 	}
 
 	public void stop() {
@@ -80,8 +88,11 @@ public class UsbMassImpl implements UsbMass, ProducerService,
 			try {
 				if (_usbInserted != isAvailable()) {
 					_usbInserted = isAvailable();
-					State state = new State(_usbInserted ? 1 : 0, _name);
+					State state = new State(_usbInserted ? 1 : 0, getName());
 					publish(state);
+					if (_log.isDebugEnabled()) {
+						_log.debug("Published state : '" + state + "'");
+					}
 				}
 			} catch (Throwable t) {
 				_log.error("Error", t);

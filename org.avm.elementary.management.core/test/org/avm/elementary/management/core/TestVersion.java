@@ -153,5 +153,20 @@ public class TestVersion extends TestCase {
 				+ ", expected:" + expected);
 		assertEquals(expected, generated);
 	}
+	
+	public void testComparaison() {
+
+//		String v1 = "1.0.0.201412010005";
+//		String v2 = "1.0.0.201410131634";
+		
+		String v1 = "1.0.1";
+		String v2 = "1.0.2";
+
+		int result = Utils.compareVersion(v1, v2);
+
+		int expected = -2;
+		debug("v1=" + v1 + "   < v2:" + v2 +" ===>" + expected);
+		assertEquals(expected, result);
+	}
 
 }
