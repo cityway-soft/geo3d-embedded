@@ -148,6 +148,10 @@ public class JDBAppender extends AppenderSkeleton {
 		File destDir = new File(tmp.getParentFile().getAbsoluteFile()
 				+ "/upload");
 
+		if (destDir.exists() == false){
+			destDir.mkdir();
+		}
+		
 		JdbFileFilter filter = new JdbFileFilter(current);
 		File[] content = tmp.listFiles(filter);
 
@@ -157,7 +161,8 @@ public class JDBAppender extends AppenderSkeleton {
 				try {
 					compressAndMove(file, destDir);
 				} catch (IOException e) {
-					_log.error("Error on compressAndMove Jdb '"+file.getAbsolutePath()+"' : " + e.getMessage());
+					_log.error("Error on compressAndMove Jdb '"
+							+ file.getAbsolutePath() + "' : " + e.getMessage());
 				}
 			}
 		}
@@ -212,7 +217,18 @@ public class JDBAppender extends AppenderSkeleton {
 	}
 
 	String getScheduledFilename(Date date) {
-		return _filename + _df.format(date);
+		StringBuffer buf = new StringBuffer();
+		buf.append(_filename);
+		buf.append("_");
+		buf.append(System.getProperty("org.avm.terminal.name"));
+		buf.append("_");
+		buf.append(System.getProperty("org.avm.terminal.owner"));
+		String dd = _df.format(date).trim();
+		if (dd.startsWith(".") == false){
+			buf.append(".");
+		}
+		buf.append(dd);
+		return buf.toString();
 	}
 
 	private int computeCheckPeriod() {

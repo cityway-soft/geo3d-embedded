@@ -7,7 +7,6 @@
 
 package org.avm.business.core;
 
-import java.lang.reflect.Modifier;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
@@ -511,6 +510,11 @@ public class SuiviItineraire implements ConfigurableService {
 		Point p = getCourse().getPointAPartirRangAvecId(currentRang, balise);
 
 		if (p != null) {
+
+			if (p.isDesservi()) {
+				_log.warn("StopPoint " + p.getNom() + " already served!");
+				return;
+			}
 			updateAttente(p, true);
 			getCourse().setPointDesservi(p);
 			getModel().setDernierPoint(p);
@@ -520,7 +524,7 @@ public class SuiviItineraire implements ConfigurableService {
 					_avanceRetard.getEntete().getProgression().getRetard());
 			getModel().setInsidePoint(true);
 			if (_log.isDebugEnabled()) {
-				_log.debug("Entree Arret " + getDernierArret() + " at "
+				_log.debug("Entry StopPoint " + getDernierArret() + " at "
 						+ _entryTime);
 			}
 

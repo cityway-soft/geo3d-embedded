@@ -1,42 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="fr.cityway.avm.embedded.ide" sequenceNumber="95">
+<?pde version="3.8"?><target name="fr.cityway.avm.embedded.ide" sequenceNumber="96">
 <locations>
 <location path="${project_loc}/3rdparty/" type="Directory"/>
 <location path="${project_loc}/knopflerfish" type="Directory"/>
 <location path="${project_loc}/equinox-luna/" type="Directory"/>
 </locations>
 <includeBundles>
-<plugin id="cm"/>
-<plugin id="com.springsource.org.junit"/>
+<plugin id="org.eclipse.osgi.services"/>
+<plugin id="org.eclipse.jetty.util"/>
+<plugin id="org.eclipse.equinox.useradmin"/>
+<plugin id="org.eclipse.equinox.device"/>
+<plugin id="org.eclipse.osgi.util"/>
+<plugin id="org.eclipse.equinox.wireadmin"/>
+<plugin id="org.eclipse.jetty.io"/>
+<plugin id="org.eclipse.equinox.log"/>
+<plugin id="org.eclipse.equinox.console"/>
+<plugin id="xml"/>
+<plugin id="org.eclipse.equinox.ds"/>
 <plugin id="console"/>
-<plugin id="consoletelnet"/>
-<plugin id="javax.servlet"/>
+<plugin id="org.eclipse.osgi"/>
 <plugin id="org.apache.felix.gogo.command"/>
 <plugin id="org.apache.felix.gogo.runtime"/>
-<plugin id="org.apache.felix.gogo.shell"/>
-<plugin id="org.eclipse.equinox.app"/>
-<plugin id="org.eclipse.equinox.common"/>
-<plugin id="org.eclipse.equinox.console"/>
-<plugin id="org.eclipse.equinox.device"/>
-<plugin id="org.eclipse.equinox.ds"/>
-<plugin id="org.eclipse.equinox.http.jetty"/>
-<plugin id="org.eclipse.equinox.http.servlet"/>
-<plugin id="org.eclipse.equinox.log"/>
-<plugin id="org.eclipse.equinox.preferences"/>
-<plugin id="org.eclipse.equinox.useradmin"/>
-<plugin id="org.eclipse.equinox.util"/>
-<plugin id="org.eclipse.equinox.wireadmin"/>
-<plugin id="org.eclipse.jetty.continuation"/>
-<plugin id="org.eclipse.jetty.http" version="8.1.16.v20140903"/>
-<plugin id="org.eclipse.jetty.io"/>
-<plugin id="org.eclipse.jetty.security"/>
 <plugin id="org.eclipse.jetty.server"/>
+<plugin id="com.springsource.org.junit"/>
+<plugin id="org.eclipse.equinox.http.jetty"/>
+<plugin id="org.eclipse.equinox.util"/>
+<plugin id="org.eclipse.jetty.http"/>
+<plugin id="org.apache.felix.gogo.shell"/>
+<plugin id="org.eclipse.equinox.http.servlet"/>
+<plugin id="org.eclipse.jetty.continuation"/>
+<plugin id="consoletelnet"/>
+<plugin id="org.eclipse.equinox.common"/>
+<plugin id="cm"/>
+<plugin id="org.eclipse.equinox.preferences"/>
 <plugin id="org.eclipse.jetty.servlet"/>
-<plugin id="org.eclipse.jetty.util"/>
-<plugin id="org.eclipse.osgi"/>
-<plugin id="org.eclipse.osgi.services"/>
-<plugin id="org.eclipse.osgi.util"/>
-<plugin id="xml"/>
+<plugin id="javax.servlet"/>
+<plugin id="org.eclipse.jetty.security"/>
 </includeBundles>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/OSGi%Minimum-1.1"/>
 <launcherArgs>
