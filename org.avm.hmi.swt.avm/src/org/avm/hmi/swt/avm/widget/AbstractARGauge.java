@@ -76,7 +76,7 @@ public abstract class AbstractARGauge extends Composite implements Runnable {
 		} else if (val < -limitLow) {
 			idx = 1;
 			clig = true;
-		} else if (val < 0) {
+		} else if (val <= 0) {
 			idx = ((limitLow + val) / (limitLow / 4)) + 1;
 		} else if (val > 0) {
 			idx = ((val - limitHigh) / (limitHigh / 4)) + 7;
