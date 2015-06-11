@@ -1196,7 +1196,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 		debug(balise + " is arret : " + result); //$NON-NLS-1$
 		return result;
 	}
-	
+
 	public boolean isArretEnAval(int balise) {
 		boolean result = _suiviItineraire.isArretEnAval(balise);
 		debug(balise + " is arret en aval : " + result); //$NON-NLS-1$
@@ -1242,9 +1242,10 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 		try {
 			_fsm.sortie(balise);
 		} catch (RuntimeException e) {
-			_log.error("Erreur 'sortie balise [" + balise + "]'"); //$NON-NLS-1$
-			_log.error("Erreur 'sortie balise [" + balise + "]'", e);
-			_log.error(e);
+			_log.error("Erreur 'sortie balise [" + balise + "]' : " + e.getMessage()); //$NON-NLS-1$
+			if (_log.isDebugEnabled()) {
+				_log.error("Erreur 'sortie balise [" + balise + "]'", e);
+			}
 
 		}
 	}
