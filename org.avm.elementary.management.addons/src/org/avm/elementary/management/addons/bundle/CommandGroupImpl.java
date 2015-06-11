@@ -337,15 +337,9 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		}
 		return 0;
 	}
-
-	// -- SYNCHRONIZE
-	public final static String USAGE_SYNCHRONIZE = "[<mode>]";
-
-	public final static String[] HELP_SYNCHRONIZE = new String[] { "Synchronize bundles" };
-
-	public int cmdSynchronize(Dictionary opts, Reader in, PrintWriter out,
-			Session session) {
-		String smode = ((String) opts.get("mode"));
+	
+	
+	private void changeUploadDownloadMode(String smode, PrintWriter out){
 		if (smode != null) {
 			if (smode.equals("default")) {
 				ManagementPropertyFile configuration = ManagementPropertyFile
@@ -373,6 +367,17 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		} catch (Exception e) {
 			out.print(e.getMessage());
 		}
+	}
+
+	// -- SYNCHRONIZE
+	public final static String USAGE_SYNCHRONIZE = "[<mode>]";
+
+	public final static String[] HELP_SYNCHRONIZE = new String[] { "Synchronize bundles" };
+
+	public int cmdSynchronize(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+		String smode = ((String) opts.get("mode"));
+		changeUploadDownloadMode(smode, out);
 		synchronize(out, true);
 
 		return 0;
@@ -810,15 +815,19 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	}
 
 	// -- execute script from url
-	public final static String USAGE_UPLOAD = "[-f #F#] [-r #R#] [<file>] ";
+	public final static String USAGE_UPLOAD = "[-f #F#] [-r #R#] [-m #M#] [<file>] ";
 
 	public final static String[] HELP_UPLOAD = new String[] {
 			"Upload files (use /data/upload,if <file> is empty)",
 			"-f <true=default|false> : force copy even if file created today ",
-			"-r <true=default|false> : remove file after copy " };
+			"-r <true=default|false> : remove file after copy ",
+			"-m <true=default|false> : remove file after copy "};
 
 	public int cmdUpload(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
+				
+		String smode = ((String) opts.get("mode"));
+		changeUploadDownloadMode(smode, out);
 		String cmd = "upload";
 		String forceCopy = ((String) opts.get("-f"));
 		if (forceCopy == null || !forceCopy.equalsIgnoreCase("false")) {
