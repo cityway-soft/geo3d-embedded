@@ -35,6 +35,12 @@ public class MediaMqttImpl implements MediaMqtt, ConfigurableService,
 		ManageableService, JDBInjector, AlarmProvider, ProducerService,
 		MqttCallback {
 
+	private static final String MQTT_DISCONNECT = "DISCONNECT";
+
+	private static final String MQTT_ON_LINE = "ON LINE";
+
+	private static final String MQTT_CONNECTION_LOST = "CONNECTION LOST";
+
 	private final String JDB_TAG = "COMM";
 
 	private Logger _log;
@@ -86,7 +92,7 @@ public class MediaMqttImpl implements MediaMqtt, ConfigurableService,
 	public void configure(Config config) {
 		_config = (MediaMqttConfig) config;
 		topicMO = "/terminal/mo/" + getMediaId();
-		topicMT = "/terminal/mt/" + getMediaId();
+		topicMT = "/terminal/mt";
 	}
 
 	public void setMessenger(MediaListener messenger) {
@@ -103,15 +109,9 @@ public class MediaMqttImpl implements MediaMqtt, ConfigurableService,
 	}
 
 	public void stop() {
-		try {
-			mqttClient.disconnect();
-			System.out.println("Disconnected");
-		} catch (MqttException e) {
-			e.printStackTrace();
-		}
 
-		_started = false;
 		_scheduler.execute(DISPOSE_CONNECTION);
+		_started = false;
 	}
 
 	public String getMediaId() {
@@ -123,27 +123,29 @@ public class MediaMqttImpl implements MediaMqtt, ConfigurableService,
 			saveContextIntoHeader(header);
 		}
 
-		
-		
 		Integer lon = (Integer) header.get("lon");
 		Integer lat = (Integer) header.get("lat");
 		Integer trk = (Integer) header.get("trk");
 		Integer spd = (Integer) header.get("spd");
 		Date date = (Date) header.get("date");
-		
-		
-		BaseData base = new BaseData();
-		LocalisedData location = new LocalisedData();
-		location.setLat((double)lat.intValue());
-		location.setLon((double)lon.intValue());
-		location.setSpeed((double)spd.intValue());
-		location.setTrack((double)trk.intValue());
-		location.setDate(date);
-		M2MMessage m = M2MMessageHelper.createM2MMessage(base, location, data);
-		String msg = M2MMessageHelper.toJson(m);
-		
+
+		// BaseData base = new BaseData();
+		// LocalisedData location = new LocalisedData();
+		// location.setLat((double)lat.intValue());
+		// location.setLon((double)lon.intValue());
+		// location.setSpeed((double)spd.intValue());
+		// location.setTrack((double)trk.intValue());
+		// location.setDate(date);
+		// M2MMessage m = M2MMessageHelper.createM2MMessage(base, location,
+		// data);
+		// String msg = M2MMessageHelper.toJson(m);
+		//
+		// byte[] dataToSend=msg.getBytes();
+
+		byte[] dataToSend = data;
+
 		int qos = 2;
-		MqttMessage message = new MqttMessage(msg.getBytes());
+		MqttMessage message = new MqttMessage(dataToSend);
 		message.setQos(qos);
 		mqttClient.publish(topicMO, message);
 		_log.debug("Message published");
@@ -320,23 +322,30 @@ public class MediaMqttImpl implements MediaMqtt, ConfigurableService,
 
 				MqttConnectOptions connOpts = new MqttConnectOptions();
 				connOpts.setCleanSession(true);
-				String willPayload = "CONNECTION LOST";
-				connOpts.setWill(topicMO, willPayload.getBytes(), 2, true);
-				System.out.println("Connecting to broker: " + broker);
+				connOpts.setWill(topicMO, MQTT_CONNECTION_LOST.getBytes(), 2,
+						true);
+				if (_log.isDebugEnabled()) {
+					_log.debug("Connecting to broker: " + broker);
+				}
 				mqttClient.connect(connOpts);
-				String connectionMsg = "I'm ONLINE ";
-				send(new Hashtable(), connectionMsg.getBytes());
+				send(new Hashtable(), MQTT_ON_LINE.getBytes());
 				mqttClient.setCallback(MediaMqttImpl.this);
 				System.out.println("Connected");
+				// -- subscribe to topic for all terminals
 				mqttClient.subscribe(topicMT);
+				// -- subscribe to topic for this terminal only
+				mqttClient.subscribe(topicMT + "/" + getMediaId());
+
 				notifyConnected(true);
 			} catch (MqttException me) {
-				System.out.println("reason " + me.getReasonCode());
-				System.out.println("msg " + me.getMessage());
-				System.out.println("loc " + me.getLocalizedMessage());
-				System.out.println("cause " + me.getCause());
-				System.out.println("excep " + me);
-				me.printStackTrace();
+				_log.warn("reason " + me.getReasonCode());
+				_log.warn("msg " + me.getMessage());
+				_log.warn("loc " + me.getLocalizedMessage());
+				_log.warn("cause " + me.getCause());
+				_log.warn("excep " + me);
+				if (_log.isDebugEnabled()) {
+					me.printStackTrace();
+				}
 				throw me;
 			}
 
@@ -366,7 +375,20 @@ public class MediaMqttImpl implements MediaMqtt, ConfigurableService,
 			// _connection.dispose();
 			// _connection = null;
 			// }
-			_log.debug("[Media Mqtt diposed");
+			try {
+				send(new Hashtable(), MQTT_DISCONNECT.getBytes());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				try {
+					mqttClient.disconnect();
+				} catch (MqttException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			_log.debug("[Media Mqtt disposed");
 		}
 	};
 
@@ -449,8 +471,17 @@ public class MediaMqttImpl implements MediaMqtt, ConfigurableService,
 	public void messageArrived(String arg0, MqttMessage message)
 			throws Exception {
 		byte[] data = message.getPayload();
-		Dictionary header = new Properties();
-		_messenger.receive(header, data);
-
+		String msg = new String(data);
+		if (msg.contains(MQTT_ON_LINE)) {
+			_log.info("** SERVER ON LINE **");
+			send(new Hashtable(), MQTT_ON_LINE.getBytes());
+			notifyConnected(true);
+		} else if (msg.contains(MQTT_CONNECTION_LOST)) {
+			_log.info("** SERVER ON LINE **");
+			notifyConnected(false);
+		} else {
+			Dictionary header = new Properties();
+			_messenger.receive(header, data);
+		}
 	}
 }
