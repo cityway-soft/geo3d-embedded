@@ -1,9 +1,12 @@
 package org.avm.elementary.useradmin.manager;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -76,13 +79,15 @@ public class Data2UserAdmin {
 
 	}
 
-	public void initialize(String filename, String[] groups, Properties defaultUsers) throws IOException {
+	public void initialize(String filename, String copyFilename,String[] groups, Properties defaultUsers) throws IOException {
 		init(groups, defaultUsers);
-		BufferedReader fic;
+		BufferedReader fic=null;
+		BufferedWriter fout=null;
 
 		try {
 			fic = new BufferedReader(new InputStreamReader(new FileInputStream(filename),
 					"ISO-8859-1"));
+			fout = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(copyFilename), "ISO-8859-1"));
 			String line = fic.readLine();
 			// idu;prenom;nom;codesecret;collection de roles sep par ,
 			int count = 1;
@@ -95,12 +100,22 @@ public class Data2UserAdmin {
 						e.printStackTrace();
 					}
 				}
+				fout.write(line);
+				fout.write(System.getProperty("line.separator"));
 				line = fic.readLine();
 				count++;
 			}
 		} catch (IOException e) {
 			_log.error("Error when initialize data from : " + filename);
 			_log.error(e.getLocalizedMessage(), e);
+		}finally{
+			if(fic != null){
+				
+			fic.close();
+			}
+			if (fout != null){
+				fout.close();
+			}
 		}
 	}
 
