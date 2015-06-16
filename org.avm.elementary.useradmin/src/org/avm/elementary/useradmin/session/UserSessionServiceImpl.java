@@ -10,23 +10,19 @@ import org.avm.elementary.common.ProducerManager;
 import org.avm.elementary.common.ProducerService;
 import org.avm.elementary.useradmin.UserSessionService;
 import org.avm.elementary.useradmin.bundle.ConfigImpl;
-import org.avm.elementary.useradmin.core.UserAdminInjector;
-import org.avm.elementary.useradmin.manager.UserAdminControler;
 import org.osgi.service.useradmin.Authorization;
 import org.osgi.service.useradmin.User;
 import org.osgi.service.useradmin.UserAdmin;
 import org.osgi.util.measurement.State;
 
 public class UserSessionServiceImpl implements UserSessionService,
-		ProducerService, UserAdminInjector, ConfigurableService {
+		ProducerService, ConfigurableService {
 
 	private Logger _log;
 
 	private User _currentUser = null;
 
 	private ProducerManager _producer;
-
-	private UserAdminControler _userAdminControler;
 
 	private State _currentState;
 
@@ -37,6 +33,8 @@ public class UserSessionServiceImpl implements UserSessionService,
 	private boolean _withLocalAuthentification;
 
 	private Dictionary _anonymousUserProperties;
+
+	private UserAdmin userAdminService;
 
 	public UserSessionServiceImpl() {
 		_log = Logger.getInstance(this.getClass());
@@ -119,12 +117,15 @@ public class UserSessionServiceImpl implements UserSessionService,
 		return false;
 	}
 
-	public void setUserAdminControler(UserAdminControler uac) {
-		_userAdminControler = uac;
+	public void setUserAdmin(UserAdmin ua) {
+		if (ua != null) {
+
+		}
+		userAdminService = ua;
 	}
 
 	public UserAdmin getUserAdminService() {
-		return _userAdminControler.getUserAdminService();
+		return userAdminService;
 	}
 
 	public State getState() {

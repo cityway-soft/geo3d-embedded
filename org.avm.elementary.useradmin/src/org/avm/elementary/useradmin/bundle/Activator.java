@@ -22,8 +22,8 @@ import org.osgi.service.prefs.PreferencesService;
 import org.osgi.service.useradmin.UserAdmin;
 import org.osgi.util.measurement.State;
 
-public class Activator extends AbstractActivator implements 
-		UserSessionService, UserAdminControler {
+public class Activator extends AbstractActivator implements UserSessionService,
+		UserAdminControler {
 
 	static final String PID = UserSessionService.class.getName();
 
@@ -31,7 +31,7 @@ public class Activator extends AbstractActivator implements
 
 	private Logger _log;
 
-	private ConfigurationAdmin _cm; 
+	private ConfigurationAdmin _cm;
 
 	private UserAdminManagerImpl _peerUserAdminManager;
 
@@ -53,7 +53,6 @@ public class Activator extends AbstractActivator implements
 		_peerUserAdminManager = new UserAdminManagerImpl();
 		_peerUserAdminManager.setUserAdminControler(this);
 		_peerUserSession = new UserSessionServiceImpl();
-		_peerUserSession.setUserAdminControler(this);
 	}
 
 	public static AbstractActivator getDefault() {
@@ -94,7 +93,7 @@ public class Activator extends AbstractActivator implements
 			_producer.stop();
 		}
 	}
-	
+
 	// config
 	private void initializeConfiguration() {
 		_cm = (ConfigurationAdmin) _context.locateService("cm");
@@ -106,8 +105,7 @@ public class Activator extends AbstractActivator implements
 						.configure(_config);
 			}
 			if (_peerUserSession instanceof ConfigurableService) {
-				((ConfigurableService) _peerUserSession)
-						.configure(_config);
+				((ConfigurableService) _peerUserSession).configure(_config);
 			}
 		} catch (Exception e) {
 			_log.error(e.getMessage(), e);
@@ -218,7 +216,6 @@ public class Activator extends AbstractActivator implements
 		}
 	}
 
-
 	public Dictionary getUserProperties() {
 		return _peerUserSession.getUserProperties();
 	}
@@ -256,7 +253,7 @@ public class Activator extends AbstractActivator implements
 			int cpt = 5;
 			do {
 				bundleUA.start();
-				if (bundleUA.getState() == Bundle.ACTIVE){
+				if (bundleUA.getState() == Bundle.ACTIVE) {
 					break;
 				}
 				try {
@@ -270,12 +267,24 @@ public class Activator extends AbstractActivator implements
 
 	}
 
-	public UserAdmin getUserAdminService() {
-		return (UserAdmin) _context.locateService("useradmin");
-	}
+	// public UserAdmin getUserAdminService() {
+	// return (UserAdmin) _context.locateService("useradmin");
+	// }
 
 	public State getState() {
 		return _peerUserSession.getState();
+	}
+
+	public void addUserAdminService(UserAdmin ua) {
+		_log.debug("add UserAdmin service = " + ua);
+		_peerUserAdminManager.setUserAdmin(ua);
+		_peerUserSession.setUserAdmin(ua);
+	}
+
+	public void removeUserAdminService(UserAdmin ua) {
+		_log.debug("remove UserAdmin");
+		_peerUserAdminManager.setUserAdmin(null);
+		_peerUserSession.setUserAdmin(null);
 	}
 
 }

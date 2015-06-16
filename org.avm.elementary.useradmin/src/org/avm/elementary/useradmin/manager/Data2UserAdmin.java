@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.URL;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -15,7 +14,6 @@ import java.util.StringTokenizer;
 import org.apache.log4j.Logger;
 
 public class Data2UserAdmin {
-
 
 	private Logger _log;
 
@@ -25,69 +23,70 @@ public class Data2UserAdmin {
 		_log = Logger.getInstance(this.getClass());
 	}
 
-	
-	private void init(String[] groups, Properties defaultUsers)  {
-		for (int i=0; i<groups.length; i++){
+	private void init(String[] groups, Properties defaultUsers) {
+		for (int i = 0; i < groups.length; i++) {
 			_uam.createGroup(groups[i]);
 		}
 
-		Properties p =  defaultUsers;
+		Properties p = defaultUsers;
 		Enumeration en = p.elements();
 		while (en.hasMoreElements()) {
 			Properties allUserProperties = (Properties) en.nextElement();
-			
+
 			Enumeration en2 = allUserProperties.keys();
-			String matricule=null;
+			String matricule = null;
 			Properties userCredentials = new Properties();
 			Properties userGroups = new Properties();
 			Properties userProperties = new Properties();
 			while (en2.hasMoreElements()) {
 				String key = (String) en2.nextElement();
-				if (key.startsWith(UserAdminManagerConfig.USER_TAG)){
-					matricule=allUserProperties.getProperty(key);
-					userProperties.put(UserAdminManagerConfig.MATRICULE_TAG, matricule);
-				}else if (key.startsWith(UserAdminManagerConfig.CREDENTIAL_TAG)){
-					String tag = key.substring(key.indexOf(".")+1);
-					String value=allUserProperties.getProperty(key);
+				if (key.startsWith(UserAdminManagerConfig.USER_TAG)) {
+					matricule = allUserProperties.getProperty(key);
+					userProperties.put(UserAdminManagerConfig.MATRICULE_TAG,
+							matricule);
+				} else if (key
+						.startsWith(UserAdminManagerConfig.CREDENTIAL_TAG)) {
+					String tag = key.substring(key.indexOf(".") + 1);
+					String value = allUserProperties.getProperty(key);
 					userCredentials.put(tag, value);
-				}
-				else if (key.startsWith(UserAdminManagerConfig.GROUPS_TAG)){
-					String group=allUserProperties.getProperty(key);
+				} else if (key.startsWith(UserAdminManagerConfig.GROUPS_TAG)) {
+					String group = allUserProperties.getProperty(key);
 					userGroups.put(key, group);
-				}
-				else if (key.startsWith(UserAdminManagerConfig.PROPERTY_TAG)){
-					String tag = key.substring(key.indexOf(".")+1);
-					String value=allUserProperties.getProperty(key);
+				} else if (key.startsWith(UserAdminManagerConfig.PROPERTY_TAG)) {
+					String tag = key.substring(key.indexOf(".") + 1);
+					String value = allUserProperties.getProperty(key);
 					userProperties.put(tag, value);
 				}
-				
+
 			}
-			
+
 			_uam.createUser(matricule, userProperties, userCredentials);
 			en2 = userGroups.elements();
 			while (en2.hasMoreElements()) {
 				String group = (String) en2.nextElement();
 				try {
-				_uam.addMember(matricule, group);
-				}
-				catch(NoSuchFieldException e){
-					_log.error("Error when adding member to group " +group + ": " + e.toString());
+					_uam.addMember(matricule, group);
+				} catch (NoSuchFieldException e) {
+					_log.error("Error when adding member to group " + group
+							+ ": " + e.toString());
 				}
 			}
-			
+
 		}
 
 	}
 
-	public void initialize(String filename, String copyFilename,String[] groups, Properties defaultUsers) throws IOException {
+	public void initialize(String filename, String copyFilename,
+			String[] groups, Properties defaultUsers) throws IOException {
 		init(groups, defaultUsers);
-		BufferedReader fic=null;
-		BufferedWriter fout=null;
+		BufferedReader fic = null;
+		BufferedWriter fout = null;
 
 		try {
-			fic = new BufferedReader(new InputStreamReader(new FileInputStream(filename),
-					"ISO-8859-1"));
-			fout = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(copyFilename), "ISO-8859-1"));
+			fic = new BufferedReader(new InputStreamReader(new FileInputStream(
+					filename), "ISO-8859-1"));
+			fout = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(copyFilename), "ISO-8859-1"));
 			String line = fic.readLine();
 			// idu;prenom;nom;codesecret;collection de roles sep par ,
 			int count = 1;
@@ -108,12 +107,11 @@ public class Data2UserAdmin {
 		} catch (IOException e) {
 			_log.error("Error when initialize data from : " + filename);
 			_log.error(e.getLocalizedMessage(), e);
-		}finally{
-			if(fic != null){
-				
-			fic.close();
+		} finally {
+			if (fic != null) {
+				fic.close();
 			}
-			if (fout != null){
+			if (fout != null) {
 				fout.close();
 			}
 		}
