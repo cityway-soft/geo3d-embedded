@@ -125,10 +125,12 @@ public class DesktopIhm {
 	}
 
 	public void configure(Config config) {
-		_beginDay = ((ConfigImpl) config).getBeginDay();
-		_endDay = ((ConfigImpl) config).getEndDay();
+		if (config != null) {
+			_beginDay = ((ConfigImpl) config).getBeginDay();
+			_endDay = ((ConfigImpl) config).getEndDay();
 
-		setDayRange(_beginDay, _endDay);
+			setDayRange(_beginDay, _endDay);
+		}
 	}
 
 	/**
@@ -208,10 +210,9 @@ public class DesktopIhm {
 		gridData.grabExcessHorizontalSpace = true;
 		_tabFolder = new TabFolder(_shell, SWT.NONE | SWT.BOTTOM);
 
-		
-			
-	Font _fontTabFolder = getFont(AVMDisplay.TABFOLDER_FONT, AVMDisplay.TABFOLDER_FONTSIZE_DELTA, SWT.NORMAL);
-		
+		Font _fontTabFolder = getFont(AVMDisplay.TABFOLDER_FONT,
+				AVMDisplay.TABFOLDER_FONTSIZE_DELTA, SWT.NORMAL);
+
 		_tabFolder.setFont(_fontTabFolder);
 		_tabFolder.setBackground(DesktopStyle.getBackgroundColor());
 		_tabFolder.setLayoutData(gridData);
@@ -634,7 +635,7 @@ public class DesktopIhm {
 	public static Font getFont(int deltasize, int style) {
 		return Application.getFont(deltasize, style);
 	}
-	
+
 	public static Font getFont(String fontname, int deltasize, int style) {
 		return Application.getFont(fontname, deltasize, style);
 	}

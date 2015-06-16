@@ -397,7 +397,9 @@ public class AvmImpl implements ConsumerService, ManageableService,
 	}
 
 	public void configure(Config config) {
-		_periode = ((AvmIhmConfig) config).getPeriode();
+		if (config != null) {
+			_periode = ((AvmIhmConfig) config).getPeriode();
+		}
 	}
 
 	public void setDemoPeriode(int periode) {
