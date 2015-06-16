@@ -38,13 +38,14 @@ public class JDBImpl implements ConfigurableService, ManageableService, JDB,
 
 	public void configure(Config config) {
 		_config = (JDBConfig) config;
-
-		Object[] arguments = { System.getProperty("org.avm.home") };
-		String dir = MessageFormat.format(_config.getFilename(), arguments);
-		File jdbDir = new File(dir);
-		jdbDir = jdbDir.getParentFile();
-		if (jdbDir.exists() == false) {
-			jdbDir.mkdir();
+		if (_config != null) {
+			Object[] arguments = { System.getProperty("org.avm.home") };
+			String dir = MessageFormat.format(_config.getFilename(), arguments);
+			File jdbDir = new File(dir);
+			jdbDir = jdbDir.getParentFile();
+			if (jdbDir.exists() == false) {
+				jdbDir.mkdir();
+			}
 		}
 	}
 
@@ -91,7 +92,6 @@ public class JDBImpl implements ConfigurableService, ManageableService, JDB,
 		logger.callAppenders(new JDBEvent(logger, onTime, message, null,
 				position));
 	}
-
 
 	public void sync() {
 		_appender.flush();

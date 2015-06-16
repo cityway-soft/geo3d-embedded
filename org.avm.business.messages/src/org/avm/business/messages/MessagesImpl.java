@@ -55,7 +55,9 @@ public class MessagesImpl implements Messages, ConfigurableService,
 
 	public void configure(Config config) {
 		_config = (MessagesConfig) config;
-		purge();
+		if (config != null) {
+			purge();
+		}
 	}
 
 	public void start() {
@@ -231,7 +233,7 @@ public class MessagesImpl implements Messages, ConfigurableService,
 
 		String msg = message.getMessage();
 		try {
-			
+
 			String fromCharset = System.getProperty("message.from-charset",
 					System.getProperty("file.encoding"));
 			String toCharset = System
@@ -251,20 +253,20 @@ public class MessagesImpl implements Messages, ConfigurableService,
 		} else {
 			_log.debug("adding message...");
 			Date reception = new Date();
-			SimpleDateFormat df= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String formatted = df.format(reception);//DF.format(reception);//
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String formatted = df.format(reception);// DF.format(reception);//
 			_log.debug("Date object=" + reception + ", formatted=" + formatted);
-			addMessage(id, formatted, DF.format(debut), (fin != null) ? DF.format(fin)
-					: null, jours, destinataire, sAffectation, msg, priorite,
-					acquittement);
+			addMessage(id, formatted, DF.format(debut),
+					(fin != null) ? DF.format(fin) : null, jours, destinataire,
+					sAffectation, msg, priorite, acquittement);
 		}
 
 		return destinataire;
 	}
 
-	private void addMessage(String id, String reception, String debut, String fin, String jours,
-			int destinataire, String sAffectation, String msg, int priorite,
-			boolean acquittement) {
+	private void addMessage(String id, String reception, String debut,
+			String fin, String jours, int destinataire, String sAffectation,
+			String msg, int priorite, boolean acquittement) {
 		if (_log.isDebugEnabled()) {
 			StringBuffer buf = new StringBuffer();
 			buf.append("id=");
@@ -289,8 +291,8 @@ public class MessagesImpl implements Messages, ConfigurableService,
 			_log.debug(buf);
 			_log.debug("config=" + _config);
 		}
-		_config.addMessage(id, reception, debut, fin, jours, destinataire, sAffectation,
-				msg, priorite, acquittement);
+		_config.addMessage(id, reception, debut, fin, jours, destinataire,
+				sAffectation, msg, priorite, acquittement);
 		if (_config instanceof AbstractConfig) {
 			((ConfigImpl) _config).updateConfig(false);
 		}
@@ -514,27 +516,29 @@ public class MessagesImpl implements Messages, ConfigurableService,
 			message.getEntete().getReference().setAcquittement(1);
 			message.getEntete().getReference().setId(Long.parseLong(msgId));
 			String response = "LU '" + msg.getProperty(Messages.MESSAGE) + "'";
-			String m=response;
+			String m = response;
 			try {
-				
-				String  toCharset  = System.getProperty("message.from-charset",
+
+				String toCharset = System.getProperty("message.from-charset",
 						System.getProperty("file.encoding"));
-				String fromCharset = System
-						.getProperty("message.to-charset", "utf-8");
+				String fromCharset = System.getProperty("message.to-charset",
+						"utf-8");
 				if (!fromCharset.equalsIgnoreCase(toCharset)) {
 					m = new String(response.getBytes(fromCharset), toCharset);
 				}
-				_log.debug("from=" + fromCharset + ", to=" + toCharset + ", msg="
-						+ m);
+				_log.debug("from=" + fromCharset + ", to=" + toCharset
+						+ ", msg=" + m);
 			} catch (UnsupportedEncodingException e) {
-				_log.error("Error unsupportedEncodingException : " + e.getMessage());
+				_log.error("Error unsupportedEncodingException : "
+						+ e.getMessage());
 			}
 			message.setMessage(m);
 			_log.info("Emission du message d'acquittement : " + message);
 			send(message);
 		}
 		String fin = DF.format(new Date());
-		addMessage(msg.getProperty(Messages.ID),msg.getProperty(Messages.RECEPTION),
+		addMessage(msg.getProperty(Messages.ID),
+				msg.getProperty(Messages.RECEPTION),
 				msg.getProperty(Messages.DEBUT), fin,
 				msg.getProperty(Messages.JOURSEMAINE), destinataire,
 				msg.getProperty(Messages.AFFECTATION),
