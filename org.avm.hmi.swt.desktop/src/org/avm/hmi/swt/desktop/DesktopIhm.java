@@ -512,8 +512,19 @@ public class DesktopIhm {
 		Runnable run = new Runnable() {
 			public void run() {
 				try {
+					if (_shell.isDisposed()){
+						System.err.println("Shell is disposed");
+						return;
+					}
+					
+					if (_shell.getDisplay().isDisposed()){
+						System.err.println("Display is disposed");
+						return;
+					}
 					updateTime();
-					_shell.getDisplay().timerExec(5 * 1000, this);
+					if (_shell.isDisposed() == false) {
+						_shell.getDisplay().timerExec(5 * 1000, this);
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
