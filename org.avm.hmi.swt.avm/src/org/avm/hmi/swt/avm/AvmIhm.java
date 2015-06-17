@@ -69,6 +69,8 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 
 	private static final int BUTTON_HEIGHT = 50;
 
+	private int lastAR=Integer.MAX_VALUE;
+
 	private Logger _log = Logger.getInstance(this.getClass().getName());
 
 	private boolean _isGeorefRole;
@@ -505,12 +507,15 @@ public class AvmIhm extends Composite { // implements ChoiceListener {
 		if (isDisposed())
 			return;
 		Display.getDefault().syncExec(new Runnable() {
+
 			public void run() {
 				_log.debug("AvmIhm setAvanceRetard : _suivicourse= "
 						+ _suiviCourse);
 				if (_suiviCourse != null) {
-
-					_suiviCourse.setAvanceRetard(ar);
+					if (lastAR != ar) {
+						_suiviCourse.setAvanceRetard(ar);
+						lastAR = ar;
+					}
 					refresh(_suiviCourse);
 				}
 

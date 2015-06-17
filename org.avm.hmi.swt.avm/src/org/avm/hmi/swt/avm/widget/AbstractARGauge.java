@@ -76,12 +76,19 @@ public abstract class AbstractARGauge extends Composite implements Runnable {
 		} else if (val < -limitLow) {
 			idx = 1;
 			clig = true;
-		} else if (val <= 0) {
-			idx = ((limitLow + val) / (limitLow / 4)) + 1;
-		} else if (val > 0) {
-			idx = ((val - limitHigh) / (limitHigh / 4)) + 7;
+		} else if (val < -(limitLow / 3)) {
+			idx = 3 - ((int) (-val / ((limitLow + (limitLow / 3)) / 3)));
+		} else if (val > (limitHigh / 3)) {
+			idx = 4 + ((int) (val / ((limitHigh - (limitLow / 3)) / 3)));
 		} else {
 			idx = 4;
+		}
+
+		if (idx <= 0) {
+			idx = 1;
+		}
+		if (idx >= 8) {
+			idx = 7;
 		}
 
 		// idx = 8 - idx;
@@ -95,17 +102,15 @@ public abstract class AbstractARGauge extends Composite implements Runnable {
 		}
 		_list[idx - 1].setBackground(_color[idx - 1]);
 		_list[idx].setBackground(_color[idx]);
-		// _list[idx].setFont(_font);
-		// _list[idx].setText(format(val));
 		_list[idx + 1].setBackground(_color[idx + 1]);
 
 	}
 
 	// FLA : AR en secondes et plus en minute
 	public void setAvanceRetard(final int ar) {
-		// int curseur = getCursor(ar);
 
 		activate(ar);
+
 		_avanceRetard.setText(format(ar));
 		refresh(this);
 	}
