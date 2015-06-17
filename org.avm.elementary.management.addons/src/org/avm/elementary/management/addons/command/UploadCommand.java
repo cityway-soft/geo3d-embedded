@@ -24,8 +24,6 @@ import org.osgi.framework.BundleContext;
  */
 class UploadCommand extends AbstractCommand {
 
-
-
 	public static final String PROP_FILEPATH = "filepath";
 
 	private Logger _log = Logger.getInstance(ManagementService.class);
@@ -58,22 +56,23 @@ class UploadCommand extends AbstractCommand {
 			boolean force = Boolean.valueOf(
 					parameters.getProperty("force", "false")).booleanValue();
 			String localFilename = parameters.getProperty(PROP_FILEPATH);
-			if (localFilename != null){
-				if (localFilename.startsWith("/") == false){
-					localFilename = System.getProperty("org.avm.home") + "/data/" + localFilename;
+			if (localFilename != null) {
+				if (localFilename.startsWith("/") == false) {
+					localFilename = System.getProperty("org.avm.home")
+							+ "/data/" + localFilename;
 				}
 				out.println("File to upload : " + localFilename);
 			}
-			
+
 			trace(out, "remove files:" + remove);
 			trace(out, "force copy:" + force);
 			URL u = management.getCurrentUploadUrl();
-			if (u == null){
+			if (u == null) {
 				throw new Exception("Upload URL not set.");
 			}
 
 			String surl = Utils.formatURL(u.toString(), false);
-	
+
 			URL url = new URL(surl);
 
 			upload(out, localFilename, url, remove, force);
@@ -86,28 +85,25 @@ class UploadCommand extends AbstractCommand {
 
 	private void upload(PrintWriter out, String filepath, URL urlRemoteDir,
 			boolean removeAfterCopy, boolean forceCopy) throws IOException {
-		File[] files = _upload(out, filepath, urlRemoteDir, removeAfterCopy, forceCopy);
-		
-		
-		if (files != null ){
+		File[] files = _upload(out, filepath, urlRemoteDir, removeAfterCopy,
+				forceCopy);
+
+		if (files != null) {
 			StringBuffer buf = new StringBuffer();
 			for (int i = 0; i < files.length; i++) {
 				buf.append(files[i].getName());
 				buf.append("\n");
-				
+
 			}
 			trace(out, "Uploading :");
 			trace(out, buf.toString());
-			
-			if (urlRemoteDir.getProtocol().equalsIgnoreCase("ftp")){
-				String remotefilename  = Utils.getRemoteFilename(null, ".ready");
+
+			if (urlRemoteDir.getProtocol().equalsIgnoreCase("ftp")) {
+				String remotefilename = Utils.getRemoteFilename(null, ".ready");
 				copy(buf, urlRemoteDir, remotefilename, out);
 			}
-			
+
 		}
-			
-		
-		
 
 	}
 
@@ -117,8 +113,6 @@ class UploadCommand extends AbstractCommand {
 			_log.debug(trace);
 		}
 	}
-	
-
 
 	private File[] _upload(PrintWriter out, String filepath, URL urlRemoteDir,
 			boolean removeAfterCopy, boolean forceCopy) throws IOException {
@@ -130,7 +124,8 @@ class UploadCommand extends AbstractCommand {
 			for (int i = 0; i < files.length; i++) {
 				buf.append(files[i].getName());
 				buf.append("\n");
-				if (files[i].isFile() && (forceCopy || isOlderThanToday(files[i])) ) {
+				if (files[i].isFile()
+						&& (forceCopy || isOlderThanToday(files[i]))) {
 					_upload(out, files[i].getAbsolutePath(), urlRemoteDir,
 							removeAfterCopy, forceCopy);
 				}
@@ -139,29 +134,27 @@ class UploadCommand extends AbstractCommand {
 		} else {
 
 			String localfilename = file.getAbsolutePath();
-			String remotefilename = Utils.getRemoteFilename(file, file.getName());
-			
+			String remotefilename = Utils.getRemoteFilename(file,
+					file.getName());
+
 			long t = System.currentTimeMillis();
 
 			copy(localfilename, urlRemoteDir, remotefilename);
-			trace(out, "File '" + localfilename + "' copied in "
-					+ (System.currentTimeMillis() - t) + " ms.");
+			trace(out,
+					"File '" + localfilename + "' copied in "
+							+ (System.currentTimeMillis() - t) + " ms.");
 
 			if (removeAfterCopy) {
-				if (isOlderThanToday(file)) {
-					file.delete();
-					trace(out, "File '" + file + "' removed.");
-				} else {
-					trace(out, "File '" + file + "' NOT removed.");
-				}
+				file.delete();
+				trace(out, "File '" + file + "' removed.");
+			} else {
+				trace(out, "File '" + file + "' NOT removed.");
 			}
-			return new File[]{file};
+			return new File[] { file };
 		}
 	}
-	
-	
-	
-	private boolean isOlderThanToday(File file){
+
+	private boolean isOlderThanToday(File file) {
 		Date modifiedDate = new Date(file.lastModified());
 		Calendar cal = Calendar.getInstance();
 
@@ -173,32 +166,36 @@ class UploadCommand extends AbstractCommand {
 		return modifiedDate.before(today);
 	}
 
-	private void copy(String localfile, URL url, String remotefilename) throws IOException {
+	private void copy(String localfile, URL url, String remotefilename)
+			throws IOException {
 		try {
 			File file = new File(localfile);
 			DataUploadClient client = new DataUploadClient(url);
-			if (remotefilename==null){
+			if (remotefilename == null) {
 				remotefilename = file.getName();
 			}
 			client.put(file, remotefilename);
 
 		} catch (IOException e) {
 			System.err
-					.println("[Management Upload] Erreur pendant la copie de " + localfile + " vers "
-							+ url + " dans " + remotefilename + ":" + e.getMessage() );
+					.println("[Management Upload] Erreur pendant la copie de "
+							+ localfile + " vers " + url + " dans "
+							+ remotefilename + ":" + e.getMessage());
 			throw e;
 		}
 	}
-	
-	private void copy(StringBuffer buffer, URL url, String remotefilename, PrintWriter out) throws IOException {
+
+	private void copy(StringBuffer buffer, URL url, String remotefilename,
+			PrintWriter out) throws IOException {
 		try {
 			DataUploadClient client = new DataUploadClient(url);
 			String result = client.put(buffer, remotefilename);
 			out.println("Server:" + result);
 		} catch (IOException e) {
 			System.err
-			.println("[Management Upload] Erreur pendant la copie de " + buffer + " vers "
-					+ url + " dans " + remotefilename);
+					.println("[Management Upload] Erreur pendant la copie de "
+							+ buffer + " vers " + url + " dans "
+							+ remotefilename);
 			throw e;
 		}
 	}
