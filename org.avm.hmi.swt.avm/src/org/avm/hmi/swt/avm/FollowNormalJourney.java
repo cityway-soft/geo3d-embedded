@@ -288,6 +288,7 @@ public class FollowNormalJourney extends FollowJourney {
 
 	public void setAvanceRetard(final int ar) {
 		if (_gauge != null) {
+			
 			_gauge.setAvanceRetard(ar);
 		}
 		_instance.layout();

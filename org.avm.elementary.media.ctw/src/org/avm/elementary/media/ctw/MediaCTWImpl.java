@@ -87,7 +87,7 @@ public class MediaCTWImpl implements MediaCTW, ConfigurableService,
 
 	public void stop() {
 		_started = false;
-		_scheduler.execute(DISPOSE_CONNECTION);
+		DISPOSE_CONNECTION.run();
 	}
 
 	public String getMediaId() {

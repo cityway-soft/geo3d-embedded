@@ -592,7 +592,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 	 */
 
 	public void priseCourse(int course) {
-		_model.setCourse(null);
+
 		try {
 			_fsm.priseCourse(course);
 		} catch (RuntimeException e) {
@@ -601,6 +601,8 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 	}
 
 	public boolean isCourseCorrect(int courseIDU) {
+		_model.setCourse(null);
+		System.err.println("prise course =>>>>  course set to null");
 		if (courseIDU != -1 && _currentDatasource != null) {
 			try {
 
@@ -616,6 +618,10 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 				}
 				// _model.getServiceAgent().getCourseByIdu(course.getIdu())
 				// .setTerminee(false);
+				if (course == null) {
+					System.err
+							.println("****** WARNING ******* course is null !!!!");
+				}
 				_model.setCourse(course);
 			} catch (Throwable t) {
 				_log.error(t);
@@ -1159,6 +1165,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 	}
 
 	public void resetCourse() {
+		System.err.println("RESET Course (set to null)");
 		_model.setCourse(null);
 		_model.setInsidePoint(false);
 		_model.setAvanceRetard(0);

@@ -119,8 +119,6 @@ public class AvmImpl implements ConsumerService, ManageableService,
 	}
 
 	public void notify(Object o) {
-		_log.info(o);
-
 		if (o instanceof State) {
 			State state = (State) o;
 			if (state.getName().equals(UserSessionService.class.getName())) {
@@ -397,7 +395,9 @@ public class AvmImpl implements ConsumerService, ManageableService,
 	}
 
 	public void configure(Config config) {
-		_periode = ((AvmIhmConfig) config).getPeriode();
+		if (config != null) {
+			_periode = ((AvmIhmConfig) config).getPeriode();
+		}
 	}
 
 	public void setDemoPeriode(int periode) {

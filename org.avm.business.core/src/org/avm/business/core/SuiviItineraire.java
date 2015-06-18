@@ -385,12 +385,16 @@ public class SuiviItineraire implements ConfigurableService {
 			// on est à un arret
 			if (isAtStop) {
 				Point point = getDernierArret();
-				int ar = (getCurrentHourInSecondFromMidnight()
-						- point.getArriveeTheorique() + point
-						.getAttenteTheorique());
-				_avanceRetard.getEntete().getProgression().setRetard(ar);
-				getModel().setAvanceRetard(ar);
-				_producer.publish(_avanceRetard);
+				if (point == null) {
+					_log.warn("AV/RT Task last point is null");
+				} else {
+					int ar = (getCurrentHourInSecondFromMidnight()
+							- point.getArriveeTheorique() + point
+							.getAttenteTheorique());
+					_avanceRetard.getEntete().getProgression().setRetard(ar);
+					getModel().setAvanceRetard(ar);
+					_producer.publish(_avanceRetard);
+				}
 			}
 		}
 
@@ -452,8 +456,7 @@ public class SuiviItineraire implements ConfigurableService {
 					}
 				}
 			}
-		}
-		else{
+		} else {
 			return true;
 		}
 		return false;

@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import org.knopflerfish.shared.cm.CMDataReader;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Constants;
+import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
@@ -64,7 +65,8 @@ public abstract class AbstractConfig implements Config, ManagedService,
 
 	public void updated(Dictionary config) throws ConfigurationException {
 		if (isModified()) {
-			_context.disableComponent(getPid());
+			String pid=getPid();
+			_context.disableComponent(pid);
 			if (config == null) {
 				_config = getDefault();
 				updateConfig();
@@ -72,7 +74,27 @@ public abstract class AbstractConfig implements Config, ManagedService,
 				_config = config;
 				_initialize = false;
 			}
-			_context.enableComponent(getPid());
+			
+			//-- wait for component end before enable it again.
+			ServiceReference sr = _context.getServiceReference();
+			int cpt=0;
+			while(cpt < 20 && sr != null){
+				cpt--;
+				try {
+					_log.warn("Component " +pid + " is not yet disabled. Wait...");
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+				}
+				sr = _context.getServiceReference();
+			}
+			
+			if( sr != null){
+				_log.error("Component " +pid + " cannot not be disabled. ");
+			}else{
+				_log.debug("Component " +pid + " is disabled. ");
+			}
+			
+			_context.enableComponent(pid);
 		}
 	}
 
