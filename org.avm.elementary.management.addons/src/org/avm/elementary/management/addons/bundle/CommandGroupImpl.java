@@ -15,6 +15,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.Properties;
 import java.util.StringTokenizer;
 
 import org.apache.commons.codec.binary.Base64;
@@ -180,15 +181,20 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			try {
 				if (mode.equals("public")) {
 					_peer.setPublicMode();
-					//-- url current (i.e user) est écrasée avec celle "public"
-					_peer.setDownloadUrl(_peer.getDownloadUrl(Management.MODE_PUBLIC));
-					_peer.setUploadUrl(_peer.getUploadUrl(Management.MODE_PUBLIC));
+					// -- url current (i.e user) est écrasée avec celle "public"
+					_peer.setDownloadUrl(_peer
+							.getDownloadUrl(Management.MODE_PUBLIC));
+					_peer.setUploadUrl(_peer
+							.getUploadUrl(Management.MODE_PUBLIC));
 				} else {
 					mode = "private";
 					_peer.setPrivateMode();
-					//-- url current (i.e user) est écrasée avec celle "private"
-					_peer.setDownloadUrl(_peer.getDownloadUrl(Management.MODE_PRIVATE));
-					_peer.setUploadUrl(_peer.getUploadUrl(Management.MODE_PRIVATE));
+					// -- url current (i.e user) est écrasée avec celle
+					// "private"
+					_peer.setDownloadUrl(_peer
+							.getDownloadUrl(Management.MODE_PRIVATE));
+					_peer.setUploadUrl(_peer
+							.getUploadUrl(Management.MODE_PRIVATE));
 				}
 
 				if (bSave) {
@@ -337,9 +343,8 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		}
 		return 0;
 	}
-	
-	
-	private void changeUploadDownloadMode(String smode, PrintWriter out){
+
+	private void changeUploadDownloadMode(String smode, PrintWriter out) {
 		if (smode != null) {
 			if (smode.equals("default")) {
 				ManagementPropertyFile configuration = ManagementPropertyFile
@@ -413,9 +418,9 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			Session session) {
 		out.println("Sending bundle list");
 		String smode = ((String) opts.get("mode"));
-		
+
 		try {
-			
+
 			int mode;
 			if (smode == null) {
 				mode = Management.MODE_BYUSER;
@@ -426,8 +431,8 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 				} else if (smode.equals("private")) {
 					mode = Management.MODE_PRIVATE;
 				}
-			}			
-			
+			}
+
 			out.println("Using : "
 					+ ((ManagementImpl) _peer).getUploadUrl(mode));
 			((ManagementImpl) _peer).sendBundleList(mode);
@@ -704,7 +709,13 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			Session session) {
 		String cmd = "systeminfo";
 		try {
-			((ManagementImpl) _peer).execute(cmd, "", out);
+			String format = (String) session.getProperties().get("output-format");
+			if (format == null){
+				format="zzz";
+			}
+			Properties p = new Properties();
+			p.put("format", format);
+			((ManagementImpl) _peer).execute(cmd, p, out);
 		} catch (CommandException e) {
 			out.println(e.getMessage());
 		} catch (IOException e) {
@@ -821,11 +832,11 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			"Upload files (use /data/upload,if <file> is empty)",
 			"-f <true=default|false> : force copy even if file created today ",
 			"-r <true=default|false> : remove file after copy ",
-			"-m <true=default|false> : remove file after copy "};
+			"-m <true=default|false> : remove file after copy " };
 
 	public int cmdUpload(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
-				
+
 		String smode = ((String) opts.get("mode"));
 		changeUploadDownloadMode(smode, out);
 		String cmd = "upload";

@@ -24,6 +24,8 @@ public abstract class AbstractCommandGroup extends CommandGroupAdapter
 
 	protected AbstractConfig _config;
 
+	private String format = "text";
+
 	public AbstractCommandGroup(ComponentContext context,
 			AbstractConfig config, String groupName, String shortHelp) {
 		super(groupName, shortHelp);
@@ -53,6 +55,23 @@ public abstract class AbstractCommandGroup extends CommandGroupAdapter
 		return result;
 	}
 
+	public String getFormat() {
+		return format;
+	}
+
+	// output format
+	public final static String USAGE_OUTPUT = "<format>";
+
+	public final static String[] HELP_OUTPUT = new String[] { "Set log level", };
+
+	public int cmdOutput(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+		format = ((String) opts.get("format")).trim();
+		
+		session.getProperties().put("output-format", format);
+		return 0;
+	}
+
 	// log level
 	public final static String USAGE_SETLEVEL = "<level> [<category>]";
 
@@ -62,10 +81,11 @@ public abstract class AbstractCommandGroup extends CommandGroupAdapter
 			Session session) {
 		String level = ((String) opts.get("level")).trim();
 		String category = (String) opts.get("category");
-		category = (category != null)?category:getCategory();
+		category = (category != null) ? category : getCategory();
 		Logger _log = Logger.getInstance(category);
 		_log.setPriority(Priority.toPriority(level, Priority.DEBUG));
-		out.println("Current log level : " + _log.getPriority() + " for category " + category );
+		out.println("Current log level : " + _log.getPriority()
+				+ " for category " + category);
 		return 0;
 	}
 
@@ -90,7 +110,7 @@ public abstract class AbstractCommandGroup extends CommandGroupAdapter
 		_config.delete();
 		return 0;
 	}
-	
+
 	// Update config
 	public final static String USAGE_UPDATECONFIG = "";
 

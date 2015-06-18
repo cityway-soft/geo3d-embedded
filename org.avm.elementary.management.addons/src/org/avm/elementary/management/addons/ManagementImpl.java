@@ -259,6 +259,8 @@ public class ManagementImpl implements ManageableService, ManagementService,
 			out.println("ERROR: " + e.getMessage());
 		}
 	}
+	
+	
 
 	public void runScript(URL url) {
 		_log.info("Running script... :" + url); //$NON-NLS-1$
@@ -289,6 +291,11 @@ public class ManagementImpl implements ManageableService, ManagementService,
 		if (_cs == null) {
 			_log.error("Console Service not set !"); //$NON-NLS-1$
 		} else {
+			if (cmd.startsWith("@")){
+				int idx=cmd.indexOf(" ");
+				String tmp=cmd.substring(0, idx);
+				
+			}
 			return _cs.runCommand(cmd);
 		}
 		return null;
