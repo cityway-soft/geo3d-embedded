@@ -131,7 +131,11 @@ public class PhonyImpl implements Phony, ConfigurableService,
 
 	public void setVolume(int volume) {
 		_volume = volume;
-		setSpeakerVolume(volume);
+		sendAtSpeakerVolume(volume);
+	}
+
+	public void setRingVolume(int volume) {
+		sendAtRingVolume(volume);
 	}
 
 	public int getDefaultSoundVolume() {
@@ -148,8 +152,6 @@ public class PhonyImpl implements Phony, ConfigurableService,
 		}
 		return result;
 	}
-
-
 
 	public void notify(Object obj) {
 		_log.debug(obj);
@@ -175,7 +177,7 @@ public class PhonyImpl implements Phony, ConfigurableService,
 			break;
 		}
 	}
-	
+
 	private void _dial(final String phone) {
 		_dial(phone, false);
 	}
@@ -281,7 +283,6 @@ public class PhonyImpl implements Phony, ConfigurableService,
 			_log.error(e.getMessage(), e);
 		}
 	}
-	
 
 	private String getCallingNumber(String event) {
 		String number = "unknown";
@@ -295,7 +296,27 @@ public class PhonyImpl implements Phony, ConfigurableService,
 		return number;
 	}
 
-	private void setSpeakerVolume(int volume) {
+	private void sendAtRingVolume(int volume) {
+		try {
+			//if (_gsm != null) {
+								
+				String command = _config.getSpecificCommand("ring-volume");
+				if(command == null){
+					//--bidouille pour éviter de devoir reinitialiser la conf par defaut
+					command="AT+CRSL=";
+				}
+				if (command != null) {
+					String cmd=command+volume+"\r";
+					GsmRequest request = new GsmRequest(cmd);
+					_gsm.send(request);
+				}
+			//}
+		} catch (Exception e) {
+			_log.error(e.getMessage(), e);
+		}
+	}
+
+	private void sendAtSpeakerVolume(int volume) {
 		try {
 			if (_gsm != null) {
 				double delta = ((double) _config.getMaxLevelVolume() - 1) / 100.0;
@@ -401,7 +422,7 @@ public class PhonyImpl implements Phony, ConfigurableService,
 		}
 
 		public void initialize() {
-			_log.debug("[DSU] call initialize callback");
+			_log.debug("Call initialize callback");
 			String[] list = _config.getInitAtCommand();
 			for (int i = 0; i < list.length; i++) {
 				String description = "unk";
@@ -451,8 +472,8 @@ public class PhonyImpl implements Phony, ConfigurableService,
 		}
 
 		public void dialing(String phone, boolean listen) {
-			_log.debug("Call dialing callback phone : " + phone
-					+ " listen : " + listen);
+			_log.debug("Call dialing callback phone : " + phone + " listen : "
+					+ listen);
 
 			// set audio mode
 			if (listen) {

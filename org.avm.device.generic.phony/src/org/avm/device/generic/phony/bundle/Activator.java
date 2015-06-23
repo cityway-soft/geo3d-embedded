@@ -188,4 +188,9 @@ public class Activator extends AbstractActivator implements Phony,
 		_peer.unsetJdb(jdb);
 	}
 
+	public void setRingVolume(int volume) {
+		_peer.setRingVolume(volume);
+		
+	}
+
 }

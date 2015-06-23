@@ -18,4 +18,6 @@ public interface Phony {
 
 	int getDefaultSoundVolume();
 
+	void setRingVolume(int volume);
+
 }

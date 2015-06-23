@@ -11,6 +11,7 @@ import org.osgi.service.component.ComponentContext;
 
 public class ConfigImpl extends AbstractConfig implements PhonyConfig {
 
+	private static int MAX_RING_LEVEL_VOLUME = 0;
 	private static int MAX_LEVEL_VOLUME = 0;
 
 	public ConfigImpl(ComponentContext context, ConfigurationAdmin cm) {
@@ -58,6 +59,9 @@ public class ConfigImpl extends AbstractConfig implements PhonyConfig {
 
 	public String getSpecificCommand(String name) {
 		Properties p = getSpecificCommandProperties(name);
+		if (p==null){
+			return null;
+		}
 		return p.getProperty(TAG_CMD_REQUEST);
 	}
 
@@ -113,5 +117,7 @@ public class ConfigImpl extends AbstractConfig implements PhonyConfig {
 		}
 		return MAX_LEVEL_VOLUME;
 	}
+
+	
 
 }

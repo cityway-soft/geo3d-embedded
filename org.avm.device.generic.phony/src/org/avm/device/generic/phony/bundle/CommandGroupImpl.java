@@ -36,12 +36,12 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		boolean listen = (opts.get("-l") == null) ? false : true;
 
 		try {
-			if(listen){
+			if (listen) {
 				_peer.dialListenMode(number);
-			}else {
+			} else {
 				_peer.dial(number);
 			}
-			
+
 		} catch (Exception e) {
 			out.println("Exception : " + e.getMessage());
 		}
@@ -85,6 +85,18 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		int volume = new Integer(((String) opts.get("volume")).trim())
 				.intValue();
 		_peer.setVolume(volume);
+		return 0;
+	}
+
+	// set ring volume
+	public final static String USAGE_SETRINGVOLUME = "<volume>";
+	public final static String[] HELP_SETRINGVOLUME = new String[] { "Set ring volume" };
+
+	public int cmdSetringvolume(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+		int volume = new Integer(((String) opts.get("volume")).trim())
+				.intValue();
+		_peer.setRingVolume(volume);
 		return 0;
 	}
 
@@ -199,7 +211,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 	public int cmdAt(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
-		String cmd = (String) opts.get("cmd")+"\r";
+		String cmd = (String) opts.get("cmd") + "\r";
 		String result = ((PhonyImpl) _peer).at(cmd);
 		out.println(result);
 		return 0;

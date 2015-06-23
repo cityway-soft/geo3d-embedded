@@ -4,7 +4,7 @@
 <!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
 <configuration pid="org.avm.device.phony.Phony" mode="new">
 <property name="org.avm.config.version">
-<value type="Integer">18</value>
+<value type="Integer">19</value>
 </property>
 <property name="service.pid">
 <value type="String">org.avm.device.phony.Phony</value>
@@ -30,7 +30,7 @@ set-default-melody,set-default-player,set-microphone-gain,listen-mode-off,call-l
 desc=positionne le gain microphone
 request=AT+VGT=250\r
 </value>
-</property>
+</property> 
 
 <property name="at.call-line-presentation">
 <value type="String">#Wed May 20 14:14:34 CEST 2009
@@ -39,12 +39,17 @@ request=AT+CLIP=1\r
 </value>
 </property>
 
-
-
 <property name="at.set-default-melody">
 <value type="String">#Wed May 20 14:14:34 CEST 2009
 desc=selection melodie par defaut,selection 'speaker' comme player par defaut
-request=AT+WCDM=9,1
+request=AT+WCDM=10,1
+</value>
+</property>
+
+<property name="at.ring-volume">
+<value type="String">#Wed May 20 14:14:34 CEST 2009
+desc=change le volume de la sonnerie en sortie de speaker
+request=AT+CRSL=
 </value>
 </property>
 
