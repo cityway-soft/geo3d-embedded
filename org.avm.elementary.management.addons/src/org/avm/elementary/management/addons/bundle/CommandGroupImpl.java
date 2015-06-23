@@ -709,10 +709,17 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			Session session) {
 		String cmd = "systeminfo";
 		try {
-			String format = (String) session.getProperties().get("output-format");
-			if (format == null){
-				format="zzz";
+			String format = "text";
+			if (session != null) {
+				if (session.getProperties().get("output-format") != null) {
+					format = (String) session.getProperties().get(
+							"output-format");
+
+				}
+			} else {
+				format = "json";
 			}
+
 			Properties p = new Properties();
 			p.put("format", format);
 			((ManagementImpl) _peer).execute(cmd, p, out);

@@ -7,6 +7,7 @@ Bundle-Vendor: Cityway
 Import-Package: EDU.oswego.cs.dl.util.concurrent,
  org.apache.log4j,
  org.avm.elementary.common,
+ org.json;resolution:=optional,
  org.knopflerfish.service.console,
  org.osgi.framework,
  org.osgi.service.cm,

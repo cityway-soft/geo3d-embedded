@@ -67,8 +67,11 @@ public abstract class AbstractCommandGroup extends CommandGroupAdapter
 	public int cmdOutput(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
 		format = ((String) opts.get("format")).trim();
-		
-		session.getProperties().put("output-format", format);
+		if(session != null){
+			session.getProperties().put("output-format", format);
+		}else{
+			_log.warn("Command group session is null");
+		}
 		return 0;
 	}
 

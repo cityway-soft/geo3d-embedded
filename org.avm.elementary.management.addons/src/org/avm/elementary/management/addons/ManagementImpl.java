@@ -4,6 +4,7 @@
 package org.avm.elementary.management.addons;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,6 +12,7 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.Hashtable;
 import java.util.Properties;
@@ -24,8 +26,12 @@ import org.avm.elementary.management.addons.command.CommandFactory;
 import org.avm.elementary.management.addons.usb.USBManagementImpl;
 import org.avm.elementary.management.addons.wifi.WifiManagementImpl;
 import org.avm.elementary.management.core.Management;
+import org.avm.elementary.management.core.utils.DataUploadClient;
+import org.avm.elementary.management.core.utils.Utils;
 import org.avm.elementary.messenger.Messenger;
 import org.avm.elementary.messenger.MessengerInjector;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.knopflerfish.service.console.ConsoleService;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -56,6 +62,10 @@ public class ManagementImpl implements ManageableService, ManagementService,
 	private Messenger _messenger;
 
 	private ServiceReference managementServiceReference;
+
+	private static final String SMS_PROTOCOL_TAG = "sms://";
+	private static final String FTP_PROTOCOL_TAG = "ftp://";
+	private static final String CTW_PROTOCOL_TAG = "ctw";
 
 	public ManagementImpl() {
 		_log = Logger.getInstance(ManagementService.class);
@@ -199,7 +209,7 @@ public class ManagementImpl implements ManageableService, ManagementService,
 			while (t.hasMoreTokens()) {
 				String s = t.nextToken();
 				_log.info("Run management command : '" + s + "'");
-				runScript(s);
+				executeScript(s);
 			}
 
 		}
@@ -259,8 +269,6 @@ public class ManagementImpl implements ManageableService, ManagementService,
 			out.println("ERROR: " + e.getMessage());
 		}
 	}
-	
-	
 
 	public void runScript(URL url) {
 		_log.info("Running script... :" + url); //$NON-NLS-1$
@@ -287,15 +295,81 @@ public class ManagementImpl implements ManageableService, ManagementService,
 		}
 	}
 
+	public void executeScript(String cmd) {
+		if (_cs == null) {
+			_log.error("Console Service not set !"); //$NON-NLS-1$
+		} else {
+			String destination = null;
+			String id = null;
+			cmd = cmd.trim();
+			if (cmd.startsWith("@")) {
+				int idx = cmd.indexOf(" ");
+				String tmp = cmd.substring(1, idx);
+				idx = tmp.indexOf("!");
+				destination = tmp.substring(0, idx);
+				id = tmp.substring(idx + 1);
+				cmd = cmd.substring(idx + 2 + id.length()).trim();
+				System.err.println("id=" + id + ", dest=" + destination
+						+ ", cmd=" + cmd);
+			}
+
+			String result = _cs.runCommand(cmd);
+
+			if (result != null && result.trim().length() != 0) {
+				result=result.trim();
+				if (result.startsWith("{") && result.endsWith("}")) {
+					try {
+						JSONObject jsonResult = new JSONObject(result);
+						JSONObject response = new JSONObject();
+						response.put("id", id);
+						response.put("response", jsonResult);
+						result = response.toString();
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				if (destination != null) {
+					int idx;
+					if (destination.startsWith(SMS_PROTOCOL_TAG)) {
+						idx = destination.indexOf(SMS_PROTOCOL_TAG);
+						String number = destination.substring(idx
+								+ SMS_PROTOCOL_TAG.length());
+						result = result.substring(0,
+								Math.min(result.length(), 159));
+						result = result.replace('\n', ',');
+						result = result.replace('\r', ' ');
+						String command = "/media.sms sendmsg  -d " + number
+								+ " -t texto -m \"" + result + "\"";
+						_log.info("Execute cmd :" + command);
+						result = runScript(command);
+						_log.info("result :" + result);
+					} else if (destination.startsWith(FTP_PROTOCOL_TAG)) {
+						String path = Utils.formatURL(destination, false);
+						String remotefile = Utils.formatURL("$i_response.txt",
+								false);
+						_log.info("ftp path :" + path);
+						try {
+							DataUploadClient client = new DataUploadClient(
+									new URL(path));
+							client.put(new StringBuffer(result), remotefile);
+						} catch (IOException e) {
+							_log.error("ERROR:" + e.getMessage());
+						}
+					} else if (destination.startsWith(CTW_PROTOCOL_TAG)) {
+						String resp = URLEncoder.encode(result);
+						send(resp);
+						_log.info(result);
+					}
+				}
+			}
+		}
+	}
+
 	public String runScript(String cmd) {
 		if (_cs == null) {
 			_log.error("Console Service not set !"); //$NON-NLS-1$
 		} else {
-			if (cmd.startsWith("@")){
-				int idx=cmd.indexOf(" ");
-				String tmp=cmd.substring(0, idx);
-				
-			}
 			return _cs.runCommand(cmd);
 		}
 		return null;
