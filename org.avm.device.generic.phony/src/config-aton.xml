@@ -4,7 +4,7 @@
 <!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
 <configuration pid="org.avm.device.phony.Phony" mode="new">
 <property name="org.avm.config.version">
-<value type="Integer">19</value>
+<value type="Integer">18</value>
 </property>
 <property name="service.pid">
 <value type="String">org.avm.device.phony.Phony</value>
