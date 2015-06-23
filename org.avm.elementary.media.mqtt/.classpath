@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.avm.elementary.media.mqtt.protocol-0.0.1-SNAPSHOT.jar" sourcepath="/org.avm.elementary.media.mqtt.protocol"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/OSGi%Minimum-1.1"/>
 	<classpathentry kind="lib" path="lib/mqtt-client-0.4.0.jar"/>

@@ -1,5 +1,6 @@
 package org.avm.elementary.media.mqtt;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,6 +23,9 @@ import org.avm.elementary.common.Scheduler;
 import org.avm.elementary.jdb.JDB;
 import org.avm.elementary.jdb.JDBInjector;
 import org.avm.elementary.media.mqtt.bundle.Activator;
+import org.avm.elementary.media.mqtt.protocol.M2MMessage;
+import org.avm.elementary.media.mqtt.protocol.M2MMessageParser;
+import org.avm.elementary.media.mqtt.protocol.ParserV1;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -35,11 +39,11 @@ public class MediaMqttImpl implements MediaMqtt, ConfigurableService,
 		ManageableService, JDBInjector, AlarmProvider, ProducerService,
 		MqttCallback {
 
-	private static final String MQTT_DISCONNECT = "DISCONNECT";
-
-	private static final String MQTT_ON_LINE = "ON LINE";
-
-	private static final String MQTT_CONNECTION_LOST = "CONNECTION LOST";
+	// private static final String MQTT_DISCONNECT = "DISCONNECT";
+	//
+	// private static final String MQTT_ON_LINE = "ON LINE";
+	//
+	// private static final String MQTT_CONNECTION_LOST = "CONNECTION LOST";
 
 	private final String JDB_TAG = "COMM";
 
@@ -83,6 +87,9 @@ public class MediaMqttImpl implements MediaMqtt, ConfigurableService,
 
 	private Date date;
 
+	private MqttConnectOptions connectionOptions;
+	private M2MMessage connectionLost;
+
 	public MediaMqttImpl() {
 		_log = Logger.getInstance(this.getClass());
 		_log.setPriority(Priority.DEBUG);
@@ -118,7 +125,29 @@ public class MediaMqttImpl implements MediaMqtt, ConfigurableService,
 		return _config.getMediaId();
 	}
 
+	public void sendStatus(byte status) throws Exception {
+		M2MMessage m = createM2MMessage();
+		m.setConnectionStatus(status);
+		m.setData(new byte[0]);
+
+		byte[] dataToSend = M2MMessageParser.encode(m);
+
+		int qos = 2;
+		MqttMessage message = new MqttMessage(dataToSend);
+		message.setQos(qos);
+		mqttClient.publish(topicMO, message);
+
+	}
+
 	public void send(Dictionary header, byte[] data) throws Exception {
+		
+		if (mqttClient.isConnected()==false){
+			_log.debug("Client is not connected anymore!");
+		}else{
+			_log.debug("Client is connected.");
+		}
+		
+		
 		if (header != null) {
 			saveContextIntoHeader(header);
 		}
@@ -129,24 +158,23 @@ public class MediaMqttImpl implements MediaMqtt, ConfigurableService,
 		Integer spd = (Integer) header.get("spd");
 		Date date = (Date) header.get("date");
 
-		// BaseData base = new BaseData();
-		// LocalisedData location = new LocalisedData();
-		// location.setLat((double)lat.intValue());
-		// location.setLon((double)lon.intValue());
-		// location.setSpeed((double)spd.intValue());
-		// location.setTrack((double)trk.intValue());
-		// location.setDate(date);
-		// M2MMessage m = M2MMessageHelper.createM2MMessage(base, location,
-		// data);
-		// String msg = M2MMessageHelper.toJson(m);
-		//
-		// byte[] dataToSend=msg.getBytes();
+		M2MMessage m = new M2MMessage();
+		m.setVersion(ParserV1.VERSION);
+		m.setConnectionStatus(M2MMessage.CONNECTED);
+		m.setLat((double) lat.doubleValue() / 360000d);
+		m.setLon((double) lon.doubleValue() / 360000d);
+		m.setSpeed((double) spd.doubleValue());
+		m.setTrack((double) trk.doubleValue());
+		m.setDate(date);
+		m.setMime("application/phoebus-ctw");
+		m.setData(data);
 
-		byte[] dataToSend = data;
+		byte[] dataToSend = M2MMessageParser.encode(m);
 
 		int qos = 2;
 		MqttMessage message = new MqttMessage(dataToSend);
 		message.setQos(qos);
+		
 		mqttClient.publish(topicMO, message);
 		_log.debug("Message published");
 		// if (_started) {
@@ -172,6 +200,8 @@ public class MediaMqttImpl implements MediaMqtt, ConfigurableService,
 			lat = (int) (position.getLatitude().getValue() * 180 / Math.PI * 360000);
 			speed = (int) (position.getSpeed().getValue() * 3.6);
 			track = (int) (position.getTrack().getValue() * 180 / Math.PI);
+
+			updateWill();
 
 			// if (_connection != null) {
 			// _connection.setLongitude(lon);
@@ -280,7 +310,42 @@ public class MediaMqttImpl implements MediaMqtt, ConfigurableService,
 		return result;
 	}
 
+	protected M2MMessage createM2MMessage() {
+		M2MMessage m = new M2MMessage();
+		m.setVersion(ParserV1.VERSION);
+		m.setFromServer(false);
+		m.setDate(new Date());
+		m.setConnectionStatus(M2MMessage.CONNECTED);
+
+		return m;
+	}
+
+	private void updateWill() {
+		if (connectionLost == null) {
+			connectionLost = createM2MMessage();
+		}
+
+		if (connectionOptions != null) {
+			connectionLost.setConnectionStatus(M2MMessage.CONNECTION_LOST);
+			connectionLost.setLat(lat);
+			connectionLost.setLon(lon);
+			connectionLost.setDate(new Date());
+			connectionLost.setSpeed(speed);
+			connectionLost.setTrack(track);
+
+			byte[] connectionLostFrame;
+			try {
+				connectionLostFrame = M2MMessageParser.encode(connectionLost);
+				connectionOptions
+						.setWill(topicMO, connectionLostFrame, 2, true);
+			} catch (IOException e) {
+				_log.error(e);
+			}
+		}
+	}
+
 	private Runnable INITIALIZE_CONNECTION = new Runnable() {
+
 		public void run() {
 			try {
 				initilize();
@@ -289,6 +354,9 @@ public class MediaMqttImpl implements MediaMqtt, ConfigurableService,
 				_dateConnection = new Date();
 				notifyConnected(true);
 			} catch (Exception e) {
+				if (_log.isDebugEnabled()){
+					_log.error("Mqtt initialisation failure : ", e);
+				}
 				if (_started) {
 					_scheduler.schedule(INITIALIZE_CONNECTION, _timeout);
 					_failureCounter++;
@@ -311,24 +379,23 @@ public class MediaMqttImpl implements MediaMqtt, ConfigurableService,
 					+ port + " period: " + period + " timeout:" + _timeout
 					+ " failure:" + _failureCounter);
 
-			// Socket socket = new Socket(host, port);
-			// socket.setSoTimeout(10000);
-			//
 			try {
 				String broker = "tcp://" + host + ":" + port;
 				String clientId = getMediaId();
 				MemoryPersistence persistence = new MemoryPersistence();
 				mqttClient = new MqttClient(broker, clientId, persistence);
 
-				MqttConnectOptions connOpts = new MqttConnectOptions();
-				connOpts.setCleanSession(true);
-				connOpts.setWill(topicMO, MQTT_CONNECTION_LOST.getBytes(), 2,
-						true);
+				connectionOptions = new MqttConnectOptions();
+				connectionOptions.setCleanSession(true);
+
+				updateWill();
+
 				if (_log.isDebugEnabled()) {
 					_log.debug("Connecting to broker: " + broker);
 				}
-				mqttClient.connect(connOpts);
-				send(new Hashtable(), MQTT_ON_LINE.getBytes());
+				mqttClient.connect(connectionOptions);
+				sendStatus(M2MMessage.CONNECTED);
+
 				mqttClient.setCallback(MediaMqttImpl.this);
 				System.out.println("Connected");
 				// -- subscribe to topic for all terminals
@@ -376,7 +443,7 @@ public class MediaMqttImpl implements MediaMqtt, ConfigurableService,
 			// _connection = null;
 			// }
 			try {
-				send(new Hashtable(), MQTT_DISCONNECT.getBytes());
+				sendStatus(M2MMessage.DISCONNECTED);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -460,6 +527,7 @@ public class MediaMqttImpl implements MediaMqtt, ConfigurableService,
 	public void connectionLost(Throwable arg0) {
 		_log.debug("Media MQTT connectionLost : " + arg0);
 		notifyConnected(false);
+		_scheduler.schedule(INITIALIZE_CONNECTION, _timeout);
 
 	}
 
@@ -471,17 +539,26 @@ public class MediaMqttImpl implements MediaMqtt, ConfigurableService,
 	public void messageArrived(String arg0, MqttMessage message)
 			throws Exception {
 		byte[] data = message.getPayload();
-		String msg = new String(data);
-		if (msg.contains(MQTT_ON_LINE)) {
-			_log.info("** SERVER ON LINE **");
-			send(new Hashtable(), MQTT_ON_LINE.getBytes());
-			notifyConnected(true);
-		} else if (msg.contains(MQTT_CONNECTION_LOST)) {
-			_log.info("** SERVER ON LINE **");
-			notifyConnected(false);
-		} else {
-			Dictionary header = new Properties();
-			_messenger.receive(header, data);
+
+		try {
+			M2MMessage m = M2MMessageParser.decode(data);
+
+			if (m.getConnectionStatus() == M2MMessage.CONNECTED) {
+				_log.info("** SERVER ON LINE **");
+				M2MMessage msg = MediaMqttImpl.this.createM2MMessage();
+				byte[] frame = M2MMessageParser.encode(msg);
+				send(new Hashtable(), frame);
+				notifyConnected(true);
+			} else if (m.getConnectionStatus() == M2MMessage.CONNECTION_LOST) {
+				_log.info("** SERVER CONNECTION LOST **");
+				notifyConnected(false);
+			} else {
+				Dictionary header = new Properties();
+				_messenger.receive(header, m.getData());
+			}
+		} catch (Throwable t) {
+			System.err.println("String(data)=" + new String(data));
+			t.printStackTrace();
 		}
 	}
 }
