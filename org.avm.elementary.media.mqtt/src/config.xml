@@ -2,7 +2,7 @@
 <!DOCTYPE cm_data PUBLIC '-//Gatespace//DTD cm_data 0.1//EN' 'cm_data.dtd'>
 <cm_data version="0.1">
 <!-- EDITING THIS FILE IS NOT GUARANTEED TO WORK  -->
-<configuration pid="org.avm.elementary.media.ctw.MediaCTW" mode="new">
+<configuration pid="org.avm.elementary.media.mqtt.MediaMqtt" mode="new">
 <property name="period">
 <value type="Integer">180</value>
 </property>
