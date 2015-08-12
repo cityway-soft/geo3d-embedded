@@ -249,21 +249,21 @@ public class Activator extends AbstractActivator implements UserSessionService,
 		} catch (BundleException e) {
 		}
 
-		try {
-			int cpt = 5;
-			do {
+		int cpt = 5;
+		do {
+			try {
 				bundleUA.start();
 				if (bundleUA.getState() == Bundle.ACTIVE) {
 					break;
 				}
-				try {
-					Thread.sleep(1500);
-				} catch (InterruptedException e) {
-				}
-				cpt--;
-			} while (cpt > 0 && bundleUA.getState() != Bundle.ACTIVE);
-		} catch (BundleException e) {
-		}
+			} catch (BundleException e) {
+			}
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+			}
+			cpt--;
+		} while (cpt > 0 && bundleUA.getState() != Bundle.ACTIVE);
 
 	}
 
