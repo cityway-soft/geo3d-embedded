@@ -14,6 +14,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -44,6 +45,31 @@ public class Utils {
 		} else {
 			return chaine;
 		}
+
+	}
+	
+	public static boolean isSameDate(File f1, File f2) {
+		Calendar cal = Calendar.getInstance();
+
+		cal.setTimeInMillis(f1.lastModified());
+
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		Date d1 = cal.getTime();
+
+		cal.setTimeInMillis(f2.lastModified());
+
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		Date d2 = cal.getTime();
+
+		return d2.compareTo(d1) == 0;
 
 	}
 

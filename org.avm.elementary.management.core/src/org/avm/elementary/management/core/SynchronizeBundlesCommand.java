@@ -14,6 +14,8 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -208,6 +210,7 @@ class SynchronizeBundlesCommand implements BundleListener {
 			BufferedReader br = new BufferedReader(new FileReader(
 					md5file.getAbsolutePath()));
 			String line = br.readLine();
+			br.close();
 			int idx = line.indexOf(" ");
 			String md5 = line.substring(0, idx).trim();
 			String filename = line.substring(idx + 1).trim();
@@ -258,6 +261,8 @@ class SynchronizeBundlesCommand implements BundleListener {
 			}
 		}
 	}
+
+
 
 	public void deploy() throws IOException {
 		BundleList bundleList;
@@ -346,12 +351,27 @@ class SynchronizeBundlesCommand implements BundleListener {
 											.getVersion().trim();
 									String versionAlreadyDownloaded = "";
 									if (managementDeployedFile.exists()) {
-										FileInputStream in = new FileInputStream(
-												managementDeployedFile);
-										byte[] buf = new byte[1024];
-										in.read(buf);
-										versionAlreadyDownloaded = new String(
-												buf).trim();
+										File managementJarFile = new File(
+												System.getProperty("org.avm.home")
+														+ "/lib/"
+														+ _management
+																.getClass()
+																.getPackage()
+														+ ".jar");
+
+										if (Utils.isSameDate(managementDeployedFile,
+												managementJarFile) == false) {
+											println("Warning : jar file & management-core.downloaded don't have same date");
+											managementDeployedFile.delete();
+										} else {
+											FileInputStream in = new FileInputStream(
+													managementDeployedFile);
+											byte[] buf = new byte[1024];
+											in.read(buf);
+											versionAlreadyDownloaded = new String(
+													buf).trim();
+											in.close();
+										}
 									}
 									println("Management version to download         : '"
 											+ versionToDownload + "'");
@@ -369,10 +389,10 @@ class SynchronizeBundlesCommand implements BundleListener {
 													.getBytes());
 											out.close();
 										}
-									}
-									else{
+									} else {
 										println("Management version already downloaded : '"
-												+ versionAlreadyDownloaded + "' !");
+												+ versionAlreadyDownloaded
+												+ "' !");
 									}
 									forceSendBundleList = false;
 									continue;
@@ -504,8 +524,6 @@ class SynchronizeBundlesCommand implements BundleListener {
 		}
 	}
 
-
-
 	/**
 	 * retourne une hashtable contenant la liste des bundles sur le repository
 	 * 
@@ -597,19 +615,20 @@ class SynchronizeBundlesCommand implements BundleListener {
 					// + " ==> pack ok, now check version");
 
 					String bundleListVersion = bundleProperties.getVersion();
-					//double bundleVersion = Utils.getVersion(bundleListVersion);
-					
-					
-					String currentBundleVersion = (String) bundles[i].getHeaders()
-							.get("Bundle-Version");
-					//double currentVersion = Utils.getVersion(currentBundleVersion);
-					
-					
-					int result = Utils.compareVersion(bundleListVersion, currentBundleVersion);
+					// double bundleVersion =
+					// Utils.getVersion(bundleListVersion);
+
+					String currentBundleVersion = (String) bundles[i]
+							.getHeaders().get("Bundle-Version");
+					// double currentVersion =
+					// Utils.getVersion(currentBundleVersion);
+
+					int result = Utils.compareVersion(bundleListVersion,
+							currentBundleVersion);
 					// -- on retire les bundles dont la version est plus recente
 					// que
 					// celle du bundles.list
-					check = ((result==0 || result<-1) && bundleProperties
+					check = ((result == 0 || result < -1) && bundleProperties
 							.getStartlevel() >= 0);
 
 					if (check) {
