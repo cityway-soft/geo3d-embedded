@@ -94,6 +94,8 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 				}
 
 			});
+		} else {
+			_phonyihm.setEnabled(true);
 		}
 	}
 
@@ -314,7 +316,11 @@ public class PhonyImpl implements Phony, ConsumerService, ManageableService,
 
 	public void unsetUserSessionService(UserSessionService service) {
 		_session = service;
-		closePhony();
+
+		// closePhony();
+		if (_phonyihm != null) {
+			_phonyihm.setEnabled(false);
+		}
 	}
 
 	class QualitySignalTask implements Runnable {
