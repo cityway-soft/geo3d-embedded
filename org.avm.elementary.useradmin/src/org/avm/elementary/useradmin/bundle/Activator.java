@@ -241,9 +241,28 @@ public class Activator extends AbstractActivator implements UserSessionService,
 	}
 
 	public void restart() {
-		ServiceReference sr = _context.getBundleContext().getServiceReference(
-				"org.osgi.service.useradmin.UserAdmin");
-		Bundle bundleUA = sr.getBundle();
+		Bundle bundleUA = null;
+
+		
+		_log.info("Restaring useradmin equinox.... ");
+		_log.info("_context=" + _context);
+		_log.info("getBundleContext()=" + _context.getBundleContext());
+		Bundle[] bundles = _context.getBundleContext().getBundles();
+		_log.info("getBundles=" + bundles);
+		for (int i = 0; i < bundles.length; i++) {
+			String sb = bundles[i].getSymbolicName();
+			if (sb.equals("org.eclipse.equinox.useradmin")) {
+				bundleUA = bundles[i];
+				break;
+			}
+		}
+
+		if (bundleUA == null) {
+			_log.error("Unable to find bundle org.eclipse.equinox.useradmin ! ");
+			return;
+
+		}
+
 		try {
 			bundleUA.stop();
 		} catch (BundleException e) {

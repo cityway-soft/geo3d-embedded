@@ -43,7 +43,8 @@ public class UserDataManager extends AbstractManager {
 	protected void updateUrlRepository(URL url, String version) {
 		_log.debug("updateUrlRepository");
 		_config.setFileName(url.getPath());
-		((Config) _config).updateConfig(_started);
+		//((Config) _config).updateConfig(_started);
+		((Config) _config).updateConfig(false);
 		_log.debug("launch reinitMembers....");
 		try {
 			_peer.reinitMembers();
