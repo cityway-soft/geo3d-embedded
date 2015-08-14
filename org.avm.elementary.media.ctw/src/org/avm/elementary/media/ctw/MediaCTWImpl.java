@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 import org.avm.elementary.alarm.Alarm;
 import org.avm.elementary.alarm.AlarmProvider;
 import org.avm.elementary.common.Config;
@@ -26,8 +27,10 @@ import org.avm.elementary.protocol.ctw.ConnectionEvent;
 import org.avm.elementary.protocol.ctw.ConnectionListener;
 import org.avm.elementary.protocol.ctw.MessageEvent;
 import org.avm.elementary.protocol.ctw.MessageListener;
+import org.avm.elementary.protocol.ctw.parser.C_IDENT;
 import org.avm.elementary.protocol.ctw.parser.C_MSG;
 import org.avm.elementary.protocol.ctw.parser.Horodate;
+import org.avm.elementary.protocol.ctw.parser.Message;
 import org.avm.elementary.protocol.ctw.parser.S_MSG;
 import org.osgi.util.position.Position;
 
@@ -63,9 +66,10 @@ public class MediaCTWImpl implements MediaCTW, ConfigurableService,
 
 	private Date _dateConnection;
 
+
 	public MediaCTWImpl() {
 		_log = Logger.getInstance(this.getClass());
-		// _log.setPriority(Priority.DEBUG);
+		_log.setPriority(Priority.DEBUG);
 		alarm = new Alarm(new Integer(20));
 	}
 
@@ -75,7 +79,7 @@ public class MediaCTWImpl implements MediaCTW, ConfigurableService,
 
 	public void setMessenger(MediaListener messenger) {
 		_messenger = messenger;
-		if (_messenger != null){
+		if (_messenger != null) {
 			_messenger.setMedia(this);
 		}
 	}
@@ -178,9 +182,21 @@ public class MediaCTWImpl implements MediaCTW, ConfigurableService,
 			Integer spd = (Integer) header.get("spd");
 			Date date = (Date) header.get("date");
 
-			C_MSG msg = new C_MSG(lon.intValue(), lat.intValue(),
-					trk.intValue(), spd.intValue(), data);
-			msg.setHorodate(new Horodate(date.getTime()));
+			Message msg;
+			String terminalName = (String) header.get("terminal.name");
+			if (terminalName != null) {
+				C_IDENT m = new C_IDENT(terminalName, lon.intValue(),
+						lat.intValue(), trk.intValue(), spd.intValue(), data);
+				m.setHorodate(new Horodate(date.getTime()));
+
+				msg = m;
+			} else {
+				C_MSG m = new C_MSG(lon.intValue(), lat.intValue(),
+						trk.intValue(), spd.intValue(), data);
+				m.setHorodate(new Horodate(date.getTime()));
+
+				msg = m;
+			}
 
 			if (_log.isDebugEnabled()) {
 				_log.debug("Send message with header:" + header);
@@ -233,8 +249,9 @@ public class MediaCTWImpl implements MediaCTW, ConfigurableService,
 				_timeout = DEFAULT_TIMEOUT;
 				_failureCounter = 0;
 				_dateConnection = new Date();
-				notifyConnected(true);
+
 			} catch (Exception e) {
+				_connection = null;
 				if (_started) {
 					_scheduler.schedule(INITIALIZE_CONNECTION, _timeout);
 					_failureCounter++;
@@ -246,31 +263,35 @@ public class MediaCTWImpl implements MediaCTW, ConfigurableService,
 			}
 		}
 
-		private void initilize() throws Exception {
+		private synchronized void initilize() throws Exception {
+			if (_connection == null) {
+				_log.debug("Initializing Media CTW...");
+				String host = _config.getAddress();
+				InetAddress address = InetAddress.getByName(host);
+				int port = _config.getPort().intValue();
+				int period = _config.getPeriod().intValue();
 
-			String host = _config.getAddress();
-			InetAddress address = InetAddress.getByName(host);
-			int port = _config.getPort().intValue();
-			int period = _config.getPeriod().intValue();
+				_log.info("Opening Media CTW on host: " + address + " port: "
+						+ port + " period: " + period + " timeout:" + _timeout
+						+ " failure:" + _failureCounter);
 
-			_log.info("Opening Media CTW on host: " + address + " port: "
-					+ port + " period: " + period + " timeout:" + _timeout
-					+ " failure:" + _failureCounter);
+				Socket socket = new Socket(host, port);
+				socket.setSoTimeout(10000);
 
-			Socket socket = new Socket(host, port);
-			socket.setSoTimeout(10000);
-			
-			// socket.setTcpNoDelay(false);
+				// socket.setTcpNoDelay(false);
 
-			_connection = new ClientConnection(socket, period,
-					MediaCTWImpl.this);
+				_connection = new ClientConnection(socket, period,
+						MediaCTWImpl.this);
 
-			_connection.addMessageEventListener(MediaCTWImpl.this);
-			_connection.setDebugEnabled(_log.isDebugEnabled());
-			_connection.setTerminalId(_config.getMediaId());
-			_connection.connect();
-
-			_log.debug("Media CTW opened");
+				_connection.addMessageEventListener(MediaCTWImpl.this);
+				_connection.setDebugEnabled(_log.isDebugEnabled());
+				_connection.setTerminalId(_config.getMediaId());
+				_connection.connect();
+				notifyConnected(true);
+				_log.debug("Media CTW opened");
+			} else {
+				_log.debug("Initialization already in progress...");
+			}
 		}
 
 	};
@@ -305,6 +326,10 @@ public class MediaCTWImpl implements MediaCTW, ConfigurableService,
 		jdb.journalize(JDB_TAG, "DISCONNECTED");
 		_log.info("Media CTW disconnected");
 		if (_started) {
+			if (_connection != null){
+				_connection.dispose();
+			}
+			_connection = null;
 			_scheduler.execute(INITIALIZE_CONNECTION);
 		}
 
@@ -354,4 +379,9 @@ public class MediaCTWImpl implements MediaCTW, ConfigurableService,
 	public Date getConnectionDate() {
 		return _dateConnection;
 	}
+
+	public void connectionLost(ConnectionEvent arg0) {
+		_log.warn("CONNECTION LOST CALLBACK !");
+	}
+
 }

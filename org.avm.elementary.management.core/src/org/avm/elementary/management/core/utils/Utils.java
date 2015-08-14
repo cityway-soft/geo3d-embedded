@@ -57,6 +57,7 @@ public class Utils {
 		String d2 = df.format(new Date(f2.lastModified()));
 		return d1.equals(d2);
 
+
 	}
 
 	public static String formatURL(String url, boolean useDefault) {

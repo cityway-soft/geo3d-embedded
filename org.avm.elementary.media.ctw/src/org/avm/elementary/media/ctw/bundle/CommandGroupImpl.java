@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.Date;
 import java.util.Dictionary;
+import java.util.Properties;
 
 import org.avm.elementary.common.AbstractCommandGroup;
 import org.avm.elementary.media.ctw.MediaCTWConfig;
@@ -133,7 +134,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	public int cmdIsconnected(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
 
-		if (_peer == null){
+		if (_peer == null) {
 			out.println("Peer MediaCTW is null !");
 			return 1;
 		}
@@ -145,6 +146,29 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 			long delta = (System.currentTimeMillis() - date.getTime()) / 1000;
 			out.println("CONNECTED (since " + date + ", " + delta + " sec)");
 
+		}
+
+		return 0;
+	}
+
+	public final static String USAGE_IDENT = "<name>";
+
+	public final static String[] HELP_IDENT = new String[] { "Change terminal name", };
+
+	public int cmdIdent(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+
+		String name = (String) opts.get("name");
+		if (_peer == null) {
+			out.println("Peer MediaCTW is null !");
+			return 1;
+		}
+		Dictionary header = new Properties();
+		header.put("terminal.name", name);
+		try {
+			_peer.send(header, new byte[0]);
+		} catch (Exception e) {
+			out.println("Error on sending ident message ("+name+")");
 		}
 
 		return 0;
