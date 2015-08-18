@@ -47,29 +47,16 @@ public class Utils {
 		}
 
 	}
-	
+
 	public static boolean isSameDate(File f1, File f2) {
-		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		
+		String d1 = df.format(new Date(f1.lastModified()));
+		
+		
+		String d2 = df.format(new Date(f2.lastModified()));
+		return d1.equals(d2);
 
-		cal.setTimeInMillis(f1.lastModified());
-
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-
-		Date d1 = cal.getTime();
-
-		cal.setTimeInMillis(f2.lastModified());
-
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-
-		Date d2 = cal.getTime();
-
-		return d2.compareTo(d1) == 0;
 
 	}
 
@@ -255,9 +242,10 @@ public class Utils {
 						try {
 							other = Long.parseLong(b.toString());
 						} catch (Exception e) {
-							// on ne s'occupe pas de la version other si pas un nombre
-//							e.printStackTrace();
-							other=0;
+							// on ne s'occupe pas de la version other si pas un
+							// nombre
+							// e.printStackTrace();
+							other = 0;
 						}
 					}
 

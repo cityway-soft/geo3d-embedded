@@ -25,7 +25,7 @@ public class TestIsSameDate extends TestCase {
 			os = new FileOutputStream(f1);
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.MONTH, -3);
-			f1.setLastModified(cal.getTimeInMillis());
+			f1.setLastModified(cal.getTime().getTime());
 			os.close();
 
 		} catch (FileNotFoundException e) {
@@ -63,7 +63,7 @@ public class TestIsSameDate extends TestCase {
 			os = new FileOutputStream(f1);
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.MINUTE, 5);
-			f1.setLastModified(cal.getTimeInMillis());
+			f1.setLastModified(cal.getTime().getTime());
 			os.close();
 
 		} catch (FileNotFoundException e) {
@@ -102,7 +102,7 @@ public class TestIsSameDate extends TestCase {
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.MINUTE, 5);
 			cal.add(Calendar.SECOND, -3);
-			f1.setLastModified(cal.getTimeInMillis());
+			f1.setLastModified(cal.getTime().getTime());
 			os.close();
 
 		} catch (FileNotFoundException e) {
