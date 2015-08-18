@@ -34,13 +34,15 @@ public class NMEASentence {
 	public boolean isGGASentence() {
 		if (_sentence == null)
 			return false;
-		return getString(0).equals("$GPGGA");
+		String tmp=getString(0);
+		return tmp.equals("$GPGGA") || tmp.equals("$GNGGA");
 	}
 
 	public boolean isRMCSentence() {
 		if (_sentence == null)
 			return false;
-		return getString(0).equals("$GPRMC");
+		String tmp=getString(0);
+		return getString(0).equals("$GPRMC") || tmp.equals("$GNRMC");
 	}
 
 	private String[] split(String str, String tag) {
