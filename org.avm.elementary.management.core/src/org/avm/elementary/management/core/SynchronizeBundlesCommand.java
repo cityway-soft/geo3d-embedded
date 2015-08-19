@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
@@ -267,6 +268,8 @@ class SynchronizeBundlesCommand implements BundleListener {
 	public void deploy() throws IOException {
 		BundleList bundleList;
 		try {
+	
+			
 			bundleList = downloadBundleList();
 
 			if (bundleList == null) {
@@ -280,7 +283,17 @@ class SynchronizeBundlesCommand implements BundleListener {
 
 			File managementDeployedFile = new File(
 					System.getProperty("org.avm.home") + "/lib/"
-							+ Management.DEPLOYED);
+							+ Management.REPORT_NEED_TO_BE_SENT);
+			
+			
+			File managementLastDownloadedVersion = new File(
+					System.getProperty("org.avm.home") + "/lib/"
+							+ Management.LAST_DOWNLOADED_FILE_VERSION);
+			
+			
+
+			
+			
 			boolean forceSendBundleList = managementDeployedFile.exists();
 
 			updateStartLevel(bundleList);
@@ -346,26 +359,42 @@ class SynchronizeBundlesCommand implements BundleListener {
 								if (_management.getClass().getPackage()
 										.getName().indexOf(bName) != -1) {
 									// --ignore management.core himself !
+									
+									//-- la version actuellement installée n'est pas encore la bonne. Inutile de forcer le rapport de mise à jour
+									forceSendBundleList=false;
 
 									String versionToDownload = bundleProperties
 											.getVersion().trim();
 									String versionAlreadyDownloaded = "";
-									if (managementDeployedFile.exists()) {
+									if (managementLastDownloadedVersion.exists()) {
 										File managementJarFile = new File(
 												System.getProperty("org.avm.home")
 														+ "/lib/"
 														+ _management
 																.getClass()
-																.getPackage()
+																.getPackage().getName()
 														+ ".jar");
+										
+										boolean isSame = Utils.isSameDate(managementLastDownloadedVersion,
+												managementJarFile);
+												
+										SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+										
+										String d1 = df.format(new Date(managementLastDownloadedVersion.lastModified()));
+										
+										
+										String d2 = df.format(new Date(managementJarFile.lastModified()));
+										println("File '"+managementLastDownloadedVersion.getAbsolutePath()+"' modified date :" + d1);
+										println("File '"+managementJarFile.getAbsolutePath()+"' modified date :" + d2);
+										println("isSameDate--Equals ? :" + isSame);
 
-										if (Utils.isSameDate(managementDeployedFile,
-												managementJarFile) == false) {
+										if (isSame == false) {
 											println("Warning : jar file & management-core.downloaded don't have same date");
-											managementDeployedFile.delete();
+											managementLastDownloadedVersion.delete();
+											versionAlreadyDownloaded+="-older";
 										} else {
 											FileInputStream in = new FileInputStream(
-													managementDeployedFile);
+													managementLastDownloadedVersion);
 											byte[] buf = new byte[1024];
 											in.read(buf);
 											versionAlreadyDownloaded = new String(
@@ -380,21 +409,29 @@ class SynchronizeBundlesCommand implements BundleListener {
 									if (versionToDownload
 											.equals(versionAlreadyDownloaded) == false) {
 										if (downloadManagementBundle()) {
-											// -- creation fichier temoin pour
-											// forcer l'envoi du rapport de mise
-											// à jour au prochain démarrage
+											// -- creation fichier contenant la version du bundle management
 											FileOutputStream out = new FileOutputStream(
-													managementDeployedFile);
+													managementLastDownloadedVersion);
 											out.write(versionToDownload
 													.getBytes());
 											out.close();
+											
+											// -- creation fichier temoin pour
+											// forcer l'envoi du rapport de mise
+											// à jour au prochain démarrage
+											out = new FileOutputStream(
+													managementDeployedFile);
+											out.write(new Date().toString()
+													.getBytes());
+											out.close();
+											
+											
 										}
 									} else {
 										println("Management version already downloaded : '"
 												+ versionAlreadyDownloaded
 												+ "' !");
 									}
-									forceSendBundleList = false;
 									continue;
 								}
 
@@ -422,6 +459,7 @@ class SynchronizeBundlesCommand implements BundleListener {
 				try {
 					_management.sendBundleList(_management.getCurrentMode());
 					if (forceSendBundleList) {
+						println("forceSendBundleList=true => Sending report to server...");
 						managementDeployedFile.delete();
 					}
 				} catch (Exception e) {

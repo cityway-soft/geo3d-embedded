@@ -60,7 +60,9 @@ public interface Management {
 
 	public static final int TIME_TO_FWK_SHUTDOWN = 0;
 
-	public static final String DEPLOYED = "management-core.downloaded"; 
+	public static final String REPORT_NEED_TO_BE_SENT = "management-core.report-needed"; 
+	
+	public static final String LAST_DOWNLOADED_FILE_VERSION = "management-core.last-downloaded-version"; 
 
 	public void synchronize(PrintWriter out, boolean force) throws Exception;
 
