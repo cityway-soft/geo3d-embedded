@@ -9,7 +9,7 @@ public class Test {
 		System.out.println("Temperature :"+ Z8Access.getBoardTemperature());
 		System.out.println("State : "+ Z8Access.getSystemCurrentState());
 		System.out.println("Voltage : " + Z8Access.getPowerSuplyLevel());
-		new CheckSystemState(1000);
+		new CheckSystemState(900);
 		try {
 			synchronized (Test.class) {
 				Test.class.wait();
