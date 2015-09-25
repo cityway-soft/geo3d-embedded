@@ -173,7 +173,7 @@ Exit { }
 		[ctxt.isArretCourant(balise) == true]		InterArretSurItineraire					{ actionSortieArret(balise); }
 			
 		entree(balise:  int)
-		[ctxt.isProchainArret(balise) == true]		nil										{ actionEntreeArret(balise); }	
+		[ctxt.isProchainArret(balise) == true]		nil										{ actionSortieDernierArret();actionEntreeArret(balise); }	
 		
 		finCourse									ServiceNormalMap::AttenteSaisieCourse	{ actionSortieArret(); actionFinCourse(); }
 		

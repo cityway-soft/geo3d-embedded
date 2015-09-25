@@ -94,4 +94,6 @@ public interface AvmStateMachine extends Avm {
 
 	boolean isArretEnAval(int balise);
 
+	void actionSortieDernierArret();
+
 }

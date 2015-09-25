@@ -1180,6 +1180,7 @@ public class AvmStateMachineContext
                 context.clearState();
                 try
                 {
+                    ctxt.actionSortieDernierArret();
                     ctxt.actionEntreeArret(balise);
                 }
                 finally
