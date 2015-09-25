@@ -79,7 +79,7 @@ public abstract class AbstractConfig implements Config, ManagedService,
 			ServiceReference sr = _context.getServiceReference();
 			int cpt=0;
 			while(cpt < 20 && sr != null){
-				cpt--;
+				cpt++;
 				try {
 					_log.warn("Component " +pid + " is not yet disabled. Wait...");
 					Thread.sleep(500);
