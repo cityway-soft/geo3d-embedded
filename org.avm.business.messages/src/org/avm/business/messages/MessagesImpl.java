@@ -515,8 +515,9 @@ public class MessagesImpl implements Messages, ConfigurableService,
 			message.getEntete().setReference(reference);
 			message.getEntete().getReference().setAcquittement(1);
 			message.getEntete().getReference().setId(Long.parseLong(msgId));
-			String response = "LU '" + msg.getProperty(Messages.MESSAGE) + "'";
-			String m = response;
+			String response = "LU '" + msg.getProperty(Messages.MESSAGE);
+			response  = response.substring(0, Math.min(254, response.length()));
+			String m = response + "'";
 			try {
 
 				String toCharset = System.getProperty("message.from-charset",
