@@ -1274,6 +1274,7 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 		if (dernier != null && dernier.getAttente() == 0){
 			int balise = dernier.getId();
 			_suiviItineraire.sortie(balise);
+			synchronize("Exit last stop point");
 		}
 	}
 
