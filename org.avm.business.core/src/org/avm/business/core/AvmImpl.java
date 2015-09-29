@@ -1271,9 +1271,10 @@ public class AvmImpl implements Avm, ConfigurableService, ManageableService,
 	
 	public void actionSortieDernierArret() {
 		Point dernier = getModel().getDernierPoint();
-		if (dernier != null && dernier.isDesservi() == false){
+		if (dernier != null && dernier.getAttente() == 0){
 			int balise = dernier.getId();
 			_suiviItineraire.sortie(balise);
+			synchronize("Exit last stop point");
 		}
 	}
 
