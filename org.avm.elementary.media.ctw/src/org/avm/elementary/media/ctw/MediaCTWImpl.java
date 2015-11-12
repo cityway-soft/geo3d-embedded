@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.avm.elementary.alarm.Alarm;
 import org.avm.elementary.alarm.AlarmProvider;
 import org.avm.elementary.common.Config;
@@ -66,10 +65,9 @@ public class MediaCTWImpl implements MediaCTW, ConfigurableService,
 
 	private Date _dateConnection;
 
-
 	public MediaCTWImpl() {
 		_log = Logger.getInstance(this.getClass());
-		_log.setPriority(Priority.DEBUG);
+		// _log.setPriority(Priority.DEBUG);
 		alarm = new Alarm(new Integer(20));
 	}
 
@@ -326,7 +324,7 @@ public class MediaCTWImpl implements MediaCTW, ConfigurableService,
 		jdb.journalize(JDB_TAG, "DISCONNECTED");
 		_log.info("Media CTW disconnected");
 		if (_started) {
-			if (_connection != null){
+			if (_connection != null) {
 				_connection.dispose();
 			}
 			_connection = null;
@@ -382,6 +380,15 @@ public class MediaCTWImpl implements MediaCTW, ConfigurableService,
 
 	public void connectionLost(ConnectionEvent arg0) {
 		_log.warn("CONNECTION LOST CALLBACK !");
+		jdb.journalize(JDB_TAG, "CONNECTION_LOST");
+		_log.info("Media CTW disconnected");
+		if (_started) {
+			if (_connection != null) {
+				_connection.dispose();
+			}
+			_connection = null;
+			_scheduler.execute(INITIALIZE_CONNECTION);
+		}
 	}
 
 }
