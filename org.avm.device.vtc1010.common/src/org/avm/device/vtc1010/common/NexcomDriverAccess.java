@@ -1,8 +1,7 @@
 package org.avm.device.vtc1010.common;
 
 public class NexcomDriverAccess {
-	public final static int BLOCKING_READ = 1;
-	public final static int NON_BLOCKING_READ = 0;
+
 
 	static {
 		System.loadLibrary("iodriver");
