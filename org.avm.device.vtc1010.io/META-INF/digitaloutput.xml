@@ -3,7 +3,7 @@
 	<implementation class="org.avm.device.vtc1010.io.DigitalOutputDriver"/>
 	<property name="service.pid" value="org.avm.device.vtc1010.io.DigitalOutputDriver"/>
 	<property name="DRIVER_ID" value="org.avm.device.vtc1010.io.DigitalOutputDriver"/>
-	<reference bind="setVtc1010IO" cardinality="1..1" interface="org.avm.device.vtc1010.common" name="Vtc1010IO" policy="static" unbind="unsetVtc1010IO"/>
+		<reference bind="setVtc1010IO" cardinality="1..1" interface="org.avm.device.vtc1010.common.api.Vtc1010IO" name="Vtc1010IO" policy="static" unbind="unsetVtc1010IO"/>
 	<service>				
 		<provide interface="org.osgi.service.device.Driver"/>
 	</service>	
