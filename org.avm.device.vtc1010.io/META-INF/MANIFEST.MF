@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.avm.device.vtc1010.io
 Bundle-SymbolicName: org.avm.device.vtc1010.io
 Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: OSGi/Minimum-1.1
 Import-Package: org.apache.log4j,
  org.avm.device.io,
  org.avm.device.vtc1010.common.api,
