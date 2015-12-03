@@ -69,6 +69,8 @@
 		<module>../org.avm.device.linux.watchdog</module>
 		<module>../org.avm.device.linux.wifi</module>
 		<module>../org.avm.device.usbmass</module>
+		<module>../org.avm.device.vtc1010.common</module>
+		<module>../org.avm.device.vtc1010.io</module>
 		<!-- * device wanesy * -->
 		<module>../org.avm.device.wanesy</module>
 		<module>../org.avm.device.wanesy.standby</module>
