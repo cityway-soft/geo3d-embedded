@@ -29,7 +29,7 @@ JNIEXPORT void JNICALL Java_org_avm_device_vtc1010_common_NexcomDriverAccess_clo
  * Signature: (I)I
  */
 JNIEXPORT jint JNICALL Java_org_avm_device_vtc1010_common_NexcomDriverAccess_readInput
-  (JNIEnv *, jclass, jint);
+  (JNIEnv *, jclass, jint, jint);
 
 /*
  * Class:     org_avm_device_vtc1010_common_NexcomDriverAccess
