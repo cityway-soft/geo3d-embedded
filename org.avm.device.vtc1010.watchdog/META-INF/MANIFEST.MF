@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.avm.device.vtc1010.watchdog
+Bundle-SymbolicName: org.avm.device.vtc1010.watchdog
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Cityway
+Import-Package: EDU.oswego.cs.dl.util.concurrent,
+ org.apache.log4j,
+ org.avm.device.vtc1010.common.api,
+ org.avm.elementary.common,
+ org.osgi.framework,
+ org.osgi.service.startlevel,
+ org.osgi.util.tracker,
+ statemap
+Bundle-Activator: org.avm.device.vtc1010.watchdog.bundle.Activator
+Export-Package: org.avm.device.vtc1010.watchdog
