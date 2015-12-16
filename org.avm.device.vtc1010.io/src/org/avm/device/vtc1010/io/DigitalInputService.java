@@ -34,7 +34,6 @@ public class DigitalInputService extends ServiceTracker implements
 
 	private Vtc1010IO ioAccess=null;
 	
-	private final static int READ_ADDRESS = 0x0ED1;
 	
 	public Vtc1010IO getIoAccess() {
 		return ioAccess;

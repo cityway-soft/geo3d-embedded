@@ -16,8 +16,6 @@ import org.osgi.util.tracker.ServiceTracker;
 public class DigitalOutputService extends ServiceTracker implements
 		DigitalIODriver {
 
-	private static final String DEVICE = "/dev/NEXCOM_IO";
-
 	private static final int CAPABILITY = 3;
 
 	private Logger _log = Logger.getInstance(this.getClass().getName());
