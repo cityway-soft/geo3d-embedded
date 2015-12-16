@@ -17,8 +17,9 @@ import org.osgi.util.tracker.ServiceTracker;
 public class DigitalInputService extends ServiceTracker implements
 		DigitalIODriver, Runnable {
 
-	
 	public static int CAPABILITY = 3;
+
+	public static int OFFSET = 3;
 
 	private Logger _log = Logger.getInstance(this.getClass().getName());
 
@@ -32,9 +33,8 @@ public class DigitalInputService extends ServiceTracker implements
 
 	private Thread _thread;
 
-	private Vtc1010IO ioAccess=null;
-	
-	
+	private Vtc1010IO ioAccess = null;
+
 	public Vtc1010IO getIoAccess() {
 		return ioAccess;
 	}
@@ -42,7 +42,6 @@ public class DigitalInputService extends ServiceTracker implements
 	public void setIoAccess(Vtc1010IO ioAccess) {
 		this.ioAccess = ioAccess;
 	}
-
 
 	public DigitalInputService(BundleContext context, ServiceReference device) {
 		super(context, device, null);
@@ -57,7 +56,7 @@ public class DigitalInputService extends ServiceTracker implements
 	public boolean getValue(int index) {
 		if (index >= CAPABILITY)
 			throw new IndexOutOfBoundsException();
-		boolean value = _data.get(index);
+		boolean value = _data.get(index+OFFSET);
 		if (_log.isDebugEnabled()) {
 			_log.debug("I/O[" + index + "] = " + value);
 		}
@@ -110,31 +109,30 @@ public class DigitalInputService extends ServiceTracker implements
 	}
 
 	public void run() {
-		if (ioAccess!= null){
-		int handle = ioAccess.open();
-		while (_thread != null && !_thread.isInterrupted()) {
-			int value = ioAccess.read(handle, Vtc1010IO.BLOCKING_READ);
-			if (_log.isDebugEnabled()) {
-				_log.debug("Read 0x" + Integer.toHexString(value));
-			}
-			BitSet old = (BitSet) _data.clone();
-			for (int i = 0; i < CAPABILITY; i++) {
-				if (get(value, i)) {
-					_data.clear(i);
-				} else {
-					_data.set(i);
+		if (ioAccess != null) {
+			int handle = ioAccess.open();
+			while (_thread != null && !_thread.isInterrupted()) {
+				int value = ioAccess.read(handle, Vtc1010IO.BLOCKING_READ);
+				if (_log.isDebugEnabled()) {
+					_log.debug("Read 0x" + Integer.toHexString(value));
 				}
-				if (_data.get(i) != old.get(i)) {
-					_listeners.fireIndexedPropertyChange(null, i,
-							old.get(i), _data.get(i));
+				BitSet old = (BitSet) _data.clone();
+				for (int i = 0; i < CAPABILITY; i++) {
+					if (get(value, i)) {
+						_data.clear(i);
+					} else {
+						_data.set(i);
+					}
+					if (_data.get(i) != old.get(i)) {
+						_listeners.fireIndexedPropertyChange(null, i,
+								old.get(i), _data.get(i));
+					}
 				}
 			}
-		}
-		ioAccess.close(handle);
+			ioAccess.close(handle);
 		}
 	}
-	
-	
+
 	private static final boolean get(int flag, int bit) {
 		int mask = 1 << bit;
 		return ((flag & mask) == mask);
