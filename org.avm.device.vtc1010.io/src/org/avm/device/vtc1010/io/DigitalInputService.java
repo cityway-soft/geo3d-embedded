@@ -59,6 +59,7 @@ public class DigitalInputService extends ServiceTracker implements
 		boolean value = _data.get(index+OFFSET);
 		if (_log.isDebugEnabled()) {
 			_log.debug("I/O[" + index + "] = " + value);
+			//_log.debug("data : " + _data.);
 		}
 		return value;
 	}
@@ -113,11 +114,12 @@ public class DigitalInputService extends ServiceTracker implements
 			int handle = ioAccess.open();
 			while (_thread != null && !_thread.isInterrupted()) {
 				int value = ioAccess.read(handle, Vtc1010IO.BLOCKING_READ);
+				System.out.println("Read 0x" + Integer.toHexString(value));
 				if (_log.isDebugEnabled()) {
 					_log.debug("Read 0x" + Integer.toHexString(value));
 				}
 				BitSet old = (BitSet) _data.clone();
-				for (int i = 0; i < CAPABILITY; i++) {
+				for (int i = OFFSET; i < CAPABILITY + OFFSET; i++) {
 					if (get(value, i)) {
 						_data.clear(i);
 					} else {
@@ -130,6 +132,8 @@ public class DigitalInputService extends ServiceTracker implements
 				}
 			}
 			ioAccess.close(handle);
+		}else{
+			System.out.println("no ioAccess");
 		}
 	}
 
