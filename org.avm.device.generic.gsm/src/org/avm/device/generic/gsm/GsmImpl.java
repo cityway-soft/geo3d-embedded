@@ -121,6 +121,7 @@ public class GsmImpl implements Gsm, ModemListener, ConfigurableService,
 			send(command, false);
 			command = new GsmRequest(AT_AT);
 			command.add(new GsmRequest(AT_ECHO_OFF));
+			command.add(new GsmRequest(AT_WIND));
 			send(command, false);
 		} catch (Exception e) {
 			_log.error("Initialize error", e);

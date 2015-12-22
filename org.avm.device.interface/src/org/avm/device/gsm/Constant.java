@@ -17,6 +17,8 @@ public interface Constant {
 	public static final String CPIN_READY = "+CPIN: READY";
 
 	public static final String NO_CARRIER = "NO CARRIER";
+	
+	public static final String WIND_NO_CARRIER = "+WIND: 6,1";
 
 	public static final String RING = "RING";
 
@@ -27,6 +29,8 @@ public interface Constant {
 	public static final String[] ERROR = { "ERROR" };
 
 	public static final String AT_AT = "AT\r";
+	
+	public static final String AT_WIND = "AT+WIND=63\r";
 
 	public static final String AT_ECHO_OFF = "ATE0\r";
 
