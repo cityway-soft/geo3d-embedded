@@ -178,11 +178,13 @@ public class ComptageImpl implements Comptage, ManageableService,
 			if (last != null) // on est dans le point de départ
 			{
 				initComptage();
+				_last = last.getId();
 				_lastName = last.getNom();
 				_firstPoint = null;
 			} else {
 				_firstPoint = model.getProchainPoint();
 				_lastName = _firstPoint.getNom();
+				_last = _firstPoint.getId();
 			}
 		}
 
