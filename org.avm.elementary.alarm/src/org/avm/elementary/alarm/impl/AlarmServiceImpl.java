@@ -16,6 +16,9 @@ import java.util.NoSuchElementException;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.avm.business.core.Avm;
+import org.avm.business.core.AvmModel;
+import org.avm.business.core.event.Authentification;
 import org.avm.business.protocol.phoebus.Alerte;
 import org.avm.business.protocol.phoebus.Anomalie;
 import org.avm.business.protocol.phoebus.ClotureAlerte;
@@ -57,6 +60,8 @@ public class AlarmServiceImpl implements AlarmService, ConfigurableService,
 
 	private ProducerManager _producer;
 
+	private Avm avm;
+
 	private JDB jdb;
 
 	public AlarmServiceImpl() {
@@ -87,7 +92,7 @@ public class AlarmServiceImpl implements AlarmService, ConfigurableService,
 				String temp = p.getProperty(Alarm.READONLY);
 				final boolean readonly = (temp == null) ? false : temp
 						.equals("true");
-				
+
 				temp = p.getProperty(Alarm.VISIBLE);
 				final boolean visible = (temp == null) ? true : temp
 						.equals("true");
@@ -131,7 +136,8 @@ public class AlarmServiceImpl implements AlarmService, ConfigurableService,
 			Alarm alarm = (Alarm) _hashAlarmById.get(key);
 			Alarm alarmCopie = new Alarm(alarm.getIndex(), alarm.getOrder(),
 					alarm.isStatus(), alarm.getName(), alarm.getDate(),
-					alarm.getKey(), alarm.getType(), alarm.isReadOnly(), alarm.isVisible());
+					alarm.getKey(), alarm.getType(), alarm.isReadOnly(),
+					alarm.isVisible());
 			copie.add(alarmCopie);
 		}
 
@@ -146,7 +152,7 @@ public class AlarmServiceImpl implements AlarmService, ConfigurableService,
 			boolean changed = false;
 			Alarm alarm = (Alarm) o;
 			Alarm previous = (Alarm) this._hashAlarmById.get(alarm.getIndex());
-			if (previous == null){
+			if (previous == null) {
 				return;
 			}
 			changed = (previous.isStatus() != alarm.isStatus());
@@ -211,7 +217,7 @@ public class AlarmServiceImpl implements AlarmService, ConfigurableService,
 	public void update(final ClotureAlerte cloture) {
 
 		final Anomalie anomalie = cloture.getEntete().getAnomalie();
-		if (anomalie == null){
+		if (anomalie == null) {
 			_log.warn("Champs anomalie non renseigné!");
 			Alarm alarm = this.getAlarm(new Integer(0));
 			if (alarm != null) {
@@ -459,6 +465,14 @@ public class AlarmServiceImpl implements AlarmService, ConfigurableService,
 	}
 
 	private void sendAlerte(final Alerte data) {
+		if (avm != null) {
+			AvmModel model = avm.getModel();
+			Authentification auth = model.getAuthentification();
+			if (model.getAuthentification() != null && auth.isDemoRole()) {
+				_log.info("No message send for user with role 'demo'");
+				return;
+			}
+		}
 
 		final Hashtable header = new Hashtable();
 		try {
@@ -474,6 +488,14 @@ public class AlarmServiceImpl implements AlarmService, ConfigurableService,
 
 	public void unsetJdb(JDB jdb) {
 		this.jdb = null;
+	}
+
+	public void setAvm(Avm avm) {
+		this.avm = avm;
+	}
+
+	public void unsetAvm(Avm avm) {
+		this.avm = null;
 	}
 
 	public void journalize(String value) {

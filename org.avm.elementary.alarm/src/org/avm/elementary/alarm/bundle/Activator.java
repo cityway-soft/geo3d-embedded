@@ -2,6 +2,7 @@ package org.avm.elementary.alarm.bundle;
 
 import java.util.Collection;
 
+import org.avm.business.core.Avm;
 import org.avm.elementary.alarm.Alarm;
 import org.avm.elementary.alarm.AlarmService;
 import org.avm.elementary.alarm.impl.AlarmServiceImpl;
@@ -63,7 +64,7 @@ public class Activator extends AbstractActivator implements AlarmService {
 	private void initializeConfiguration() {
 
 		_cm = (ConfigurationAdmin) _context.locateService("cm");
-		
+
 		try {
 			_config = new ConfigImpl(_context, _cm);
 			_config.start();
@@ -82,7 +83,7 @@ public class Activator extends AbstractActivator implements AlarmService {
 			((ConfigurableService) _peer).configure(null);
 		}
 	}
-	
+
 	// producer
 	private void initializeProducer() {
 		if (_peer instanceof ProducerService) {
@@ -156,7 +157,6 @@ public class Activator extends AbstractActivator implements AlarmService {
 		return _peer.isAlarm();
 	}
 
-
 	public Collection getList() {
 		return _peer.getList();
 	}
@@ -164,7 +164,7 @@ public class Activator extends AbstractActivator implements AlarmService {
 	public Alarm getAlarm(Integer id) {
 		return _peer.getAlarm(id);
 	}
-	
+
 	public void setJdb(JDB jdb) {
 		_log.debug("setJdb = " + jdb);
 		_peer.setJdb(jdb);
@@ -179,5 +179,12 @@ public class Activator extends AbstractActivator implements AlarmService {
 		return _peer.getAlarmByKey(name);
 	}
 
+	public void setAvm(Avm avm) {
+		_peer.setAvm(avm);
+	}
+
+	public void unsetAvm(Avm avm) {
+		_peer.unsetAvm(null);
+	}
 
 }
