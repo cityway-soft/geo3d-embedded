@@ -53,8 +53,11 @@ public class JDBAppender extends AppenderSkeleton {
 
 	private int _size = 512;
 
-	public JDBAppender(Layout layout, String filename, String pattern)
-			throws IOException {
+	private boolean doSave = false;
+
+	public JDBAppender(Layout layout, String filename, String pattern,
+			boolean doSave) throws IOException {
+		this.doSave = doSave;
 		this.layout = layout;
 		this.name = this.getClass().getName();
 		_filename = filename;
@@ -147,11 +150,16 @@ public class JDBAppender extends AppenderSkeleton {
 
 		File destDir = new File(tmp.getParentFile().getAbsoluteFile()
 				+ "/upload");
+		File copyDir = new File(tmp.getParentFile().getAbsoluteFile()
+				+ "/saved");
 
-		if (destDir.exists() == false){
+		if (destDir.exists() == false) {
 			destDir.mkdir();
 		}
-		
+		if (! copyDir.exists()){
+			copyDir.mkdirs();
+		}
+
 		JdbFileFilter filter = new JdbFileFilter(current);
 		File[] content = tmp.listFiles(filter);
 
@@ -159,7 +167,7 @@ public class JDBAppender extends AppenderSkeleton {
 			for (int i = 0; i < content.length; i++) {
 				File file = content[i];
 				try {
-					compressAndMove(file, destDir);
+					compressAndMove(file, destDir, copyDir);
 				} catch (IOException e) {
 					_log.error("Error on compressAndMove Jdb '"
 							+ file.getAbsolutePath() + "' : " + e.getMessage());
@@ -168,7 +176,8 @@ public class JDBAppender extends AppenderSkeleton {
 		}
 	}
 
-	private File compressAndMove(File file, File destDir) throws IOException {
+	private File compressAndMove(File file, File destDir, File copyDir)
+			throws IOException {
 		BufferedInputStream in = new BufferedInputStream(new FileInputStream(
 				file));
 
@@ -178,13 +187,26 @@ public class JDBAppender extends AppenderSkeleton {
 		GZIPOutputStream _zout = new GZIPOutputStream(new FileOutputStream(
 				filename, true));
 		byte[] data = new byte[1024];
+		GZIPOutputStream savedZout = null;
+		if (doSave) {
+			String savedFilename = copyDir.getAbsoluteFile() + "/"
+					+ file.getName() + "_jdb.gz";
+			savedZout = new GZIPOutputStream(new FileOutputStream(
+					savedFilename, true));
+		}
 
 		int c;
 
 		while ((c = in.read(data)) != -1) {
 			_zout.write(data, 0, c);
+			if (savedZout != null) {
+				savedZout.write(data, 0, c);
+			}
 		}
 		in.close();
+		if (savedZout != null) {
+			savedZout.close();
+		}
 		_zout.close();
 		file.delete();
 		return new File(filename);
@@ -224,7 +246,7 @@ public class JDBAppender extends AppenderSkeleton {
 		buf.append("_");
 		buf.append(System.getProperty("org.avm.terminal.owner"));
 		String dd = _df.format(date).trim();
-		if (dd.startsWith(".") == false){
+		if (dd.startsWith(".") == false) {
 			buf.append(".");
 		}
 		buf.append(dd);
