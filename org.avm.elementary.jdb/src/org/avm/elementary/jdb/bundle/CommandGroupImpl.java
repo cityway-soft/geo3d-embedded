@@ -140,8 +140,8 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 
 	public int cmdSetsavemode(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
-		String mode = ((String) opts.get("mode")).trim();
-		((JDBConfig) _config).setSaveMode(Boolean.getBoolean(mode));
+		String mode = ((String) opts.get("mode")).trim().toLowerCase();
+		((JDBConfig) _config).setSaveMode(mode.equals("true"));
 		_config.updateConfig();
 		out.println("Current save mode is : "
 				+ ((JDBConfig) _config).isSaveMode());
