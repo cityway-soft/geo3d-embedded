@@ -15,6 +15,8 @@ public class ConfigImpl extends AbstractConfig implements JDBConfig {
 
 	private static final String SIZE_TAG = "size";
 
+	private static final String SAVE_MODE = "save-mode";
+
 	public ConfigImpl(ComponentContext context, ConfigurationAdmin cm) {
 		super(context, cm);
 	}
@@ -51,6 +53,15 @@ public class ConfigImpl extends AbstractConfig implements JDBConfig {
 
 	public void setSize(int size) {
 		_config.put(SIZE_TAG, new Integer(size));
+	}
+
+	public void setSaveMode(boolean mode) {
+		_config.put(SAVE_MODE, new Boolean(mode));
+
+	}
+
+	public boolean isSaveMode() {
+		return ((Boolean) _config.get(SAVE_MODE)).booleanValue();
 	}
 
 }

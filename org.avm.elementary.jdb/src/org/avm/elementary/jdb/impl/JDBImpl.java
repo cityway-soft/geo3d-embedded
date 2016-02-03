@@ -29,7 +29,7 @@ public class JDBImpl implements ConfigurableService, ManageableService, JDB,
 	private Layout _layout;
 
 	private JDBAppender _appender;
-	
+
 	private Gps _gps;
 
 	public JDBImpl() {
@@ -67,7 +67,8 @@ public class JDBImpl implements ConfigurableService, ManageableService, JDB,
 			Object[] arguments = { System.getProperty("org.avm.home") };
 			String text = MessageFormat
 					.format(_config.getFilename(), arguments);
-			_appender = new JDBAppender(_layout, text, _config.getPattern(), true);
+			_appender = new JDBAppender(_layout, text, _config.getPattern(),
+					_config.isSaveMode());
 			_appender.setSize(_config.getSize());
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());

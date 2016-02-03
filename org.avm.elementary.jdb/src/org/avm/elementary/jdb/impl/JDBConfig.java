@@ -13,5 +13,9 @@ public interface JDBConfig {
 	int getSize();
 
 	void setSize(int size);
+	
+	void setSaveMode(boolean mode);
+	
+	boolean isSaveMode ();
 
 }
