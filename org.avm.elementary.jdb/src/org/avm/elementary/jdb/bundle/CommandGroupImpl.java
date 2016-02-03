@@ -34,22 +34,18 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		((JDBConfig) _config).setFilename(filename);
 		_config.updateConfig();
 
-		out
-				.println("Current filename : "
-						+ ((JDBConfig) _config).getFilename());
+		out.println("Current filename : " + ((JDBConfig) _config).getFilename());
 		return 0;
 	}
 
-	//showfilename
+	// showfilename
 	public final static String USAGE_SHOWFILENAME = "";
 
 	public final static String[] HELP_SHOWFILENAME = new String[] { "Show current filename", };
 
 	public int cmdShowfilename(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
-		out
-				.println("Current filename : "
-						+ ((JDBConfig) _config).getFilename());
+		out.println("Current filename : " + ((JDBConfig) _config).getFilename());
 		return 0;
 	}
 
@@ -125,7 +121,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		_peer.sync();
 		return 0;
 	}
-	
+
 	// Flush
 	public final static String USAGE_FLUSH = "";
 
@@ -137,5 +133,31 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 		return 0;
 	}
 
+	// set save mode
+	public final static String USAGE_SETSAVEMODE = "<mode>";
+
+	public final static String[] HELP_SETSAVEMODE = new String[] { "Set save mode (true/false)", };
+
+	public int cmdSetsavemode(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+		String mode = ((String) opts.get("mode")).trim();
+		((JDBConfig) _config).setSaveMode(Boolean.getBoolean(mode));
+		_config.updateConfig();
+		out.println("Current save mode is : "
+				+ ((JDBConfig) _config).isSaveMode());
+		return 0;
+	}
+
+	// is save mode
+	public final static String USAGE_ISSAVEMODE = "";
+
+	public final static String[] HELP_ISSAVEMODE = new String[] { "Return current save mode", };
+
+	public int cmdIssavemode(Dictionary opts, Reader in, PrintWriter out,
+			Session session) {
+		boolean saveMode = ((JDBConfig) _config).isSaveMode();
+		out.println("Current save mode is : " + saveMode);
+		return 0;
+	}
 
 }
