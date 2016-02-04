@@ -844,7 +844,7 @@ public class CommandGroupImpl extends AbstractCommandGroup {
 	public int cmdUpload(Dictionary opts, Reader in, PrintWriter out,
 			Session session) {
 
-		String smode = ((String) opts.get("mode"));
+		String smode = ((String) opts.get("-m"));
 		changeUploadDownloadMode(smode, out);
 		String cmd = "upload";
 		String forceCopy = ((String) opts.get("-f"));
