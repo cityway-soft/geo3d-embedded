@@ -125,7 +125,7 @@ class UploadCommand extends AbstractCommand {
 				buf.append(files[i].getName());
 				buf.append("\n");
 				if (files[i].isFile()
-						&& (forceCopy || isOlderThanToday(files[i]))) {
+						/*&& (forceCopy || isOlderThanToday(files[i]))*/) {
 					_upload(out, files[i].getAbsolutePath(), urlRemoteDir,
 							removeAfterCopy, forceCopy);
 				}
