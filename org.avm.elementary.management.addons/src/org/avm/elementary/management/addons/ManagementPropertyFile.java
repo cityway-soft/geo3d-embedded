@@ -22,8 +22,8 @@ public class ManagementPropertyFile {
 	String privateUploadUrl;
 
 	String updateMode;
-	
-	boolean lastUpdateInPrivateZone=false;
+
+	boolean lastUpdateInPrivateZone = false;
 
 	public boolean isLastUpdateInPrivateZone() {
 		return lastUpdateInPrivateZone;
@@ -87,18 +87,18 @@ public class ManagementPropertyFile {
 					System.getProperty(Management.PRIVATE_DOWNLOAD_URL_TAG));
 			privateUploadUrl = p.getProperty(Management.PRIVATE_UPLOAD_URL_TAG,
 					System.getProperty(Management.PRIVATE_UPLOAD_URL_TAG));
-			
+
 			updateMode = p.getProperty(Management.UPDATE_MODE_TAG,
 					System.getProperty(Management.UPDATE_MODE_TAG));
-			
-			String  temp = p.getProperty(
-					Management.LAST_UPDATE_IN_PRIVATE_ZONE_TAG,
-					System.getProperty(Management.LAST_UPDATE_IN_PRIVATE_ZONE_TAG));
-			if (temp != null && temp.endsWith("true")){
-				lastUpdateInPrivateZone=true;
-			}
-			else{
-				lastUpdateInPrivateZone=false;
+
+			String temp = p
+					.getProperty(
+							Management.LAST_UPDATE_IN_PRIVATE_ZONE_TAG,
+							System.getProperty(Management.LAST_UPDATE_IN_PRIVATE_ZONE_TAG));
+			if (temp != null && temp.endsWith("true")) {
+				lastUpdateInPrivateZone = true;
+			} else {
+				lastUpdateInPrivateZone = false;
 			}
 		}
 		return modified;
@@ -106,25 +106,37 @@ public class ManagementPropertyFile {
 
 	public void save() throws FileNotFoundException, IOException {
 		Properties p = new Properties();
-		
-		if (updateMode == null){
-			updateMode="private";
+
+		if (updateMode == null) {
+			updateMode = "private";
 		}
 		p.setProperty(Management.UPDATE_MODE_TAG, updateMode);
-		
-		if (publicDownloadUrl != null)
+
+		if (publicDownloadUrl != null) {
 			p.setProperty(Management.PUBLIC_DOWNLOAD_URL_TAG, publicDownloadUrl);
-		if (publicUploadUrl != null)
+			System.setProperty(Management.PUBLIC_DOWNLOAD_URL_TAG,
+					publicDownloadUrl);
+		}
+		if (publicUploadUrl != null) {
 			p.setProperty(Management.PUBLIC_UPLOAD_URL_TAG, publicUploadUrl);
-		if (privateDownloadUrl != null)
+			System.setProperty(Management.PUBLIC_UPLOAD_URL_TAG,
+					publicUploadUrl);
+		}
+		if (privateDownloadUrl != null) {
 			p.setProperty(Management.PRIVATE_DOWNLOAD_URL_TAG,
 					privateDownloadUrl);
-		if (privateUploadUrl != null)
+			System.setProperty(Management.PRIVATE_DOWNLOAD_URL_TAG,
+					privateDownloadUrl);
+		}
+		if (privateUploadUrl != null) {
 			p.setProperty(Management.PRIVATE_UPLOAD_URL_TAG, privateUploadUrl);
-		
-		p.setProperty(Management.LAST_UPDATE_IN_PRIVATE_ZONE_TAG, lastUpdateInPrivateZone?"true":"false");
-		
-		
+			System.setProperty(Management.PRIVATE_UPLOAD_URL_TAG,
+					privateUploadUrl);
+		}
+
+		p.setProperty(Management.LAST_UPDATE_IN_PRIVATE_ZONE_TAG,
+				lastUpdateInPrivateZone ? "true" : "false");
+
 		Utils.saveProperties(p, PERSISTANCE_PROPERTY_FILE);
 	}
 
