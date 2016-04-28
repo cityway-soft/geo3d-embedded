@@ -23,6 +23,8 @@ public class GsmImpl implements Gsm, ModemListener, ConfigurableService,
 		ProducerService, ManageableService, Constant {
 
 	public static boolean USE_WIND_MODE = false;
+	
+	private final static String AT_NO_WIND = "AT+WIND=0\r";
 
 	protected Modem _modem;
 
@@ -125,6 +127,8 @@ public class GsmImpl implements Gsm, ModemListener, ConfigurableService,
 			command.add(new GsmRequest(AT_ECHO_OFF));
 			if (USE_WIND_MODE) {
 				command.add(new GsmRequest(AT_WIND));
+			}else{
+				command.add(new GsmRequest(AT_NO_WIND));
 			}
 			send(command, false);
 		} catch (Exception e) {
