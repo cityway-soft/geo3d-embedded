@@ -103,15 +103,20 @@ class ModemInputStream extends InputStream implements Constant {
 						out.writeln("");
 					} else if (text.length() == 0) {
 						// _log.debug("[DSU] empty line");
-					} else if (text.indexOf(WIND_NO_CARRIER) >= 0) {
+					} else if (GsmImpl.USE_WIND_MODE
+							&& (text.indexOf(WIND_NO_CARRIER) >= 0)) {
 						_log.debug("notify Hangup : " + text);
 						_listener.modemHangup();
-					} else if (text.indexOf(RING) >= 0) {
+					}else if (text.indexOf(NO_CARRIER) >= 0) {
+						_log.debug("notify Hangup : " + text);
+						_listener.modemHangup();
+					}
+					else if (text.indexOf(RING) >= 0) {
 						_log.debug("reception : " + text);
-					//	if(GsmImpl.RTC_MODEM){
-							_log.debug("notify RING : " + text);
-							_listener.modemRinging("");
-					//	}
+						// if(GsmImpl.RTC_MODEM){
+						_log.debug("notify RING : " + text);
+						_listener.modemRinging("");
+						// }
 					} else if (text.indexOf(CALLING_LINE_PRESENTATION) >= 0) {
 						_log.debug("notify RING : " + text);
 						_listener.modemRinging(text);

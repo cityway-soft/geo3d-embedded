@@ -22,6 +22,10 @@ import EDU.oswego.cs.dl.util.concurrent.Takable;
 public class GsmImpl implements Gsm, ModemListener, ConfigurableService,
 		ProducerService, ManageableService, Constant {
 
+	public static boolean USE_WIND_MODE = false;
+	
+	private final static String AT_NO_WIND = "AT+WIND=0\r";
+
 	protected Modem _modem;
 
 	protected BoundedPriorityQueue _queue;
@@ -121,7 +125,11 @@ public class GsmImpl implements Gsm, ModemListener, ConfigurableService,
 			send(command, false);
 			command = new GsmRequest(AT_AT);
 			command.add(new GsmRequest(AT_ECHO_OFF));
-			command.add(new GsmRequest(AT_WIND));
+			if (USE_WIND_MODE) {
+				command.add(new GsmRequest(AT_WIND));
+			}else{
+				command.add(new GsmRequest(AT_NO_WIND));
+			}
 			send(command, false);
 		} catch (Exception e) {
 			_log.error("Initialize error", e);
@@ -201,14 +209,14 @@ public class GsmImpl implements Gsm, ModemListener, ConfigurableService,
 				try {
 					result = _modem.at(requests[i]);
 				} catch (GsmException e) {
-					GsmResponse ko = new GsmResponse(GsmResponse.KO, e
-							.getMessage());
+					GsmResponse ko = new GsmResponse(GsmResponse.KO,
+							e.getMessage());
 					requests[i].result = ko;
 					request.result = ko;
 					break;
 				} catch (IOException e) {
-					GsmResponse ko = new GsmResponse(GsmResponse.KO, e
-							.getMessage());
+					GsmResponse ko = new GsmResponse(GsmResponse.KO,
+							e.getMessage());
 					requests[i].result = ko;
 					request.result = ko;
 					throw e;
