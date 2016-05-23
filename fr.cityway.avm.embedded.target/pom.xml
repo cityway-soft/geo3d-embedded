@@ -365,7 +365,7 @@
 		<repository>
 			<id>cityway-snapshots</id>
 			<name>Cityway Snapshots</name>
-			<url>http://nexus.paris.cityway.fr:8081/nexus/content/repositories/snapshots</url>
+			<url>http://nexus.paris.cityway.fr:8081/content/repositories/snapshots</url>
 		</repository>
 	</distributionManagement>
 </project> 
