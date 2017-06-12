@@ -40,6 +40,7 @@ public class ComptageImpl implements Comptage, ManageableService,
 	private String _nomLigne = "";
 	private int _codeGirouette = 0;
 	private String _lastName;
+	private boolean hasInitComptage = false;
 
 	public void configure(Config config) {
 		// _config = (ComptageConfig) config;
@@ -80,6 +81,7 @@ public class ComptageImpl implements Comptage, ManageableService,
 		log.append(pp
 				.getProperty(org.avm.device.comptage.Comptage.NOMBRE_DESCENTES));
 		_jdb.journalize("comptage", log.toString());
+		hasInitComptage = false;
 		// _comptage.miseAZero();
 	}
 
@@ -118,9 +120,16 @@ public class ComptageImpl implements Comptage, ManageableService,
 	}
 
 	private void initComptage() {
-		Properties pp = getStatus();
-		if (pp != null) {
-
+		if (!hasInitComptage) {
+			Properties pp = getStatus();
+			String nbmonte = "0";
+			String nbdesc = "0";
+			if (pp != null) {
+				nbmonte = pp
+						.getProperty(org.avm.device.comptage.Comptage.NOMBRE_MONTEES);
+				nbdesc = pp
+						.getProperty(org.avm.device.comptage.Comptage.NOMBRE_DESCENTES);
+			}
 			StringBuffer log = new StringBuffer();
 			log.append("INITPASSAGERS;");
 			log.append(_nomLigne);
@@ -129,15 +138,14 @@ public class ComptageImpl implements Comptage, ManageableService,
 			log.append(';');
 			log.append(_codeGirouette);
 			log.append(';');
-			log.append(pp
-					.getProperty(org.avm.device.comptage.Comptage.NOMBRE_MONTEES));
+			log.append(nbmonte);
 			log.append(';');
-			log.append(pp
-					.getProperty(org.avm.device.comptage.Comptage.NOMBRE_DESCENTES));
+			log.append(nbdesc);
 			_log.info("onStateAttenteSaisieCourse: journalize");
 			_jdb.journalize("comptage", log.toString());
 			_onecourse = true;
 			miseAZero();
+			hasInitComptage = true;
 		}
 	}
 
@@ -158,6 +166,9 @@ public class ComptageImpl implements Comptage, ManageableService,
 					journalizeArret();
 				}
 				endComptage();
+			}
+			else{
+				hasInitComptage = false;
 			}
 		}
 
@@ -195,6 +206,7 @@ public class ComptageImpl implements Comptage, ManageableService,
 				_lastName = point.getNom();
 				_isStopDone = false;
 			}
+			initComptage();
 		}
 
 		protected void onStateEnCourseInterarretSurItineraire(AvmModel model) {
